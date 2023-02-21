@@ -1,0 +1,68 @@
+--------------------------
+Funkcionális követelmények 
+--------------------------
+ 
+
+
+
+Bemeneti adatokra vonatkozó követelmények: 
+------------------------------------------
+
+Felhasználói interakció: 
+    A program indítását követően a felhasználónak lehetősége van a bemeneti adatokat meghatározni. A bemeneti adatokat a meghatározott formátumú és kiterjesztésű fájlok elérési útvonalának megadásával érheti el. 
+
+Bemeneti adatok: 
+    - 3D szemantikus térkép (.stl); 
+    - trajektória fájl (.csv); 
+    - szimuláció időpontja (beviteli mező, alapérték a .csv-ben található GPS idő [sec, nsec]); 
+    - kamera paraméter file (belső esetleg külső paraméterek és radiális torzítás paraméterek) 
+
+Felületháló adatai : 
+    A felületháló pontjai méterben adottak egy adott GPS koordinátán (origo) számolt WGS84 flat-Earth approximációból származó Descartes koordináta rendszerben.  A felületháló pontjainak GPS koordinátáit, a pontok közötti felületek anyagtulajdonságait tartalmazza egy meghatározott formátumú, .stl kiterjesztésű fájl. 
+
+Kamera trajektória: 
+    A program előre meghatározott formátumú kamera trajektóriákat képes betölteni. Az útvonal meghatározása kamera állások sorozatával történik. Egy adott sorozatelem adatai : Kamera pozíció (North-East-Down), kamera tájolás (Euler szögek yaw-pith-roll), GPS időpont (sec,nsec) 
+
+Bemeneti fájlok ellenőrzése:  
+    A program a bemeneteket ellenőrzi és figyelmezteti a felhasználót, ha a bemeneti fájlok szintaktikai vagy szemantikai hibákat tartalmaznak. A program a bemenetek megfelelő betöltése érdekében a bevitel megismétlését kéri, ha hibát észlel.
+
+
+
+Szimulációra, megjelenítésre vonatkozó követelmények 
+----------------------------------------------------
+
+Térháló beolvasás: 
+    A betöltött adatokat a megfelelő formátumra átalakítva felépíti a felülethálót, elhelyezi a saját koordináta rendszerében. Térhálónak elemeihez tartozó adatok: (pozíció, normál, anyagtulajdonság) 
+
+Fényforrás beállítása: 
+    Nap helyzetének, (direktcionális fény, párhuzamos megvilágítás irányának) számítás GPS idő és GPS pozíciók átlagának függvényében.
+    A szimuláció során azzal a feltételezéssel élünk, hogy a térháló max 1-2 km átmérőjű. Emaitt a modell térbeli kiterjedése nem haladja meg azt a léptéket, hogy az aktuális modellben a térbeli helyzet változása módosítaná a Nap állását. Statikusnak vesszük a fény irányát a tér függvényében. 
+
+
+Kamera és nézetkezelés biztosítása:  
+    Kétféle módszer közül van lehetőség választani:
+                                                    - kamera trajektória lejátszása
+                                                    - szabad barangolás
+    
+Kamera trajektória lejátszása:
+    A felhasználó a program nézeti ablakában lejátszhatja a kamera trajektória által meghatározott fix útvonalat, miközben a program futási időben rendereli a felületháló aktuális képét.
+    Lehetőség a szimuláció időpontjának módosítására, a fájlban meghatározott időpontok rugalmasan beállíthatóak.
+    Lehetőség van a kamera trajektóriának eltolására és elforgatására a modell felett.
+    A kamera mozgatásának sebessége a trajektória mintavétele határozza meg. Mértéke kb 50Hz.
+    A kamera útvonalat a program egy térbeli vonalláncként jeleníti meg a felületháló felett.
+
+Szabad barangolás:
+    A felhasználó billentyűzet és egér segítségével szabadon bejárhatja. A felvétel utasítás kiadásával a szabad barangolás közben bejárt útvonalról készített képek is kimenthetőek. A Nap állása a felvétel előtt egy bemeneti mezőben beállítható időpont megadással, azonban a szimuláció közben a fény iránya statikus marad, az idő függvényében nem változik.
+
+Felhasználói interakció biztosítása: 
+    A szimuláció közben a megfelelő billentyűkombinációval, megfelelő gombra való kattintva legyen jelezhet a programnak. A felhasználó szabad kameraállások sorozatával megtekintheti a modellt. A szabad bebarangolás a billentyűzet nyilaival, az egér mozgatásával lehetséges. 
+
+Árnyalás és fényelés: 
+    DirectX 11 SDK által biztosított programozható modell biztosítja. Vertex és Pixel shaderek megírásra kerülnek.
+
+ 
+OUTPUT-ra vonatkozó követelmények 
+----------------------------------
+
+Képek mentése:
+    A szimuláció során az exportálás parancs kiadásával a nézeti ablakban lejátszott képek kimenthetőek .png formátumban. 

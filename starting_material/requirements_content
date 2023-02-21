@@ -1,0 +1,20 @@
+• A követelmény-leírás tartalmazza a szoftver
+    • célját, helyét, szükségességét, előzményeit, előnyeit
+    • a funkcionális és nem funkcionális követelmények leírását
+        • felhasználói szemszögből (felületes áttekintés, használati eset diagramok)
+        • fejlesztői szemszögből (részletes ismertetés, felhasználói történetek)
+    • a rendszer átfogó architektúráját (a rendszer felbontását alrendszerekre, azok kapcsolatait) és modelljeit
+    • áttekintést (javaslatokat, becsléseket) az implementáció és az evolúció számára
+    • a fogalomjegyzéket (technikai kifejezések leírását)
+
+A követelmény-leírás felépítése:
+1. előszó (célközönség, dokumentum-történet)
+2. bevezetés (szoftver célja, helye, szükségessége, előnyei)
+3. fogalomtár (technikai áttekintés)
+4. követelmények felhasználói leírása
+5. rendszer architektúra (magas szintű áttekintés)
+6. követelmények fejlesztői leírása
+7. rendszer modellek (pl. felület terv, adatformátum leírás)
+8. rendszer evolúció (várható fejlesztések, karbantartás)
+9. függelék (pl. adatbázis terv, becsült hardver szükségletek)
+10. tárgymutató

@@ -1,1 +1,4 @@
 .DS_STORE
+TerrainRender/TerrainRender/Debug/*
+TerrainRender/TerrainRender/TerrainRender/Debug/*
+TerrainRender/TerrainRender/.vs/*

@@ -1,0 +1,13 @@
+forrás : http://www.songho.ca/opengl/gl_mvc.html#thread
+        https://www.codeproject.com/Articles/42830/Model-View-Controller-Model-View-Presenter-and-Mod
+
+A program felépítése az MVC architekturális minta szerint készült. Az MVC architektúra három különböző komponenst különít el, amelyek eltérő feladatokat látnak el.
+Az MVC architektúra az alábbi komponenseket tartalmazza: a Model, a View és a Controller.
+
+A Model komponens végzi a logikai funkciók végrehajtását és a tartalmazza az alkalmazás állapotát. A Model komponens perzisztencia komponenssel is kiegészülhet, amely az adatelérésért és az adatok tárolásáért felel. A Model független a Viewtől és a Controllertől, ha szükséges többféle Controller és View implementálható hozzá.
+
+A View komponens biztosítja a vizuális megjelenítést. A feladata, hogy a Model állapotait és adatait figyelembe véve előállítsa a vizuális tartalmat a képernyőn. A View aggregálja a Modelt, így biztosítva, hogy elérje a Model adatait. A View komponens független a Controller komponenstől.
+
+A Controller komponens fogadja és kezeli az összes programhoz érkező eseményt, legyen az felhasználói vagy operációs rendszeri esemény. A Controller komponens utasítja a Modelt a beérkező események alapján a Model állapotának újraszámítására, a View komponenst a képi tartalom megfelelő frissítésére.
+
+

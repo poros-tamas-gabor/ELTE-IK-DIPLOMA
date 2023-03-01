@@ -25,6 +25,14 @@ SO THAT     | végrehajtsam a szimulációt
     WHEN    | ha megadunk egy tetszőleges időpontot
     THEN    | a program jelzi a sikeres időpont megadást
 
+6   GIVEN   | a program sikeresen betöltődik és elindul az indítási képernyő
+    WHEN    | ha megadjuk a kamera paramétereket tartalmazó fájl elérési útvonalát és sikeresen betöltődik
+    THEN    | a program jelzi a sikeres beolvasást
+
+7   GIVEN   | a program sikeresen betöltődik és elindul az indítási képernyő
+    WHEN    | ha megadjuk a kamera paramétereket tartalmazó fájl elérési útvonalát és sikertelen a betöltése
+    THEN    | program figyelmeztet és újra bekéri a modell elérési útvonalát.
+
 --------------------------------------------------------------------------------------------------------
 
 AS A        | Felhasználó
@@ -33,17 +41,25 @@ SO THAT     |
 
 1   GIVEN   | csak a terepmodell elérési útvonalát adtuk meg és sikeresen betöltődött a modell
     WHEN    | START gombra kattintok
-    THEN    | a program megjeleníti a modellt és elindítja a BARANGOLÁS módot
+    THEN    | a program megjeleníti a modellt és elindítja a BARANGOLÁS módot alapértelmezett kamera paraméterekkel
 //    THEN    | a program megjeleníti a modellt, a kamerát default paraméterek, Nap állását a dátum alapján inicializálja.
 
 2   GIVEN   | megadtuk a dátumot és a terepmodell elérési útvonalát, ami sikeresen betöltődött
     WHEN    | START gombra kattintok
-    THEN    | a program megjeleníti a modellt és elindítja a BARANGOLÁS módot
+    THEN    | a program megjeleníti a modellt és elindítja a BARANGOLÁS módot alapértelmezett kamera paraméterekkel
 //    THEN    | a program megjeleníti a modellt, a kamerát default paraméterek, Nap állását a dátum alapján inicializálja.
 
-3   GIVEN   | megadtuk a triangulált terepmodell és a kamera trajektória elérési útvonalát és sikeresen betöltődtek
+3   GIVEN   | megadtuk a dátumot, kamera paraméterek és a terepmodell elérési útvonalát, amik sikeresen betöltődött
     WHEN    | START gombra kattintok
-    THEN    | a program megjeleníti a modellt és a kamera útvonalát. Elindítja a KÖRSÉTA módot
+    THEN    | a program megjeleníti a modellt és elindítja a BARANGOLÁS módot a megadott kamera paraméterekkel
+
+4   GIVEN   | megadtuk a triangulált terepmodell és a kamera trajektória elérési útvonalát és sikeresen betöltődtek
+    WHEN    | START gombra kattintok
+    THEN    | a program megjeleníti a modellt és a kamera útvonalát. Elindítja a KÖRSÉTA módot az alapértelmezett kameraparaméterekkel
+
+5   GIVEN   | megadtuk a triangulált terepmodell, kamera paraméterek és a kamera trajektória elérési útvonalát és sikeresen betöltődtek
+    WHEN    | START gombra kattintok
+    THEN    | a program megjeleníti a modellt és a kamera útvonalát. Elindítja a KÖRSÉTA módot a megadott kameraparaméterekkel
 
 //    THEN    | a program megjeleníti a modellt és a kamera útvonalat, a kamerát és a Napot trajektóriában található paraméterek alapján inicializálja.
 

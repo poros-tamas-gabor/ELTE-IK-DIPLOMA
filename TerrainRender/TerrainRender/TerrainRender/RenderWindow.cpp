@@ -94,7 +94,7 @@ bool RenderWindow::ProcessMessages()
 
 
 	// Handle the windows messages.
-	if (PeekMessage(&msg, this->_hwnd, 0, 0, PM_REMOVE))
+	while (PeekMessage(&msg, this->_hwnd, 0, 0, PM_REMOVE))
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);

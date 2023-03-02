@@ -5,13 +5,16 @@
 #include <windows.h>
 #include "RenderWindow.h"
 #include "Graphics/Graphics.h"
+#include "Input/Keyboard.h"
+#include "Input/Mouse.h"
 class App
 {
 private:
-	RenderWindow		_renderWindow;
-
-	Graphics			_graphics;
-	//InputManager		_inputManager;
+	RenderWindow	_renderWindow;
+					
+	Graphics		_graphics;
+	Keyboard		_keyboard;
+	Mouse			_mouse;
 
 
 	void Update();

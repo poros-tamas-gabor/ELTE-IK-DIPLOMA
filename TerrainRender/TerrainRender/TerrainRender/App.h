@@ -7,15 +7,14 @@
 #include "Graphics/Graphics.h"
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
+#include "Input/Input.h"
 class App
 {
 private:
 	RenderWindow	_renderWindow;
 					
 	Graphics		_graphics;
-	Keyboard		_keyboard;
-	Mouse			_mouse;
-
+	Input			_input;
 
 	void Update();
 	void RenderFrame();

@@ -13,6 +13,10 @@ private:
 	bool mbuttonDown = false;
 
 public:
+	Mouse() = default;
+	Mouse(const Mouse& other) = delete;
+	Mouse& operator= (const Mouse& other) = delete;
+
 	void OnLeftPressed(int x, int y);
 	void OnLeftReleased(int x, int y);
 	void OnRightPressed(int x, int y);

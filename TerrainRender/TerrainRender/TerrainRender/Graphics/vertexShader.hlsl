@@ -1,5 +1,25 @@
 
-float4 main(float4 position : POSITION) : SV_POSITION
+struct VS_INPUT
 {
-    return position;
+    float3 position : POSITION;
+    //float3 normal   : NORMAL;
+    float4 color    : COLOR;
+};
+
+struct VS_OUTPUT
+{
+    float4 position : SV_POSITION;
+    //float4 normal   : NORMAL;
+    float4 color    : COLOR;
+};
+
+
+VS_OUTPUT main(VS_INPUT input) 
+{
+    VS_OUTPUT output;
+    output.position = float4(input.position, 1.0f);
+    //output.normal = float4(input.normal, 1.0f);
+    output.color = input.color;
+
+    return output;
 }

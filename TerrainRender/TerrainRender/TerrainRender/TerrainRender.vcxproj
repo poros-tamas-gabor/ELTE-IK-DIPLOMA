@@ -146,6 +146,7 @@
     <ClCompile Include="App.cpp" />
     <ClCompile Include="ErrorHandler.cpp" />
     <ClCompile Include="Graphics\D3DManager.cpp" />
+    <ClCompile Include="Graphics\GfxModel.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
     <ClCompile Include="Graphics\PixelShader.cpp" />
     <ClCompile Include="Graphics\VertexShader.cpp" />
@@ -161,6 +162,7 @@
     <ClInclude Include="App.h" />
     <ClInclude Include="ErrorHandler.h" />
     <ClInclude Include="Graphics\D3DManager.h" />
+    <ClInclude Include="Graphics\GfxModel.h" />
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\GfxVertex.h" />
     <ClInclude Include="Graphics\Shader.h" />

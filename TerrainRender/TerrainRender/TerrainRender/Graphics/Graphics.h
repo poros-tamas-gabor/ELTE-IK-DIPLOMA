@@ -2,6 +2,7 @@
 #define GRAPHICS_H
 #include "Shader.h"
 #include "D3DManager.h"
+#include "GfxModel.h"
 #include <DirectXMath.h>
 class Graphics
 {
@@ -9,6 +10,8 @@ private:
 	D3DManager		_d3dmanager;
 	VertexShader	_vertexShader;
 	PixelShader		_pixelShader;
+	GfxModel		_gfxModel;
+
 	bool			Render();
 public:
 

@@ -33,14 +33,17 @@ public:
 
 	bool Initialize(ID3D11Device*, HWND) override;
 	void Shutdown() override;
+	bool Render(ID3D11DeviceContext*);
 
 	ID3D11VertexShader* GetVertexShader(void);
 	ID3D11InputLayout*	GetInputLayout(void);
-	//bool Render(ID3D11DeviceContext*, int, D3DXMATRIX, D3DXMATRIX, D3DXMATRIX);
+
 
 private:
 	bool InitializeShader(ID3D11Device*, HWND,const WCHAR*) override;
 	void ShutdownShader() override;
+	void RenderShader(ID3D11DeviceContext* deviceContext);
+
 	//void OutputShaderErrorMessage(ID3D10Blob*, HWND, WCHAR*);
 
 	//bool SetShaderParameters(ID3D11DeviceContext*, D3DXMATRIX, D3DXMATRIX, D3DXMATRIX);
@@ -62,6 +65,9 @@ public:
 
 	bool Initialize(ID3D11Device*, HWND) override;
 	void Shutdown() override;
+	bool Render(ID3D11DeviceContext*);
+
+
 	//bool Render(ID3D11DeviceContext*, int, D3DXMATRIX, D3DXMATRIX, D3DXMATRIX);
 
 	ID3D11PixelShader* GetPixelShader(void);
@@ -72,6 +78,6 @@ private:
 	//void OutputShaderErrorMessage(ID3D10Blob*, HWND, WCHAR*);
 
 	//bool SetShaderParameters(ID3D11DeviceContext*, D3DXMATRIX, D3DXMATRIX, D3DXMATRIX);
-	//void RenderShader(ID3D11DeviceContext*, int);
+	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount);
 };
 #endif // !SHADER_H

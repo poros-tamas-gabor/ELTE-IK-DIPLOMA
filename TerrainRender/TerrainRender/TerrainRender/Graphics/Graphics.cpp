@@ -6,6 +6,20 @@ bool Graphics::Render()
 { 
 	this->_d3dmanager.BeginScene(0.5f, 0.2f, 0.3f, 1.0f);
 
+
+
+
+
+	this->_gfxModel.Render(this->_d3dmanager.GetDeviceContext());
+
+	this->_d3dmanager.GetDeviceContext()->Draw(3, 0);
+
+
+	//
+	//this->_pixelShader.Render(this->_d3dmanager.GetDeviceContext());
+	//this->_vertexShader.Render(this->_d3dmanager.GetDeviceContext());
+
+
 	this->_d3dmanager.EndScene();
 
 	return true;
@@ -19,13 +33,19 @@ bool Graphics::Initalize(HWND hwnd, float screenWidth, float screenHeight, float
 		return false;
 	}
 
-	bresult = this->_vertexShader.Initialize(_d3dmanager.GetDevice(), hwnd);
+	bresult = this->_vertexShader.Initialize(this->_d3dmanager.GetDevice(), hwnd);
 	if (!bresult)
 	{
 		return false;
 	}
 
-	bresult = this->_pixelShader.Initialize(_d3dmanager.GetDevice(), hwnd);
+	bresult = this->_pixelShader.Initialize(this->_d3dmanager.GetDevice(), hwnd);
+	if (!bresult)
+	{
+		return false;
+	}
+
+	bresult = this->_gfxModel.Initialize(this->_d3dmanager.GetDevice());
 	if (!bresult)
 	{
 		return false;
@@ -38,6 +58,7 @@ void Graphics::Shutdown()
 	this->_d3dmanager.Shutdown();
 	this->_pixelShader.Shutdown();
 	this->_vertexShader.Shutdown();
+	this->_gfxModel.Shutdown();
 }
 bool Graphics::Frame() 
 { 

@@ -53,7 +53,7 @@ bool PixelShader::InitializeShader(ID3D11Device* device, HWND hwnd, const WCHAR*
 	{
 		if (errorMessage)
 		{
-			std::wstring errormsg = L"Compile the pixel shader code. Filename: ";
+			std::wstring errormsg = L"Failed to Compile the pixel shader code. Filename: ";
 			errormsg += psFilename;
 			ErrorHandler::log(result, errormsg);
 		}
@@ -69,9 +69,27 @@ bool PixelShader::InitializeShader(ID3D11Device* device, HWND hwnd, const WCHAR*
 	result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &this->m_pixelShader);
 	if (FAILED(result))
 	{
-		ErrorHandler::log(result, L"Create the pixel shader from the buffer");
+		ErrorHandler::log(result, L"Failed to Create the pixel shader from the buffer");
 	}
 
 	return true;
 
 }
+
+ID3D11PixelShader* PixelShader::GetPixelShader(void)
+{
+	return this->m_pixelShader;
+}
+
+bool PixelShader::Render(ID3D11DeviceContext* deviceContext)
+{
+	this->RenderShader(deviceContext, 0);
+	return true;
+}
+void PixelShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount) {
+
+	deviceContext->PSSetShader(this->m_pixelShader, NULL, 0);
+
+	deviceContext->Draw(3, 0);
+}
+

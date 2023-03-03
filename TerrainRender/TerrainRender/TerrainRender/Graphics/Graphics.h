@@ -1,13 +1,15 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
-
+#include "Shader.h"
 #include "D3DManager.h"
 #include <DirectXMath.h>
 class Graphics
 {
 private:
-	D3DManager d3dmanager;
-	bool Render();
+	D3DManager		_d3dmanager;
+	VertexShader	_vertexShader;
+	PixelShader		_pixelShader;
+	bool			Render();
 public:
 
 	Graphics();

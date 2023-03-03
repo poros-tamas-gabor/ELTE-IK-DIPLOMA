@@ -60,6 +60,12 @@
     <ClCompile Include="Input\Input.cpp">
       <Filter>Source Files\Input</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\VertexShader.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\PixelShader.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -92,5 +98,19 @@
     <ClInclude Include="Input\Input.h">
       <Filter>Header Files\Input</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics\GfxVertex.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Shader.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Graphics\vertexShader.hlsl">
+      <Filter>Source Files\Graphics</Filter>
+    </FxCompile>
+    <FxCompile Include="Graphics\pixelShader.hlsl">
+      <Filter>Source Files\Graphics</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

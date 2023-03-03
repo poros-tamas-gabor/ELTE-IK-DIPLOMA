@@ -239,7 +239,7 @@ bool D3DManager::Initalize(HWND hwnd, float screenWidth, float screenHeight, flo
 
 	// Initialize the description of the depth buffer.
 	ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
-
+	
 	// Set up the description of the depth buffer.
 	depthBufferDesc.Width = screenWidth;
 	depthBufferDesc.Height = screenHeight;
@@ -252,7 +252,7 @@ bool D3DManager::Initalize(HWND hwnd, float screenWidth, float screenHeight, flo
 	depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	depthBufferDesc.CPUAccessFlags = 0;
 	depthBufferDesc.MiscFlags = 0;
-
+	
 	// Create the texture for the depth buffer using the filled out description.
 	result = this->_device->CreateTexture2D(&depthBufferDesc, NULL, &this->_depthStencilBuffer);
 	if (FAILED(result))
@@ -260,66 +260,66 @@ bool D3DManager::Initalize(HWND hwnd, float screenWidth, float screenHeight, flo
 		ErrorHandler::log(result, L"Failed to Create the texture for the depth buffer using the filled out description");
 		return false;
 	}
-
+	
 	// Initialize the description of the stencil state.
 	ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
-
+	
 	// Set up the description of the stencil state.
 	depthStencilDesc.DepthEnable = true;
 	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
-
+	
 	depthStencilDesc.StencilEnable = true;
 	depthStencilDesc.StencilReadMask = 0xFF;
 	depthStencilDesc.StencilWriteMask = 0xFF;
-
+	
 	// Stencil operations if pixel is front-facing.
 	depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
 	depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
 	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-
+	
 	// Stencil operations if pixel is back-facing.
 	depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
 	depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
 	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-
+	
 	// Create the depth stencil state.
 	result = this->_device->CreateDepthStencilState(&depthStencilDesc, &this->_depthStencilState);
 	if (FAILED(result))
 	{
 		ErrorHandler::log(result, L"Failed to Create the depth stencil state");
-
+	
 		return false;
 	}
-
+	
 	// Set the depth stencil state.
 	this->_deviceContext->OMSetDepthStencilState(this->_depthStencilState, 1);
-
+	
 	// Initialize the depth stencil view.
 	ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
-
+	
 	// Set up the depth stencil view description.
 	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	depthStencilViewDesc.Texture2D.MipSlice = 0;
-
+	
 	// Create the depth stencil view.
 	result = this->_device->CreateDepthStencilView(this->_depthStencilBuffer, &depthStencilViewDesc, &this->_depthStencilView);
 	if (FAILED(result))
 	{
 		ErrorHandler::log(result, L"Failed to Create the depth stencil view");
-
+	
 		return false;
 	}
-
+	
 	// Bind the render target view and depth stencil buffer to the output render pipeline.
 	this->_deviceContext->OMSetRenderTargets(1, &this->_renderTargetView, this->_depthStencilView);
 
 	// Setup the raster description which will determine how and what polygons will be drawn.
 	rasterDesc.AntialiasedLineEnable = false;
-	rasterDesc.CullMode = D3D11_CULL_BACK;
+	rasterDesc.CullMode = D3D11_CULL_NONE;//D3D11_CULL_BACK;
 	rasterDesc.DepthBias = 0;
 	rasterDesc.DepthBiasClamp = 0.0f;
 	rasterDesc.DepthClipEnable = true;
@@ -328,16 +328,16 @@ bool D3DManager::Initalize(HWND hwnd, float screenWidth, float screenHeight, flo
 	rasterDesc.MultisampleEnable = false;
 	rasterDesc.ScissorEnable = false;
 	rasterDesc.SlopeScaledDepthBias = 0.0f;
-
+	
 	// Create the rasterizer state from the description we just filled out.
 	result = this->_device->CreateRasterizerState(&rasterDesc, &this->_rasterState);
 	if (FAILED(result))
 	{
 		ErrorHandler::log(result, L"Failed to Create the rasterizer state from the description we just filled out.");
-
+		
 		return false;
 	}
-
+	
 	// Now set the rasterizer state.
 	this->_deviceContext->RSSetState(this->_rasterState);
 
@@ -422,8 +422,18 @@ void D3DManager::BeginScene(float red, float green, float blue, float alpha) {
 
 }
 void D3DManager::EndScene() {
-	// switch the back buffer and the front buffer
-	this->_swapChain->Present(0, 0);
+	// Present the back buffer to the screen since rendering is complete.
+	if (this->_vsync)
+	{
+		// Lock to screen refresh rate.
+		this->_swapChain->Present(1, 0);
+	}
+	else
+	{
+		// Present as fast as possible.
+		this->_swapChain->Present(0, 0);
+	}
+
 }
 
 

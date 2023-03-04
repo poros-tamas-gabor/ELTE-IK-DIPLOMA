@@ -6,18 +6,11 @@ bool Graphics::Render()
 { 
 	this->_d3dmanager.BeginScene(0.5f, 0.2f, 0.3f, 1.0f);
 
-
-
-
-
 	this->_gfxModel.Render(this->_d3dmanager.GetDeviceContext());
 
-	this->_d3dmanager.GetDeviceContext()->Draw(3, 0);
-
-
-	//
-	//this->_pixelShader.Render(this->_d3dmanager.GetDeviceContext());
-	//this->_vertexShader.Render(this->_d3dmanager.GetDeviceContext());
+	this->_vertexShader.Render(this->_d3dmanager.GetDeviceContext());
+	this->_pixelShader.Render(this->_d3dmanager.GetDeviceContext());
+	this->_d3dmanager.GetDeviceContext()->DrawIndexed(3, 0, 0);
 
 
 	this->_d3dmanager.EndScene();

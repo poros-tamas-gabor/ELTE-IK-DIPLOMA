@@ -48,7 +48,12 @@ bool PixelShader::InitializeShader(ID3D11Device* device, HWND hwnd, const WCHAR*
 
 
 	// Compile the pixel shader code.
-	result = D3DCompileFromFile(psFilename, NULL, NULL, "main", "ps_5_0", D3DCOMPILE_OPTIMIZATION_LEVEL3, 0, &pixelShaderBuffer, &errorMessage);
+	UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
+#if defined( DEBUG ) || defined( _DEBUG )
+	flags |= D3DCOMPILE_DEBUG;
+#endif
+
+	result = D3DCompileFromFile(psFilename, NULL, NULL, "main", "ps_5_0", flags, 0, &pixelShaderBuffer, &errorMessage);
 	if (FAILED(result))
 	{
 		if (errorMessage)
@@ -72,6 +77,8 @@ bool PixelShader::InitializeShader(ID3D11Device* device, HWND hwnd, const WCHAR*
 		ErrorHandler::log(result, L"Failed to Create the pixel shader from the buffer");
 	}
 
+	pixelShaderBuffer->Release();
+
 	return true;
 
 }
@@ -89,7 +96,5 @@ bool PixelShader::Render(ID3D11DeviceContext* deviceContext)
 void PixelShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount) {
 
 	deviceContext->PSSetShader(this->m_pixelShader, NULL, 0);
-
-	deviceContext->Draw(3, 0);
 }
 

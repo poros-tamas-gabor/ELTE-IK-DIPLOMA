@@ -35,17 +35,20 @@ bool GfxModel::InitializeBuffers(ID3D11Device* device)
 
 	this->m_indexCount = this->m_vertexCount = 3;
 
-	vertices[0].position = { 0.0f, 0.5f, 0.0f };  // Bottom left.
-	vertices[0].color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-	vertices[1].position = { 0.45f, -0.5, 0.0f };  // Top middle.
-	vertices[1].color = { 0.0f, 1.0f, 0.0f, 1.0f };
+	vertices[0].position = { 0.0f, 0.5f, 0.5f };  // Bottom left.
+	vertices[0].color = { 1.0f, 0.0f, 0.0f, 1.0f };
 
-	vertices[2].position = { -0.45f, -0.5f, 0.0f };  // Bottom right.
-	vertices[2].color = {1.0f, 1.0f, 0.0f, 1.0f };
+	vertices[1].position = { 0.45f, -0.5, 0.5f };  // Top middle.
+	vertices[1].color = { 1.0f, 0.0f, 0.0f, 1.0f };
+
+	vertices[2].position = { -0.45f, -0.5f, 0.5f };  // Bottom right.
+	vertices[2].color = {1.0f, 0.0f, 0.0f, 1.0f };
+
 
 
 	// Set up the description of the static vertex buffer.
+	ZeroMemory(&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.ByteWidth = sizeof(GfxVertex) * this->m_vertexCount;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -67,6 +70,7 @@ bool GfxModel::InitializeBuffers(ID3D11Device* device)
 	}
 
 	// Set up the description of the static index buffer.
+	ZeroMemory(&indexBufferDesc, sizeof(D3D11_BUFFER_DESC));
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_indexCount;
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;

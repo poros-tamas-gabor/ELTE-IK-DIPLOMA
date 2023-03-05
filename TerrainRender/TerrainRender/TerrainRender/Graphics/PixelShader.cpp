@@ -1,9 +1,7 @@
-#include "Shader.h"
-
-#include "Shader.h"
+#include "PixelShader.h"
 #include "../ErrorHandler.h"
 
-PixelShader::PixelShader() : m_pixelShader(nullptr), m_matrixBuffer(nullptr) {}
+PixelShader::PixelShader() : m_pixelShader(nullptr) {}
 
 bool PixelShader::Initialize(ID3D11Device* device, HWND hwnd)
 {
@@ -30,11 +28,6 @@ void PixelShader::ShutdownShader()
 	{
 		this->m_pixelShader->Release();
 		this->m_pixelShader = nullptr;
-	}
-	if (this->m_matrixBuffer)
-	{
-		this->m_matrixBuffer->Release();
-		this->m_matrixBuffer = nullptr;
 	}
 }
 
@@ -88,13 +81,14 @@ ID3D11PixelShader* PixelShader::GetPixelShader(void)
 	return this->m_pixelShader;
 }
 
-bool PixelShader::Render(ID3D11DeviceContext* deviceContext)
+bool PixelShader::Render(ID3D11DeviceContext* deviceContext, int indexCount)
 {
-	this->RenderShader(deviceContext, 0);
+	this->RenderShader(deviceContext, indexCount);
 	return true;
 }
 void PixelShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount) {
 
 	deviceContext->PSSetShader(this->m_pixelShader, NULL, 0);
+	deviceContext->DrawIndexed(indexCount, 0, 0);
 }
 

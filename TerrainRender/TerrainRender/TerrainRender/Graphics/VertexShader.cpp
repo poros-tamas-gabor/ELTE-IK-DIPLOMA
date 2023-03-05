@@ -1,4 +1,4 @@
-#include "Shader.h"
+#include "VertexShader.h"
 #include "../ErrorHandler.h"
 
 VertexShader::VertexShader() : m_vertexShader(nullptr), m_layout(nullptr), m_matrixBuffer(nullptr) {}
@@ -118,6 +118,23 @@ bool VertexShader::InitializeShader(ID3D11Device* device, HWND hwnd, const WCHAR
 
 	vertexShaderBuffer->Release();
 	vertexShaderBuffer = nullptr;
+
+	// Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
+	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	matrixBufferDesc.ByteWidth = sizeof(VertexShader::MatrixBuffer);
+	matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	matrixBufferDesc.MiscFlags = 0;
+	matrixBufferDesc.StructureByteStride = 0;
+
+	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
+	result = device->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
+	if (FAILED(result))
+	{
+		ErrorHandler::log(result, L"Failed to Create constant buffer");
+		return false;
+	}
+
 	return true;
 
 }
@@ -128,12 +145,57 @@ void VertexShader::RenderShader(ID3D11DeviceContext* deviceContext)
 
 	deviceContext->VSSetShader(this->m_vertexShader, NULL, 0);
 }
-bool VertexShader::Render(ID3D11DeviceContext* deviceContext)
+bool VertexShader::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat)
 {
+	bool bresult;
+	bresult = this->SetShadeParameters(deviceContext, worldMat, viewMat, projectionMat);
+	if(!bresult)
+	{
+		return false;
+	}
 	this->RenderShader(deviceContext);
 	return true;
 }
 
+bool VertexShader::SetShadeParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat)
+{
+	HRESULT						result;
+	D3D11_MAPPED_SUBRESOURCE	mappedResource;
+	MatrixBuffer*				dataPtr;
+	unsigned int				bufferNumber;
+
+	// Transpose the matrices to prepare them for the shader.
+	worldMat = DirectX::XMMatrixTranspose(worldMat);
+	viewMat = DirectX::XMMatrixTranspose(viewMat);
+	projectionMat = DirectX::XMMatrixTranspose(projectionMat);
+
+	// Lock the constant buffer so it can be written to.
+	result = deviceContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(result))
+	{
+		ErrorHandler::log(result, L"Failed to lock the constant buffer");
+		return false;
+	}
+
+	// Get a pointer to the data in the constant buffer.
+	dataPtr = static_cast<MatrixBuffer*> (mappedResource.pData);
+
+	// Copy the data into the constant buffer.
+	dataPtr->worldMat = worldMat;
+	dataPtr->viewMat = viewMat;
+	dataPtr->projectionMat = projectionMat;
+
+	// Unlock the constant buffer.
+	deviceContext->Unmap(m_matrixBuffer, 0);
+
+	// Set the position of the constant buffer in the vertex shader.
+	bufferNumber = 0;
+
+	// Finanly set the constant buffer in the vertex shader with the updated values.
+	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
+
+	return true;
+}
 
 ID3D11VertexShader* VertexShader::GetVertexShader(void)
 {

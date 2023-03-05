@@ -19,15 +19,15 @@
 class D3DManager
 {
 private:
-	IDXGISwapChain*			_swapChain;
-	ID3D11Device*			_device;
-	ID3D11DeviceContext*	_deviceContext;
-	ID3D11RenderTargetView* _renderTargetView;
+	IDXGISwapChain*				_swapChain;
+	ID3D11Device*				_device;
+	ID3D11DeviceContext*		_deviceContext;
+	ID3D11RenderTargetView*		_renderTargetView;
 
-	ID3D11Texture2D*		_depthStencilBuffer;
-	ID3D11DepthStencilView* _depthStencilView;
-	ID3D11DepthStencilState* _depthStencilState;
-	ID3D11RasterizerState*	_rasterState;
+	ID3D11Texture2D*			_depthStencilBuffer;
+	ID3D11DepthStencilView*		_depthStencilView;
+	ID3D11DepthStencilState*	_depthStencilState;
+	ID3D11RasterizerState*		_rasterState;
 
 	//D3DXMATRIX				_projectionMatrix;
 	//D3DXMATRIX				_worldMatrix;

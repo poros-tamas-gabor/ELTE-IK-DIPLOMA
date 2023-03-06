@@ -8,6 +8,7 @@
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
 #include "Input/Input.h"
+#include "Timer.h"
 
 class App
 {
@@ -16,12 +17,13 @@ private:
 					
 	Graphics		_graphics;
 	Input			_input;
+	Timer			_timer;
 
 	void Update();
 	void RenderFrame();
 	bool ProcessMessages();
-	void KeyboardController(const KeyboardEvent& e);
-	void MouseController(const MouseEvent& e);
+	void ControlKeyboard(const KeyboardEvent& e, float dt);
+	void ControlMouse(const MouseEvent& e);
 
 public:
 	App();

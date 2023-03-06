@@ -26,17 +26,17 @@ private:
 
 	GfxCamera* _camera;
 
-	float _speed = 0.05f;
-	float _rotationSpeed = 0.005f;
+	float _speed = 0.005f;
+	float _rotationSpeed = 0.001f;
 
-	void MoveTemplate(const DirectX::XMVECTOR& default_vector, DirectX::XMVECTOR& currentVector);
+	void MoveTemplate(const DirectX::XMVECTOR& default_vector, DirectX::XMVECTOR& currentVector, float dt);
 public:
 
 	void SetVectors(const DirectX::XMMATRIX rotationMatrix);
-	void MoveForward();
-	void MoveBack();
-	void MoveLeft();
-	void MoveRight();
+	void MoveForward(float dt);
+	void MoveBack(float dt);
+	void MoveLeft(float dt);
+	void MoveRight(float dt);
 	void RotatePitchYaw(float x, float y);
 	void SetCamera(GfxCamera* camera);
 

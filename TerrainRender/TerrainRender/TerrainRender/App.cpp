@@ -39,6 +39,7 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 		return false;
 	}
 
+	_timer.Start();
 	return true;
 }
 
@@ -49,10 +50,12 @@ bool App::ProcessMessages()
 
 void App::Update()
 {
+	float dt = this->_timer.GetMilisecondsElapsed();
+	this->_timer.Restart();
 	while (!this->_input._keyboard.KeyBufferIsEmpty())
 	{
 		KeyboardEvent e = this->_input._keyboard.ReadKey();
-		this->KeyboardController(e);
+		//this->ControlKeyboard(e, dt);
 
 	}
 	while (!this->_input._keyboard.CharBufferIsEmpty())
@@ -63,11 +66,33 @@ void App::Update()
 	while (!this->_input._mouse.EventBufferIsEmpty())
 	{
 		MouseEvent e = this->_input._mouse.ReadEvent();
-		MouseController(e);
+		ControlMouse(e);
 	}
+
+
+	if (this->_input._keyboard.KeyIsPressed('W'))
+	{
+		this->_graphics._position.MoveForward(dt);
+	}
+	if (this->_input._keyboard.KeyIsPressed('S'))
+	{
+		this->_graphics._position.MoveBack(dt);
+	}
+	if (this->_input._keyboard.KeyIsPressed('A'))
+	{
+		this->_graphics._position.MoveLeft(dt);
+	}
+	if (this->_input._keyboard.KeyIsPressed('D'))
+	{
+		this->_graphics._position.MoveRight(dt);
+	}
+
+
+
+
 }
 
-void App::MouseController(const MouseEvent& e)
+void App::ControlMouse(const MouseEvent& e)
 {
 	if (MouseEvent::Type::RAW_MOVE_ABSOLUTE == e.GetType())
 	{
@@ -88,7 +113,7 @@ void App::MouseController(const MouseEvent& e)
 	}
 }
 
-void App::KeyboardController(const KeyboardEvent& e)
+void App::ControlKeyboard(const KeyboardEvent& e, float dt)
 {
 	if (e.IsPress())
 	{
@@ -96,22 +121,22 @@ void App::KeyboardController(const KeyboardEvent& e)
 		{
 		case 'W':
 		{
-			this->_graphics._position.MoveForward();
+			this->_graphics._position.MoveForward(dt);
 			break;
 		}
 		case 'A':
 		{
-			this->_graphics._position.MoveLeft();
+			this->_graphics._position.MoveLeft(dt);
 			break;
 		}
 		case 'S':
 		{
-			this->_graphics._position.MoveBack();
+			this->_graphics._position.MoveBack(dt);
 			break;
 		}
 		case 'D':
 		{
-			this->_graphics._position.MoveRight();
+			this->_graphics._position.MoveRight(dt);
 			break;
 		}
 		default:

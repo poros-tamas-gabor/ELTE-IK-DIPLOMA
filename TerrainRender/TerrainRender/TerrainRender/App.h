@@ -8,6 +8,7 @@
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
 #include "Input/Input.h"
+
 class App
 {
 private:
@@ -19,6 +20,8 @@ private:
 	void Update();
 	void RenderFrame();
 	bool ProcessMessages();
+	void KeyboardController(const KeyboardEvent& e);
+	void MouseController(const MouseEvent& e);
 
 public:
 	App();

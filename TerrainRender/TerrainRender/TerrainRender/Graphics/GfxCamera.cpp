@@ -1,6 +1,18 @@
 #include "GfxCamera.h"
 
-GfxCamera::GfxCamera() = default;
+GfxCamera::GfxCamera()
+{
+	this->_positionX = 0.0f;
+	this->_positionY = 0.0f;
+	this->_positionZ = -2.0f;
+
+	this->_rotationX = 0.0f;
+	this->_rotationY = 0.0f;
+	this->_rotationZ = 0.0f;
+
+	this->_rotationMatrix = DirectX::XMMatrixIdentity();
+
+}
 GfxCamera::~GfxCamera() {}
 
 void GfxCamera::SetPosition(float x, float y, float z)
@@ -84,17 +96,17 @@ void GfxCamera::Render()
 	float rotYRad = this->_rotationY;
 	float rotZRad = this->_rotationZ;
 	// Create the rotation matrix from the yaw, pitch, and roll values.
-	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(rotXRad, rotYRad, rotZRad);
+	this->_rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(rotXRad, rotYRad, rotZRad);
 
 	// Setup the position of the camera in the world.
 	DirectX::XMVECTOR positonVector  = DirectX::XMVectorSet(this->_positionX, this->_positionY, this->_positionZ, 0.0f);
 
 	// Transform the lookAt and up vector by the rotation matrix so the view is correctly rotated at the origin.
-	DirectX::XMVECTOR lookatVector = DirectX::XMVector4Transform(this->DEFAULT_LOOKAT_VECTOR, rotationMatrix);
+	DirectX::XMVECTOR lookatVector = DirectX::XMVector4Transform(this->DEFAULT_LOOKAT_VECTOR, this->_rotationMatrix);
 	// Translate the rotated camera position to the location of the viewer.
 	lookatVector = DirectX::XMVectorAdd(lookatVector, positonVector);
 
-	DirectX::XMVECTOR upVector = DirectX::XMVector4Transform(this->DEFAULT_UP_VECTOR, rotationMatrix);
+	DirectX::XMVECTOR upVector = DirectX::XMVector4Transform(this->DEFAULT_UP_VECTOR, this->_rotationMatrix);
 
 	this->_viewMatrix = DirectX::XMMatrixLookAtLH(positonVector, lookatVector, upVector);
 
@@ -107,4 +119,9 @@ void GfxCamera::GetViewMatrix(DirectX::XMMATRIX& viewMatrix)
 void GfxCamera::GetProjectionMatrix(DirectX::XMMATRIX& projectionMatrix)
 {
 	projectionMatrix = this->_projectionMatrix;
+}
+
+void GfxCamera::GetRotationMatrix(DirectX::XMMATRIX& rotationMatrix)
+{
+	rotationMatrix = this->_rotationMatrix;
 }

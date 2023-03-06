@@ -146,9 +146,11 @@
     <ClCompile Include="App.cpp" />
     <ClCompile Include="ErrorHandler.cpp" />
     <ClCompile Include="Graphics\D3DManager.cpp" />
+    <ClCompile Include="Graphics\GfxCamera.cpp" />
     <ClCompile Include="Graphics\GfxModel.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
     <ClCompile Include="Graphics\PixelShader.cpp" />
+    <ClCompile Include="Graphics\Position.cpp" />
     <ClCompile Include="Graphics\VertexShader.cpp" />
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="Input\Keyboard.cpp" />
@@ -162,16 +164,20 @@
     <ClInclude Include="App.h" />
     <ClInclude Include="ErrorHandler.h" />
     <ClInclude Include="Graphics\D3DManager.h" />
+    <ClInclude Include="Graphics\GfxCamera.h" />
     <ClInclude Include="Graphics\GfxModel.h" />
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\GfxVertex.h" />
-    <ClInclude Include="Graphics\Shader.h" />
+    <ClInclude Include="Graphics\PixelShader.h" />
+    <ClInclude Include="Graphics\Position.h" />
+    <ClInclude Include="Graphics\VertexShader.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Input\Keyboard.h" />
     <ClInclude Include="Input\KeyboardEvent.h" />
     <ClInclude Include="Input\Mouse.h" />
     <ClInclude Include="Input\MouseEvent.h" />
     <ClInclude Include="RenderWindow.h" />
+    <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Graphics\pixelShader.hlsl">

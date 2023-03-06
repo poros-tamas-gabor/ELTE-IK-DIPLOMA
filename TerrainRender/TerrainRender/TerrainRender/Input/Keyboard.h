@@ -9,7 +9,7 @@ private:
 
 	std::queue<KeyboardEvent> _keyBuffer;
 	std::queue<unsigned char> _charBuffer;
-	bool _autoRepeat = false;
+	bool _autoRepeat = true;
 	bool _keyStates[256];
 
 public:

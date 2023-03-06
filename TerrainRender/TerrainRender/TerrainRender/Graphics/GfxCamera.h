@@ -10,6 +10,7 @@ private:
 
 	DirectX::XMMATRIX	_viewMatrix;
 	DirectX::XMMATRIX	_projectionMatrix;
+	DirectX::XMMATRIX	_rotationMatrix;
 
 	float	_positionX;
 	float	_positionY;
@@ -39,6 +40,7 @@ public:
 	void Render();
 	void GetViewMatrix(DirectX::XMMATRIX& viewMatrix);
 	void GetProjectionMatrix(DirectX::XMMATRIX& projectionMatrix);
+	void GetRotationMatrix(DirectX::XMMATRIX& roationMatrix);
 
 
 };

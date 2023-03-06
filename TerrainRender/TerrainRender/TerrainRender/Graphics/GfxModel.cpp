@@ -36,13 +36,13 @@ bool GfxModel::InitializeBuffers(ID3D11Device* device)
 	this->m_indexCount = this->m_vertexCount = 3;
 
 
-	vertices[0].position = { 0.0f, 0.5f, 0.5f };  // Bottom left.
+	vertices[0].position = { 0.0f, 0.5f, 0.0f };  // Bottom left.
 	vertices[0].color = { 1.0f, 0.0f, 0.0f, 1.0f };
 
-	vertices[1].position = { 0.45f, -0.5, 0.5f };  // Top middle.
+	vertices[1].position = { 0.45f, -0.5, 0.0f };  // Top middle.
 	vertices[1].color = { 1.0f, 0.0f, 0.0f, 1.0f };
 
-	vertices[2].position = { -0.45f, -0.5f, 0.5f };  // Bottom right.
+	vertices[2].position = { -0.45f, -0.5f, 0.0f };  // Bottom right.
 	vertices[2].color = {1.0f, 0.0f, 0.0f, 1.0f };
 
 

@@ -2,6 +2,14 @@
 
 Graphics::Graphics() {}
 Graphics::~Graphics() {}
+
+
+void Graphics::Update()
+{
+
+
+}
+
 bool Graphics::Render() 
 { 
 	bool bresult;
@@ -9,10 +17,6 @@ bool Graphics::Render()
 
 
 
-	static float alpha = 0;
-	alpha += 0.01;
-	this->_camera.SetPosition(3*cos(alpha), 0.0f, 3*sin(alpha));
-	this->_camera.SetLookAtPos({ 0,0,0 });
 	this->_camera.SetProjectionValues(45, (float)600 / 800, 1, 100);
 
 	
@@ -70,6 +74,8 @@ bool Graphics::Initalize(HWND hwnd, float screenWidth, float screenHeight, float
 	{
 		return false;
 	}
+
+	this->_position.SetCamera(&this->_camera);
 	
 
 	return true;
@@ -79,8 +85,6 @@ void Graphics::Shutdown()
 	this->_d3dmanager.Shutdown();
 	this->_pixelShader.Shutdown();
 	this->_vertexShader.Shutdown();
-
-
 	this->_gfxModel.Shutdown();
 
 }

@@ -52,6 +52,7 @@ void App::Update()
 	while (!this->_input._keyboard.KeyBufferIsEmpty())
 	{
 		KeyboardEvent e = this->_input._keyboard.ReadKey();
+		this->KeyboardController(e);
 
 	}
 	while (!this->_input._keyboard.CharBufferIsEmpty())
@@ -62,6 +63,61 @@ void App::Update()
 	while (!this->_input._mouse.EventBufferIsEmpty())
 	{
 		MouseEvent e = this->_input._mouse.ReadEvent();
+		MouseController(e);
+	}
+}
+
+void App::MouseController(const MouseEvent& e)
+{
+	if (MouseEvent::Type::RAW_MOVE_ABSOLUTE == e.GetType())
+	{
+		static MouseEvent prev;
+		if (prev.IsValid())
+		{
+			int yaw = e.GetPosX() - prev.GetPosX();
+			int pitch = e.GetPosY() - prev.GetPosY();
+
+			this->_graphics._position.RotatePitchYaw((float)pitch,(float) yaw);
+
+		}
+		prev = e;
+	}
+	else if (MouseEvent::Type::RAW_MOVE_RELATIVE == e.GetType())
+	{
+		this->_graphics._position.RotatePitchYaw((float)e.GetPosY(), (float)e.GetPosX());
+	}
+}
+
+void App::KeyboardController(const KeyboardEvent& e)
+{
+	if (e.IsPress())
+	{
+		switch (e.GetKeyCode())
+		{
+		case 'W':
+		{
+			this->_graphics._position.MoveForward();
+			break;
+		}
+		case 'A':
+		{
+			this->_graphics._position.MoveLeft();
+			break;
+		}
+		case 'S':
+		{
+			this->_graphics._position.MoveBack();
+			break;
+		}
+		case 'D':
+		{
+			this->_graphics._position.MoveRight();
+			break;
+		}
+		default:
+			break;
+		}
+
 	}
 }
 void App::RenderFrame()

@@ -158,6 +158,8 @@
     <ClCompile Include="Input\Mouse.cpp" />
     <ClCompile Include="Input\MouseEvent.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Model\ModelLayer.cpp" />
+    <ClCompile Include="Model\Persistence\DataAccess.cpp" />
     <ClCompile Include="RenderWindow.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
@@ -177,6 +179,9 @@
     <ClInclude Include="Input\KeyboardEvent.h" />
     <ClInclude Include="Input\Mouse.h" />
     <ClInclude Include="Input\MouseEvent.h" />
+    <ClInclude Include="Model\ModelLayer.h" />
+    <ClInclude Include="Model\Persistence\ModelVertex.h" />
+    <ClInclude Include="Model\Persistence\DataAccess.h" />
     <ClInclude Include="RenderWindow.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
@@ -193,6 +198,9 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\File\Sphericon.stl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

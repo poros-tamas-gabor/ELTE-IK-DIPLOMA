@@ -1,6 +1,6 @@
 #include "Graphics.h"
 
-Graphics::Graphics() {}
+Graphics::Graphics(std::shared_ptr<ModelLayer>& model) : _model(model) {}
 Graphics::~Graphics() {}
 
 
@@ -39,7 +39,7 @@ bool Graphics::Render()
 
 
 	this->_gfxModel.Render(this->_d3dmanager.GetDeviceContext());
-	this->_pixelShader.Render(this->_d3dmanager.GetDeviceContext(), this->_gfxModel.GetIndexCount());
+	this->_pixelShader.Render(this->_d3dmanager.GetDeviceContext(), this->_gfxModel.GetVertexCount());
 	
 
 
@@ -68,8 +68,11 @@ bool Graphics::Initalize(HWND hwnd, float screenWidth, float screenHeight, float
 		return false;
 	}
 
-
-	bresult = _gfxModel.Initialize(this->_d3dmanager.GetDevice());
+	if (!bresult)
+	{
+		return false;
+	}
+	bresult = _gfxModel.Initialize(this->_d3dmanager.GetDevice(), this->_model.get());
 	if (!bresult)
 	{
 		return false;

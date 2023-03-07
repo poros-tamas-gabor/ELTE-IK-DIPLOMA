@@ -15,6 +15,9 @@ App::App()
 		ErrorHandler::log(GetLastError(), L"Failed to register raw input devices.");
 		exit(-1);
 	}
+
+	this->_model = std::make_shared<ModelLayer>();
+	this->_graphics = std::make_unique<Graphics>(this->_model);
 }
 App::~App() {};
 
@@ -32,7 +35,13 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 		return false;
 	}
 
-	result = this->_graphics.Initalize(this->_renderWindow.GetHWND(), screenWidth, screenHeight, 1, 100);
+	result - _model->LoadTerrain(L"C:\\Users\\porostamasgabor\\Documents\\THESIS\\File\\Sphericon.stl");
+	if (!result)
+	{
+		return false;
+	}
+
+	result = this->_graphics->Initalize(this->_renderWindow.GetHWND(), screenWidth, screenHeight, 1, 100);
 
 	if (!result)
 	{
@@ -72,19 +81,19 @@ void App::Update()
 
 	if (this->_input._keyboard.KeyIsPressed('W'))
 	{
-		this->_graphics._position.MoveForward(dt);
+		this->_graphics->_position.MoveForward(dt);
 	}
 	if (this->_input._keyboard.KeyIsPressed('S'))
 	{
-		this->_graphics._position.MoveBack(dt);
+		this->_graphics->_position.MoveBack(dt);
 	}
 	if (this->_input._keyboard.KeyIsPressed('A'))
 	{
-		this->_graphics._position.MoveLeft(dt);
+		this->_graphics->_position.MoveLeft(dt);
 	}
 	if (this->_input._keyboard.KeyIsPressed('D'))
 	{
-		this->_graphics._position.MoveRight(dt);
+		this->_graphics->_position.MoveRight(dt);
 	}
 
 
@@ -102,14 +111,14 @@ void App::ControlMouse(const MouseEvent& e)
 			int yaw = e.GetPosX() - prev.GetPosX();
 			int pitch = e.GetPosY() - prev.GetPosY();
 
-			this->_graphics._position.RotatePitchYaw((float)pitch,(float) yaw);
+			this->_graphics->_position.RotatePitchYaw((float)pitch,(float) yaw);
 
 		}
 		prev = e;
 	}
 	else if (MouseEvent::Type::RAW_MOVE_RELATIVE == e.GetType())
 	{
-		this->_graphics._position.RotatePitchYaw((float)e.GetPosY(), (float)e.GetPosX());
+		this->_graphics->_position.RotatePitchYaw((float)e.GetPosY(), (float)e.GetPosX());
 	}
 }
 
@@ -121,22 +130,22 @@ void App::ControlKeyboard(const KeyboardEvent& e, float dt)
 		{
 		case 'W':
 		{
-			this->_graphics._position.MoveForward(dt);
+			this->_graphics->_position.MoveForward(dt);
 			break;
 		}
 		case 'A':
 		{
-			this->_graphics._position.MoveLeft(dt);
+			this->_graphics->_position.MoveLeft(dt);
 			break;
 		}
 		case 'S':
 		{
-			this->_graphics._position.MoveBack(dt);
+			this->_graphics->_position.MoveBack(dt);
 			break;
 		}
 		case 'D':
 		{
-			this->_graphics._position.MoveRight(dt);
+			this->_graphics->_position.MoveRight(dt);
 			break;
 		}
 		default:
@@ -147,7 +156,7 @@ void App::ControlKeyboard(const KeyboardEvent& e, float dt)
 }
 void App::RenderFrame()
 {
-	this->_graphics.Frame();
+	this->_graphics->Frame();
 
 }
 void App::Run()

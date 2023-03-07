@@ -1,10 +1,11 @@
 #include "GfxModel.h"
 #include	"../ErrorHandler.h"
+#include "../Model/ModelLayer.h"
 
-bool GfxModel::Initialize(ID3D11Device* device)
+bool GfxModel::Initialize(ID3D11Device* device, const ModelLayer* _model)
 {
 	bool bresult;
-	bresult = this->InitializeBuffers(device);
+	bresult = this->InitializeBuffers(device,_model);
 	if (!bresult)
 	{
 		return false;
@@ -24,27 +25,38 @@ int GfxModel::GetIndexCount()
 {
 	return this->m_indexCount;
 }
-
-bool GfxModel::InitializeBuffers(ID3D11Device* device)
+int GfxModel::GetVertexCount()
 {
-	GfxVertex			vertices[3];
-	unsigned long		indices[3] = {0,1,2};
-	D3D11_BUFFER_DESC	vertexBufferDesc, indexBufferDesc;
-	HRESULT				result;
-	D3D11_SUBRESOURCE_DATA vertexData, indexData;
+	return this->m_vertexCount;
 
-	this->m_indexCount = this->m_vertexCount = 3;
+}
+
+bool GfxModel::InitializeBuffers(ID3D11Device* device, const ModelLayer* _model)
+{
+	std::vector<ModelVertex> modelVertices;
+	_model->GetVertices(modelVertices);
+
+	std::unique_ptr<GfxVertex[]>			vertices;
+	std::unique_ptr<unsigned long[]>		indices;
+	D3D11_BUFFER_DESC					vertexBufferDesc, indexBufferDesc;
+	HRESULT								result;
+	D3D11_SUBRESOURCE_DATA				vertexData, indexData;
 
 
-	vertices[0].position = { 0.0f, 0.5f, 0.0f };  // Bottom left.
-	vertices[0].color = { 1.0f, 0.0f, 0.0f, 1.0f };
+	this->m_indexCount = this->m_vertexCount = modelVertices.size();
 
-	vertices[1].position = { 0.45f, -0.5, 0.0f };  // Top middle.
-	vertices[1].color = { 1.0f, 0.0f, 0.0f, 1.0f };
+	vertices = std::make_unique<GfxVertex[]>(this->m_indexCount);
+	indices = std::make_unique<unsigned long[]>(this->m_vertexCount);
 
-	vertices[2].position = { -0.45f, -0.5f, 0.0f };  // Bottom right.
-	vertices[2].color = {1.0f, 0.0f, 0.0f, 1.0f };
+	int i = 0;
+	for (const ModelVertex& v : modelVertices)
+	{
+		vertices[i].color = { 1.0f, 0.0f, 0.0f, 1.0f };
+		vertices[i].position = { v.position.x / 100,v.position.y / 100,v.position.z / 100 };
+		indices[i] = i;
+		i++;
 
+	}
 
 
 	// Set up the description of the static vertex buffer.
@@ -57,7 +69,7 @@ bool GfxModel::InitializeBuffers(ID3D11Device* device)
 	vertexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the vertex data.
-	vertexData.pSysMem = vertices;
+	vertexData.pSysMem = vertices.get();
 	vertexData.SysMemPitch = 0;
 	vertexData.SysMemSlicePitch = 0;
 
@@ -79,7 +91,7 @@ bool GfxModel::InitializeBuffers(ID3D11Device* device)
 	indexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the index data.
-	indexData.pSysMem = indices;
+	indexData.pSysMem = indices.get();
 	indexData.SysMemPitch = 0;
 	indexData.SysMemSlicePitch = 0;
 

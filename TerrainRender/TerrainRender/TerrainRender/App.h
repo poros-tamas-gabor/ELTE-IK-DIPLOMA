@@ -9,15 +9,17 @@
 #include "Input/Mouse.h"
 #include "Input/Input.h"
 #include "Timer.h"
-
+#include "Model/ModelLayer.h"
+#include <memory>
 class App
 {
 private:
-	RenderWindow	_renderWindow;
+	RenderWindow					_renderWindow;
 					
-	Graphics		_graphics;
-	Input			_input;
-	Timer			_timer;
+	Input							_input;
+	Timer							_timer;
+	std::unique_ptr<Graphics>		_graphics;
+	std::shared_ptr<ModelLayer>		_model;
 
 	void Update();
 	void RenderFrame();

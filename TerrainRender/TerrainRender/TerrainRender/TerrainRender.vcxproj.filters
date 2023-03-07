@@ -25,6 +25,18 @@
     <Filter Include="Source Files\Input">
       <UniqueIdentifier>{54d083b0-9498-401b-948e-097815181db3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Model">
+      <UniqueIdentifier>{128fca8d-1848-4dad-9051-5978809cf649}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Model\Persistence">
+      <UniqueIdentifier>{ffa24334-0288-4db3-b348-ca1300537ccc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Model">
+      <UniqueIdentifier>{de305f9b-854f-4840-bbc9-87a3dff5ccd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Model\Persistence">
+      <UniqueIdentifier>{ca528639-bf03-4b62-9db2-1db280a28524}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -77,6 +89,12 @@
     </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Persistence\DataAccess.cpp">
+      <Filter>Source Files\Model\Persistence</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelLayer.cpp">
+      <Filter>Source Files\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -131,6 +149,15 @@
     <ClInclude Include="Timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Model\Persistence\ModelVertex.h">
+      <Filter>Header Files\Model\Persistence</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Persistence\DataAccess.h">
+      <Filter>Header Files\Model\Persistence</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelLayer.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Graphics\vertexShader.hlsl">
@@ -139,5 +166,10 @@
     <FxCompile Include="Graphics\pixelShader.hlsl">
       <Filter>Source Files\Graphics</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\File\Sphericon.stl">
+      <Filter>Source Files\Graphics</Filter>
+    </None>
   </ItemGroup>
 </Project>

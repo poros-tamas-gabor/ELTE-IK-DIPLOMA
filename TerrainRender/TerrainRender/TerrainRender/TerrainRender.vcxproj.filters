@@ -96,6 +96,12 @@
     <ClCompile Include="Model\ModelLayer.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\GfxLight.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Persistence\ModelLight.cpp">
+      <Filter>Source Files\Model\Persistence</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -157,6 +163,18 @@
     </ClInclude>
     <ClInclude Include="Model\ModelLayer.h">
       <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\IObserver.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Persistence\ModelTerrain.h">
+      <Filter>Header Files\Model\Persistence</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GfxLight.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Persistence\ModelLight.h">
+      <Filter>Header Files\Model\Persistence</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

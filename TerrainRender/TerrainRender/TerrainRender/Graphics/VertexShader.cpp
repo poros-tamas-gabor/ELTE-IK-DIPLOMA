@@ -39,6 +39,11 @@ void VertexShader::ShutdownShader()
 		this->m_matrixBuffer->Release();
 		this->m_matrixBuffer = nullptr;
 	}
+	if (this->m_lightBuffer)
+	{
+		this->m_lightBuffer->Release();
+		this->m_lightBuffer = nullptr;
+	}
 }
 
 bool VertexShader::InitializeShader(ID3D11Device* device, HWND hwnd, const WCHAR* vsFilename)
@@ -46,9 +51,10 @@ bool VertexShader::InitializeShader(ID3D11Device* device, HWND hwnd, const WCHAR
 	HRESULT						result;
 	ID3D10Blob*					errorMessage = nullptr;
 	ID3D10Blob*					vertexShaderBuffer = nullptr;
-	D3D11_INPUT_ELEMENT_DESC	polygonLayout[2];
+	D3D11_INPUT_ELEMENT_DESC	polygonLayout[3];
 	unsigned int				numElements;
 	D3D11_BUFFER_DESC			matrixBufferDesc;
+	D3D11_BUFFER_DESC			lightBufferDesc;
 
 	UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
@@ -89,21 +95,21 @@ bool VertexShader::InitializeShader(ID3D11Device* device, HWND hwnd, const WCHAR
 	polygonLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	polygonLayout[0].InstanceDataStepRate = 0;
 
-	//polygonLayout[1].SemanticName = "NORMAL";
-	//polygonLayout[1].SemanticIndex = 0;
-	//polygonLayout[1].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	//polygonLayout[1].InputSlot = 0;
-	//polygonLayout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-	//polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	//polygonLayout[1].InstanceDataStepRate = 0;
-
-	polygonLayout[1].SemanticName = "COLOR";
+	polygonLayout[1].SemanticName = "NORMAL";
 	polygonLayout[1].SemanticIndex = 0;
-	polygonLayout[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	polygonLayout[1].Format = DXGI_FORMAT_R32G32B32_FLOAT;
 	polygonLayout[1].InputSlot = 0;
 	polygonLayout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 	polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	polygonLayout[1].InstanceDataStepRate = 0;
+
+	polygonLayout[2].SemanticName = "COLOR";
+	polygonLayout[2].SemanticIndex = 0;
+	polygonLayout[2].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	polygonLayout[2].InputSlot = 0;
+	polygonLayout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	polygonLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	polygonLayout[2].InstanceDataStepRate = 0;
 
 	numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
@@ -135,6 +141,23 @@ bool VertexShader::InitializeShader(ID3D11Device* device, HWND hwnd, const WCHAR
 		return false;
 	}
 
+	lightBufferDesc = { 0 };
+	// Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
+	lightBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	lightBufferDesc.ByteWidth = sizeof(VertexShader::LightBuffer);
+	lightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	lightBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	lightBufferDesc.MiscFlags = 0;
+	lightBufferDesc.StructureByteStride = 0;
+
+	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
+	result = device->CreateBuffer(&lightBufferDesc, NULL, &m_lightBuffer);
+	if (FAILED(result))
+	{
+		ErrorHandler::log(result, L"Failed to Create constant buffer");
+		return false;
+	}
+
 	return true;
 
 }
@@ -145,10 +168,10 @@ void VertexShader::RenderShader(ID3D11DeviceContext* deviceContext)
 
 	deviceContext->VSSetShader(this->m_vertexShader, NULL, 0);
 }
-bool VertexShader::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat)
+bool VertexShader::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 diffuseColor, DirectX::XMFLOAT4	lightDirection)
 {
 	bool bresult;
-	bresult = this->SetShadeParameters(deviceContext, worldMat, viewMat, projectionMat);
+	bresult = this->SetShadeParameters(deviceContext, worldMat, viewMat, projectionMat, diffuseColor, lightDirection);
 	if(!bresult)
 	{
 		return false;
@@ -157,11 +180,13 @@ bool VertexShader::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX 
 	return true;
 }
 
-bool VertexShader::SetShadeParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat)
+bool VertexShader::SetShadeParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 diffuseColor, DirectX::XMFLOAT4	lightDirection)
 {
 	HRESULT						result;
 	D3D11_MAPPED_SUBRESOURCE	mappedResource;
-	MatrixBuffer*				dataPtr;
+	MatrixBuffer*				matrixDataPtr;
+	LightBuffer*				lightDataPtr;
+
 	unsigned int				bufferNumber;
 
 	// Transpose the matrices to prepare them for the shader.
@@ -178,12 +203,12 @@ bool VertexShader::SetShadeParameters(ID3D11DeviceContext* deviceContext, Direct
 	}
 
 	// Get a pointer to the data in the constant buffer.
-	dataPtr = static_cast<MatrixBuffer*> (mappedResource.pData);
+	matrixDataPtr = static_cast<MatrixBuffer*> (mappedResource.pData);
 
 	// Copy the data into the constant buffer.
-	dataPtr->worldMat = worldMat;
-	dataPtr->viewMat = viewMat;
-	dataPtr->projectionMat = projectionMat;
+	matrixDataPtr->worldMat = worldMat;
+	matrixDataPtr->viewMat = viewMat;
+	matrixDataPtr->projectionMat = projectionMat;
 
 	// Unlock the constant buffer.
 	deviceContext->Unmap(m_matrixBuffer, 0);
@@ -193,6 +218,28 @@ bool VertexShader::SetShadeParameters(ID3D11DeviceContext* deviceContext, Direct
 
 	// Finanly set the constant buffer in the vertex shader with the updated values.
 	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
+
+
+	mappedResource = { 0 };
+	// Lock the constant buffer so it can be written to.
+	result = deviceContext->Map(m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(result))
+	{
+		ErrorHandler::log(result, L"Failed to lock the constant buffer");
+		return false;
+	}
+
+	lightDataPtr = static_cast<LightBuffer*>(mappedResource.pData);
+
+	lightDataPtr->diffuseColor = diffuseColor;
+	lightDataPtr->lightDirection = lightDirection;
+
+	deviceContext->Unmap(this->m_lightBuffer, 0);
+
+	bufferNumber = 1;
+	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_lightBuffer);
+
+
 
 	return true;
 }

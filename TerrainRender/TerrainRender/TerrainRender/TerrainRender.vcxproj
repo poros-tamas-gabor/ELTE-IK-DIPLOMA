@@ -147,6 +147,7 @@
     <ClCompile Include="ErrorHandler.cpp" />
     <ClCompile Include="Graphics\D3DManager.cpp" />
     <ClCompile Include="Graphics\GfxCamera.cpp" />
+    <ClCompile Include="Graphics\GfxLight.cpp" />
     <ClCompile Include="Graphics\GfxModel.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
     <ClCompile Include="Graphics\PixelShader.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model\ModelLayer.cpp" />
     <ClCompile Include="Model\Persistence\DataAccess.cpp" />
+    <ClCompile Include="Model\Persistence\ModelLight.cpp" />
     <ClCompile Include="RenderWindow.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
@@ -168,9 +170,11 @@
     <ClInclude Include="ErrorHandler.h" />
     <ClInclude Include="Graphics\D3DManager.h" />
     <ClInclude Include="Graphics\GfxCamera.h" />
+    <ClInclude Include="Graphics\GfxLight.h" />
     <ClInclude Include="Graphics\GfxModel.h" />
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\GfxVertex.h" />
+    <ClInclude Include="Graphics\IObserver.h" />
     <ClInclude Include="Graphics\PixelShader.h" />
     <ClInclude Include="Graphics\Position.h" />
     <ClInclude Include="Graphics\VertexShader.h" />
@@ -180,6 +184,8 @@
     <ClInclude Include="Input\Mouse.h" />
     <ClInclude Include="Input\MouseEvent.h" />
     <ClInclude Include="Model\ModelLayer.h" />
+    <ClInclude Include="Model\Persistence\ModelLight.h" />
+    <ClInclude Include="Model\Persistence\ModelTerrain.h" />
     <ClInclude Include="Model\Persistence\ModelVertex.h" />
     <ClInclude Include="Model\Persistence\DataAccess.h" />
     <ClInclude Include="RenderWindow.h" />

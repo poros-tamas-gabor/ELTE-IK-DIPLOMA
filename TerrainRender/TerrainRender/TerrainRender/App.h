@@ -10,6 +10,7 @@
 #include "Input/Input.h"
 #include "Timer.h"
 #include "Model/ModelLayer.h"
+#include "Model/Persistence/DataAccess.h"
 #include <memory>
 class App
 {
@@ -18,8 +19,9 @@ private:
 					
 	Input							_input;
 	Timer							_timer;
-	std::unique_ptr<Graphics>		_graphics;
-	std::shared_ptr<ModelLayer>		_model;
+	Graphics*						_graphics;
+	ModelLayer*						_model;
+	IDataAccess*					_dataAccess;
 
 	void Update();
 	void RenderFrame();

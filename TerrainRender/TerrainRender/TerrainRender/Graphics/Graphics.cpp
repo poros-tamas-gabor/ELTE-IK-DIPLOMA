@@ -1,11 +1,13 @@
 #include "Graphics.h"
 
-Graphics::Graphics(std::shared_ptr<ModelLayer>& model) : _model(model) {}
+Graphics::Graphics()  {}
 Graphics::~Graphics() {}
 
 
 void Graphics::Update()
 {
+	//TODO::
+
 
 
 }
@@ -30,8 +32,11 @@ bool Graphics::Render()
 	DirectX::XMMATRIX viewMat;
 	this->_camera.GetViewMatrix(viewMat);
 	this->_camera.GetProjectionMatrix(projectionMat);
+
+	DirectX::XMFLOAT4 color = this->_gfxLight.GetDiffuseColor();
+	DirectX::XMFLOAT4 dir = this->_gfxLight.GetDirection();
 	
-	bresult = this->_vertexShader.Render(this->_d3dmanager.GetDeviceContext(), mat, viewMat , projectionMat);
+	bresult = this->_vertexShader.Render(this->_d3dmanager.GetDeviceContext(), mat, viewMat , projectionMat, color, dir);
 	if (!bresult)
 	{
 		return false;
@@ -47,9 +52,17 @@ bool Graphics::Render()
 
 	return true;
 }
-bool Graphics::Initalize(HWND hwnd, float screenWidth, float screenHeight, float screenNear, float screenDepth, bool fullscreen, bool vsync, float fieldOfView)
+bool Graphics::Initalize(ModelLayer* modelLayer, HWND hwnd, float screenWidth, float screenHeight, float screenNear, float screenDepth, bool fullscreen, bool vsync, float fieldOfView)
 {
 	bool bresult;
+
+	if (modelLayer == nullptr)
+	{
+		return false;
+	}
+	
+	this->_model = modelLayer;
+
 	bresult = this->_d3dmanager.Initalize(hwnd, screenWidth, screenHeight, screenNear, screenDepth, fullscreen, vsync, fieldOfView);
 	if (!bresult)
 	{
@@ -68,11 +81,10 @@ bool Graphics::Initalize(HWND hwnd, float screenWidth, float screenHeight, float
 		return false;
 	}
 
-	if (!bresult)
-	{
-		return false;
-	}
-	bresult = _gfxModel.Initialize(this->_d3dmanager.GetDevice(), this->_model.get());
+	_gfxLight.SetLightParameters(this->_model);
+
+
+	bresult = _gfxModel.Initialize(this->_d3dmanager.GetDevice(), this->_model );
 	if (!bresult)
 	{
 		return false;
@@ -89,6 +101,7 @@ void Graphics::Shutdown()
 	this->_pixelShader.Shutdown();
 	this->_vertexShader.Shutdown();
 	this->_gfxModel.Shutdown();
+	this->_model->Shutdown();
 
 }
 bool Graphics::Frame() 

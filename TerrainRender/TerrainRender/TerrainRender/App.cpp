@@ -15,9 +15,6 @@ App::App()
 		ErrorHandler::log(GetLastError(), L"Failed to register raw input devices.");
 		exit(-1);
 	}
-
-	this->_model = std::make_shared<ModelLayer>();
-	this->_graphics = std::make_unique<Graphics>(this->_model);
 }
 App::~App() {};
 
@@ -28,6 +25,19 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 {
 	bool result;
+
+	this->_model = new ModelLayer;
+	this->_graphics = new Graphics;
+	this->_dataAccess = new TextFileDataAccess;
+
+	result = _model->Initalize(this->_dataAccess);
+	if (!result)
+	{
+		return false;
+	}
+
+	this->_model->Attach(this->_graphics);
+
 	result = _renderWindow.Initialize(this, screenWidth, screenHeight);
 
 	if (!result)
@@ -41,7 +51,7 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 		return false;
 	}
 
-	result = this->_graphics->Initalize(this->_renderWindow.GetHWND(), screenWidth, screenHeight, 1, 100);
+	result = this->_graphics->Initalize(_model, this->_renderWindow.GetHWND(), screenWidth, screenHeight, 1, 100);
 
 	if (!result)
 	{
@@ -172,4 +182,9 @@ void App::Shutdown()
 	// Shutdown the window.
 
 	this->_renderWindow.Shutdown();
+	this->_graphics->Shutdown();
+	this->_model->Shutdown();
+	delete _graphics;
+	delete _model;
+	delete this->_dataAccess;
 }

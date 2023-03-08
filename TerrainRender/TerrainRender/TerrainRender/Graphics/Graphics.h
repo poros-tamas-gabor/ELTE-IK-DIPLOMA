@@ -8,9 +8,11 @@
 #include <DirectXMath.h>
 #include "Position.h"
 #include "../Model/ModelLayer.h"
+#include "GfxLight.h"
+#include "IObserver.h"
 #include <vector>
 #include <memory>
-class Graphics
+class Graphics : public IObserver
 {
 private:
 	D3DManager							_d3dmanager;
@@ -18,19 +20,22 @@ private:
 	PixelShader							_pixelShader;
 	GfxCamera							_camera;
 	GfxModel							_gfxModel;
+	GfxLight							_gfxLight;
 
-	std::shared_ptr<ModelLayer>			_model;
+	ModelLayer*							_model;
+
+
 
 	bool			Render();
 public:
 
-	Graphics(std::shared_ptr<ModelLayer>&);
+	Graphics();
 	Graphics(const Graphics&) = delete;
 	~Graphics();
-	bool Initalize(HWND hwnd, float screenWidth, float screenHeight, float screenNear, float screenDepth, bool fullscreen = false, bool vsync = true, float fieldOfView = (float)( /*D3DX_PI*/ DirectX::XM_PI / 4.0f));
+	bool Initalize(ModelLayer* modelLayer, HWND hwnd, float screenWidth, float screenHeight, float screenNear, float screenDepth, bool fullscreen = false, bool vsync = true, float fieldOfView = (float)( /*D3DX_PI*/ DirectX::XM_PI / 4.0f));
 	void Shutdown();
 	bool Frame();
-	void Update();
+	void Update() override;
 	Position				_position;
 
 

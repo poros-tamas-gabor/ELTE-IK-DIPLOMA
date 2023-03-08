@@ -3,19 +3,33 @@
 
 #include <vector>
 #include "Persistence/ModelVertex.h"
+#include "Persistence/ModelLight.h"
 #include "Persistence/DataAccess.h"
-
+#include <memory>
+#include "../Graphics/IObserver.h"
 
 class ModelLayer
 {
 private:
-	FileDataAccess					_persistence;
-	std::vector<ModelVertex>		_vertices;
+	std::vector<IObserver*>					_observers;
+	ModelLight								_modelLight;
+	IDataAccess*							_persistence;
+	std::vector<ModelVertex>				_vertices;
 
 public:
 	ModelLayer();
+	~ModelLayer();
+
+	bool Attach(IObserver* observer);
+	bool Detach(IObserver* observer);
+	void NotifyObservers(void);
+
+	bool Initalize(IDataAccess* persistence);
 	bool LoadTerrain(const wchar_t* filepath);
-	void GetVertices(std::vector<ModelVertex>& vertices) const;
+	void Shutdown();
+	const std::vector<ModelVertex>& GetVertices( void ) const;
+
+	void GetLight(const ModelLight** modelLight) const;
 };
 #endif // !MODEL_H
 

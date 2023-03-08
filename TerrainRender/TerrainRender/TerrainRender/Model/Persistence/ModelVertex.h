@@ -8,6 +8,15 @@ struct ModelVector3D
 	float y;
 	float z;
 };
+
+struct ModelVector4D
+{
+	float x;
+	float y;
+	float z;
+	float w;
+};
+
 struct
 	ModelVertex
 {

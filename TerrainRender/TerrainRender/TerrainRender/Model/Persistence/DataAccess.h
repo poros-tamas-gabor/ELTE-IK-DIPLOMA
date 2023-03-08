@@ -12,7 +12,7 @@ public:
 	virtual bool LoadTerrain(const wchar_t* filename, std::vector<ModelVertex>& vertices) = 0;
 };
 
-class FileDataAccess : IDataAccess
+class TextFileDataAccess : public IDataAccess
 {
 
 private:
@@ -20,10 +20,10 @@ private:
 
 
 public:
-	FileDataAccess() = default;
-	FileDataAccess(const FileDataAccess&) = delete;
-	FileDataAccess&  operator=(const FileDataAccess&) = delete;
-	~FileDataAccess() = default;
+	TextFileDataAccess() = default;
+	TextFileDataAccess(const TextFileDataAccess&) = delete;
+	TextFileDataAccess&  operator=(const TextFileDataAccess&) = delete;
+	~TextFileDataAccess() = default;
 	bool LoadTerrain(const wchar_t* filename, std::vector<ModelVertex>& vertices) override;
 };
 #endif // ! PERSISTENCE_H

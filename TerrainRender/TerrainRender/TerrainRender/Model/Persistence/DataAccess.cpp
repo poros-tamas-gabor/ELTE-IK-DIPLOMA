@@ -7,7 +7,7 @@
 #include <vector>
 
 
-void FileDataAccess::CreateVertex(ModelVertex& vertex, std::stringstream& sstream, std::vector<ModelVertex>& vertices)
+void TextFileDataAccess::CreateVertex(ModelVertex& vertex, std::stringstream& sstream, std::vector<ModelVertex>& vertices)
 {
 	std::string word;
 	sstream >> word;
@@ -37,7 +37,7 @@ void FileDataAccess::CreateVertex(ModelVertex& vertex, std::stringstream& sstrea
 
 }
 
-bool FileDataAccess::LoadTerrain(const wchar_t* filename, std::vector<ModelVertex>& vertices)
+bool TextFileDataAccess::LoadTerrain(const wchar_t* filename, std::vector<ModelVertex>& vertices)
 {
 	std::ifstream input;
 	std::string line;

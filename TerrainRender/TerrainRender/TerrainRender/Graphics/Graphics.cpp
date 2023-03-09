@@ -33,10 +33,11 @@ bool Graphics::Render()
 	this->_camera.GetViewMatrix(viewMat);
 	this->_camera.GetProjectionMatrix(projectionMat);
 
-	DirectX::XMFLOAT4 color = this->_gfxLight.GetDiffuseColor();
+	DirectX::XMFLOAT4 ambientColor = this->_gfxLight.GetAmbientColor();
+	DirectX::XMFLOAT4 diffusecolor = this->_gfxLight.GetDiffuseColor();
 	DirectX::XMFLOAT4 dir = this->_gfxLight.GetDirection();
 	
-	bresult = this->_vertexShader.Render(this->_d3dmanager.GetDeviceContext(), mat, viewMat , projectionMat, color, dir);
+	bresult = this->_vertexShader.Render(this->_d3dmanager.GetDeviceContext(), mat, viewMat , projectionMat, ambientColor, diffusecolor, dir);
 	if (!bresult)
 	{
 		return false;

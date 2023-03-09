@@ -168,10 +168,10 @@ void VertexShader::RenderShader(ID3D11DeviceContext* deviceContext)
 
 	deviceContext->VSSetShader(this->m_vertexShader, NULL, 0);
 }
-bool VertexShader::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 diffuseColor, DirectX::XMFLOAT4	lightDirection)
+bool VertexShader::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4	ambientColor, DirectX::XMFLOAT4 diffuseColor, DirectX::XMFLOAT4	lightDirection)
 {
 	bool bresult;
-	bresult = this->SetShadeParameters(deviceContext, worldMat, viewMat, projectionMat, diffuseColor, lightDirection);
+	bresult = this->SetShadeParameters(deviceContext, worldMat, viewMat, projectionMat,ambientColor, diffuseColor, lightDirection);
 	if(!bresult)
 	{
 		return false;
@@ -180,7 +180,7 @@ bool VertexShader::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX 
 	return true;
 }
 
-bool VertexShader::SetShadeParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 diffuseColor, DirectX::XMFLOAT4	lightDirection)
+bool VertexShader::SetShadeParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4	ambientColor, DirectX::XMFLOAT4 diffuseColor, DirectX::XMFLOAT4	lightDirection)
 {
 	HRESULT						result;
 	D3D11_MAPPED_SUBRESOURCE	mappedResource;
@@ -231,6 +231,7 @@ bool VertexShader::SetShadeParameters(ID3D11DeviceContext* deviceContext, Direct
 
 	lightDataPtr = static_cast<LightBuffer*>(mappedResource.pData);
 
+	lightDataPtr->ambientColor = ambientColor;
 	lightDataPtr->diffuseColor = diffuseColor;
 	lightDataPtr->lightDirection = lightDirection;
 

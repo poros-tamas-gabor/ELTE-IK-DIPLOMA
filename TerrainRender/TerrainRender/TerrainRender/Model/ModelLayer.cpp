@@ -12,6 +12,7 @@ bool ModelLayer::Initalize(IDataAccess* persistence)
 {
 	_persistence = persistence;
 
+	_modelLight.SetAmbientColor(0.4f, 0.4f, 0.4f, 1.0f);
 	_modelLight.SetDiffuseColor(0.4f, 0.4f, 0.4f, 1.0f);
 	_modelLight.SetDirection(-1.0f, -1.0f, -1.0f, 0.0f);
 

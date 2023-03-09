@@ -2,14 +2,14 @@ cbuffer MatrixBuffer : register(b0)
 {
     float4x4 worldMat;
     float4x4 viewMat;
-    float4x4 projectioMat;
+    float4x4 projectionMat;
 };
 
 cbuffer LightBuffer : register(b1)
 {
+    float4  ambientColor;
     float4  diffuseColor;
     float4  lightDirection;
-    float   padding;
 };
 
 
@@ -38,7 +38,7 @@ VS_OUTPUT main(VS_INPUT input)
     
     output.position = mul(output.position, worldMat);
     output.position = mul(output.position, viewMat);
-    output.position = mul(output.position, projectioMat);
+    output.position = mul(output.position, projectionMat);
 
 
     float4 lightDir = lightDirection;
@@ -48,7 +48,10 @@ VS_OUTPUT main(VS_INPUT input)
     output.normal = normalize(output.normal);
 
     float diffuseBrightness = saturate(dot(output.normal, lightDir));
-    output.color += diffuseBrightness * diffuseColor;
+    output.color *= saturate(diffuseBrightness * diffuseColor);
+
+    float4 ambient = saturate(input.color * ambientColor);
+    output.color += ambient;
 
 
     return output;

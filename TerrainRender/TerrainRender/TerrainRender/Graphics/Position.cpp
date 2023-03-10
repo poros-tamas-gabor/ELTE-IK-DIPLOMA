@@ -43,6 +43,18 @@ void Position::MoveRight(float dt)
 	this->MoveTemplate(this->DEFAULT_RIGHT, this->_current_right, dt);
 }
 
+void Position::MoveUp(float dt)
+{
+	this->_camera->GetRotationMatrix(this->_rotationMatrix);
+	this->MoveTemplate(this->DEFAULT_UP, this->_current_up, dt);
+}
+
+void Position::MoveDown(float dt)
+{
+	this->_camera->GetRotationMatrix(this->_rotationMatrix);
+	this->MoveTemplate(this->DEFAULT_DOWN, this->_current_down, dt);
+}
+
 void Position::SetCamera(GfxCamera* camera)
 {
 	this->_camera = camera;

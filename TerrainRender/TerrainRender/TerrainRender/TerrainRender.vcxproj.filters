@@ -37,6 +37,12 @@
     <Filter Include="Source Files\Model\Persistence">
       <UniqueIdentifier>{ca528639-bf03-4b62-9db2-1db280a28524}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Controller">
+      <UniqueIdentifier>{2e1d2fa7-9c9c-4af9-ac5e-436be8d10859}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Controller">
+      <UniqueIdentifier>{aac79875-89ea-4904-be0b-f3a6bb2ab3ed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -69,9 +75,6 @@
     <ClCompile Include="Input\Mouse.cpp">
       <Filter>Source Files\Input</Filter>
     </ClCompile>
-    <ClCompile Include="Input\Input.cpp">
-      <Filter>Source Files\Input</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\VertexShader.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
@@ -102,6 +105,9 @@
     <ClCompile Include="Model\ModelLight.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
+    <ClCompile Include="Controller\Controller3DExplore.cpp">
+      <Filter>Source Files\Controller</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -129,9 +135,6 @@
       <Filter>Header Files\Input</Filter>
     </ClInclude>
     <ClInclude Include="Input\Mouse.h">
-      <Filter>Header Files\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Input\Input.h">
       <Filter>Header Files\Input</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\GfxVertex.h">
@@ -175,6 +178,9 @@
     </ClInclude>
     <ClInclude Include="Model\ModelLight.h">
       <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\Controllers.h">
+      <Filter>Header Files\Controller</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

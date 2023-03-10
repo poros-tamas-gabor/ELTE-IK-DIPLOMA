@@ -15,9 +15,19 @@ void Controller3DExplore::Control(float dt, Graphics* graphics)
 	while (!Mouse::GetInstance()->EventBufferIsEmpty())
 	{
 		MouseEvent e = Mouse::GetInstance()->ReadEvent();
+
 		ControlMouse(e, graphics);
+		
 	}
 
+	if (Keyboard::GetInstance()->KeyIsPressed(VK_SPACE))
+	{
+		graphics->_position.MoveUp(dt);
+	}
+	if (Keyboard::GetInstance()->KeyIsPressed('C'))
+	{
+		graphics->_position.MoveDown(dt);
+	}
 
 	if (Keyboard::GetInstance()->KeyIsPressed('W'))
 	{
@@ -47,14 +57,20 @@ void Controller3DExplore::ControlMouse(const MouseEvent& e, Graphics* graphics)
 			int yaw = e.GetPosX() - prev.GetPosX();
 			int pitch = e.GetPosY() - prev.GetPosY();
 
-			graphics->_position.RotatePitchYaw((float)pitch, (float)yaw);
+			if (Mouse::GetInstance()->IsLeftDown())
+			{
+				graphics->_position.RotatePitchYaw((float)pitch, (float)yaw);
+			}
 
 		}
 		prev = e;
 	}
 	else if (MouseEvent::Type::RAW_MOVE_RELATIVE == e.GetType())
 	{
-		graphics->_position.RotatePitchYaw((float)e.GetPosY(), (float)e.GetPosX());
+		if (Mouse::GetInstance()->IsLeftDown())
+		{
+			graphics->_position.RotatePitchYaw((float)e.GetPosY(), (float)e.GetPosX());
+		}
 	}
 }
 

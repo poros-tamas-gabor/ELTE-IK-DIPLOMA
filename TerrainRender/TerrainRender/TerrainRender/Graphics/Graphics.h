@@ -12,6 +12,8 @@
 #include "IObserver.h"
 #include <vector>
 #include <memory>
+
+class IController;
 class Graphics : public IObserver
 {
 private:
@@ -23,6 +25,7 @@ private:
 	GfxLight							_gfxLight;
 
 	ModelLayer*							_model;
+	IController* _controller;
 
 
 
@@ -36,6 +39,7 @@ public:
 	void Shutdown();
 	bool Frame();
 	void Update() override;
+	void doControl(float dt);
 	Position				_position;
 
 

@@ -1,5 +1,5 @@
 #include "Graphics.h"
-
+#include "../Controller/Controllers.h"
 Graphics::Graphics()  {}
 Graphics::~Graphics() {}
 
@@ -10,6 +10,11 @@ void Graphics::Update()
 
 
 
+}
+
+void Graphics::doControl(float dt)
+{
+	this->_controller->Control(dt, this);
 }
 
 bool Graphics::Render() 
@@ -63,6 +68,11 @@ bool Graphics::Initalize(ModelLayer* modelLayer, HWND hwnd, float screenWidth, f
 	}
 	
 	this->_model = modelLayer;
+	this->_controller = new Controller3DExplore;
+	if (this->_controller == nullptr)
+	{
+		return false;
+	}
 
 	bresult = this->_d3dmanager.Initalize(hwnd, screenWidth, screenHeight, screenNear, screenDepth, fullscreen, vsync, fieldOfView);
 	if (!bresult)
@@ -103,6 +113,12 @@ void Graphics::Shutdown()
 	this->_vertexShader.Shutdown();
 	this->_gfxModel.Shutdown();
 	this->_model->Shutdown();
+
+	if (this->_controller)
+	{
+		delete this->_controller;
+		this->_controller = nullptr;
+	}
 
 }
 bool Graphics::Frame() 

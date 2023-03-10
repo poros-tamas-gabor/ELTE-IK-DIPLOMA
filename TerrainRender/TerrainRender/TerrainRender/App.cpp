@@ -211,6 +211,7 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 		return false;
 	}
 
+
 	result = this->_graphics->Initalize(_model, this->_renderWindow.GetHWND(), (float)screenWidth, (float)screenHeight, 1, 100);
 
 	if (!result)
@@ -231,99 +232,10 @@ void App::Update()
 {
 	float dt = (float)this->_timer.GetMilisecondsElapsed();
 	this->_timer.Restart();
-	while (!Keyboard::GetInstance()->KeyBufferIsEmpty())
-	{
-		KeyboardEvent e = Keyboard::GetInstance()->ReadKey();
-		//this->ControlKeyboard(e, dt);
-
-	}
-	while (!Keyboard::GetInstance()->CharBufferIsEmpty())
-	{
-		unsigned char c = Keyboard::GetInstance()->ReadChar();
-	}
-
-	while (! Mouse::GetInstance()->EventBufferIsEmpty())
-	{
-		MouseEvent e = Mouse::GetInstance() -> ReadEvent();
-		ControlMouse(e);
-	}
-
-
-	if (Keyboard::GetInstance()->KeyIsPressed('W'))
-	{
-		this->_graphics->_position.MoveForward(dt);
-	}
-	if (Keyboard::GetInstance()->KeyIsPressed('S'))
-	{
-		this->_graphics->_position.MoveBack(dt);
-	}
-	if (Keyboard::GetInstance()->KeyIsPressed('A'))
-	{
-		this->_graphics->_position.MoveLeft(dt);
-	}
-	if (Keyboard::GetInstance()->KeyIsPressed('D'))
-	{
-		this->_graphics->_position.MoveRight(dt);
-	}
-
-
-
-
+	this->_graphics->doControl(dt);
 }
 
-void App::ControlMouse(const MouseEvent& e)
-{
-	if (MouseEvent::Type::RAW_MOVE_ABSOLUTE == e.GetType())
-	{
-		static MouseEvent prev;
-		if (prev.IsValid())
-		{
-			int yaw = e.GetPosX() - prev.GetPosX();
-			int pitch = e.GetPosY() - prev.GetPosY();
 
-			this->_graphics->_position.RotatePitchYaw((float)pitch,(float) yaw);
-
-		}
-		prev = e;
-	}
-	else if (MouseEvent::Type::RAW_MOVE_RELATIVE == e.GetType())
-	{
-		this->_graphics->_position.RotatePitchYaw((float)e.GetPosY(), (float)e.GetPosX());
-	}
-}
-
-void App::ControlKeyboard(const KeyboardEvent& e, float dt)
-{
-	if (e.IsPress())
-	{
-		switch (e.GetKeyCode())
-		{
-		case 'W':
-		{
-			this->_graphics->_position.MoveForward(dt);
-			break;
-		}
-		case 'A':
-		{
-			this->_graphics->_position.MoveLeft(dt);
-			break;
-		}
-		case 'S':
-		{
-			this->_graphics->_position.MoveBack(dt);
-			break;
-		}
-		case 'D':
-		{
-			this->_graphics->_position.MoveRight(dt);
-			break;
-		}
-		default:
-			break;
-		}
-
-	}
-}
 void App::RenderFrame()
 {
 	this->_graphics->Frame();

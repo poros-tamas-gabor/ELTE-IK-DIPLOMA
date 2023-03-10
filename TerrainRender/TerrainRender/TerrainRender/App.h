@@ -7,26 +7,25 @@
 #include "Graphics/Graphics.h"
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
-#include "Input/Input.h"
 #include "Timer.h"
 #include "Model/ModelLayer.h"
 #include "Model/Persistence/DataAccess.h"
 #include <memory>
+#include "Controller/Controllers.h"
 class App
 {
 private:
-	RenderWindow					_renderWindow;
+	RenderWindow	_renderWindow;
 					
-	Timer							_timer;
-	Graphics*						_graphics;
-	ModelLayer*						_model;
-	IDataAccess*					_dataAccess;
+	Timer			_timer;
+	Graphics*		_graphics;
+	ModelLayer*		_model;
+	IDataAccess*	_dataAccess;
+	IController*	_controller;
 
 	void Update();
 	void RenderFrame();
 	bool ProcessMessages();
-	void ControlKeyboard(const KeyboardEvent& e, float dt);
-	void ControlMouse(const MouseEvent& e);
 
 public:
 	App();

@@ -160,8 +160,8 @@
     <ClCompile Include="Input\MouseEvent.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model\ModelLayer.cpp" />
+    <ClCompile Include="Model\ModelLight.cpp" />
     <ClCompile Include="Model\Persistence\DataAccess.cpp" />
-    <ClCompile Include="Model\Persistence\ModelLight.cpp" />
     <ClCompile Include="RenderWindow.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
@@ -184,9 +184,9 @@
     <ClInclude Include="Input\Mouse.h" />
     <ClInclude Include="Input\MouseEvent.h" />
     <ClInclude Include="Model\ModelLayer.h" />
-    <ClInclude Include="Model\Persistence\ModelLight.h" />
+    <ClInclude Include="Model\ModelLight.h" />
     <ClInclude Include="Model\Persistence\ModelTerrain.h" />
-    <ClInclude Include="Model\Persistence\ModelVertex.h" />
+    <ClInclude Include="Model\Persistence\ModelStructs.h" />
     <ClInclude Include="Model\Persistence\DataAccess.h" />
     <ClInclude Include="RenderWindow.h" />
     <ClInclude Include="Timer.h" />

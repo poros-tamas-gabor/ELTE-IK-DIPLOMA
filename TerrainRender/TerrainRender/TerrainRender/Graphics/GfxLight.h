@@ -8,9 +8,9 @@ class GfxLight
 {
 
 private:
-	DirectX::XMFLOAT4 _ambientColor;
-	DirectX::XMFLOAT4 _diffuseColor;
-	DirectX::XMFLOAT4 _direction;
+	DirectX::XMFLOAT4 _ambientColor = {0.2f, 0.2f, 0.2f, 1.0f};
+	DirectX::XMFLOAT4 _diffuseColor = {0.4f, 0.4f, 0.4f, 1.0f};
+	DirectX::XMFLOAT4 _inverseDirection;
 
 public:
 	GfxLight() = default;
@@ -28,7 +28,8 @@ public:
 	void SetAmbientColor(const DirectX::XMFLOAT4& ambientColor);
 	void SetAmbientColor(const ModelVector4D& ambientColor);
 
-	void SetLightParameters(const ModelLayer* modelLayer);
+	void UpdateLightDirection(const ModelLayer* modelLayer);
+	void SetInverseLightDirection(double azimuth, double elevation);
 
 	DirectX::XMFLOAT4 GetDiffuseColor( void ) const;
 	DirectX::XMFLOAT4 GetAmbientColor( void ) const;

@@ -3,7 +3,7 @@
 #include <fstream>
 #include <string>
 #include <windows.h>
-#include "ModelVertex.h"
+#include "ModelStructs.h"
 #include <vector>
 
 

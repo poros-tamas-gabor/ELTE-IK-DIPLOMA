@@ -99,8 +99,8 @@
     <ClCompile Include="Graphics\GfxLight.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Persistence\ModelLight.cpp">
-      <Filter>Source Files\Model\Persistence</Filter>
+    <ClCompile Include="Model\ModelLight.cpp">
+      <Filter>Source Files\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -155,7 +155,7 @@
     <ClInclude Include="Timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Persistence\ModelVertex.h">
+    <ClInclude Include="Model\Persistence\ModelStructs.h">
       <Filter>Header Files\Model\Persistence</Filter>
     </ClInclude>
     <ClInclude Include="Model\Persistence\DataAccess.h">
@@ -173,8 +173,8 @@
     <ClInclude Include="Graphics\GfxLight.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Persistence\ModelLight.h">
-      <Filter>Header Files\Model\Persistence</Filter>
+    <ClInclude Include="Model\ModelLight.h">
+      <Filter>Header Files\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

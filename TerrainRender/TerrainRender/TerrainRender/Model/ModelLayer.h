@@ -2,8 +2,8 @@
 #define MODEL_H
 
 #include <vector>
-#include "Persistence/ModelVertex.h"
-#include "Persistence/ModelLight.h"
+#include "Persistence/ModelStructs.h"
+#include "ModelLight.h"
 #include "Persistence/DataAccess.h"
 #include <memory>
 #include "../Graphics/IObserver.h"

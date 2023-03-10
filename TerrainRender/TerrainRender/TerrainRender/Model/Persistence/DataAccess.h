@@ -1,6 +1,6 @@
 #ifndef PERSISTENCE_H
 #define	PERSISTENCE_H
-#include "ModelVertex.h"
+#include "ModelStructs.h"
 #include <vector>
 #include <sstream>
 

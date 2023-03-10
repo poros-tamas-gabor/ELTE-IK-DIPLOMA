@@ -42,7 +42,7 @@ VS_OUTPUT main(VS_INPUT input)
 
 
     float4 lightDir = lightDirection;
-    lightDir *= -1;
+    //lightDir *= -1;
 
     output.normal = mul(output.normal, worldMat);
     output.normal = normalize(output.normal);

@@ -11,10 +11,10 @@ void GfxLight::SetDiffuseColor(const ModelVector4D& diffuseColor)
 }
 void GfxLight::SetDirection(const ModelVector4D& direction)
 {
-	this->_direction.x = direction.x;
-	this->_direction.y = direction.y;
-	this->_direction.z = direction.z;
-	this->_direction.w = direction.w;
+	this->_inverseDirection.x = direction.x;
+	this->_inverseDirection.y = direction.y;
+	this->_inverseDirection.z = direction.z;
+	this->_inverseDirection.w = direction.w;
 }
 void GfxLight::SetAmbientColor(const ModelVector4D& ambientColor)
 {
@@ -34,11 +34,11 @@ void GfxLight::SetDiffuseColor(const DirectX::XMFLOAT4& diffuseColor)
 }
 void GfxLight::SetDirection(const DirectX::XMFLOAT4& direction)
 {
-	this->_direction = direction;
+	this->_inverseDirection = direction;
 }
 
 
-void GfxLight::SetLightParameters(const ModelLayer* modelLayer)
+void GfxLight::UpdateLightDirection(const ModelLayer* modelLayer)
 {
 	const ModelLight* modelLight = nullptr;
 	modelLayer->GetLight(&modelLight);
@@ -46,15 +46,23 @@ void GfxLight::SetLightParameters(const ModelLayer* modelLayer)
 	{
 		return;
 	}
-	ModelVector4D diffuseColor = modelLight->GetDiffuseColor();
-	ModelVector4D ambientColor = modelLight->GetAmbientColor();
-	ModelVector4D direction = modelLight->GetDirection();
+	double azimuth = modelLight->GetAzimuth();
+	double elevation = modelLight->GetElevation();
 
-	this->SetAmbientColor(ambientColor);
-	this->SetDiffuseColor(diffuseColor);
-	this->SetDirection(direction);
+	this->SetInverseLightDirection(azimuth, elevation);
 }
 
+void GfxLight::SetInverseLightDirection(double azimuth, double elevation)
+{
+	float rotXRad = -elevation;
+	float rotYRad = azimuth;
+	float rotZRad = 0;
+	// Create the rotation matrix from the yaw, pitch, and roll values.
+	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(rotXRad, rotYRad, rotZRad);
+	const DirectX::XMVECTOR defaultZVector = DirectX::XMVectorSet(0.0, 0.0, 1.0, 0.0);
+	DirectX::XMVECTOR inverseLightDirection = DirectX::XMVector4Transform(defaultZVector, rotationMatrix);
+	DirectX::XMStoreFloat4(&this->_inverseDirection, inverseLightDirection);
+}
 
 DirectX::XMFLOAT4 GfxLight::GetAmbientColor(void) const
 {
@@ -66,5 +74,5 @@ DirectX::XMFLOAT4 GfxLight::GetDiffuseColor(void) const
 }
 DirectX::XMFLOAT4 GfxLight::GetDirection(void) const
 {
-	return this->_direction;
+	return this->_inverseDirection;
 }

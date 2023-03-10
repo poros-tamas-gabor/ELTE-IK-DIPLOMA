@@ -82,7 +82,7 @@ bool Graphics::Initalize(ModelLayer* modelLayer, HWND hwnd, float screenWidth, f
 		return false;
 	}
 
-	_gfxLight.SetLightParameters(this->_model);
+	_gfxLight.UpdateLightDirection(this->_model);
 
 
 	bresult = _gfxModel.Initialize(this->_d3dmanager.GetDevice(), this->_model );

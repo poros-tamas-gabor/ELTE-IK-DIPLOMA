@@ -39,9 +39,6 @@ private:
 	void	CalculateCelestialCoordinates(double n, double& alpha, double& delta);
 	double	CalculateLocalHourAngle(double n, int hour, double alpha, double longitude);
 
-
-
-
 };
 
 #endif

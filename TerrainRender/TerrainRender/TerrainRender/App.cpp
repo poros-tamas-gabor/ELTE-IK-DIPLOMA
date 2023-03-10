@@ -45,13 +45,13 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 		return false;
 	}
 
-	result - _model->LoadTerrain(L"C:\\Users\\porostamasgabor\\Documents\\THESIS\\File\\Sphericon.stl");
+	result = _model->LoadTerrain(L"C:\\Users\\porostamasgabor\\Documents\\THESIS\\File\\Sphericon.stl");
 	if (!result)
 	{
 		return false;
 	}
 
-	result = this->_graphics->Initalize(_model, this->_renderWindow.GetHWND(), screenWidth, screenHeight, 1, 100);
+	result = this->_graphics->Initalize(_model, this->_renderWindow.GetHWND(), (float)screenWidth, (float)screenHeight, 1, 100);
 
 	if (!result)
 	{
@@ -69,7 +69,7 @@ bool App::ProcessMessages()
 
 void App::Update()
 {
-	float dt = this->_timer.GetMilisecondsElapsed();
+	float dt = (float)this->_timer.GetMilisecondsElapsed();
 	this->_timer.Restart();
 	while (!this->_input._keyboard.KeyBufferIsEmpty())
 	{

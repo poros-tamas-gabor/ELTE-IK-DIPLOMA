@@ -58,7 +58,7 @@ void ModelLayer::NotifyObservers(void)
 	}
 }
 
-void ModelLayer::GetLight(const ModelLight** modelLight) const
+void ModelLayer::GetpModelLight(const ModelLight** modelLight) const
 {
 	*modelLight = &this->_modelLight;
 }

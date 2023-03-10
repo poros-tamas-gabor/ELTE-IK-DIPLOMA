@@ -41,7 +41,7 @@ void GfxLight::SetDirection(const DirectX::XMFLOAT4& direction)
 void GfxLight::UpdateLightDirection(const ModelLayer* modelLayer)
 {
 	const ModelLight* modelLight = nullptr;
-	modelLayer->GetLight(&modelLight);
+	modelLayer->GetpModelLight(&modelLight);
 	if (modelLight == nullptr)
 	{
 		return;

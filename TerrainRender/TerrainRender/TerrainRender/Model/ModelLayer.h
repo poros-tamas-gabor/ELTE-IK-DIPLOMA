@@ -29,7 +29,7 @@ public:
 	void Shutdown();
 	const std::vector<ModelVertex>& GetVertices( void ) const;
 
-	void GetLight(const ModelLight** modelLight) const;
+	void GetpModelLight(const ModelLight** modelLight) const;
 };
 #endif // !MODEL_H
 

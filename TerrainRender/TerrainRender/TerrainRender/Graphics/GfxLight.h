@@ -10,7 +10,7 @@ class GfxLight
 private:
 	DirectX::XMFLOAT4 _ambientColor = {0.2f, 0.2f, 0.2f, 1.0f};
 	DirectX::XMFLOAT4 _diffuseColor = {0.4f, 0.4f, 0.4f, 1.0f};
-	DirectX::XMFLOAT4 _inverseDirection;
+	DirectX::XMFLOAT4 _inverseDirection = {1.0f, 1.0f, 1.0f, 1.0f};
 
 public:
 	GfxLight() = default;
@@ -19,8 +19,8 @@ public:
 	GfxLight& operator=(const GfxLight&) = delete;
 
 
-	void SetDirection(const DirectX::XMFLOAT4& direction);
-	void SetDirection(const ModelVector4D& diffuseColor);
+	void SetInverseDirection(const DirectX::XMFLOAT4& direction);
+	void SetInverseDirection(const ModelVector4D& diffuseColor);
 	
 	void SetDiffuseColor(const DirectX::XMFLOAT4& diffuseColor);
 	void SetDiffuseColor(const ModelVector4D& diffuseColor);
@@ -33,7 +33,7 @@ public:
 
 	DirectX::XMFLOAT4 GetDiffuseColor( void ) const;
 	DirectX::XMFLOAT4 GetAmbientColor( void ) const;
-	DirectX::XMFLOAT4 GetDirection( void ) const;
+	DirectX::XMFLOAT4 GetInverseDirection( void ) const;
 };
 
 #endif

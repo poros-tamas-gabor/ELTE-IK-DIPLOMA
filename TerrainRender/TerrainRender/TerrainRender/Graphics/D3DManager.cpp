@@ -21,7 +21,7 @@ bool D3DManager::GetAdapterData(float screenWidth, float screenHeight, unsigned 
 	IDXGIFactory* factory;
 	IDXGIAdapter* adapter;
 	IDXGIOutput* adapterOutput;
-	unsigned int numModes;
+	unsigned int numModes = 0;
 	DXGI_MODE_DESC* displayModeList;
 	DXGI_ADAPTER_DESC adapterDesc;
 	unsigned int stringLength;

@@ -158,5 +158,6 @@ void ModelLight::CalculateSunPosition(ModelTime time, double lat, double longitu
 	lha = CalculateLocalHourAngle(n, time.hour, alpha, longitude);
 
 	CalculateAzimuthAndElevation(lat, delta, lha);
+
 }
 

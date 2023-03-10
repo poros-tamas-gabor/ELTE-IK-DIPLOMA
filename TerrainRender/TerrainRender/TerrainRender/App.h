@@ -17,7 +17,6 @@ class App
 private:
 	RenderWindow					_renderWindow;
 					
-	Input							_input;
 	Timer							_timer;
 	Graphics*						_graphics;
 	ModelLayer*						_model;

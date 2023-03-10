@@ -2,9 +2,13 @@
 #define MOUSE_H
 #include <queue>
 #include "MouseEvent.h"
+#include <mutex>
+//Singleton
 class Mouse 
 {
 private:
+	static Mouse* _pinstance;
+	static std::mutex _mutex;
 	std::queue<MouseEvent> _eventBuffer;
 	int x = 0;
 	int y = 0;
@@ -12,8 +16,14 @@ private:
 	bool rightIsDown = false;
 	bool mbuttonDown = false;
 
+private:
+	Mouse() {}
+	~Mouse() {}
 public:
-	Mouse() = default;
+
+	static Mouse* GetInstance(void);
+	static void Shutdown(void);
+
 	Mouse(const Mouse& other) = delete;
 	Mouse& operator= (const Mouse& other) = delete;
 
@@ -39,6 +49,8 @@ public:
 
 	bool EventBufferIsEmpty() const;
 	MouseEvent ReadEvent();
+
+
 
 };
 #endif

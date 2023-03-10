@@ -1,6 +1,8 @@
 #include "App.h"
 #include <windows.h>
 #include "ErrorHandler.h"
+#include "Input/Keyboard.h"
+#include "Input/Mouse.h"
 App::App()
 {
 	//https://learn.microsoft.com/en-us/windows/win32/inputdev/using-raw-input
@@ -20,7 +22,165 @@ App::~App() {};
 
 LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
-	return _input.WindowProc(hwnd, umessage, wparam, lparam);
+	switch (umessage)
+	{
+
+		//Keyboard Messages
+		// clear keystate when window loses focus to prevent input getting "stuck"
+	case WM_KILLFOCUS:
+	{
+		Keyboard::GetInstance()->ClearCharBuffer();
+		Keyboard::GetInstance()->ClearKeyBuffer();
+		return 0;
+	}
+	// Check if a key has been pressed on the keyboard.
+	case WM_KEYDOWN:
+	{
+		unsigned char keycode = static_cast<unsigned char>(wparam);
+
+		// If a key is pressed send it to the input object so it can record that state.
+		if (!(lparam & 0x40000000) || Keyboard::GetInstance()->IsAutoRepeatEnabled())
+		{
+			Keyboard::GetInstance()->OnKeyPressed((keycode));
+		}
+		return 0;
+	}
+
+	// Check if a key has been released on the keyboard.
+	case WM_KEYUP:
+	{
+		unsigned char keycode = static_cast<unsigned char>(wparam);
+
+		// If a key is released then send it to the input object so it can unset the state for that key.
+		Keyboard::GetInstance()->OnKeyReleased((keycode));
+		return 0;
+	}
+	case WM_CHAR:
+	{
+		unsigned char ch = static_cast<unsigned char>(wparam);
+		Keyboard::GetInstance()->OnChar((ch));
+		return 0;
+	}
+
+	//Mouse Messages
+	case WM_MOUSEMOVE:
+	{
+		int x = LOWORD(lparam);
+		int y = HIWORD(lparam);
+		Mouse::GetInstance()->OnMouseMove(x, y);
+		return 0;
+	}
+	case WM_LBUTTONDOWN:
+	{
+		int x = LOWORD(lparam);
+		int y = HIWORD(lparam);
+		Mouse::GetInstance()->OnLeftPressed(x, y);
+		return 0;
+	}
+	case WM_RBUTTONDOWN:
+	{
+		int x = LOWORD(lparam);
+		int y = HIWORD(lparam);
+		Mouse::GetInstance()->OnRightPressed(x, y);
+		return 0;
+	}
+	case WM_MBUTTONDOWN:
+	{
+		int x = LOWORD(lparam);
+		int y = HIWORD(lparam);
+		Mouse::GetInstance()->OnMiddlePressed(x, y);
+		return 0;
+	}
+	case WM_LBUTTONUP:
+	{
+		int x = LOWORD(lparam);
+		int y = HIWORD(lparam);
+		Mouse::GetInstance()->OnLeftReleased(x, y);
+		return 0;
+	}
+	case WM_RBUTTONUP:
+	{
+		int x = LOWORD(lparam);
+		int y = HIWORD(lparam);
+		Mouse::GetInstance()->OnRightReleased(x, y);
+		return 0;
+	}
+	case WM_MBUTTONUP:
+	{
+		int x = LOWORD(lparam);
+		int y = HIWORD(lparam);
+		Mouse::GetInstance()->OnMiddleReleased(x, y);
+		return 0;
+	}
+	case WM_MOUSEWHEEL:
+	{
+		int x = LOWORD(lparam);
+		int y = HIWORD(lparam);
+		if (GET_WHEEL_DELTA_WPARAM(wparam) > 0)
+		{
+			Mouse::GetInstance()->OnWheelUp(x, y);
+		}
+		else if (GET_WHEEL_DELTA_WPARAM(wparam) < 0)
+		{
+			Mouse::GetInstance()->OnWheelDown(x, y);
+		}
+		return 0;
+	}
+	case WM_INPUT:
+	{
+		//https://learn.microsoft.com/en-us/windows/win32/inputdev/using-raw-input
+		UINT dwSize;
+
+		GetRawInputData((HRAWINPUT)lparam, RID_INPUT, NULL, &dwSize, sizeof(RAWINPUTHEADER));
+		if (dwSize > 0)
+		{
+			LPBYTE lpb = new BYTE[dwSize];
+			if (lpb == NULL)
+			{
+				return DefWindowProc(hwnd, umessage, wparam, lparam);
+			}
+
+			if (GetRawInputData((HRAWINPUT)lparam, RID_INPUT, lpb, &dwSize, sizeof(RAWINPUTHEADER)) == dwSize)
+			{
+				RAWINPUT* raw = (RAWINPUT*)lpb;
+				if (raw->header.dwType == RIM_TYPEMOUSE)
+				{
+					if ((raw->data.mouse.usFlags & MOUSE_MOVE_ABSOLUTE) == MOUSE_MOVE_ABSOLUTE)
+					{
+						//Note that if you want your game to support use via remote desktop (typically for testing), 
+						//then you need to deal with emulating relative input from absolute position because in the case of a virtual desktop you never get relative,
+						//only absolute, from WM_INPUT. This is indicated by MOUSE_VIRTUAL_DESKTOP.
+						bool isVirtualDesktop = (raw->data.mouse.usFlags & MOUSE_VIRTUAL_DESKTOP) == MOUSE_VIRTUAL_DESKTOP;
+
+						int width = GetSystemMetrics(isVirtualDesktop ? SM_CXVIRTUALSCREEN : SM_CXSCREEN);
+						int height = GetSystemMetrics(isVirtualDesktop ? SM_CYVIRTUALSCREEN : SM_CYSCREEN);
+
+						int absoluteX = int((raw->data.mouse.lLastX / 65535.0f) * width);
+						int absoluteY = int((raw->data.mouse.lLastY / 65535.0f) * height);
+						Mouse::GetInstance()->OnMouseMoveRawAbsolute(absoluteX, absoluteY);
+					}
+					else if (raw->data.mouse.lLastX != 0 || raw->data.mouse.lLastY != 0)
+					{
+						int relativeX = raw->data.mouse.lLastX;
+						int relativeY = raw->data.mouse.lLastY;
+						Mouse::GetInstance()->OnMouseMoveRawRelative(relativeX, relativeY);
+					}
+				}
+			}
+			else
+			{
+				OutputDebugString(TEXT("GetRawInputData does not return correct size !\n"));
+			}
+
+			delete[] lpb;
+		}
+		return DefWindowProc(hwnd, umessage, wparam, lparam);
+	}
+	default:
+	{
+		return DefWindowProc(hwnd, umessage, wparam, lparam);
+	}
+	}
 }
 bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 {
@@ -71,37 +231,37 @@ void App::Update()
 {
 	float dt = (float)this->_timer.GetMilisecondsElapsed();
 	this->_timer.Restart();
-	while (!this->_input._keyboard.KeyBufferIsEmpty())
+	while (!Keyboard::GetInstance()->KeyBufferIsEmpty())
 	{
-		KeyboardEvent e = this->_input._keyboard.ReadKey();
+		KeyboardEvent e = Keyboard::GetInstance()->ReadKey();
 		//this->ControlKeyboard(e, dt);
 
 	}
-	while (!this->_input._keyboard.CharBufferIsEmpty())
+	while (!Keyboard::GetInstance()->CharBufferIsEmpty())
 	{
-		unsigned char c = this->_input._keyboard.ReadChar();
+		unsigned char c = Keyboard::GetInstance()->ReadChar();
 	}
 
-	while (!this->_input._mouse.EventBufferIsEmpty())
+	while (! Mouse::GetInstance()->EventBufferIsEmpty())
 	{
-		MouseEvent e = this->_input._mouse.ReadEvent();
+		MouseEvent e = Mouse::GetInstance() -> ReadEvent();
 		ControlMouse(e);
 	}
 
 
-	if (this->_input._keyboard.KeyIsPressed('W'))
+	if (Keyboard::GetInstance()->KeyIsPressed('W'))
 	{
 		this->_graphics->_position.MoveForward(dt);
 	}
-	if (this->_input._keyboard.KeyIsPressed('S'))
+	if (Keyboard::GetInstance()->KeyIsPressed('S'))
 	{
 		this->_graphics->_position.MoveBack(dt);
 	}
-	if (this->_input._keyboard.KeyIsPressed('A'))
+	if (Keyboard::GetInstance()->KeyIsPressed('A'))
 	{
 		this->_graphics->_position.MoveLeft(dt);
 	}
-	if (this->_input._keyboard.KeyIsPressed('D'))
+	if (Keyboard::GetInstance()->KeyIsPressed('D'))
 	{
 		this->_graphics->_position.MoveRight(dt);
 	}
@@ -184,6 +344,8 @@ void App::Shutdown()
 	this->_renderWindow.Shutdown();
 	this->_graphics->Shutdown();
 	this->_model->Shutdown();
+	Keyboard::Shutdown();
+	Mouse::Shutdown();
 	delete _graphics;
 	delete _model;
 	delete this->_dataAccess;

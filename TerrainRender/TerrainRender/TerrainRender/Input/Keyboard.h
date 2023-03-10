@@ -2,18 +2,27 @@
 #define KEYBOARD_H
 
 #include "KeyboardEvent.h"
+#include <mutex>
 #include <queue>
 class Keyboard
 {
 private:
-
+	static Keyboard* _pinstance;
+	static std::mutex _mutex;
 	std::queue<KeyboardEvent> _keyBuffer;
 	std::queue<unsigned char> _charBuffer;
 	bool _autoRepeat = true;
 	bool _keyStates[256];
 
-public:
+private:
 	Keyboard();
+	~Keyboard() {}
+
+public:
+
+	static Keyboard* GetInstance(void);
+	static void Shutdown(void);
+
 	Keyboard(const Keyboard& other) = delete;
 	Keyboard& operator= (const Keyboard& other) = delete;
 

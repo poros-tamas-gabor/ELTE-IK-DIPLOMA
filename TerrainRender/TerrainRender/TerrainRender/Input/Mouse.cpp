@@ -1,5 +1,30 @@
 #include "Mouse.h"
 
+
+Mouse* Mouse::_pinstance{ nullptr };
+std::mutex Mouse::_mutex;
+
+Mouse* Mouse::GetInstance(void)
+{
+	std::lock_guard<std::mutex> lock(_mutex);
+	if (_pinstance == nullptr)
+	{
+		_pinstance = new Mouse;
+	}
+	return _pinstance;
+}
+
+void Mouse::Shutdown(void)
+{
+	std::lock_guard<std::mutex> lock(_mutex);
+	if (_pinstance != nullptr)
+	{
+		delete _pinstance;
+		_pinstance = nullptr;
+	}
+}
+
+
 void Mouse::OnLeftPressed(int x, int y)
 {
 	this->leftIsDown = true;

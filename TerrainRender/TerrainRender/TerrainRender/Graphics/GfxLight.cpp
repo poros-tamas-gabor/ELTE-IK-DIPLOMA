@@ -9,7 +9,7 @@ void GfxLight::SetDiffuseColor(const ModelVector4D& diffuseColor)
 	this->_diffuseColor.z = diffuseColor.z;
 	this->_diffuseColor.w = diffuseColor.w;
 }
-void GfxLight::SetDirection(const ModelVector4D& direction)
+void GfxLight::SetInverseDirection(const ModelVector4D& direction)
 {
 	this->_inverseDirection.x = direction.x;
 	this->_inverseDirection.y = direction.y;
@@ -32,7 +32,7 @@ void GfxLight::SetDiffuseColor(const DirectX::XMFLOAT4& diffuseColor)
 {
 	this->_diffuseColor = diffuseColor;
 }
-void GfxLight::SetDirection(const DirectX::XMFLOAT4& direction)
+void GfxLight::SetInverseDirection(const DirectX::XMFLOAT4& direction)
 {
 	this->_inverseDirection = direction;
 }
@@ -72,7 +72,7 @@ DirectX::XMFLOAT4 GfxLight::GetDiffuseColor(void) const
 {
 	return this->_diffuseColor;
 }
-DirectX::XMFLOAT4 GfxLight::GetDirection(void) const
+DirectX::XMFLOAT4 GfxLight::GetInverseDirection(void) const
 {
 	return this->_inverseDirection;
 }

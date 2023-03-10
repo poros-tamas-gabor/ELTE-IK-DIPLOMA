@@ -35,7 +35,7 @@ bool Graphics::Render()
 
 	DirectX::XMFLOAT4 ambientColor = this->_gfxLight.GetAmbientColor();
 	DirectX::XMFLOAT4 diffusecolor = this->_gfxLight.GetDiffuseColor();
-	DirectX::XMFLOAT4 dir = this->_gfxLight.GetDirection();
+	DirectX::XMFLOAT4 dir = this->_gfxLight.GetInverseDirection();
 	
 	bresult = this->_vertexShader.Render(this->_d3dmanager.GetDeviceContext(), mat, viewMat , projectionMat, ambientColor, diffusecolor, dir);
 	if (!bresult)

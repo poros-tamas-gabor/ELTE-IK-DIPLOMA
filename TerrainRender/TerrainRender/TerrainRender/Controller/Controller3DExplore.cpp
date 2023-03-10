@@ -15,9 +15,7 @@ void Controller3DExplore::Control(float dt, Graphics* graphics)
 	while (!Mouse::GetInstance()->EventBufferIsEmpty())
 	{
 		MouseEvent e = Mouse::GetInstance()->ReadEvent();
-
-		ControlMouse(e, graphics);
-		
+		ControlMouse(e, graphics);	
 	}
 
 	if (Keyboard::GetInstance()->KeyIsPressed(VK_SPACE))
@@ -28,7 +26,6 @@ void Controller3DExplore::Control(float dt, Graphics* graphics)
 	{
 		graphics->_position.MoveDown(dt);
 	}
-
 	if (Keyboard::GetInstance()->KeyIsPressed('W'))
 	{
 		graphics->_position.MoveForward(dt);
@@ -71,38 +68,5 @@ void Controller3DExplore::ControlMouse(const MouseEvent& e, Graphics* graphics)
 		{
 			graphics->_position.RotatePitchYaw((float)e.GetPosY(), (float)e.GetPosX());
 		}
-	}
-}
-
-void Controller3DExplore::ControlKeyboard(const KeyboardEvent& e, float dt, Graphics* graphics)
-{
-	if (e.IsPress())
-	{
-		switch (e.GetKeyCode())
-		{
-		case 'W':
-		{
-			graphics->_position.MoveForward(dt);
-			break;
-		}
-		case 'A':
-		{
-			graphics->_position.MoveLeft(dt);
-			break;
-		}
-		case 'S':
-		{
-			graphics->_position.MoveBack(dt);
-			break;
-		}
-		case 'D':
-		{
-			graphics->_position.MoveRight(dt);
-			break;
-		}
-		default:
-			break;
-		}
-
 	}
 }

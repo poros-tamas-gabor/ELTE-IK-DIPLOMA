@@ -8,6 +8,15 @@ ModelLayer::~ModelLayer() = default;
 
 void ModelLayer::Shutdown() {}
 
+bool ModelLayer::IsTrajektoryLoaded(void)
+{
+	return this->_isTrajektoryLoaded;
+}
+bool ModelLayer::IsTerrainLoaded(void)
+{
+	return this->_isTerrainLoaded;
+}
+
 bool ModelLayer::Initalize(IDataAccess* persistence) 
 {
 	_persistence = persistence;
@@ -21,6 +30,7 @@ bool ModelLayer::LoadTerrain(const wchar_t* filepath)
 {
 	bool bresult = _persistence->LoadTerrain(filepath, this->_vertices);
 	this->NotifyObservers();
+	this->_isTerrainLoaded = bresult;
 	return bresult;
 
 }
@@ -38,7 +48,7 @@ bool ModelLayer::Attach(IObserver* observer)
 	}
 	else {
 		this->_observers.push_back(observer);
-		return false;
+		return true;
 	}
 }
 bool ModelLayer::Detach(IObserver* observer)

@@ -186,17 +186,23 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 {
 	bool result;
 
-	this->_model = new ModelLayer;
-	this->_graphics = new Graphics;
 	this->_dataAccess = new TextFileDataAccess;
+	if (this->_dataAccess == nullptr)
+		return false;
 
-	result = _model->Initalize(this->_dataAccess);
+	
+	result = _model.Initalize(this->_dataAccess);
 	if (!result)
 	{
 		return false;
 	}
 
-	this->_model->Attach(this->_graphics);
+	result = this->_model.Attach(&this->_graphics);
+	if (!result)
+		return false;
+
+	this->_controllers.push_back(new Controller3DExplore);
+	this->_currentController = 0;
 
 	result = _renderWindow.Initialize(this, screenWidth, screenHeight);
 
@@ -205,14 +211,14 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 		return false;
 	}
 
-	result = _model->LoadTerrain(L"C:\\Users\\porostamasgabor\\Documents\\THESIS\\File\\Sphericon.stl");
+	result = _model.LoadTerrain(L"C:\\Users\\porostamasgabor\\Documents\\THESIS\\File\\Sphericon.stl");
 	if (!result)
 	{
 		return false;
 	}
 
 
-	result = this->_graphics->Initalize(_model, this->_renderWindow.GetHWND(), (float)screenWidth, (float)screenHeight, 1, 100);
+	result = this->_graphics.Initalize(&_model, this->_renderWindow.GetHWND(), (float)screenWidth, (float)screenHeight, 1, 100);
 
 	if (!result)
 	{
@@ -232,13 +238,17 @@ void App::Update()
 {
 	float dt = (float)this->_timer.GetMilisecondsElapsed();
 	this->_timer.Restart();
-	this->_graphics->doControl(dt);
+	IController* c = this->_controllers.at(this->_currentController);
+	if (c != nullptr)
+	{
+		c->Control(dt, &this->_graphics);
+	}
 }
 
 
 void App::RenderFrame()
 {
-	this->_graphics->Frame();
+	this->_graphics.Frame();
 
 }
 void App::Run()
@@ -254,11 +264,24 @@ void App::Shutdown()
 	// Shutdown the window.
 
 	this->_renderWindow.Shutdown();
-	this->_graphics->Shutdown();
-	this->_model->Shutdown();
+	this->_graphics.Shutdown();
+	this->_model.Shutdown();
+
+
+	if (this->_dataAccess)
+	{
+		delete this->_dataAccess;
+	}
+	for (IController* c : this->_controllers)
+	{
+		if (c != nullptr)
+		{
+			delete c;
+			c = nullptr;
+		}
+	}
+
 	Keyboard::Shutdown();
 	Mouse::Shutdown();
-	delete _graphics;
-	delete _model;
-	delete this->_dataAccess;
+
 }

@@ -12,16 +12,18 @@
 #include "Model/Persistence/DataAccess.h"
 #include <memory>
 #include "Controller/Controllers.h"
+#include <vector>
 class App
 {
 private:
-	RenderWindow	_renderWindow;
+	RenderWindow				_renderWindow;
 					
-	Timer			_timer;
-	Graphics*		_graphics;
-	ModelLayer*		_model;
-	IDataAccess*	_dataAccess;
-	IController*	_controller;
+	Timer						_timer;
+	Graphics					_graphics;
+	ModelLayer					_model;
+	IDataAccess*				_dataAccess;
+	std::vector<IController*>	_controllers;
+	unsigned int				_currentController;
 
 	void Update();
 	void RenderFrame();

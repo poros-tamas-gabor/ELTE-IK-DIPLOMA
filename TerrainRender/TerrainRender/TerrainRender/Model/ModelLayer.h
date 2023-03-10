@@ -15,11 +15,16 @@ private:
 	ModelLight								_modelLight;
 	IDataAccess*							_persistence;
 	std::vector<ModelVertex>				_vertices;
+	bool	_isTerrainLoaded;
+	bool	_isTrajektoryLoaded;
 
 public:
 	ModelLayer();
 	~ModelLayer();
 
+
+	bool IsTrajektoryLoaded(void);
+	bool IsTerrainLoaded(void);
 	bool Attach(IObserver* observer);
 	bool Detach(IObserver* observer);
 	void NotifyObservers(void);

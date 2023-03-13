@@ -138,9 +138,6 @@
     <ClCompile Include="Controller\GuiController.cpp">
       <Filter>Source Files\Controller</Filter>
     </ClCompile>
-    <ClCompile Include="Controller\FileSelectEvent.cpp">
-      <Filter>Header Files\Controller</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -248,11 +245,14 @@
     <ClInclude Include="Controller\GuiController.h">
       <Filter>Header Files\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="Model\ModelEvent.h">
-      <Filter>Header Files\Model</Filter>
-    </ClInclude>
     <ClInclude Include="Controller\FileSelectEvent.h">
       <Filter>Header Files\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\CameraMoveEvent.h">
+      <Filter>Header Files\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="EventTemplate.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

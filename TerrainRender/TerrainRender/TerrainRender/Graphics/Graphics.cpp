@@ -9,14 +9,11 @@ void Graphics::Update()
 	//TODO::
 	bool bresult;
 	bresult = _gfxModel.Initialize(this->_d3dmanager.GetDevice(), this->_model);
-
-
-
 }
 
 void Graphics::doControl(float dt)
 {
-	this->_controller->Control(dt, this);
+	this->_controller->Control(dt);
 }
 
 bool Graphics::Render() 

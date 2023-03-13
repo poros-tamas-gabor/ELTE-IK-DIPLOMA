@@ -1,4 +1,4 @@
-#ifndef MODEL_VERTEX_H
-#define MODEL_VERTEX_H
+#ifndef MODEL_TERRAIN_H
+#define MODEL_TERRAIN_H
 
 #endif

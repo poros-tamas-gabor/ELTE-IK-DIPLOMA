@@ -12,7 +12,7 @@ class IController
 
 public:
 	virtual ~IController() {}
-	virtual void Control(float dt, Graphics* graphics)const = 0;
+	virtual void Control(float dt)const = 0;
 };
 
 
@@ -25,14 +25,14 @@ private:
 public:
 	Controller3DExplore(ControllerContainer* _container, ModelLayer* model, Graphics* graphics);
 	virtual ~Controller3DExplore() {}
-	virtual void Control(float dt, Graphics* graphics) const override;
+	virtual void Control(float dt) const override;
 
 
 
 private:
 
-	void ControlMouse(const MouseEvent& e, Graphics* graphics) const;
-	void ControlKeyboard(const KeyboardEvent& e, float dt, Graphics* graphics) ;
+	void ControlMouse(const MouseEvent& e) const;
+	void ControlKeyboard(const KeyboardEvent& e, float dt) ;
 
 };
 
@@ -41,7 +41,7 @@ class ControllerFlythrough : public IController
 public:
 	ControllerFlythrough() {}
 	virtual ~ControllerFlythrough() {}
-	virtual void Control(float dt, Graphics* graphics) const override;
+	virtual void Control(float dt) const override;
 };
 
 

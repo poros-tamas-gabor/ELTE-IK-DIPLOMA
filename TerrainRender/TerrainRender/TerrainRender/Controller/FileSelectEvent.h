@@ -2,28 +2,17 @@
 #define FILE_SELECT_EVENT_H
 
 #include <string>
-class FileSelectEvent
+#include "../EventTemplate.h"
+
+enum FileSelectEvent_Type
 {
-public:
-	enum Type
-	{
-		Invalid,
-		TerrainFile,
-		CameraTrajectoryFile,
-		CameraPropertiesFile
-	};
-private:
-	FileSelectEvent::Type	_type;
-	std::wstring		_filepath;
-
-public:
-	FileSelectEvent();
-	FileSelectEvent(FileSelectEvent::Type type, std::wstring filepath);
-
-	bool IsTerrainFile() const;
-	bool IsCameraTrajectoryFile() const;
-	bool IsCameraPropertiesFile() const;
-	bool IsValid() const;
-	std::wstring GetFilePath() const;
+	Invalid,
+	TerrainFile,
+	CameraTrajectoryFile,
+	CameraPropertiesFile
 };
+
+typedef Event<FileSelectEvent_Type, std::wstring> FileSelectEvent;
+
+
 #endif

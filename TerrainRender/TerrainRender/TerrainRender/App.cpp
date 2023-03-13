@@ -318,7 +318,7 @@ void App::Update()
 	const IController* c = this->_controllers.GetCurrentModeController();
 	if (c != nullptr)
 	{
-		c->Control(dt, &this->_graphics);
+		c->Control(dt);
 	}
 }
 

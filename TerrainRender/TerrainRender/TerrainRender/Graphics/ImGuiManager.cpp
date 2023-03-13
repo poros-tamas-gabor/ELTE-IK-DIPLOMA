@@ -58,7 +58,7 @@ void ImGuiManager::ShowWindow()
         {
             if (GetOpenFileName(&ofn) == TRUE)
             {
-                FileSelectEvent event(FileSelectEvent::TerrainFile, szFile);
+                FileSelectEvent event(FileSelectEvent_Type::TerrainFile, szFile);
                 this->_guiController->OnFileLoaded(event);
             }
         }

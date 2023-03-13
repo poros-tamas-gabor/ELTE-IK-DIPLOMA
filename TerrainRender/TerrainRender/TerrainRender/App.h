@@ -11,7 +11,7 @@
 #include "Model/ModelLayer.h"
 #include "Model/Persistence/DataAccess.h"
 #include <memory>
-#include "Controller/Controllers.h"
+#include "Controller/ControllerContainer.h"
 #include <vector>
 class App
 {
@@ -22,8 +22,7 @@ private:
 	Graphics					_graphics;
 	ModelLayer					_model;
 	IDataAccess*				_dataAccess;
-	std::vector<IController*>	_controllers;
-	unsigned int				_currentController;
+	ControllerContainer			_controllers;
 
 	void Update();
 	void RenderFrame();

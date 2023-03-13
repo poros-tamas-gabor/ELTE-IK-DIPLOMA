@@ -201,9 +201,6 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 	if (!result)
 		return false;
 
-	this->_controllers.push_back(new Controller3DExplore);
-	this->_currentController = 0;
-
 	result = _renderWindow.Initialize(this, screenWidth, screenHeight);
 
 	if (!result)
@@ -238,7 +235,7 @@ void App::Update()
 {
 	float dt = (float)this->_timer.GetMilisecondsElapsed();
 	this->_timer.Restart();
-	IController* c = this->_controllers.at(this->_currentController);
+	const IController* c = this->_controllers.GetCurrentModeController();
 	if (c != nullptr)
 	{
 		c->Control(dt, &this->_graphics);
@@ -266,20 +263,13 @@ void App::Shutdown()
 	this->_renderWindow.Shutdown();
 	this->_graphics.Shutdown();
 	this->_model.Shutdown();
-
+	this->_controllers.Shutdown();
 
 	if (this->_dataAccess)
 	{
 		delete this->_dataAccess;
 	}
-	for (IController* c : this->_controllers)
-	{
-		if (c != nullptr)
-		{
-			delete c;
-			c = nullptr;
-		}
-	}
+
 
 	Keyboard::Shutdown();
 	Mouse::Shutdown();

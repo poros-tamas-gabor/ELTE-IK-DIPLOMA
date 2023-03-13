@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Controller\Controller3DExplore.cpp" />
+    <ClCompile Include="Controller\ControllerContainer.cpp" />
     <ClCompile Include="ErrorHandler.cpp" />
     <ClCompile Include="Graphics\D3DManager.cpp" />
     <ClCompile Include="Graphics\GfxCamera.cpp" />
@@ -154,6 +155,12 @@
     <ClCompile Include="Graphics\PixelShader.cpp" />
     <ClCompile Include="Graphics\Position.cpp" />
     <ClCompile Include="Graphics\VertexShader.cpp" />
+    <ClCompile Include="ImGui\imgui.cpp" />
+    <ClCompile Include="ImGui\imgui_demo.cpp" />
+    <ClCompile Include="ImGui\imgui_draw.cpp" />
+    <ClCompile Include="ImGui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Input\Keyboard.cpp" />
     <ClCompile Include="Input\KeyboardEvent.cpp" />
     <ClCompile Include="Input\Mouse.cpp" />
@@ -167,6 +174,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
+    <ClInclude Include="Controller\ControllerContainer.h" />
     <ClInclude Include="Controller\Controllers.h" />
     <ClInclude Include="ErrorHandler.h" />
     <ClInclude Include="Graphics\D3DManager.h" />
@@ -179,6 +187,14 @@
     <ClInclude Include="Graphics\PixelShader.h" />
     <ClInclude Include="Graphics\Position.h" />
     <ClInclude Include="Graphics\VertexShader.h" />
+    <ClInclude Include="ImGui\imconfig.h" />
+    <ClInclude Include="ImGui\imgui.h" />
+    <ClInclude Include="ImGui\imgui_impl_dx11.h" />
+    <ClInclude Include="ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="ImGui\imgui_internal.h" />
+    <ClInclude Include="ImGui\imstb_rectpack.h" />
+    <ClInclude Include="ImGui\imstb_textedit.h" />
+    <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="Input\Keyboard.h" />
     <ClInclude Include="Input\KeyboardEvent.h" />
     <ClInclude Include="Input\Mouse.h" />

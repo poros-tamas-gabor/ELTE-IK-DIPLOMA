@@ -1,7 +1,7 @@
 #include "Controllers.h"
 #include "../Graphics/Graphics.h"
 
-void Controller3DExplore::Control(float dt, Graphics* graphics)
+void Controller3DExplore::Control(float dt, Graphics* graphics) const
 {
 	while (!Keyboard::GetInstance()->KeyBufferIsEmpty())
 	{
@@ -44,7 +44,7 @@ void Controller3DExplore::Control(float dt, Graphics* graphics)
 	}
 }
 
-void Controller3DExplore::ControlMouse(const MouseEvent& e, Graphics* graphics)
+void Controller3DExplore::ControlMouse(const MouseEvent& e, Graphics* graphics) const
 {
 	if (MouseEvent::Type::RAW_MOVE_ABSOLUTE == e.GetType())
 	{

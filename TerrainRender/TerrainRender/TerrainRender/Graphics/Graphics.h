@@ -25,7 +25,7 @@ private:
 	GfxLight							_gfxLight;
 
 	ModelLayer*							_model;
-	IController* _controller;
+	IController*						_controller;
 
 
 

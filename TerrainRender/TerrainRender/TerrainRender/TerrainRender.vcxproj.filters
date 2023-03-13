@@ -43,6 +43,9 @@
     <Filter Include="Source Files\Controller">
       <UniqueIdentifier>{aac79875-89ea-4904-be0b-f3a6bb2ab3ed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\ImGui">
+      <UniqueIdentifier>{dd6ed4b6-7246-42f8-854f-a1f60c3e7a76}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -106,6 +109,27 @@
       <Filter>Source Files\Model</Filter>
     </ClCompile>
     <ClCompile Include="Controller\Controller3DExplore.cpp">
+      <Filter>Source Files\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_win32.cpp">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_widgets.cpp">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui.cpp">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_demo.cpp">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_draw.cpp">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_dx11.cpp">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller\ControllerContainer.cpp">
       <Filter>Source Files\Controller</Filter>
     </ClCompile>
   </ItemGroup>
@@ -180,6 +204,33 @@
       <Filter>Header Files\Model</Filter>
     </ClInclude>
     <ClInclude Include="Controller\Controllers.h">
+      <Filter>Header Files\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_dx11.h">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_win32.h">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_internal.h">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_rectpack.h">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_textedit.h">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_truetype.h">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imconfig.h">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui.h">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\ControllerContainer.h">
       <Filter>Header Files\Controller</Filter>
     </ClInclude>
   </ItemGroup>

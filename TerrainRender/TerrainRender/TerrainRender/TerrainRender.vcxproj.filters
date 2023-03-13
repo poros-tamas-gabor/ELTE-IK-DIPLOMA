@@ -132,6 +132,15 @@
     <ClCompile Include="Controller\ControllerContainer.cpp">
       <Filter>Source Files\Controller</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\ImGuiManager.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller\GuiController.cpp">
+      <Filter>Source Files\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller\FileSelectEvent.cpp">
+      <Filter>Header Files\Controller</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -231,6 +240,18 @@
       <Filter>Resource Files\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="Controller\ControllerContainer.h">
+      <Filter>Header Files\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\ImGuiManager.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\GuiController.h">
+      <Filter>Header Files\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelEvent.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\FileSelectEvent.h">
       <Filter>Header Files\Controller</Filter>
     </ClInclude>
   </ItemGroup>

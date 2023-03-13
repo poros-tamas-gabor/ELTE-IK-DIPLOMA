@@ -7,6 +7,8 @@ Graphics::~Graphics() {}
 void Graphics::Update()
 {
 	//TODO::
+	bool bresult;
+	bresult = _gfxModel.Initialize(this->_d3dmanager.GetDevice(), this->_model);
 
 
 
@@ -21,6 +23,7 @@ bool Graphics::Render()
 { 
 	bool bresult;
 	this->_d3dmanager.BeginScene(0.5f, 0.2f, 0.3f, 1.0f);
+	this->_imgui.BeginFrame();
 
 
 
@@ -52,23 +55,15 @@ bool Graphics::Render()
 	this->_gfxModel.Render(this->_d3dmanager.GetDeviceContext());
 	this->_pixelShader.Render(this->_d3dmanager.GetDeviceContext(), this->_gfxModel.GetVertexCount());
 	
-
-
+	this->_imgui.ShowWindow();
+	this->_imgui.EndFrame();
 	this->_d3dmanager.EndScene();
 
 	return true;
 }
-bool Graphics::Initalize(ModelLayer* modelLayer, HWND hwnd, float screenWidth, float screenHeight, float screenNear, float screenDepth, bool fullscreen, bool vsync, float fieldOfView)
+bool Graphics::Initalize(HWND hwnd, float screenWidth, float screenHeight, float screenNear, float screenDepth, bool fullscreen, bool vsync, float fieldOfView)
 {
 	bool bresult;
-
-	if (modelLayer == nullptr)
-	{
-		return false;
-	}
-	
-	this->_model = modelLayer;
-
 
 	bresult = this->_d3dmanager.Initalize(hwnd, screenWidth, screenHeight, screenNear, screenDepth, fullscreen, vsync, fieldOfView);
 	if (!bresult)
@@ -90,15 +85,9 @@ bool Graphics::Initalize(ModelLayer* modelLayer, HWND hwnd, float screenWidth, f
 
 	_gfxLight.UpdateLightDirection(this->_model);
 
-
-	bresult = _gfxModel.Initialize(this->_d3dmanager.GetDevice(), this->_model );
-	if (!bresult)
-	{
-		return false;
-	}
-
 	this->_position.SetCamera(&this->_camera);
 	
+	this->_imgui.Initalize(this->_d3dmanager.GetDevice(), this->_d3dmanager.GetDeviceContext(),this->_guiController);
 
 	return true;
 }
@@ -109,13 +98,7 @@ void Graphics::Shutdown()
 	this->_vertexShader.Shutdown();
 	this->_gfxModel.Shutdown();
 	this->_model->Shutdown();
-
-	if (this->_controller)
-	{
-		delete this->_controller;
-		this->_controller = nullptr;
-	}
-
+	this->_imgui.Shutdown();
 }
 bool Graphics::Frame() 
 { 
@@ -127,4 +110,17 @@ bool Graphics::Frame()
 		return false;
 
 	return true; 
+}
+
+void Graphics::SetModel(ModelLayer* model)
+{
+	this->_model = model;
+}
+void Graphics::SetGuiController(const GuiController* guiController)
+{
+	this->_guiController = guiController;
+}
+void Graphics::SetModeController(const IController* controller)
+{
+	this->_controller = controller;
 }

@@ -3,6 +3,12 @@
 #include "ErrorHandler.h"
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
+#include "ImGui/imgui_impl_win32.h"
+#include "ImGui/imgui.h"
+#include "ImGui/imgui_impl_dx11.h"
+
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 App::App()
 {
 	//https://learn.microsoft.com/en-us/windows/win32/inputdev/using-raw-input
@@ -22,6 +28,10 @@ App::~App() {};
 
 LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, umessage, wparam, lparam))
+		return true;
+
+	ImGuiIO& io = ImGui::GetIO();
 	switch (umessage)
 	{
 
@@ -36,6 +46,10 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 	// Check if a key has been pressed on the keyboard.
 	case WM_KEYDOWN:
 	{
+		if (io.WantCaptureKeyboard)
+		{
+			return 0;
+		}
 		unsigned char keycode = static_cast<unsigned char>(wparam);
 
 		// If a key is pressed send it to the input object so it can record that state.
@@ -49,6 +63,10 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 	// Check if a key has been released on the keyboard.
 	case WM_KEYUP:
 	{
+		if (io.WantCaptureKeyboard)
+		{
+			return 0;
+		}
 		unsigned char keycode = static_cast<unsigned char>(wparam);
 
 		// If a key is released then send it to the input object so it can unset the state for that key.
@@ -57,6 +75,10 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 	}
 	case WM_CHAR:
 	{
+		if (io.WantCaptureKeyboard)
+		{
+			return 0;
+		}
 		unsigned char ch = static_cast<unsigned char>(wparam);
 		this->_keyboard.OnChar((ch));
 		return 0;
@@ -65,6 +87,10 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 	//Mouse Messages
 	case WM_MOUSEMOVE:
 	{
+		if (io.WantCaptureMouse)
+		{
+			return 0;
+		}
 		int x = LOWORD(lparam);
 		int y = HIWORD(lparam);
 		this->_mouse.OnMouseMove(x, y);
@@ -72,6 +98,10 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 	}
 	case WM_LBUTTONDOWN:
 	{
+		if (io.WantCaptureMouse)
+		{
+			return 0;
+		}
 		int x = LOWORD(lparam);
 		int y = HIWORD(lparam);
 		this->_mouse.OnLeftPressed(x, y);
@@ -79,6 +109,10 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 	}
 	case WM_RBUTTONDOWN:
 	{
+		if (io.WantCaptureMouse)
+		{
+			return 0;
+		}
 		int x = LOWORD(lparam);
 		int y = HIWORD(lparam);
 		this->_mouse.OnRightPressed(x, y);
@@ -86,6 +120,10 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 	}
 	case WM_MBUTTONDOWN:
 	{
+		if (io.WantCaptureMouse)
+		{
+			return 0;
+		}
 		int x = LOWORD(lparam);
 		int y = HIWORD(lparam);
 		this->_mouse.OnMiddlePressed(x, y);
@@ -93,6 +131,10 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 	}
 	case WM_LBUTTONUP:
 	{
+		if (io.WantCaptureMouse)
+		{
+			return 0;
+		}
 		int x = LOWORD(lparam);
 		int y = HIWORD(lparam);
 		this->_mouse.OnLeftReleased(x, y);
@@ -100,6 +142,10 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 	}
 	case WM_RBUTTONUP:
 	{
+		if (io.WantCaptureMouse)
+		{
+			return 0;
+		}
 		int x = LOWORD(lparam);
 		int y = HIWORD(lparam);
 		this->_mouse.OnRightReleased(x, y);
@@ -107,6 +153,10 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 	}
 	case WM_MBUTTONUP:
 	{
+		if (io.WantCaptureMouse)
+		{
+			return 0;
+		}
 		int x = LOWORD(lparam);
 		int y = HIWORD(lparam);
 		this->_mouse.OnMiddleReleased(x, y);
@@ -114,6 +164,10 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 	}
 	case WM_MOUSEWHEEL:
 	{
+		if (io.WantCaptureMouse)
+		{
+			return 0;
+		}
 		int x = LOWORD(lparam);
 		int y = HIWORD(lparam);
 		if (GET_WHEEL_DELTA_WPARAM(wparam) > 0)
@@ -128,6 +182,10 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 	}
 	case WM_INPUT:
 	{
+		if (io.WantCaptureMouse)
+		{
+			return DefWindowProc(hwnd, umessage, wparam, lparam);
+		}
 		//https://learn.microsoft.com/en-us/windows/win32/inputdev/using-raw-input
 		UINT dwSize;
 
@@ -184,6 +242,12 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 }
 bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 {
+	this->InitializeMVCArchitecture();
+	// Setup Dear ImGui context
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	//ImGuiIO& io = ImGui::GetIO(); (void)io;
+
 	bool result;
 
 	this->_dataAccess = new TextFileDataAccess;
@@ -201,11 +265,7 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 	if (!result)
 		return false;
 
-	result = this->_controllers.Initalize(_keyboard, _mouse);
-	if (!result)
-	{
-		return false;
-	}
+
 
 	result = _renderWindow.Initialize(this, screenWidth, screenHeight);
 	if (!result)
@@ -213,24 +273,39 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 		return false;
 	}
 
-	result = _model.LoadTerrain(L"C:\\Users\\porostamasgabor\\Documents\\THESIS\\File\\Sphericon.stl");
+	ImGui_ImplWin32_Init(this->_renderWindow.GetHWND());
+
+	result = this->_controllers.Initalize(_keyboard, _mouse);
+	if (!result)
+	{
+		return false;
+	}
+
+	this->_graphics.SetModeController(this->_controllers.GetCurrentModeController());
+	this->_graphics.SetGuiController(this->_controllers.GetGuiController());
+
+	result = this->_graphics.Initalize(this->_renderWindow.GetHWND(), (float)screenWidth, (float)screenHeight, 1, 100);
+
 	if (!result)
 	{
 		return false;
 	}
 
 
-	result = this->_graphics.Initalize(&_model, this->_renderWindow.GetHWND(), (float)screenWidth, (float)screenHeight, 1, 100);
 
-	if (!result)
-	{
-		return false;
-	}
+	
 
 	_timer.Start();
 	return true;
 }
 
+
+void App::InitializeMVCArchitecture()
+{
+	this->_graphics.SetModel(&this->_model);
+	this->_controllers.SetModel(&this->_model);
+	this->_controllers.SetView(&this->_graphics);
+}
 bool App::ProcessMessages()
 {
 	return this->_renderWindow.ProcessMessages();
@@ -264,15 +339,18 @@ void App::Run()
 void App::Shutdown()
 {
 	// Shutdown the window.
-
-	this->_renderWindow.Shutdown();
-	this->_graphics.Shutdown();
-	this->_model.Shutdown();
-	this->_controllers.Shutdown();
-
 	if (this->_dataAccess)
 	{
 		delete this->_dataAccess;
 	}
+	this->_graphics.Shutdown();
+	this->_model.Shutdown();
+	this->_controllers.Shutdown();
+
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
+	this->_renderWindow.Shutdown();
+
+
 
 }

@@ -5,13 +5,12 @@
 #include "../Input/Keyboard.h"
 
 class Graphics;
+class ControllerContainer;
+class ModelLayer;
 class IController
 {
-protected:
-	Keyboard& _keyboard;
-	Mouse& _mouse;
+
 public:
-	IController(Keyboard& keyboard, Mouse& mouse) : _keyboard(keyboard), _mouse(mouse) {}
 	virtual ~IController() {}
 	virtual void Control(float dt, Graphics* graphics)const = 0;
 };
@@ -19,10 +18,16 @@ public:
 
 class Controller3DExplore : public IController
 {
+private:
+	ControllerContainer* _container;
+	ModelLayer*			_model;
+	Graphics*			_graphics;
 public:
-	Controller3DExplore(Keyboard& keyboard, Mouse& mouse) : IController(keyboard, mouse) {}
+	Controller3DExplore(ControllerContainer* _container, ModelLayer* model, Graphics* graphics);
 	virtual ~Controller3DExplore() {}
 	virtual void Control(float dt, Graphics* graphics) const override;
+
+
 
 private:
 
@@ -34,7 +39,7 @@ private:
 class ControllerFlythrough : public IController
 {
 public:
-	ControllerFlythrough(Keyboard& keyboard, Mouse& mouse) : IController(keyboard, mouse) {}
+	ControllerFlythrough() {}
 	virtual ~ControllerFlythrough() {}
 	virtual void Control(float dt, Graphics* graphics) const override;
 };

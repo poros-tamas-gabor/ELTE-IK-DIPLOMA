@@ -29,8 +29,11 @@ bool ModelLayer::Initalize(IDataAccess* persistence)
 bool ModelLayer::LoadTerrain(const wchar_t* filepath)
 {
 	bool bresult = _persistence->LoadTerrain(filepath, this->_vertices);
-	this->NotifyObservers();
 	this->_isTerrainLoaded = bresult;
+	if (bresult)
+	{
+		this->NotifyObservers();
+	}
 	return bresult;
 
 }

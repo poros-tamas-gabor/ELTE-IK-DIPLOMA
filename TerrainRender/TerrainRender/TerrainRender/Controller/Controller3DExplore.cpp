@@ -1,48 +1,52 @@
 #include "Controllers.h"
 #include "../Graphics/Graphics.h"
+#include "ControllerContainer.h" 
 
 void Controller3DExplore::Control(float dt, Graphics* graphics) const
 {
-	while (!_keyboard.KeyBufferIsEmpty())
+	while (!_container->_keyboard->KeyBufferIsEmpty())
 	{
-		KeyboardEvent e = _keyboard.ReadKey();
+		KeyboardEvent e = _container->_keyboard->ReadKey();
 	}
-	while (!_keyboard.CharBufferIsEmpty())
+	while (!_container->_keyboard->CharBufferIsEmpty())
 	{
-		unsigned char c = _keyboard.ReadChar();
+		unsigned char c = _container->_keyboard->ReadChar();
 	}
 
-	while (!_mouse.EventBufferIsEmpty())
+	while (!_container->_mouse->EventBufferIsEmpty())
 	{
-		MouseEvent e = _mouse.ReadEvent();
+		MouseEvent e = _container->_mouse->ReadEvent();
 		ControlMouse(e, graphics);	
 	}
 
-	if (_keyboard.KeyIsPressed(VK_SPACE))
+	if (_container->_keyboard->KeyIsPressed(VK_SPACE))
 	{
 		graphics->_position.MoveUp(dt);
 	}
-	if (_keyboard.KeyIsPressed('C'))
+	if (_container->_keyboard->KeyIsPressed('C'))
 	{
 		graphics->_position.MoveDown(dt);
 	}
-	if (_keyboard.KeyIsPressed('W'))
+	if (_container->_keyboard->KeyIsPressed('W'))
 	{
 		graphics->_position.MoveForward(dt);
 	}
-	if (_keyboard.KeyIsPressed('S'))
+	if (_container->_keyboard->KeyIsPressed('S'))
 	{
 		graphics->_position.MoveBack(dt);
 	}
-	if (_keyboard.KeyIsPressed('A'))
+	if (_container->_keyboard->KeyIsPressed('A'))
 	{
 		graphics->_position.MoveLeft(dt);
 	}
-	if (_keyboard.KeyIsPressed('D'))
+	if (_container->_keyboard->KeyIsPressed('D'))
 	{
 		graphics->_position.MoveRight(dt);
 	}
 }
+
+Controller3DExplore::Controller3DExplore(ControllerContainer* container, ModelLayer* model, Graphics* graphics) : _container(container), _model(model), _graphics(graphics) {}
+
 
 void Controller3DExplore::ControlMouse(const MouseEvent& e, Graphics* graphics) const
 {
@@ -54,7 +58,7 @@ void Controller3DExplore::ControlMouse(const MouseEvent& e, Graphics* graphics) 
 			int yaw = e.GetPosX() - prev.GetPosX();
 			int pitch = e.GetPosY() - prev.GetPosY();
 
-			if (_mouse.IsLeftDown())
+			if (_container->_mouse->IsLeftDown())
 			{
 				graphics->_position.RotatePitchYaw((float)pitch, (float)yaw);
 			}
@@ -64,7 +68,7 @@ void Controller3DExplore::ControlMouse(const MouseEvent& e, Graphics* graphics) 
 	}
 	else if (MouseEvent::Type::RAW_MOVE_RELATIVE == e.GetType())
 	{
-		if (_mouse.IsLeftDown())
+		if (_container->_mouse->IsLeftDown())
 		{
 			graphics->_position.RotatePitchYaw((float)e.GetPosY(), (float)e.GetPosX());
 		}

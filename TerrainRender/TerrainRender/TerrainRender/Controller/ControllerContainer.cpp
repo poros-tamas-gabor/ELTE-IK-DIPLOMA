@@ -1,8 +1,7 @@
 #include "ControllerContainer.h"
 
 
-
-ControllerContainer::ControllerContainer() : _guiController(nullptr), _currentModeControllerIndex(-1), _keyboard(nullptr), _mouse(nullptr)
+ControllerContainer::ControllerContainer() : _guiController(nullptr), _currentModeControllerIndex(-1), _keyboard(nullptr), _mouse(nullptr), _model(nullptr), _view(nullptr)
 {
 
 }
@@ -12,12 +11,15 @@ bool ControllerContainer::Initalize(Keyboard& keyboard, Mouse& mouse)
 	_currentModeControllerIndex = 0;
 	_keyboard	= &keyboard;
 	_mouse		= &mouse;
-	IController* controller = new Controller3DExplore(*_keyboard, *_mouse);
+
+	IController* controller = new Controller3DExplore(this, _model, _view);
 	if (controller == nullptr)
 	{
 		return false;
 	}
 	_modeControllers.push_back(controller);
+
+	_guiController = new GuiController(_model);
 	return true;
 }
 
@@ -31,9 +33,18 @@ const IController* ControllerContainer::GetCurrentModeController()
 {
 	return _modeControllers.at(_currentModeControllerIndex);
 }
-const IController* ControllerContainer::GetGuiController()
+const GuiController* ControllerContainer::GetGuiController()
 {
-	return _guiController;
+	return this->_guiController;
+}
+
+void ControllerContainer::SetModel(ModelLayer* model)
+{
+	this->_model = model;
+}
+void ControllerContainer::SetView(Graphics* view)
+{
+	this->_view = view;
 }
 
 void ControllerContainer::Shutdown()

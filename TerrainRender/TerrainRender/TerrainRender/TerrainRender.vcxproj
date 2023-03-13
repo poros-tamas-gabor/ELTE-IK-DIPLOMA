@@ -146,12 +146,15 @@
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Controller\Controller3DExplore.cpp" />
     <ClCompile Include="Controller\ControllerContainer.cpp" />
+    <ClCompile Include="Controller\FileSelectEvent.cpp" />
+    <ClCompile Include="Controller\GuiController.cpp" />
     <ClCompile Include="ErrorHandler.cpp" />
     <ClCompile Include="Graphics\D3DManager.cpp" />
     <ClCompile Include="Graphics\GfxCamera.cpp" />
     <ClCompile Include="Graphics\GfxLight.cpp" />
     <ClCompile Include="Graphics\GfxModel.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
+    <ClCompile Include="Graphics\ImGuiManager.cpp" />
     <ClCompile Include="Graphics\PixelShader.cpp" />
     <ClCompile Include="Graphics\Position.cpp" />
     <ClCompile Include="Graphics\VertexShader.cpp" />
@@ -176,6 +179,8 @@
     <ClInclude Include="App.h" />
     <ClInclude Include="Controller\ControllerContainer.h" />
     <ClInclude Include="Controller\Controllers.h" />
+    <ClInclude Include="Controller\FileSelectEvent.h" />
+    <ClInclude Include="Controller\GuiController.h" />
     <ClInclude Include="ErrorHandler.h" />
     <ClInclude Include="Graphics\D3DManager.h" />
     <ClInclude Include="Graphics\GfxCamera.h" />
@@ -183,6 +188,7 @@
     <ClInclude Include="Graphics\GfxModel.h" />
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\GfxVertex.h" />
+    <ClInclude Include="Graphics\ImGuiManager.h" />
     <ClInclude Include="Graphics\IObserver.h" />
     <ClInclude Include="Graphics\PixelShader.h" />
     <ClInclude Include="Graphics\Position.h" />
@@ -199,6 +205,7 @@
     <ClInclude Include="Input\KeyboardEvent.h" />
     <ClInclude Include="Input\Mouse.h" />
     <ClInclude Include="Input\MouseEvent.h" />
+    <ClInclude Include="Model\ModelEvent.h" />
     <ClInclude Include="Model\ModelLayer.h" />
     <ClInclude Include="Model\ModelLight.h" />
     <ClInclude Include="Model\Persistence\ModelTerrain.h" />

@@ -13,6 +13,8 @@
 #include <memory>
 #include "Controller/ControllerContainer.h"
 #include <vector>
+#include "ImGui/imgui.h"
+
 class App
 {
 private:
@@ -29,10 +31,12 @@ private:
 	void Update();
 	void RenderFrame();
 	bool ProcessMessages();
+	void InitializeMVCArchitecture();
 
 public:
 	App();
 	~App();
+
 
 	bool Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight);
 	void Run();

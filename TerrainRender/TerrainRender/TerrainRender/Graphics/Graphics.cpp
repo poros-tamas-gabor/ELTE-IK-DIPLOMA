@@ -68,11 +68,7 @@ bool Graphics::Initalize(ModelLayer* modelLayer, HWND hwnd, float screenWidth, f
 	}
 	
 	this->_model = modelLayer;
-	this->_controller = new Controller3DExplore;
-	if (this->_controller == nullptr)
-	{
-		return false;
-	}
+
 
 	bresult = this->_d3dmanager.Initalize(hwnd, screenWidth, screenHeight, screenNear, screenDepth, fullscreen, vsync, fieldOfView);
 	if (!bresult)

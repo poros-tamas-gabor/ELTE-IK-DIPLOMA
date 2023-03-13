@@ -7,8 +7,6 @@
 class Mouse 
 {
 private:
-	static Mouse* _pinstance;
-	static std::mutex _mutex;
 	std::queue<MouseEvent> _eventBuffer;
 	int x = 0;
 	int y = 0;
@@ -16,14 +14,9 @@ private:
 	bool rightIsDown = false;
 	bool mbuttonDown = false;
 
-private:
+public:
 	Mouse() {}
 	~Mouse() {}
-public:
-
-	static Mouse* GetInstance(void);
-	static void Shutdown(void);
-
 	Mouse(const Mouse& other) = delete;
 	Mouse& operator= (const Mouse& other) = delete;
 

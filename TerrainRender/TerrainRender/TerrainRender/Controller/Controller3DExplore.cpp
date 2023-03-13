@@ -3,42 +3,42 @@
 
 void Controller3DExplore::Control(float dt, Graphics* graphics) const
 {
-	while (!Keyboard::GetInstance()->KeyBufferIsEmpty())
+	while (!_keyboard.KeyBufferIsEmpty())
 	{
-		KeyboardEvent e = Keyboard::GetInstance()->ReadKey();
+		KeyboardEvent e = _keyboard.ReadKey();
 	}
-	while (!Keyboard::GetInstance()->CharBufferIsEmpty())
+	while (!_keyboard.CharBufferIsEmpty())
 	{
-		unsigned char c = Keyboard::GetInstance()->ReadChar();
+		unsigned char c = _keyboard.ReadChar();
 	}
 
-	while (!Mouse::GetInstance()->EventBufferIsEmpty())
+	while (!_mouse.EventBufferIsEmpty())
 	{
-		MouseEvent e = Mouse::GetInstance()->ReadEvent();
+		MouseEvent e = _mouse.ReadEvent();
 		ControlMouse(e, graphics);	
 	}
 
-	if (Keyboard::GetInstance()->KeyIsPressed(VK_SPACE))
+	if (_keyboard.KeyIsPressed(VK_SPACE))
 	{
 		graphics->_position.MoveUp(dt);
 	}
-	if (Keyboard::GetInstance()->KeyIsPressed('C'))
+	if (_keyboard.KeyIsPressed('C'))
 	{
 		graphics->_position.MoveDown(dt);
 	}
-	if (Keyboard::GetInstance()->KeyIsPressed('W'))
+	if (_keyboard.KeyIsPressed('W'))
 	{
 		graphics->_position.MoveForward(dt);
 	}
-	if (Keyboard::GetInstance()->KeyIsPressed('S'))
+	if (_keyboard.KeyIsPressed('S'))
 	{
 		graphics->_position.MoveBack(dt);
 	}
-	if (Keyboard::GetInstance()->KeyIsPressed('A'))
+	if (_keyboard.KeyIsPressed('A'))
 	{
 		graphics->_position.MoveLeft(dt);
 	}
-	if (Keyboard::GetInstance()->KeyIsPressed('D'))
+	if (_keyboard.KeyIsPressed('D'))
 	{
 		graphics->_position.MoveRight(dt);
 	}
@@ -54,7 +54,7 @@ void Controller3DExplore::ControlMouse(const MouseEvent& e, Graphics* graphics) 
 			int yaw = e.GetPosX() - prev.GetPosX();
 			int pitch = e.GetPosY() - prev.GetPosY();
 
-			if (Mouse::GetInstance()->IsLeftDown())
+			if (_mouse.IsLeftDown())
 			{
 				graphics->_position.RotatePitchYaw((float)pitch, (float)yaw);
 			}
@@ -64,7 +64,7 @@ void Controller3DExplore::ControlMouse(const MouseEvent& e, Graphics* graphics) 
 	}
 	else if (MouseEvent::Type::RAW_MOVE_RELATIVE == e.GetType())
 	{
-		if (Mouse::GetInstance()->IsLeftDown())
+		if (_mouse.IsLeftDown())
 		{
 			graphics->_position.RotatePitchYaw((float)e.GetPosY(), (float)e.GetPosX());
 		}

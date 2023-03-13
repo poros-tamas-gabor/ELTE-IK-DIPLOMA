@@ -2,11 +2,25 @@
 
 
 
-ControllerContainer::ControllerContainer() : _guiController(nullptr)
+ControllerContainer::ControllerContainer() : _guiController(nullptr), _currentModeControllerIndex(-1), _keyboard(nullptr), _mouse(nullptr)
+{
+
+}
+
+bool ControllerContainer::Initalize(Keyboard& keyboard, Mouse& mouse)
 {
 	_currentModeControllerIndex = 0;
-	_modeControllers.push_back(new Controller3DExplore);
+	_keyboard	= &keyboard;
+	_mouse		= &mouse;
+	IController* controller = new Controller3DExplore(*_keyboard, *_mouse);
+	if (controller == nullptr)
+	{
+		return false;
+	}
+	_modeControllers.push_back(controller);
+	return true;
 }
+
 bool ControllerContainer::FlipModeController()
 {
 	return false;

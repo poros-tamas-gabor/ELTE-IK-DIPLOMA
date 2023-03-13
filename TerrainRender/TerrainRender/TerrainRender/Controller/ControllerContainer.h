@@ -8,9 +8,11 @@ class ControllerContainer
 private:
 	IController*				_guiController;
 	std::vector<IController*>	_modeControllers;
-	unsigned int				_currentModeControllerIndex;
+	int							_currentModeControllerIndex;
+	Keyboard*					_keyboard;
+	Mouse*						_mouse;
 public:
-
+	bool Initalize(Keyboard& keyboard, Mouse& mouse);
 	ControllerContainer();
 	bool FlipModeController();
 	const IController* GetCurrentModeController();

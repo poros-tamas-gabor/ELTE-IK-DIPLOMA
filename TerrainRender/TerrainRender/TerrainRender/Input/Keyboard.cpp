@@ -1,28 +1,5 @@
 #include "Keyboard.h"
 
-Keyboard* Keyboard::_pinstance{ nullptr };
-std::mutex Keyboard::_mutex;
-
-Keyboard* Keyboard::GetInstance(void)
-{
-	std::lock_guard<std::mutex> lock(_mutex);
-	if (_pinstance == nullptr)
-	{
-		_pinstance = new Keyboard;
-	}
-	return _pinstance;
-}
-
-void Keyboard::Shutdown(void)
-{
-	std::lock_guard<std::mutex> lock(_mutex);
-	if (_pinstance != nullptr)
-	{
-		delete _pinstance;
-		_pinstance = nullptr;
-	}
-}
-
 Keyboard::Keyboard()
 {
 	for (int i = 0; i < 256u; i++)

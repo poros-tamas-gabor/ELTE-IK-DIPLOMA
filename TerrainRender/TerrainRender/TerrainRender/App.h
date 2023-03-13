@@ -16,13 +16,15 @@
 class App
 {
 private:
+
 	RenderWindow				_renderWindow;
-					
+	
 	Timer						_timer;
 	Graphics					_graphics;
 	ModelLayer					_model;
 	IDataAccess*				_dataAccess;
 	ControllerContainer			_controllers;
+
 
 	void Update();
 	void RenderFrame();
@@ -35,6 +37,8 @@ public:
 	bool Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight);
 	void Run();
 	void Shutdown();
+	Mouse						_mouse;
+	Keyboard					_keyboard;
 
 	LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
 

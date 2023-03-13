@@ -29,8 +29,8 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 		// clear keystate when window loses focus to prevent input getting "stuck"
 	case WM_KILLFOCUS:
 	{
-		Keyboard::GetInstance()->ClearCharBuffer();
-		Keyboard::GetInstance()->ClearKeyBuffer();
+		this->_keyboard.ClearCharBuffer();
+		this->_keyboard.ClearKeyBuffer();
 		return 0;
 	}
 	// Check if a key has been pressed on the keyboard.
@@ -39,9 +39,9 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 		unsigned char keycode = static_cast<unsigned char>(wparam);
 
 		// If a key is pressed send it to the input object so it can record that state.
-		if (!(lparam & 0x40000000) || Keyboard::GetInstance()->IsAutoRepeatEnabled())
+		if (!(lparam & 0x40000000) || this->_keyboard.IsAutoRepeatEnabled())
 		{
-			Keyboard::GetInstance()->OnKeyPressed((keycode));
+			this->_keyboard.OnKeyPressed((keycode));
 		}
 		return 0;
 	}
@@ -52,13 +52,13 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 		unsigned char keycode = static_cast<unsigned char>(wparam);
 
 		// If a key is released then send it to the input object so it can unset the state for that key.
-		Keyboard::GetInstance()->OnKeyReleased((keycode));
+		this->_keyboard.OnKeyReleased((keycode));
 		return 0;
 	}
 	case WM_CHAR:
 	{
 		unsigned char ch = static_cast<unsigned char>(wparam);
-		Keyboard::GetInstance()->OnChar((ch));
+		this->_keyboard.OnChar((ch));
 		return 0;
 	}
 
@@ -67,49 +67,49 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 	{
 		int x = LOWORD(lparam);
 		int y = HIWORD(lparam);
-		Mouse::GetInstance()->OnMouseMove(x, y);
+		this->_mouse.OnMouseMove(x, y);
 		return 0;
 	}
 	case WM_LBUTTONDOWN:
 	{
 		int x = LOWORD(lparam);
 		int y = HIWORD(lparam);
-		Mouse::GetInstance()->OnLeftPressed(x, y);
+		this->_mouse.OnLeftPressed(x, y);
 		return 0;
 	}
 	case WM_RBUTTONDOWN:
 	{
 		int x = LOWORD(lparam);
 		int y = HIWORD(lparam);
-		Mouse::GetInstance()->OnRightPressed(x, y);
+		this->_mouse.OnRightPressed(x, y);
 		return 0;
 	}
 	case WM_MBUTTONDOWN:
 	{
 		int x = LOWORD(lparam);
 		int y = HIWORD(lparam);
-		Mouse::GetInstance()->OnMiddlePressed(x, y);
+		this->_mouse.OnMiddlePressed(x, y);
 		return 0;
 	}
 	case WM_LBUTTONUP:
 	{
 		int x = LOWORD(lparam);
 		int y = HIWORD(lparam);
-		Mouse::GetInstance()->OnLeftReleased(x, y);
+		this->_mouse.OnLeftReleased(x, y);
 		return 0;
 	}
 	case WM_RBUTTONUP:
 	{
 		int x = LOWORD(lparam);
 		int y = HIWORD(lparam);
-		Mouse::GetInstance()->OnRightReleased(x, y);
+		this->_mouse.OnRightReleased(x, y);
 		return 0;
 	}
 	case WM_MBUTTONUP:
 	{
 		int x = LOWORD(lparam);
 		int y = HIWORD(lparam);
-		Mouse::GetInstance()->OnMiddleReleased(x, y);
+		this->_mouse.OnMiddleReleased(x, y);
 		return 0;
 	}
 	case WM_MOUSEWHEEL:
@@ -118,11 +118,11 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 		int y = HIWORD(lparam);
 		if (GET_WHEEL_DELTA_WPARAM(wparam) > 0)
 		{
-			Mouse::GetInstance()->OnWheelUp(x, y);
+			this->_mouse.OnWheelUp(x, y);
 		}
 		else if (GET_WHEEL_DELTA_WPARAM(wparam) < 0)
 		{
-			Mouse::GetInstance()->OnWheelDown(x, y);
+			this->_mouse.OnWheelDown(x, y);
 		}
 		return 0;
 	}
@@ -157,13 +157,13 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 
 						int absoluteX = int((raw->data.mouse.lLastX / 65535.0f) * width);
 						int absoluteY = int((raw->data.mouse.lLastY / 65535.0f) * height);
-						Mouse::GetInstance()->OnMouseMoveRawAbsolute(absoluteX, absoluteY);
+						this->_mouse.OnMouseMoveRawAbsolute(absoluteX, absoluteY);
 					}
 					else if (raw->data.mouse.lLastX != 0 || raw->data.mouse.lLastY != 0)
 					{
 						int relativeX = raw->data.mouse.lLastX;
 						int relativeY = raw->data.mouse.lLastY;
-						Mouse::GetInstance()->OnMouseMoveRawRelative(relativeX, relativeY);
+						this->_mouse.OnMouseMoveRawRelative(relativeX, relativeY);
 					}
 				}
 			}
@@ -201,8 +201,13 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 	if (!result)
 		return false;
 
-	result = _renderWindow.Initialize(this, screenWidth, screenHeight);
+	result = this->_controllers.Initalize(_keyboard, _mouse);
+	if (!result)
+	{
+		return false;
+	}
 
+	result = _renderWindow.Initialize(this, screenWidth, screenHeight);
 	if (!result)
 	{
 		return false;
@@ -269,9 +274,5 @@ void App::Shutdown()
 	{
 		delete this->_dataAccess;
 	}
-
-
-	Keyboard::Shutdown();
-	Mouse::Shutdown();
 
 }

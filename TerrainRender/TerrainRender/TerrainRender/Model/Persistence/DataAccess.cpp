@@ -12,7 +12,7 @@ bool TextFileDataAccess::CreateVertex(ModelVertex& vertex,const std::string& lin
     bool bresult;
     switch (type) {
     case BEGIN: {
-        bresult = std::regex_match(line, std::regex("solid .+"));
+        bresult = std::regex_match(line, std::regex("solid.+"));
         type = FACET;
         return bresult;
     }
@@ -20,13 +20,13 @@ bool TextFileDataAccess::CreateVertex(ModelVertex& vertex,const std::string& lin
     case END: {
         vertex.Clear();
 
-        bresult = std::regex_match(line, std::regex("endsolid .+"));
+        bresult = std::regex_match(line, std::regex("endsolid.+"));
         if (bresult)
         {
             return true;
         }
         bresult = std::regex_match(
-            line, std::regex("[ \t\r\n\f]*facet normal( -?[0-9]+[.]?[0-9]*(e-[0-9]+)?){3}"));
+            line, std::regex("[ \t\r\n\f]*facet[ \t\r\n\f]*normal([ \t\r\n\f]*-?[0-9]+[.]?[0-9]*(e[+-][0-9]+)?){3}"));
         if (!bresult) {
             return false;
         }
@@ -44,13 +44,13 @@ bool TextFileDataAccess::CreateVertex(ModelVertex& vertex,const std::string& lin
         return true;
     }
     case LOOP: {
-        bresult = std::regex_match(line, std::regex("[ \t\r\n\f]*outer loop"));
+        bresult = std::regex_match(line, std::regex("[ \t\r\n\f]*outer[ \t\r\n\f]*loop"));
         type = VERTEX;
         return bresult;
     }
     case VERTEX: {
         bresult = std::regex_match(
-            line, std::regex("[ \t\r\n\f]*vertex( -?[0-9]+[.]?[0-9]*(e-[0-9]+)?){3}"));
+            line, std::regex("[ \t\r\n\f]*vertex([ \t\r\n\f]*-?[0-9]+[.]?[0-9]*(e[+-][0-9]+)?){3}"));
         if (!bresult) {
             return false;
         }
@@ -121,7 +121,7 @@ bool TextFileDataAccess::LoadTerrain(const wchar_t* filename, std::vector<ModelV
 
 bool TextFileDataAccess::CreateCameraPose(CameraPose& cameraPose, const std::string& line, const std::vector<std::string>& headers) 
 {
-    bool bresult = std::regex_match(line, std::regex("(-?[0-9]+[.]?[0-9]*(e-[0-9]+)?)(;(-?[0-9]+[.]?[0-9]*(e-[0-9]+)?))*"));
+    bool bresult = std::regex_match(line, std::regex("(-?[0-9]+[.]?[0-9]*(e[+-][0-9]+)?)(;(-?[0-9]+[.]?[0-9]*(e[+-][0-9]+)?))*"));
     if (!bresult)
     {
         return false;

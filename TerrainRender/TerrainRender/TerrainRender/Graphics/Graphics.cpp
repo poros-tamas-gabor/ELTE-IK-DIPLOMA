@@ -3,7 +3,6 @@
 Graphics::Graphics()  {}
 Graphics::~Graphics() {}
 
-
 void Graphics::Update()
 {
 	//TODO::
@@ -108,6 +107,42 @@ bool Graphics::Frame()
 
 	return true; 
 }
+
+
+void Graphics::OnMoveCamera(const CameraMoveEvent::Event& event)
+{
+	float timeElapsed = event.GetData();
+	if (event.IsType(CameraMoveEvent::Type::MoveForward))
+	{
+		this->_position.MoveForward(timeElapsed);
+	}
+	else if (event.IsType(CameraMoveEvent::Type::MoveBack))
+	{
+		this->_position.MoveBack(timeElapsed);
+	}
+	else if (event.IsType(CameraMoveEvent::Type::MoveLeft))
+	{
+		this->_position.MoveLeft(timeElapsed);
+	}
+	else if (event.IsType(CameraMoveEvent::Type::MoveRight))
+	{
+		this->_position.MoveRight(timeElapsed);
+	}
+	else if (event.IsType(CameraMoveEvent::Type::MoveUp))
+	{
+		this->_position.MoveUp(timeElapsed);
+	}
+	else if (event.IsType(CameraMoveEvent::Type::MoveDown))
+	{
+		this->_position.MoveDown(timeElapsed);
+	}
+}
+void Graphics::OnRotateCamera(const CameraRotateEvent::Event& event)
+{
+	CameraRotateEvent::CameraRotation cameraRotation = event.GetData();
+	this->_position.RotatePitchYaw(cameraRotation.pitch, cameraRotation.yaw);
+}
+
 
 void Graphics::SetModel(ModelLayer* model)
 {

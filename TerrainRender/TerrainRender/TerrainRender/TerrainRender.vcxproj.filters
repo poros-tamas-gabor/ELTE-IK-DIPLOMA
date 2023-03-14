@@ -46,6 +46,9 @@
     <Filter Include="Resource Files\ImGui">
       <UniqueIdentifier>{dd6ed4b6-7246-42f8-854f-a1f60c3e7a76}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Controller\Event">
+      <UniqueIdentifier>{011ef120-e09f-4f87-bbd4-086491410816}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -245,14 +248,17 @@
     <ClInclude Include="Controller\GuiController.h">
       <Filter>Header Files\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="Controller\FileSelectEvent.h">
-      <Filter>Header Files\Controller</Filter>
-    </ClInclude>
-    <ClInclude Include="Controller\CameraMoveEvent.h">
-      <Filter>Header Files\Controller</Filter>
-    </ClInclude>
     <ClInclude Include="EventTemplate.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\CameraMoveEvent.h">
+      <Filter>Header Files\Controller\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\CameraRotateEvent.h">
+      <Filter>Header Files\Controller\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\FileSelectEvent.h">
+      <Filter>Header Files\Controller\Event</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

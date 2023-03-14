@@ -3,16 +3,16 @@
 
 #include <string>
 #include "../EventTemplate.h"
-
-enum FileSelectEvent_Type
+namespace FileSelectEvent
 {
-	Invalid,
-	TerrainFile,
-	CameraTrajectoryFile,
-	CameraPropertiesFile
-};
-
-typedef Event<FileSelectEvent_Type, std::wstring> FileSelectEvent;
-
+	enum Type
+	{
+		Invalid,
+		TerrainFile,
+		CameraTrajectoryFile,
+		CameraPropertiesFile
+	};
+	typedef ::Event<Type, std::wstring> Event;
+}
 
 #endif

@@ -1,6 +1,8 @@
 #include "Controllers.h"
 #include "../Graphics/Graphics.h"
-#include "ControllerContainer.h" 
+#include "ControllerContainer.h"
+#include "CameraMoveEvent.h"
+#include "CameraRotateEvent.h"
 
 void Controller3DExplore::Control(float dt) const
 {
@@ -19,30 +21,41 @@ void Controller3DExplore::Control(float dt) const
 		ControlMouse(e);	
 	}
 
+	CameraMoveEvent::Type type(CameraMoveEvent::Invalid);
 	if (_container->_keyboard->KeyIsPressed(VK_SPACE))
 	{
-		this->_graphics->_position.MoveUp(dt);
+		type = CameraMoveEvent::Type::MoveUp;
+		//this->_graphics->_position.MoveUp(dt);
 	}
-	if (_container->_keyboard->KeyIsPressed('C'))
+	else if (_container->_keyboard->KeyIsPressed('C'))
 	{
-		this->_graphics->_position.MoveDown(dt);
+		type = CameraMoveEvent::Type::MoveDown;
+		//this->_graphics->_position.MoveDown(dt);
 	}
-	if (_container->_keyboard->KeyIsPressed('W'))
+	else if (_container->_keyboard->KeyIsPressed('W'))
 	{
-		this->_graphics->_position.MoveForward(dt);
+		type = CameraMoveEvent::Type::MoveForward;
+
+		//this->_graphics->_position.MoveForward(dt);
 	}
-	if (_container->_keyboard->KeyIsPressed('S'))
+	else if (_container->_keyboard->KeyIsPressed('S'))
 	{
-		this->_graphics->_position.MoveBack(dt);
+		type = CameraMoveEvent::Type::MoveBack;
+
+		//this->_graphics->_position.MoveBack(dt);
 	}
-	if (_container->_keyboard->KeyIsPressed('A'))
+	else if (_container->_keyboard->KeyIsPressed('A'))
 	{
-		this->_graphics->_position.MoveLeft(dt);
+		type = CameraMoveEvent::Type::MoveLeft;
+
+		//this->_graphics->_position.MoveLeft(dt);
 	}
-	if (_container->_keyboard->KeyIsPressed('D'))
+	else if (_container->_keyboard->KeyIsPressed('D'))
 	{
-		this->_graphics->_position.MoveRight(dt);
+		type = CameraMoveEvent::Type::MoveRight;
+		//this->_graphics->_position.MoveRight(dt);
 	}
+	this->_graphics->OnMoveCamera(CameraMoveEvent::Event(type, dt));
 }
 
 Controller3DExplore::Controller3DExplore(ControllerContainer* container, ModelLayer* model, Graphics* graphics) : _container(container), _model(model), _graphics(graphics) {}
@@ -60,7 +73,10 @@ void Controller3DExplore::ControlMouse(const MouseEvent& e) const
 
 			if (_container->_mouse->IsLeftDown())
 			{
-				this->_graphics->_position.RotatePitchYaw((float)pitch, (float)yaw);
+				CameraRotateEvent::Event event(CameraRotateEvent::Type::Rotate, { (float)pitch, (float)yaw });
+
+				this->_graphics->OnRotateCamera(event);
+				//this->_graphics->_position.RotatePitchYaw((float)pitch, (float)yaw);
 			}
 
 		}
@@ -70,7 +86,10 @@ void Controller3DExplore::ControlMouse(const MouseEvent& e) const
 	{
 		if (_container->_mouse->IsLeftDown())
 		{
-			this->_graphics->_position.RotatePitchYaw((float)e.GetPosY(), (float)e.GetPosX());
+			CameraRotateEvent::Event event(CameraRotateEvent::Type::Rotate, { (float)e.GetPosY(), (float)e.GetPosX() });
+			this->_graphics->OnRotateCamera(event);
+
+			//this->_graphics->_position.RotatePitchYaw((float)e.GetPosY(), (float)e.GetPosX());
 		}
 	}
 }

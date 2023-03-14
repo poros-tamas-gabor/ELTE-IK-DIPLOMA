@@ -3,9 +3,9 @@
 
 GuiController::GuiController(ModelLayer* model) : _model(model) {}
 
-void GuiController::OnFileLoaded(const FileSelectEvent& event) const
+void GuiController::OnFileLoaded(const FileSelectEvent::Event& event) const
 {
-	if (event.IsType(FileSelectEvent_Type::TerrainFile))
+	if (event.IsType(FileSelectEvent::Type::TerrainFile))
 	{
 		this->_model->LoadTerrain(event.GetData().c_str());
 	}

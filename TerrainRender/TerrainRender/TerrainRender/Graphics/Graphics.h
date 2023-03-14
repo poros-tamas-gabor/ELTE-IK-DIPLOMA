@@ -13,9 +13,12 @@
 #include "ImGuiManager.h"
 #include <vector>
 #include <memory>
+#include "../Controller/CameraMoveEvent.h"
+#include "../Controller/CameraRotateEvent.h"
 
 class IController;
 class GuiController;
+
 class Graphics : public IObserver
 {
 private:
@@ -28,8 +31,9 @@ private:
 	ImGuiManager		_imgui;
 
 	ModelLayer*			_model;
-	const IController*		_controller;
+	const IController*			_controller;
 	const GuiController*		_guiController;
+	Position				_position;
 	
 
 
@@ -48,7 +52,8 @@ public:
 	void SetModel(ModelLayer* model);
 	void SetGuiController(const GuiController* guiController);
 	void SetModeController(const IController* controller);
-	Position				_position;
+	void OnMoveCamera(const CameraMoveEvent::Event& event);
+	void OnRotateCamera(const CameraRotateEvent::Event & event);
 
 
 

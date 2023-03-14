@@ -8,7 +8,7 @@ class GuiController
 {
 public:
 	GuiController(ModelLayer* model);
-	void OnFileLoaded(const FileSelectEvent& event) const;
+	void OnFileLoaded(const FileSelectEvent::Event& event) const;
 private:
 	ModelLayer*	_model;
 };

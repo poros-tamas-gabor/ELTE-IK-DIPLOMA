@@ -177,6 +177,7 @@
   <ItemGroup>
     <ClInclude Include="App.h" />
     <ClInclude Include="Controller\CameraMoveEvent.h" />
+    <ClInclude Include="Controller\CameraRotateEvent.h" />
     <ClInclude Include="Controller\ControllerContainer.h" />
     <ClInclude Include="Controller\Controllers.h" />
     <ClInclude Include="Controller\FileSelectEvent.h" />

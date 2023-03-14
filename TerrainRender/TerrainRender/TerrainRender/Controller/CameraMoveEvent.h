@@ -4,7 +4,9 @@
 #include <string>
 #include "../EventTemplate.h"
 
-enum CameraMoveEvent_Type
+namespace CameraMoveEvent
+{
+enum Type
 {
 	Invalid,
 	MoveForward,
@@ -13,8 +15,8 @@ enum CameraMoveEvent_Type
 	MoveRight,
 	MoveUp,
 	MoveDown
-
 };
+typedef ::Event<Type, float> Event;
+}
 //Data == TimeElapsed unsigned int
-typedef Event<CameraMoveEvent_Type, unsigned int> CameraMoveEvent;
 #endif

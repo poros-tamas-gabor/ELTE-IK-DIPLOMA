@@ -12,19 +12,19 @@ public:
 	virtual bool LoadTerrain(const wchar_t* filename, std::vector<ModelVertex>& vertices) = 0;
 };
 
-class TextFileDataAccess : public IDataAccess
-{
+class TextFileDataAccess : public IDataAccess {
 
 private:
-	void CreateVertex(ModelVertex& vertex, std::stringstream& sstream, std::vector<ModelVertex>& vertices);
+    enum STLLineType { BEGIN, FACET, LOOP, VERTEX, ENDLOOP, ENDFACET, END };
 
+private:
+    bool CreateVertex(ModelVertex& vertex, const std::string& line, std::vector<ModelVertex>& vertices, STLLineType& type, int& vertexCount);
 
 public:
-	TextFileDataAccess() = default;
-	TextFileDataAccess(const TextFileDataAccess&) = delete;
-	TextFileDataAccess&  operator=(const TextFileDataAccess&) = delete;
-	~TextFileDataAccess() = default;
-	bool LoadTerrain(const wchar_t* filename, std::vector<ModelVertex>& vertices) override;
+    TextFileDataAccess() = default;
+    TextFileDataAccess(const TextFileDataAccess&) = delete;
+    TextFileDataAccess& operator=(const TextFileDataAccess&) = delete;
+    ~TextFileDataAccess() = default;
+    bool LoadTerrain(const wchar_t* filename, std::vector<ModelVertex>& vertices) override;
 };
 #endif // ! PERSISTENCE_H
-

@@ -1,0 +1,52 @@
+1 február 27 - március 5 
+
+    <<March 1 - Architect pattern>> 
+    Architektural pattern, uml class diagram, engine tutorial 
+
+2 március 6 - március 12 
+
+    minimum 3d nézet stl minta file beolvasással, szabad kamera mozgás 
+
+3 március 13 - március 19 
+
+    trajektória fájl beolvasás és trajektória adatszerkezet alapján kamera mozgatás (x,y,z, yaw,pitch,roll) 
+
+4 március 20 - március 26 
+
+    trajektória idővonal kattinthatóan ugrik és start/stop. mérési pontok között lineáris interpoláció. 
+
+5 március 27 - április 2 
+
+    árnyalás implementálása, nap statikus párhuzamos fényforrás kiszámolása GPS koordináta és időpont alapján 
+
+6 április 3 - április 9 
+
+    valós minta file (BME templom) beolvasása (valszleg osztályomként _b mint building stb részfileok.) eddigi funkciók tisztázata és dokumentálása. 
+
+7 április 10 - április 16 
+
+    nap áétal vetett árnyékok? 
+
+8 április 17 - április 23 
+
+    GUI szépítése 
+
+9 április 24 - április 30 
+
+    debug/test és dokumentáció 
+
+10 május 1 - május 7 
+
+    trajektória mentés barangolás módban 
+
+11 május 8 - május 14 
+
+    dokumentáció és demo gyakorlás/test 
+
+12 május 15 - május 21 
+
+    <<EXTRA>> 
+
+13 május 22 - május 28 
+
+    <<EXTRA>> 

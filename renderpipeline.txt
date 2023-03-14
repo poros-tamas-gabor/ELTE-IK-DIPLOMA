@@ -1,0 +1,33 @@
+INPUT ASSEMBLER -> VERTEX SHADER -> RASTERIZER -> PIXEL SHADER -> OUTPUT MERGER
+
+----------------------------------------------------------
+INPUT ASSEMBLER : 
+input layout elkeszitese
+szukseg van hozza vertexshaderbufferben ezert ezt a lepest a vertexshader fogja elvegezni
+
+----------------------------------------------------------
+VERTEX SHADER
+
+
+----------------------------------------------------------
+
+----------------------------------------------------------
+
+RASTERIZER
+nem programozhato 
+szinten a d3dmanager vegzi el a bellitasat
+setViewPort
+
+----------------------------------------------------------
+
+PIXEL SHADER
+
+
+----------------------------------------------------------
+
+----------------------------------------------------------
+
+OUTPUT MERGER
+itt az allapotot lehet bellitani nem ugy programozhato allomas
+
+OMSSetRenderTargets hivas, D3DManager vegzi

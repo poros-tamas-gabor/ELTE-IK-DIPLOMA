@@ -209,6 +209,7 @@
     <ClInclude Include="Input\MouseEvent.h" />
     <ClInclude Include="Model\ModelLayer.h" />
     <ClInclude Include="Model\ModelLight.h" />
+    <ClInclude Include="Model\Persistence\CameraPose.h" />
     <ClInclude Include="Model\Persistence\ModelTerrain.h" />
     <ClInclude Include="Model\Persistence\ModelStructs.h" />
     <ClInclude Include="Model\Persistence\DataAccess.h" />

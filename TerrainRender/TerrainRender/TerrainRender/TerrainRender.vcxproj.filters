@@ -260,6 +260,9 @@
     <ClInclude Include="Controller\FileSelectEvent.h">
       <Filter>Header Files\Controller\Event</Filter>
     </ClInclude>
+    <ClInclude Include="Model\Persistence\CameraPose.h">
+      <Filter>Header Files\Model\Persistence</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Graphics\vertexShader.hlsl">

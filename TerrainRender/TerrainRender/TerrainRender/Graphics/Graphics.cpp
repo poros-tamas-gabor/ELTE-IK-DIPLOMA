@@ -3,11 +3,16 @@
 Graphics::Graphics()  {}
 Graphics::~Graphics() {}
 
-void Graphics::Update()
+void Graphics::Update(const ModelEvent::Event& event)
 {
-	//TODO::
 	bool bresult;
-	bresult = _gfxModel.Initialize(this->_d3dmanager.GetDevice(), this->_model);
+
+	if (event.IsType(ModelEvent::TerrainLoaded))
+	{
+		bresult = _gfxModel.Initialize(this->_d3dmanager.GetDevice(), event.GetData());
+
+	}
+
 }
 
 void Graphics::doControl(float dt)

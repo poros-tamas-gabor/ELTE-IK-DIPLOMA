@@ -32,10 +32,18 @@ bool ModelLayer::LoadTerrain(const wchar_t* filepath)
 	this->_isTerrainLoaded = bresult;
 	if (bresult)
 	{
-		this->NotifyObservers();
+		ModelEvent::Event event(ModelEvent::Type::TerrainLoaded, this->GetVertices());
+		this->NotifyObservers(event);
 	}
 	return bresult;
+}
+bool ModelLayer::LoadCameraTrajectory(const wchar_t* filepath)
+{
+	std::vector<CameraPose> cameraPoses;
+	bool bresult = _persistence->LoadCameraTrajectory(filepath, cameraPoses);
+	this->_isTrajektoryLoaded = bresult;
 
+	return bresult;
 }
 const std::vector<ModelVertex>& ModelLayer::GetVertices(void) const
 {
@@ -63,11 +71,11 @@ bool ModelLayer::Detach(IObserver* observer)
 	}
 	return false;
 }
-void ModelLayer::NotifyObservers(void)
+void ModelLayer::NotifyObservers(const ModelEvent::Event& event)
 {
 	for (IObserver* o : _observers)
 	{
-		o->Update();
+		o->Update(event);
 	}
 }
 

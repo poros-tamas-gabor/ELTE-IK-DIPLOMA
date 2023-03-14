@@ -99,9 +99,6 @@
     <ClCompile Include="Timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Persistence\DataAccess.cpp">
-      <Filter>Source Files\Model\Persistence</Filter>
-    </ClCompile>
     <ClCompile Include="Model\ModelLayer.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
@@ -140,6 +137,9 @@
     </ClCompile>
     <ClCompile Include="Controller\GuiController.cpp">
       <Filter>Source Files\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Persistence\DataAccess.cpp">
+      <Filter>Source Files\Model\Persistence</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -262,6 +262,12 @@
     </ClInclude>
     <ClInclude Include="Model\Persistence\CameraPose.h">
       <Filter>Header Files\Model\Persistence</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelEvent.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GfxTrajectory.h">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

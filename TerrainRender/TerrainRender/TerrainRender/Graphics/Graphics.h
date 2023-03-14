@@ -47,7 +47,7 @@ public:
 	bool Initalize(HWND hwnd, float screenWidth, float screenHeight, float screenNear, float screenDepth, bool fullscreen = false, bool vsync = true, float fieldOfView = (float)( /*D3DX_PI*/ DirectX::XM_PI / 4.0f));
 	void Shutdown();
 	bool Frame();
-	void Update() override;
+	void Update(const ModelEvent::Event& event) override;
 	void doControl(float dt);
 	void SetModel(ModelLayer* model);
 	void SetGuiController(const GuiController* guiController);

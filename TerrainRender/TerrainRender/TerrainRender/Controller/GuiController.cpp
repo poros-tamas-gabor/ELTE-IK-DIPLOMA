@@ -9,4 +9,8 @@ void GuiController::OnFileLoaded(const FileSelectEvent::Event& event) const
 	{
 		this->_model->LoadTerrain(event.GetData().c_str());
 	}
+	else if (event.IsType(FileSelectEvent::Type::CameraTrajectoryFile))
+	{
+		this->_model->LoadCameraTrajectory(event.GetData().c_str());
+	}
 }

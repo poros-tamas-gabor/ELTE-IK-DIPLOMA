@@ -5,8 +5,7 @@
 #include <vector>
 #include <d3d11.h>
 #include <DirectXMath.h>
-
-class ModelLayer;
+#include "../Model/Persistence/ModelStructs.h"
 class GfxModel
 {
 private:
@@ -19,8 +18,8 @@ private:
 	};
 
 private:
-	ID3D11Buffer* _vertexBuffer;
-	ID3D11Buffer* _indexBuffer;
+	ID3D11Buffer*	_vertexBuffer;
+	ID3D11Buffer*	_indexBuffer;
 	unsigned int	_vertexCount;
 	unsigned int	_indexCount;
 
@@ -32,7 +31,7 @@ public:
 	GfxModel& operator=(const GfxModel&) = delete;
 
 	
-	bool Initialize(ID3D11Device*, const ModelLayer* );
+	bool Initialize(ID3D11Device*, const std::vector<ModelVertex>& vertices);
 	void Shutdown();
 	void Render(ID3D11DeviceContext*);
 
@@ -40,7 +39,7 @@ public:
 	int GetVertexCount() const;
 
 private:
-	bool InitializeBuffers(ID3D11Device*, const ModelLayer*);
+	bool InitializeBuffers(ID3D11Device*, const std::vector<ModelVertex>& vertices);
 	void ShutdownBuffers();
 	void RenderBuffers(ID3D11DeviceContext*);
 

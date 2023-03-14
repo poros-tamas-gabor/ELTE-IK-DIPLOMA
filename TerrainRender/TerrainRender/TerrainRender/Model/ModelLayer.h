@@ -7,6 +7,7 @@
 #include "Persistence/DataAccess.h"
 #include <memory>
 #include "../Graphics/IObserver.h"
+#include "ModelEvent.h"
 
 class ModelLayer
 {
@@ -27,10 +28,11 @@ public:
 	bool IsTerrainLoaded(void);
 	bool Attach(IObserver* observer);
 	bool Detach(IObserver* observer);
-	void NotifyObservers(void);
+	void NotifyObservers(const ModelEvent::Event& event);
 
 	bool Initalize(IDataAccess* persistence);
 	bool LoadTerrain(const wchar_t* filepath);
+	bool LoadCameraTrajectory(const wchar_t* filepath);
 	void Shutdown();
 	const std::vector<ModelVertex>& GetVertices( void ) const;
 

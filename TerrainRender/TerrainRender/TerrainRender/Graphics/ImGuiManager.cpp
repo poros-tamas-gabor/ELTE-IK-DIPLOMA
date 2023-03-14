@@ -23,9 +23,10 @@ void ImGuiManager::ShowWindow()
 {
     static bool show_another_window = true;
 
+    static wchar_t terrainFilePath[260];       // buffer for file name
+    static wchar_t trajectoryFilePath[260];       // buffer for file name
 
     OPENFILENAME ofn;       // common dialog box structure
-    wchar_t szFile[260];       // buffer for file name
     HWND hwnd = NULL;              // owner window
     HANDLE hf;              // file handle
 
@@ -33,13 +34,13 @@ void ImGuiManager::ShowWindow()
     ZeroMemory(&ofn, sizeof(ofn));
     ofn.lStructSize = sizeof(ofn);
     ofn.hwndOwner = hwnd;
-    ofn.lpstrFile = szFile;
+    ofn.lpstrFile = terrainFilePath;
     //
     // Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
     // use the contents of szFile to initialize itself.
     //
     ofn.lpstrFile[0] = '\0';
-    ofn.nMaxFile = sizeof(szFile);
+    ofn.nMaxFile = sizeof(terrainFilePath);
     ofn.lpstrFilter = L"All\0*.*\0Text\0*.TXT\0";
     ofn.nFilterIndex = 1;
     ofn.lpstrFileTitle = NULL;
@@ -58,10 +59,28 @@ void ImGuiManager::ShowWindow()
         {
             if (GetOpenFileName(&ofn) == TRUE)
             {
-                FileSelectEvent::Event event(FileSelectEvent::Type::TerrainFile, szFile);
+                FileSelectEvent::Event event(FileSelectEvent::Type::TerrainFile, terrainFilePath);
                 this->_guiController->OnFileLoaded(event);
             }
         }
+       //size_t i;
+       //char text[260];
+       //
+       //wcstombs_s(&i, text, terrainFilePath, 260);
+       //ImGui::Text(text);
+
+        ofn.lpstrFile = trajectoryFilePath;
+
+        if (ImGui::Button("Set Trajectory Path"))
+        {
+            if (GetOpenFileName(&ofn) == TRUE)
+            {
+                FileSelectEvent::Event event(FileSelectEvent::Type::CameraTrajectoryFile, trajectoryFilePath);
+                this->_guiController->OnFileLoaded(event);
+            }
+
+        }
+
         ImGui::End();
     }
 

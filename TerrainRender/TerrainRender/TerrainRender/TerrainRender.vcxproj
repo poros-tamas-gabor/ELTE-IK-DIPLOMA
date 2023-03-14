@@ -188,6 +188,7 @@
     <ClInclude Include="Graphics\GfxCamera.h" />
     <ClInclude Include="Graphics\GfxLight.h" />
     <ClInclude Include="Graphics\GfxModel.h" />
+    <ClInclude Include="Graphics\GfxTrajectory.h" />
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\GfxVertex.h" />
     <ClInclude Include="Graphics\ImGuiManager.h" />
@@ -207,6 +208,7 @@
     <ClInclude Include="Input\KeyboardEvent.h" />
     <ClInclude Include="Input\Mouse.h" />
     <ClInclude Include="Input\MouseEvent.h" />
+    <ClInclude Include="Model\ModelEvent.h" />
     <ClInclude Include="Model\ModelLayer.h" />
     <ClInclude Include="Model\ModelLight.h" />
     <ClInclude Include="Model\Persistence\CameraPose.h" />

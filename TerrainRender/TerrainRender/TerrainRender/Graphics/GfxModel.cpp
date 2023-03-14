@@ -2,10 +2,10 @@
 #include	"../ErrorHandler.h"
 #include "../Model/ModelLayer.h"
 
-bool GfxModel::Initialize(ID3D11Device* device, const ModelLayer* modelLayer)
+bool GfxModel::Initialize(ID3D11Device* device, const std::vector<ModelVertex>& vertices)
 {
 	bool bresult;
-	bresult = this->InitializeBuffers(device, modelLayer);
+	bresult = this->InitializeBuffers(device, vertices);
 	if (!bresult)
 	{
 		return false;
@@ -32,7 +32,7 @@ int GfxModel::GetVertexCount() const
 
 }
 
-bool GfxModel::InitializeBuffers(ID3D11Device* device, const ModelLayer* modelLayer)
+bool GfxModel::InitializeBuffers(ID3D11Device* device, const std::vector<ModelVertex>& modelVertices)
 {
 	std::unique_ptr<GfxVertex[]>			vertices;
 	std::unique_ptr<unsigned long[]>		indices;
@@ -42,7 +42,6 @@ bool GfxModel::InitializeBuffers(ID3D11Device* device, const ModelLayer* modelLa
 
 	// Set the number of vertices in the vertex array.
 	// Set the number of indices in the index array.
-	const std::vector<ModelVertex>& modelVertices = modelLayer->GetVertices();
 	this->_indexCount = this->_vertexCount = modelVertices.size();
 
 	//Allocate memory for the array of vertices and indices
@@ -59,7 +58,6 @@ bool GfxModel::InitializeBuffers(ID3D11Device* device, const ModelLayer* modelLa
 		i++;
 
 	}
-
 
 	// Set up the description of the static vertex buffer.
 	ZeroMemory(&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));

@@ -1,16 +1,23 @@
-#ifndef GUI_CONTROLLER_H
-#define GUI_CONTROLLER_H
+#ifndef CONTROLLER_3D_EXPLORE_H
+#define CONTROLLER_3D_EXPLORE_H
 
+#include "../Input/Mouse.h"
+#include "../Input/Keyboard.h"
 #include "IController.h"
-class GuiController : public IController
+
+class TerrainModel;
+class Controller3DExplore : public IController
 {
 private:
-	TerrainModel*							m_terrainModel;
-	std::vector<ControllerEvent::Type>		m_handledEvents;
+	TerrainModel* _terrainModel;
+	Mouse* m_mouse;
+	Keyboard* m_keyboard;
+	std::vector<ControllerEvent::Type>	m_handledEvents;
+
 
 public:
-	GuiController();
-	virtual ~GuiController();
+	Controller3DExplore();
+	virtual ~Controller3DExplore() {}
 
 	virtual bool CanHandle(ControllerEvent::IEvent* event) const override;
 	virtual void Control(ControllerEvent::IEvent* event) override;
@@ -22,6 +29,10 @@ public:
 	virtual void Shutdown() override;
 
 private:
+
+	void ControlMouse(const MouseEvent& e) const;
+	//void ControlKeyboard(const KeyboardEvent& e, float dt) ;
+
 };
 
 

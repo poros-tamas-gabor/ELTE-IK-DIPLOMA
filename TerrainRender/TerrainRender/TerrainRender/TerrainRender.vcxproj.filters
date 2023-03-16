@@ -13,12 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Graphics">
-      <UniqueIdentifier>{c217939f-872a-4bdb-8824-7f58a6efbe83}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Graphics">
-      <UniqueIdentifier>{e784d71c-75ed-4b2b-938a-242a8d0441e2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Input">
       <UniqueIdentifier>{2c9f07b1-7377-49e2-a8c1-9410a770cd15}</UniqueIdentifier>
     </Filter>
@@ -46,8 +40,17 @@
     <Filter Include="Resource Files\ImGui">
       <UniqueIdentifier>{dd6ed4b6-7246-42f8-854f-a1f60c3e7a76}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\View">
+      <UniqueIdentifier>{75fc8090-eef3-4b6a-ba03-cf895a50d68e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\View">
+      <UniqueIdentifier>{402ecc78-d297-4172-9c8e-3f6515935196}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Model\Event">
+      <UniqueIdentifier>{00835c65-94e7-4417-86dd-3f57a9f1bdf8}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Header Files\Controller\Event">
-      <UniqueIdentifier>{011ef120-e09f-4f87-bbd4-086491410816}</UniqueIdentifier>
+      <UniqueIdentifier>{6e102699-eea5-48f5-8c12-a370e2fa361f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -63,12 +66,6 @@
     <ClCompile Include="ErrorHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\D3DManager.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Graphics.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Input\KeyboardEvent.cpp">
       <Filter>Source Files\Input</Filter>
     </ClCompile>
@@ -81,35 +78,8 @@
     <ClCompile Include="Input\Mouse.cpp">
       <Filter>Source Files\Input</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\VertexShader.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\PixelShader.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\GfxModel.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\GfxCamera.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Position.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\ModelLayer.cpp">
-      <Filter>Source Files\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\GfxLight.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\ModelLight.cpp">
-      <Filter>Source Files\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Controller\Controller3DExplore.cpp">
-      <Filter>Source Files\Controller</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_impl_win32.cpp">
       <Filter>Resource Files\ImGui</Filter>
@@ -129,17 +99,53 @@
     <ClCompile Include="ImGui\imgui_impl_dx11.cpp">
       <Filter>Resource Files\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Controller\ControllerContainer.cpp">
-      <Filter>Source Files\Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\ImGuiManager.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Controller\GuiController.cpp">
-      <Filter>Source Files\Controller</Filter>
-    </ClCompile>
     <ClCompile Include="Model\Persistence\DataAccess.cpp">
       <Filter>Source Files\Model\Persistence</Filter>
+    </ClCompile>
+    <ClCompile Include="View\D3DView.cpp">
+      <Filter>Source Files\View</Filter>
+    </ClCompile>
+    <ClCompile Include="View\GuiView.cpp">
+      <Filter>Source Files\View</Filter>
+    </ClCompile>
+    <ClCompile Include="View\TerrainView.cpp">
+      <Filter>Source Files\View</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Camera.cpp">
+      <Filter>Header Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Light.cpp">
+      <Filter>Header Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\PolygonMesh.cpp">
+      <Filter>Header Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\PixelShader.cpp">
+      <Filter>Header Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Position.cpp">
+      <Filter>Header Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\VertexShader.cpp">
+      <Filter>Header Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\SunPosition.cpp">
+      <Filter>Header Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\TerrainModel.cpp">
+      <Filter>Header Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\CompositeRenderable.cpp">
+      <Filter>Header Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller\Controller3DExplore.cpp">
+      <Filter>Header Files\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller\GuiController.cpp">
+      <Filter>Header Files\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller\CompositeController.cpp">
+      <Filter>Header Files\Controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -151,12 +157,6 @@
     </ClInclude>
     <ClInclude Include="ErrorHandler.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Graphics.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\D3DManager.h">
-      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Input\KeyboardEvent.h">
       <Filter>Header Files\Input</Filter>
@@ -170,24 +170,6 @@
     <ClInclude Include="Input\Mouse.h">
       <Filter>Header Files\Input</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\GfxVertex.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\PixelShader.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\GfxModel.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\VertexShader.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\GfxCamera.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Position.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -197,22 +179,7 @@
     <ClInclude Include="Model\Persistence\DataAccess.h">
       <Filter>Header Files\Model\Persistence</Filter>
     </ClInclude>
-    <ClInclude Include="Model\ModelLayer.h">
-      <Filter>Header Files\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\IObserver.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Persistence\ModelTerrain.h">
-      <Filter>Header Files\Model\Persistence</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\GfxLight.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\ModelLight.h">
-      <Filter>Header Files\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Controller\Controllers.h">
+    <ClInclude Include="Controller\Controller3DExplore.h">
       <Filter>Header Files\Controller</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_impl_dx11.h">
@@ -239,48 +206,91 @@
     <ClInclude Include="ImGui\imgui.h">
       <Filter>Resource Files\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Controller\ControllerContainer.h">
+    <ClInclude Include="Controller\CompositeController.h">
       <Filter>Header Files\Controller</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\ImGuiManager.h">
-      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Controller\GuiController.h">
       <Filter>Header Files\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="EventTemplate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Controller\CameraMoveEvent.h">
-      <Filter>Header Files\Controller\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="Controller\CameraRotateEvent.h">
-      <Filter>Header Files\Controller\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="Controller\FileSelectEvent.h">
-      <Filter>Header Files\Controller\Event</Filter>
-    </ClInclude>
     <ClInclude Include="Model\Persistence\CameraPose.h">
       <Filter>Header Files\Model\Persistence</Filter>
     </ClInclude>
-    <ClInclude Include="Model\ModelEvent.h">
+    <ClInclude Include="View\IView.h">
+      <Filter>Source Files\View</Filter>
+    </ClInclude>
+    <ClInclude Include="View\GuiView.h">
+      <Filter>Source Files\View</Filter>
+    </ClInclude>
+    <ClInclude Include="View\TerrainView.h">
+      <Filter>Source Files\View</Filter>
+    </ClInclude>
+    <ClInclude Include="View\D3DView.h">
+      <Filter>Source Files\View</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Camera.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\GfxTrajectory.h">
-      <Filter>Header Files\Graphics</Filter>
+    <ClInclude Include="Model\Light.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PolygonMesh.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PixelShader.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Position.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\VertexShader.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\SunPosition.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\IRenderable.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Vertex.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\TerrainModel.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\IModel.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Event\CameraMoveEvent.h">
+      <Filter>Header Files\Model\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Event\CameraRotateEvent.h">
+      <Filter>Header Files\Model\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Event\EventTemplate.h">
+      <Filter>Header Files\Model\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Event\FileSelectEvent.h">
+      <Filter>Header Files\Model\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\IController.h">
+      <Filter>Header Files\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\CompositeRenderable.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\IEvent.h">
+      <Filter>Header Files\Controller\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\ControllerEvents.h">
+      <Filter>Header Files\Controller\Event</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Graphics\vertexShader.hlsl">
-      <Filter>Source Files\Graphics</Filter>
+    <FxCompile Include="Model\pixelShader.hlsl">
+      <Filter>Header Files\Model</Filter>
     </FxCompile>
-    <FxCompile Include="Graphics\pixelShader.hlsl">
-      <Filter>Source Files\Graphics</Filter>
+    <FxCompile Include="Model\vertexShader.hlsl">
+      <Filter>Header Files\Model</Filter>
     </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\File\Sphericon.stl">
-      <Filter>Source Files\Graphics</Filter>
-    </None>
   </ItemGroup>
 </Project>

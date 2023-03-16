@@ -4,16 +4,16 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include "RenderWindow.h"
-#include "Graphics/Graphics.h"
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
 #include "Timer.h"
-#include "Model/ModelLayer.h"
 #include "Model/Persistence/DataAccess.h"
 #include <memory>
-#include "Controller/ControllerContainer.h"
 #include <vector>
 #include "ImGui/imgui.h"
+#include "Model/TerrainModel.h"
+#include "Controller/CompositeController.h"
+#include "View/TerrainView.h"
 
 class App
 {
@@ -22,16 +22,15 @@ private:
 	RenderWindow				_renderWindow;
 	
 	Timer						_timer;
-	Graphics					_graphics;
-	ModelLayer					_model;
-	IDataAccess*				_dataAccess;
-	ControllerContainer			_controllers;
+	TerrainModel				m_terrainModel;
+	TerrainView					m_terrainView;
+	CompositeController			m_terrainController;
+	IDataAccess*				m_dataAccess;
 
 
 	void Update();
 	void RenderFrame();
 	bool ProcessMessages();
-	void InitializeMVCArchitecture();
 
 public:
 	App();

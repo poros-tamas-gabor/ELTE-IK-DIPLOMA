@@ -7,6 +7,13 @@
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_dx11.h"
 
+
+//TODO: DELETE
+#include "Controller/GuiController.h"
+#include "Controller/Controller3DExplore.h"
+#include "Controller/ControllerEvents.h"
+
+
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 App::App()
@@ -242,70 +249,55 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 }
 bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 {
-	this->InitializeMVCArchitecture();
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	//ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+	this->m_terrainView.SetController(&this->m_terrainController);
+	this->m_terrainView.SetModel(&this->m_terrainModel);
 
 	bool result;
 
-	this->_dataAccess = new TextFileDataAccess;
-	if (this->_dataAccess == nullptr)
+	this->m_dataAccess = new TextFileDataAccess;
+	if (this->m_dataAccess == nullptr)
 		return false;
-
-	
-	result = _model.Initalize(this->_dataAccess);
-	if (!result)
-	{
-		return false;
-	}
-
-	result = this->_model.Attach(&this->_graphics);
-	if (!result)
-		return false;
-
-
 
 	result = _renderWindow.Initialize(this, screenWidth, screenHeight);
 	if (!result)
-	{
 		return false;
-	}
 
 	ImGui_ImplWin32_Init(this->_renderWindow.GetHWND());
 
-	result = this->_controllers.Initalize(_keyboard, _mouse);
+	result = this->m_terrainController.Initialize(&this->m_terrainModel, &this->_mouse, &this->_keyboard);
 	if (!result)
-	{
 		return false;
+
+	//TODO : ne itt legyen
+	{
+		IControllerPtr c = std::make_shared<Controller3DExplore>();
+
+		c->Initialize(&this->m_terrainModel, &this->_mouse, &this->_keyboard);
+		this->m_terrainController.AddController(c);
+
+		IControllerPtr guic = std::make_shared<GuiController>();
+
+		guic->Initialize(&this->m_terrainModel, &this->_mouse, &this->_keyboard);
+		this->m_terrainController.AddController(guic);
+
+
 	}
 
-	this->_graphics.SetModeController(this->_controllers.GetCurrentModeController());
-	this->_graphics.SetGuiController(this->_controllers.GetGuiController());
-
-	result = this->_graphics.Initalize(this->_renderWindow.GetHWND(), (float)screenWidth, (float)screenHeight, 1, 100);
-
+	result = this->m_terrainView.Initalize(_renderWindow.GetHWND(), screenWidth, screenHeight);
 	if (!result)
-	{
 		return false;
-	}
 
-
-
-	
+	result = this->m_terrainModel.Initalize(_renderWindow.GetHWND(), m_dataAccess, m_terrainView.GetDevice(), screenWidth, screenHeight, 1, 1000);
 
 	_timer.Start();
 	return true;
 }
 
-
-void App::InitializeMVCArchitecture()
-{
-	this->_graphics.SetModel(&this->_model);
-	this->_controllers.SetModel(&this->_model);
-	this->_controllers.SetView(&this->_graphics);
-}
 bool App::ProcessMessages()
 {
 	return this->_renderWindow.ProcessMessages();
@@ -315,17 +307,16 @@ void App::Update()
 {
 	float dt = (float)this->_timer.GetMilisecondsElapsed();
 	this->_timer.Restart();
-	const IController* c = this->_controllers.GetCurrentModeController();
-	if (c != nullptr)
-	{
-		c->Control(dt);
-	}
+
+	ControllerEvent::NewFrameEvent event;
+	event.SetElapsedMiliseconds(dt);
+	this->m_terrainController.Control(&event);
 }
 
 
 void App::RenderFrame()
 {
-	this->_graphics.Frame();
+	this->m_terrainView.RenderFrame();
 
 }
 void App::Run()
@@ -339,13 +330,13 @@ void App::Run()
 void App::Shutdown()
 {
 	// Shutdown the window.
-	if (this->_dataAccess)
+	if (this->m_dataAccess)
 	{
-		delete this->_dataAccess;
+		delete this->m_dataAccess;
 	}
-	this->_graphics.Shutdown();
-	this->_model.Shutdown();
-	this->_controllers.Shutdown();
+	this->m_terrainController.Shutdown();
+	this->m_terrainModel.Shutdown();
+	this->m_terrainView.Shutdown();
 
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();

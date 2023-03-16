@@ -42,7 +42,7 @@ void ControllerContainer::SetModel(ModelLayer* model)
 {
 	this->_model = model;
 }
-void ControllerContainer::SetView(Graphics* view)
+void ControllerContainer::SetView(TerrainModel* view)
 {
 	this->_view = view;
 }

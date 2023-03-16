@@ -8,7 +8,7 @@
 #include <regex>
 
 
-bool TextFileDataAccess::CreateVertex(ModelVertex& vertex,const std::string& line,std::vector<ModelVertex>& vertices, STLLineType& type, int& vertexCount) {
+bool TextFileDataAccess::CreateVertex(Vertex& vertex,const std::string& line,std::vector<Vertex>& vertices, STLLineType& type, int& vertexCount) {
     bool bresult;
     switch (type) {
     case BEGIN: {
@@ -18,7 +18,9 @@ bool TextFileDataAccess::CreateVertex(ModelVertex& vertex,const std::string& lin
     }
     case FACET:
     case END: {
-        vertex.Clear();
+        vertex.color    = { 1.0f, 1.0f, 1.0f, 1.0f };
+        vertex.normal   = { 0,0,0};
+        vertex.position = { 0,0,0 };
 
         bresult = std::regex_match(line, std::regex("endsolid.+"));
         if (bresult)
@@ -88,12 +90,12 @@ bool TextFileDataAccess::CreateVertex(ModelVertex& vertex,const std::string& lin
     }
 }
 
-bool TextFileDataAccess::LoadTerrain(const wchar_t* filename, std::vector<ModelVertex>& vertices)
+bool TextFileDataAccess::LoadTerrain(const wchar_t* filename, std::vector<Vertex>& vertices)
 {
 	std::ifstream   input;
 	std::string     line;
     STLLineType     type = STLLineType::BEGIN;
-	ModelVertex     vertex;
+	Vertex          vertex;
 
 	input.open(filename, std::ifstream::in);
 

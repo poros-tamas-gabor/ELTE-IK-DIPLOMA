@@ -144,19 +144,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Controller\CompositeController.cpp" />
     <ClCompile Include="Controller\Controller3DExplore.cpp" />
-    <ClCompile Include="Controller\ControllerContainer.cpp" />
     <ClCompile Include="Controller\GuiController.cpp" />
     <ClCompile Include="ErrorHandler.cpp" />
-    <ClCompile Include="Graphics\D3DManager.cpp" />
-    <ClCompile Include="Graphics\GfxCamera.cpp" />
-    <ClCompile Include="Graphics\GfxLight.cpp" />
-    <ClCompile Include="Graphics\GfxModel.cpp" />
-    <ClCompile Include="Graphics\Graphics.cpp" />
-    <ClCompile Include="Graphics\ImGuiManager.cpp" />
-    <ClCompile Include="Graphics\PixelShader.cpp" />
-    <ClCompile Include="Graphics\Position.cpp" />
-    <ClCompile Include="Graphics\VertexShader.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_demo.cpp" />
     <ClCompile Include="ImGui\imgui_draw.cpp" />
@@ -168,34 +159,31 @@
     <ClCompile Include="Input\Mouse.cpp" />
     <ClCompile Include="Input\MouseEvent.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Model\ModelLayer.cpp" />
-    <ClCompile Include="Model\ModelLight.cpp" />
+    <ClCompile Include="Model\Camera.cpp" />
+    <ClCompile Include="Model\CompositeRenderable.cpp" />
+    <ClCompile Include="Model\Light.cpp" />
+    <ClCompile Include="Model\PolygonMesh.cpp" />
     <ClCompile Include="Model\Persistence\DataAccess.cpp" />
+    <ClCompile Include="Model\PixelShader.cpp" />
+    <ClCompile Include="Model\Position.cpp" />
+    <ClCompile Include="Model\SunPosition.cpp" />
+    <ClCompile Include="Model\TerrainModel.cpp" />
+    <ClCompile Include="Model\VertexShader.cpp" />
     <ClCompile Include="RenderWindow.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="View\D3DView.cpp" />
+    <ClCompile Include="View\TerrainView.cpp" />
+    <ClCompile Include="View\GuiView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
-    <ClInclude Include="Controller\CameraMoveEvent.h" />
-    <ClInclude Include="Controller\CameraRotateEvent.h" />
-    <ClInclude Include="Controller\ControllerContainer.h" />
-    <ClInclude Include="Controller\Controllers.h" />
-    <ClInclude Include="Controller\FileSelectEvent.h" />
+    <ClInclude Include="Controller\CompositeController.h" />
+    <ClInclude Include="Controller\Controller3DExplore.h" />
+    <ClInclude Include="Controller\ControllerEvents.h" />
     <ClInclude Include="Controller\GuiController.h" />
+    <ClInclude Include="Controller\IController.h" />
+    <ClInclude Include="Controller\IEvent.h" />
     <ClInclude Include="ErrorHandler.h" />
-    <ClInclude Include="EventTemplate.h" />
-    <ClInclude Include="Graphics\D3DManager.h" />
-    <ClInclude Include="Graphics\GfxCamera.h" />
-    <ClInclude Include="Graphics\GfxLight.h" />
-    <ClInclude Include="Graphics\GfxModel.h" />
-    <ClInclude Include="Graphics\GfxTrajectory.h" />
-    <ClInclude Include="Graphics\Graphics.h" />
-    <ClInclude Include="Graphics\GfxVertex.h" />
-    <ClInclude Include="Graphics\ImGuiManager.h" />
-    <ClInclude Include="Graphics\IObserver.h" />
-    <ClInclude Include="Graphics\PixelShader.h" />
-    <ClInclude Include="Graphics\Position.h" />
-    <ClInclude Include="Graphics\VertexShader.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
     <ClInclude Include="ImGui\imgui_impl_dx11.h" />
@@ -208,32 +196,39 @@
     <ClInclude Include="Input\KeyboardEvent.h" />
     <ClInclude Include="Input\Mouse.h" />
     <ClInclude Include="Input\MouseEvent.h" />
-    <ClInclude Include="Model\ModelEvent.h" />
-    <ClInclude Include="Model\ModelLayer.h" />
-    <ClInclude Include="Model\ModelLight.h" />
+    <ClInclude Include="Model\Camera.h" />
+    <ClInclude Include="Model\CompositeRenderable.h" />
+    <ClInclude Include="Model\Event\CameraMoveEvent.h" />
+    <ClInclude Include="Model\Event\CameraRotateEvent.h" />
+    <ClInclude Include="Model\Event\EventTemplate.h" />
+    <ClInclude Include="Model\Event\FileSelectEvent.h" />
+    <ClInclude Include="Model\IModel.h" />
+    <ClInclude Include="Model\IRenderable.h" />
+    <ClInclude Include="Model\Light.h" />
+    <ClInclude Include="Model\PolygonMesh.h" />
     <ClInclude Include="Model\Persistence\CameraPose.h" />
-    <ClInclude Include="Model\Persistence\ModelTerrain.h" />
     <ClInclude Include="Model\Persistence\ModelStructs.h" />
     <ClInclude Include="Model\Persistence\DataAccess.h" />
+    <ClInclude Include="Model\PixelShader.h" />
+    <ClInclude Include="Model\Position.h" />
+    <ClInclude Include="Model\SunPosition.h" />
+    <ClInclude Include="Model\TerrainModel.h" />
+    <ClInclude Include="Model\Vertex.h" />
+    <ClInclude Include="Model\VertexShader.h" />
     <ClInclude Include="RenderWindow.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="View\D3DView.h" />
+    <ClInclude Include="View\TerrainView.h" />
+    <ClInclude Include="View\GuiView.h" />
+    <ClInclude Include="View\IView.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Graphics\pixelShader.hlsl">
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    <FxCompile Include="Model\pixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="Graphics\vertexShader.hlsl">
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    <FxCompile Include="Model\vertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
     </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\File\Sphericon.stl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

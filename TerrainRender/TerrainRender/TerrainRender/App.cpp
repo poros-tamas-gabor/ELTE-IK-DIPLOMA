@@ -292,7 +292,7 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 	if (!result)
 		return false;
 
-	result = this->m_terrainModel.Initalize(_renderWindow.GetHWND(), m_dataAccess, m_terrainView.GetDevice(), screenWidth, screenHeight, 1, 1000);
+	result = this->m_terrainModel.Initalize(_renderWindow.GetHWND(), m_dataAccess, m_terrainView.GetDevice(), screenWidth, screenHeight, 1, 100);
 
 	_timer.Start();
 	return true;

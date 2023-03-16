@@ -81,14 +81,14 @@ ID3D11PixelShader* PixelShader::GetPixelShader(void)
 	return this->m_pixelShader;
 }
 
-bool PixelShader::Render(ID3D11DeviceContext* deviceContext, int indexCount)
+bool PixelShader::Render(ID3D11DeviceContext* deviceContext, int vertexCount)
 {
-	this->RenderShader(deviceContext, indexCount);
+	this->RenderShader(deviceContext, vertexCount);
 	return true;
 }
-void PixelShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount) {
+void PixelShader::RenderShader(ID3D11DeviceContext* deviceContext, int vertexCount) {
 
 	deviceContext->PSSetShader(this->m_pixelShader, NULL, 0);
-	deviceContext->DrawIndexed(indexCount, 0, 0);
+	deviceContext->Draw(vertexCount, 0);
 }
 

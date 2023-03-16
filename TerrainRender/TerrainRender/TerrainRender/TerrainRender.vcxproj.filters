@@ -284,6 +284,12 @@
     <ClInclude Include="Controller\ControllerEvents.h">
       <Filter>Header Files\Controller\Event</Filter>
     </ClInclude>
+    <ClInclude Include="Model\Event\IEvent.h">
+      <Filter>Header Files\Model\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Event\ModelEvent.h">
+      <Filter>Header Files\Model\Event</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Model\pixelShader.hlsl">

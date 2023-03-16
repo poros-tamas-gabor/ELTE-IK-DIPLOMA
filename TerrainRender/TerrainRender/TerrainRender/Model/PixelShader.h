@@ -20,7 +20,7 @@ public:
 
 	bool Initialize(ID3D11Device*, HWND) ;
 	void Shutdown() ;
-	bool Render(ID3D11DeviceContext*, int indexCount);
+	bool Render(ID3D11DeviceContext*, int vertexCount);
 
 	ID3D11PixelShader* GetPixelShader(void);
 
@@ -28,6 +28,6 @@ private:
 	bool InitializeShader(ID3D11Device*, HWND, const WCHAR*) ;
 	void ShutdownShader() ;
 
-	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount);
+	void RenderShader(ID3D11DeviceContext* deviceContext, int vertexCount);
 };
 #endif // !SHADER_H

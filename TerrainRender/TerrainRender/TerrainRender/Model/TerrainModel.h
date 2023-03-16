@@ -17,6 +17,7 @@
 #include "Event/FileSelectEvent.h"
 #include "Persistence/DataAccess.h"
 #include "CompositeRenderable.h"
+#include "Event/ModelEvent.h"
 #pragma comment(lib, "D3DCompiler.lib")
 #pragma comment(lib, "d3d11.lib")
 
@@ -34,6 +35,7 @@ private:
 	ID3D11DeviceContext*		m_deviceContext;
 	IDataAccess*				m_persistence;
 
+
 public:
 
 	TerrainModel();
@@ -42,14 +44,16 @@ public:
 	bool	Initalize(HWND hwnd, IDataAccess* persistence, ID3D11Device* device, int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView = (DirectX::XM_PI / 4.0f));
 	void	Shutdown();
 	bool	Render(ID3D11DeviceContext* deviceContext);
-	void	OnMoveCamera(const CameraMoveEvent::Event& event);
-	void	OnRotateCamera(const CameraRotateEvent::Event& event);
-	void	OnFileSelect(const FileSelectEvent::Event& event);
+
+	void	EventHandler(ModelEvent::IEvent* event);
+
 
 	bool	LoadTerrain(const wchar_t* filepath);
 	bool	LoadCameraTrajectory(const wchar_t* filepath);
 
-
+	void	OnMoveCamera(const CameraMoveEvent::Event& event);
+	void	OnRotateCamera(const CameraRotateEvent::Event& event);
+	void	OnFileSelect(const FileSelectEvent::Event& event);
 
 };
 

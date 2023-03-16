@@ -80,6 +80,30 @@ void GuiView::ShowSettingWindow()
             }
 
         }
+        static float speeds[2] = { 50, 50 };
+        if (ImGui::SliderFloat2("Set Camera Speed and Rotation Speed", speeds, 0, 100))
+        {
+            ControllerEvent::EnterFloatEvent event;
+            event.SetEventType(ControllerEvent::EnterFloat_cameraMoveSpeed);
+            event.SetFloatData(speeds[0]/10000);
+            this->m_terrainController->Control(&event);
+
+
+            event.SetEventType(ControllerEvent::EnterFloat_cameraRotationSpeed);
+            event.SetFloatData(speeds[1] / 50000);
+            this->m_terrainController->Control(&event);
+        }
+
+        if (ImGui::Button("Reset Camera"))
+        {
+            ControllerEvent::Event event;
+            event.SetEventType(ControllerEvent::ClickButton_ResetCamera);
+            this->m_terrainController->Control(&event);
+
+        }
+
+
+
 
         ImGui::End();
     }

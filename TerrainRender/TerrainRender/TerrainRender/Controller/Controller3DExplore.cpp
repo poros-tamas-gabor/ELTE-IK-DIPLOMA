@@ -20,60 +20,57 @@ void Controller3DExplore::Control(ControllerEvent::IEvent* event)
 		if (ControllerEvent::NewFrameEvent* castedEvent = dynamic_cast<ControllerEvent::NewFrameEvent*>(event))
 		{
 			TimeEllapsed = castedEvent->GetElapsedMiliseconds();
+
+			while (!m_keyboard->KeyBufferIsEmpty())
+			{
+				KeyboardEvent e = m_keyboard->ReadKey();
+			}
+			while (!m_keyboard->CharBufferIsEmpty())
+			{
+				unsigned char c = m_keyboard->ReadChar();
+			}
+
+			while (!m_mouse->EventBufferIsEmpty())
+			{
+				MouseEvent e = m_mouse->ReadEvent();
+				ControlMouse(e);
+			}
+
+			if (m_keyboard->KeyIsPressed(VK_SPACE))
+			{
+				CameraMoveEvent::Type type = CameraMoveEvent::Type::MoveUp;
+				this->_terrainModel->OnMoveCamera(CameraMoveEvent::Event(type, TimeEllapsed));
+			}
+			if (m_keyboard->KeyIsPressed('C'))
+			{
+				CameraMoveEvent::Type type = CameraMoveEvent::Type::MoveDown;
+				this->_terrainModel->OnMoveCamera(CameraMoveEvent::Event(type, TimeEllapsed));
+			}
+			if (m_keyboard->KeyIsPressed('W'))
+			{
+				CameraMoveEvent::Type type = CameraMoveEvent::Type::MoveForward;
+				this->_terrainModel->OnMoveCamera(CameraMoveEvent::Event(type, TimeEllapsed));
+
+			}
+			if (m_keyboard->KeyIsPressed('S'))
+			{
+				CameraMoveEvent::Type type = CameraMoveEvent::Type::MoveBack;
+				this->_terrainModel->OnMoveCamera(CameraMoveEvent::Event(type, TimeEllapsed));
+
+			}
+			if (m_keyboard->KeyIsPressed('A'))
+			{
+				CameraMoveEvent::Type type = CameraMoveEvent::Type::MoveLeft;
+				this->_terrainModel->OnMoveCamera(CameraMoveEvent::Event(type, TimeEllapsed));
+
+			}
+			if (m_keyboard->KeyIsPressed('D'))
+			{
+				CameraMoveEvent::Type type = CameraMoveEvent::Type::MoveRight;
+				this->_terrainModel->OnMoveCamera(CameraMoveEvent::Event(type, TimeEllapsed));
+			}
 		}
-		else
-		{
-			return;
-		}
-	}
 
-	while (!m_keyboard->KeyBufferIsEmpty())
-	{
-		KeyboardEvent e = m_keyboard->ReadKey();
-	}
-	while (!m_keyboard->CharBufferIsEmpty())
-	{
-		unsigned char c = m_keyboard->ReadChar();
-	}
-
-	while (!m_mouse->EventBufferIsEmpty())
-	{
-		MouseEvent e = m_mouse->ReadEvent();
-		ControlMouse(e);
-	}
-
-	if (m_keyboard->KeyIsPressed(VK_SPACE))
-	{
-		CameraMoveEvent::Type type = CameraMoveEvent::Type::MoveUp;
-		this->_terrainModel->OnMoveCamera(CameraMoveEvent::Event(type, TimeEllapsed));
-	}
-	else if (m_keyboard->KeyIsPressed('C'))
-	{
-		CameraMoveEvent::Type type = CameraMoveEvent::Type::MoveDown;
-		this->_terrainModel->OnMoveCamera(CameraMoveEvent::Event(type, TimeEllapsed));
-	}
-	else if (m_keyboard->KeyIsPressed('W'))
-	{
-		CameraMoveEvent::Type type = CameraMoveEvent::Type::MoveForward;
-		this->_terrainModel->OnMoveCamera(CameraMoveEvent::Event(type, TimeEllapsed));
-
-	}
-	else if (m_keyboard->KeyIsPressed('S'))
-	{
-		CameraMoveEvent::Type type = CameraMoveEvent::Type::MoveBack;
-		this->_terrainModel->OnMoveCamera(CameraMoveEvent::Event(type, TimeEllapsed));
-
-	}
-	else if (m_keyboard->KeyIsPressed('A'))
-	{
-		CameraMoveEvent::Type type = CameraMoveEvent::Type::MoveLeft;
-		this->_terrainModel->OnMoveCamera(CameraMoveEvent::Event(type, TimeEllapsed));
-
-	}
-	else if (m_keyboard->KeyIsPressed('D'))
-	{
-		CameraMoveEvent::Type type = CameraMoveEvent::Type::MoveRight;
-		this->_terrainModel->OnMoveCamera(CameraMoveEvent::Event(type, TimeEllapsed));
 	}
 
 }

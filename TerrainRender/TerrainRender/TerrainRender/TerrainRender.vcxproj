@@ -202,6 +202,8 @@
     <ClInclude Include="Model\Event\CameraRotateEvent.h" />
     <ClInclude Include="Model\Event\EventTemplate.h" />
     <ClInclude Include="Model\Event\FileSelectEvent.h" />
+    <ClInclude Include="Model\Event\IEvent.h" />
+    <ClInclude Include="Model\Event\ModelEvent.h" />
     <ClInclude Include="Model\IModel.h" />
     <ClInclude Include="Model\IRenderable.h" />
     <ClInclude Include="Model\Light.h" />

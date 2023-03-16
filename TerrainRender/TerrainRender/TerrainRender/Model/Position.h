@@ -42,6 +42,8 @@ public:
 	void RotatePitchYaw(float x, float y);
 	void Initialize(Camera* camera);
 
+	void SetSpeed(float speed);
+	void SetRotationSpeed(float speed);
 
 };
 

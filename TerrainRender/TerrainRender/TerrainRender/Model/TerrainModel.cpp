@@ -101,3 +101,32 @@ bool TerrainModel::LoadTerrain(const wchar_t* filepath)
 	}
 	return bresult;
 }
+
+void TerrainModel::EventHandler(ModelEvent::IEvent* event)
+{
+	
+	if (event->GetEventType() == ModelEvent::Type::SetCameraMoveSpeed)
+	{
+		if (ModelEvent::SetFloatData* castedEvent = dynamic_cast<ModelEvent::SetFloatData*>(event))
+		{
+			float speed = castedEvent->GetData();
+			this->m_position.SetSpeed(speed);
+		}
+	}
+
+	if (event->GetEventType() == ModelEvent::Type::SetCameraRotationSpeed)
+	{
+		if (ModelEvent::SetFloatData* castedEvent = dynamic_cast<ModelEvent::SetFloatData*>(event))
+		{
+			float speed = castedEvent->GetData();
+			this->m_position.SetRotationSpeed(speed);
+		}
+	}
+
+	if (event->GetEventType() == ModelEvent::Type::ResetCamera)
+	{
+		this->m_camera.SetLookAtPos({ 0,0,0 });
+	}
+}
+
+

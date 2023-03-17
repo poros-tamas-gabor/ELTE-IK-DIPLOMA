@@ -4,7 +4,7 @@ Camera::Camera()
 {
 	this->_positionX = 0.0f;
 	this->_positionY = 0.0f;
-	this->_positionZ = -10.0f;
+	this->_positionZ = -2.0f;
 
 	this->_rotationX = 0.0f;
 	this->_rotationY = 0.0f;
@@ -60,9 +60,9 @@ void Camera::Initialize(int screenWidth, int screenHeight, float screenNear, flo
 	this->SetProjectionValues(fieldOfView, screenAspect, screenNear, screenDepth);
 }
 
-void Camera::SetProjectionValues(float fovDegrees, float aspectRatio, float nearScreen, float farScreen)
+void Camera::SetProjectionValues(float fovRadian, float aspectRatio, float nearScreen, float farScreen)
 {
-	this->_projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(fovDegrees), aspectRatio, nearScreen, farScreen);
+	this->_projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(fovRadian, aspectRatio, nearScreen, farScreen);
 }
 
 void Camera::SetLookAtPos(const DirectX::XMFLOAT3& lookAtFloat)
@@ -105,7 +105,7 @@ void Camera::Render()
 	this->_rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(rotXRad, rotYRad, rotZRad);
 
 	// Setup the position of the camera in the world.
-	DirectX::XMVECTOR positonVector  = DirectX::XMVectorSet(this->_positionX, this->_positionY, this->_positionZ, 0.0f);
+	DirectX::XMVECTOR positonVector = DirectX::XMVectorSet(this->_positionX, this->_positionY, this->_positionZ, 0.0f);
 
 	// Transform the lookAt and up vector by the rotation matrix so the view is correctly rotated at the origin.
 	DirectX::XMVECTOR lookatVector = DirectX::XMVector4Transform(this->DEFAULT_LOOKAT_VECTOR, this->_rotationMatrix);

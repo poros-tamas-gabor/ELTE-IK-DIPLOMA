@@ -4,7 +4,7 @@
 #include <DirectXMath.h>
 
 class Camera;
-class Position 
+class Position
 {
 
 private:
@@ -22,7 +22,7 @@ private:
 	DirectX::XMVECTOR m_current_left;
 	DirectX::XMVECTOR m_current_right;
 
-	DirectX::XMMATRIX _rotationMatrix;
+	DirectX::XMMATRIX m_rotationMatrix;
 
 	Camera* m_camera;
 
@@ -32,7 +32,6 @@ private:
 	void MoveTemplate(const DirectX::XMVECTOR& default_vector, DirectX::XMVECTOR& currentVector, float dt);
 public:
 
-	void SetVectors(const DirectX::XMMATRIX rotationMatrix);
 	void MoveForward(float dt);
 	void MoveBack(float dt);
 	void MoveLeft(float dt);

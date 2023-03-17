@@ -20,6 +20,7 @@ private:
 	float	_rotationY;		//in radian
 	float	_rotationZ;		//in radian
 
+
 public:
 	Camera();
 	Camera(const Camera& other) = delete;
@@ -27,7 +28,7 @@ public:
 
 	void Initialize(int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView);
 
-	void SetProjectionValues(float fovDegrees, float aspectRatio, float nearZ, float farZ);
+	void SetProjectionValues(float fovRad, float aspectRatio, float nearZ, float farZ);
 
 	void SetPosition(float x, float y, float z);
 	void SetRotationRad(float x, float y, float z);

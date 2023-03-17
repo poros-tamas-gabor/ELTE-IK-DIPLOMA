@@ -99,6 +99,7 @@ bool TerrainModel::LoadTerrain(const wchar_t* filepath)
 		vertexCount = vertices.size();
 		this->m_scene.Add(pVertices, vertexCount);
 	}
+
 	return bresult;
 }
 

@@ -12,9 +12,10 @@ bool TextFileDataAccess::CreateVertex(Vertex& vertex,const std::string& line,std
     bool bresult;
     switch (type) {
     case BEGIN: {
-        bresult = std::regex_match(line, std::regex("solid.+"));
+        //bresult = std::regex_match(line, std::regex("solid.+"));
         type = FACET;
-        return bresult;
+        //return bresult;
+        return true;
     }
     case FACET:
     case END: {
@@ -22,16 +23,16 @@ bool TextFileDataAccess::CreateVertex(Vertex& vertex,const std::string& line,std
         vertex.normal   = { 0,0,0};
         vertex.position = { 0,0,0 };
 
-        bresult = std::regex_match(line, std::regex("endsolid.+"));
-        if (bresult)
-        {
-            return true;
-        }
-        bresult = std::regex_match(
-            line, std::regex("[ \t\r\n\f]*facet[ \t\r\n\f]*normal([ \t\r\n\f]*-?[0-9]+[.]?[0-9]*(e[+-][0-9]+)?){3}"));
-        if (!bresult) {
-            return false;
-        }
+       bresult = std::regex_match(line, std::regex("endsolid.+"));
+       if (bresult)
+       {
+           return true;
+       }
+       // bresult = std::regex_match(
+        //    line, std::regex("[ \t\r\n\f]*facet[ \t\r\n\f]*normal([ \t\r\n\f]*-?[0-9]+[.]?[0-9]*(e[+-][0-9]+)?){3}"));
+        //if (!bresult) {
+        //    return false;
+        //}
         std::stringstream sstream(line);
         std::string word;
         sstream >> word; // facet
@@ -46,16 +47,17 @@ bool TextFileDataAccess::CreateVertex(Vertex& vertex,const std::string& line,std
         return true;
     }
     case LOOP: {
-        bresult = std::regex_match(line, std::regex("[ \t\r\n\f]*outer[ \t\r\n\f]*loop"));
+        //bresult = std::regex_match(line, std::regex("[ \t\r\n\f]*outer[ \t\r\n\f]*loop"));
         type = VERTEX;
-        return bresult;
+        //return bresult;
+        return true;
     }
     case VERTEX: {
-        bresult = std::regex_match(
-            line, std::regex("[ \t\r\n\f]*vertex([ \t\r\n\f]*-?[0-9]+[.]?[0-9]*(e[+-][0-9]+)?){3}"));
-        if (!bresult) {
-            return false;
-        }
+       //bresult = std::regex_match(
+       //    line, std::regex("[ \t\r\n\f]*vertex([ \t\r\n\f]*-?[0-9]+[.]?[0-9]*(e[+-][0-9]+)?){3}"));
+        //if (!bresult) {
+        //    return false;
+        //}
         std::stringstream sstream(line);
         std::string word;
         sstream >> word; // vertex
@@ -75,17 +77,20 @@ bool TextFileDataAccess::CreateVertex(Vertex& vertex,const std::string& line,std
             vertexCount = 0;
             type = ENDLOOP;
         }
-        return bresult;
+        //return bresult;
+        return true;
     }
     case ENDLOOP: {
-        bresult = std::regex_match(line, std::regex("[ \t\r\n\f]*endloop"));
+        //bresult = std::regex_match(line, std::regex("[ \t\r\n\f]*endloop"));
         type = ENDFACET;
-        return bresult;
+        return true;
+        //return bresult;
     }
     case ENDFACET: {
-        bresult = std::regex_match(line, std::regex("[ \t\r\n\f]*endfacet"));
+        //bresult = std::regex_match(line, std::regex("[ \t\r\n\f]*endfacet"));
         type = FACET;
-        return bresult;
+        //return bresult;
+        return true;
     }
     }
 }

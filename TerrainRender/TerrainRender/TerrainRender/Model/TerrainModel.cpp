@@ -1,5 +1,5 @@
 #include "TerrainModel.h"
-
+#include "../resource.h"
 TerrainModel::TerrainModel() = default;
 TerrainModel::~TerrainModel() = default;
 
@@ -50,41 +50,53 @@ bool TerrainModel::Render(ID3D11DeviceContext* deviceContext)
 	return true;
 }
 
-void TerrainModel::OnMoveCamera(const CameraMoveEvent::Event& event)
+
+void TerrainModel::MoveCamera(unsigned message, float timeElapsed)
 {
-	float timeElapsed = event.GetData();
-	if (event.IsType(CameraMoveEvent::Type::MoveForward))
+	switch (message)
+	{
+	case IDC_CAMERA_MOVE_FORWARD:
 	{
 		this->m_position.MoveForward(timeElapsed);
+		break;
 	}
-	else if (event.IsType(CameraMoveEvent::Type::MoveBack))
+	case IDC_CAMERA_MOVE_BACK:
 	{
 		this->m_position.MoveBack(timeElapsed);
+		break;
 	}
-	else if (event.IsType(CameraMoveEvent::Type::MoveLeft))
+	case IDC_CAMERA_MOVE_LEFT:
 	{
 		this->m_position.MoveLeft(timeElapsed);
+		break;
 	}
-	else if (event.IsType(CameraMoveEvent::Type::MoveRight))
+	case IDC_CAMERA_MOVE_RIGHT:
 	{
 		this->m_position.MoveRight(timeElapsed);
+		break;
 	}
-	else if (event.IsType(CameraMoveEvent::Type::MoveUp))
+	case IDC_CAMERA_MOVE_UP:
 	{
 		this->m_position.MoveUp(timeElapsed);
+		break;
 	}
-	else if (event.IsType(CameraMoveEvent::Type::MoveDown))
+	case IDC_CAMERA_MOVE_DOWN:
 	{
 		this->m_position.MoveDown(timeElapsed);
+		break;
+	}
 	}
 }
 
-void TerrainModel::OnRotateCamera(const CameraRotateEvent::Event& event)
+void TerrainModel::RotateCamera(unsigned message, float pitch, float yaw)
 {
-	
-	CameraRotateEvent::CameraRotation cameraRotation = event.GetData();
-	this->m_position.RotatePitchYaw(cameraRotation.pitch, cameraRotation.yaw);
-	
+	switch (message)
+	{
+	case IDC_CAMERA_ROTATE:
+
+		this->m_position.RotatePitchYaw(pitch, yaw);
+		break;
+	}
 }
 
 bool TerrainModel::LoadTerrain(const wchar_t* filepath)
@@ -102,31 +114,42 @@ bool TerrainModel::LoadTerrain(const wchar_t* filepath)
 
 	return bresult;
 }
-
-void TerrainModel::EventHandler(ModelEvent::IEvent* event)
+void TerrainModel::ResetCamera()
 {
-	
-	if (event->GetEventType() == ModelEvent::Type::SetCameraMoveSpeed)
+	this->m_camera.SetLookAtPos({ 0,0,0 });
+}
+void TerrainModel::UpdateCameraProperties(unsigned message, float data)
+{
+	switch (message)
 	{
-		if (ModelEvent::SetFloatData* castedEvent = dynamic_cast<ModelEvent::SetFloatData*>(event))
-		{
-			float speed = castedEvent->GetData();
-			this->m_position.SetSpeed(speed);
-		}
+	case IDC_SET_CAMERA_SPEED:
+	{
+		this->m_position.SetSpeed(data);
+		break;
+	}
+	case IDC_SET_CAMERA_ROTATION_SPEED:
+	{
+		this->m_position.SetRotationSpeed(data);
 	}
 
-	if (event->GetEventType() == ModelEvent::Type::SetCameraRotationSpeed)
+	case IDC_SET_CAMERA_FIELD_OF_VIEW:
 	{
-		if (ModelEvent::SetFloatData* castedEvent = dynamic_cast<ModelEvent::SetFloatData*>(event))
-		{
-			float speed = castedEvent->GetData();
-			this->m_position.SetRotationSpeed(speed);
-		}
+		//this->m_position.SetRotationSpeed(data);
 	}
-
-	if (event->GetEventType() == ModelEvent::Type::ResetCamera)
+	case IDC_SET_CAMERA_ASPECT_RATIO:
 	{
-		this->m_camera.SetLookAtPos({ 0,0,0 });
+		//this->m_position.SetRotationSpeed(data);
+	}
+	case IDC_SET_CAMERA_ASPECT_NEAR_SCREEN:
+	{
+		//this->m_position.SetRotationSpeed(data);
+	}
+	case IDC_SET_CAMERA_ASPECT_FAR_SCREEN:
+	{
+		//this->m_position.SetRotationSpeed(data);
+	}
+	default:
+		break;
 	}
 }
 

@@ -4,15 +4,14 @@
 #include "../Input/Mouse.h"
 #include "../Input/Keyboard.h"
 #include <memory>
-#include "IEvent.h"
 
 
 class TerrainModel; //TODO: Use IModel
 class IController {
 public:
     virtual ~IController() {}
-    virtual bool CanHandle(ControllerEvent::IEvent* event) const = 0;
-    virtual void Control(ControllerEvent::IEvent* event) = 0;
+    virtual bool CanHandle(unsigned int) const = 0;
+    virtual void Control(unsigned int message, float* fparam, unsigned* uparam) = 0;
 
     virtual void SetTerrainModel(TerrainModel* pModel) = 0;
     virtual void SetMouse(Mouse* mouse) = 0;

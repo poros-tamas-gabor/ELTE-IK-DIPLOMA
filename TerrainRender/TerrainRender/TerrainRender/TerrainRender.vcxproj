@@ -179,10 +179,8 @@
     <ClInclude Include="App.h" />
     <ClInclude Include="Controller\CompositeController.h" />
     <ClInclude Include="Controller\Controller3DExplore.h" />
-    <ClInclude Include="Controller\ControllerEvents.h" />
     <ClInclude Include="Controller\GuiController.h" />
     <ClInclude Include="Controller\IController.h" />
-    <ClInclude Include="Controller\IEvent.h" />
     <ClInclude Include="ErrorHandler.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
@@ -198,12 +196,6 @@
     <ClInclude Include="Input\MouseEvent.h" />
     <ClInclude Include="Model\Camera.h" />
     <ClInclude Include="Model\CompositeRenderable.h" />
-    <ClInclude Include="Model\Event\CameraMoveEvent.h" />
-    <ClInclude Include="Model\Event\CameraRotateEvent.h" />
-    <ClInclude Include="Model\Event\EventTemplate.h" />
-    <ClInclude Include="Model\Event\FileSelectEvent.h" />
-    <ClInclude Include="Model\Event\IEvent.h" />
-    <ClInclude Include="Model\Event\ModelEvent.h" />
     <ClInclude Include="Model\IModel.h" />
     <ClInclude Include="Model\IRenderable.h" />
     <ClInclude Include="Model\Light.h" />
@@ -218,6 +210,7 @@
     <ClInclude Include="Model\Vertex.h" />
     <ClInclude Include="Model\VertexShader.h" />
     <ClInclude Include="RenderWindow.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="View\D3DView.h" />
     <ClInclude Include="View\TerrainView.h" />

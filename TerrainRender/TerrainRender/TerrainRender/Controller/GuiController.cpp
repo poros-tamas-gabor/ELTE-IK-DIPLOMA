@@ -1,64 +1,97 @@
 #include "GuiController.h"
 #include <algorithm>
 #include "../Model/TerrainModel.h"
-#include "ControllerEvents.h"
+#include "../resource.h"
+
 
 GuiController::GuiController()
 {
-	m_handledEvents.push_back(ControllerEvent::ClickButton_SetTerrainPath);
-	m_handledEvents.push_back(ControllerEvent::ClickButton_SetTrajectoryPath);
-	m_handledEvents.push_back(ControllerEvent::ClickButton_SetCameraPropertiesPath);
-	m_handledEvents.push_back(ControllerEvent::EnterFloat_cameraMoveSpeed);
-	m_handledEvents.push_back(ControllerEvent::EnterFloat_cameraRotationSpeed);
-	m_handledEvents.push_back(ControllerEvent::ClickButton_ResetCamera);
+	m_handledEvents.push_back(IDC_BUTTON_FIlE_TERRAIN);
+	m_handledEvents.push_back(IDC_BUTTON_FIlE_CAMERA_TRAJECTORY);
+	m_handledEvents.push_back(IDC_BUTTON_FIlE_CAMERA_PROPERTIES);
+	m_handledEvents.push_back(IDC_SLIDER_CAMERA_SPEED);
+	m_handledEvents.push_back(IDC_SLIDER_CAMERA_ROTATION_SPEED);
+	m_handledEvents.push_back(IDC_BUTTON_CAMERA_RESET);
 }
 GuiController::~GuiController() {}
 
-bool GuiController::CanHandle(ControllerEvent::IEvent* event) const
+bool GuiController::CanHandle(unsigned int message) const
 {
-	auto it = std::find(m_handledEvents.begin(), m_handledEvents.end(), event->GetEventType());
+	auto it = std::find(m_handledEvents.begin(), m_handledEvents.end(), message);
 	return it != m_handledEvents.end();
 }
-void GuiController::Control(ControllerEvent::IEvent* event)
+
+void GuiController::OpenFileDialog(wchar_t* filePath, unsigned buffer)
 {
-	if (event->GetEventType() == ControllerEvent::Type::ClickButton_SetTerrainPath)
-	{
-		if (ControllerEvent::TerrainFileSelectEvent* castedEvent = dynamic_cast<ControllerEvent::TerrainFileSelectEvent*>(event)) 
-		{
-			const wchar_t* filepath = castedEvent->GetFilePath();
-			this->m_terrainModel->LoadTerrain(filepath);
-		}
-	}
-	if (event->GetEventType() == ControllerEvent::Type::EnterFloat_cameraMoveSpeed)
-	{
-		if (ControllerEvent::EnterFloatEvent* castedEvent = dynamic_cast<ControllerEvent::EnterFloatEvent*>(event))
-		{
-			float speed = castedEvent->GetFloatData();
-			ModelEvent::SetCameraMoveSpeedEvent event;
-			event.SetData(speed);
-			this->m_terrainModel->EventHandler(&event);
-		}
-	}
+	//wchar_t filePath[260];      // buffer for file name
+	OPENFILENAME ofn;			// common dialog box structure
+	HWND hwnd = NULL;           // owner window
+	HANDLE hf;					// file handle
 
-	if (event->GetEventType() == ControllerEvent::Type::EnterFloat_cameraRotationSpeed)
-	{
-		if (ControllerEvent::EnterFloatEvent* castedEvent = dynamic_cast<ControllerEvent::EnterFloatEvent*>(event))
-		{
-			float speed = castedEvent->GetFloatData();
-			ModelEvent::SetCameraRotationSpeedEvent event;
-			event.SetData(speed);
-			this->m_terrainModel->EventHandler(&event);
-		}
-	}
+	// Initialize OPENFILENAME
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = hwnd;
+	ofn.lpstrFile = filePath;
+	//
+	// Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
+	// use the contents of szFile to initialize itself.
+	//
+	ofn.lpstrFile[0] = '\0';
+	ofn.nMaxFile = sizeof(wchar_t) * buffer;
+	ofn.lpstrFilter = L"All\0*.*\0Text\0*.TXT\0";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
-	if (event->GetEventType() == ControllerEvent::Type::ClickButton_ResetCamera)
+	// Display the Open dialog box. 
+	if (GetOpenFileName(&ofn) == TRUE)
 	{
-		if (ControllerEvent::Event* castedEvent = dynamic_cast<ControllerEvent::Event*>(event))
-		{
-			ModelEvent::Event event;
-			event.SetEventType(ModelEvent::ResetCamera);
-			this->m_terrainModel->EventHandler(&event);
-		}
+		OutputDebugStringW(filePath);
+	}
+}
+void GuiController::Control(unsigned int message, float* fparam, unsigned* uparam)
+{
+	switch (message)
+	{
+	case IDC_BUTTON_FIlE_TERRAIN:
+	{
+		wchar_t filePath[260];
+		this->OpenFileDialog(filePath, 260);
+		this->m_terrainModel->LoadTerrain(filePath);
+		break;
+	}
+	case IDC_BUTTON_FIlE_CAMERA_TRAJECTORY:
+	{
+		wchar_t filePath[260];
+		this->OpenFileDialog(filePath, 260);
+		//this->m_terrainModel->LoadTerrain(filePath);
+		break;
+	}
+	case IDC_BUTTON_FIlE_CAMERA_PROPERTIES:
+	{
+		wchar_t filePath[260];
+		this->OpenFileDialog(filePath, 260);
+		//this->m_terrainModel->LoadTerrain(filePath);
+		break;
+	}
+	case IDC_SLIDER_CAMERA_SPEED:
+	{
+		this->m_terrainModel->UpdateCameraProperties(IDC_SET_CAMERA_SPEED, *fparam);
+		break;
+	}
+	case IDC_SLIDER_CAMERA_ROTATION_SPEED:
+	{
+		this->m_terrainModel->UpdateCameraProperties(IDC_SET_CAMERA_ROTATION_SPEED, *fparam);
+		break;
+	}
+	case IDC_BUTTON_CAMERA_RESET:
+	{
+		this->m_terrainModel->ResetCamera();
+		break;
+	}
 	}
 }
 void GuiController::SetTerrainModel(TerrainModel* pModel)

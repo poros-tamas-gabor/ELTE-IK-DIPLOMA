@@ -2,14 +2,14 @@
 #include <algorithm>
 CompositeController::CompositeController()
 {
-	_terrainModel = NULL;
+	m_terrainModel = NULL;
 	m_mouse = NULL;
 	m_keyboard = NULL;
 }
 
 void CompositeController::SetTerrainModel(TerrainModel* pModel)
 {
-	this->_terrainModel = pModel;
+	this->m_terrainModel = pModel;
 }
 void CompositeController::SetMouse(Mouse* mouse)
 {
@@ -31,20 +31,22 @@ bool CompositeController::Initialize(TerrainModel* pModel, Mouse* mouse, Keyboar
 	this->SetKeyboard(keyboard);
 	return true;
 }
-bool CompositeController::CanHandle(ControllerEvent::IEvent* event) const
+
+bool CompositeController::CanHandle(unsigned int message) const
 {
 	for (IControllerPtr controller : m_controllers)
 	{
-		if (controller->CanHandle(event))
+		if (controller->CanHandle(message))
 			return true;
 	}
 	return false;
 }
-void CompositeController::Control(ControllerEvent::IEvent* event)
+
+void CompositeController::Control(unsigned int message, float* fparam, unsigned* uparam)
 {
 	for (IControllerPtr controller : m_controllers)
 	{
-		controller->Control(event);
+		controller->Control(message, fparam, uparam);
 	}
 }
 

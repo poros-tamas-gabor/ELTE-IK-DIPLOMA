@@ -8,7 +8,7 @@ class CompositeController : public IController
 {
 private:
 	std::vector<IControllerPtr>	m_controllers;
-	TerrainModel* _terrainModel;
+	TerrainModel* m_terrainModel;
 	Mouse* m_mouse;
 	Keyboard* m_keyboard;
 
@@ -16,8 +16,8 @@ public:
 	CompositeController();
 
 	virtual bool Initialize(TerrainModel* pModel, Mouse* mouse, Keyboard* keyboard) override;
-	virtual bool CanHandle(ControllerEvent::IEvent* event) const override;
-	virtual void Control(ControllerEvent::IEvent* event) override;
+	virtual bool CanHandle(unsigned int message) const override;
+	virtual void Control(unsigned int message, float* fparam, unsigned* uparam) override;
 	virtual void SetTerrainModel(TerrainModel* pModel) override;
 	virtual void SetMouse(Mouse* mouse) override;
 	virtual void SetKeyboard(Keyboard* keyboard) override;

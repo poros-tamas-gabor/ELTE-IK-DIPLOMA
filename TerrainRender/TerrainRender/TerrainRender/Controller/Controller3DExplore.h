@@ -9,18 +9,18 @@ class TerrainModel;
 class Controller3DExplore : public IController
 {
 private:
-	TerrainModel* _terrainModel;
-	Mouse* m_mouse;
-	Keyboard* m_keyboard;
-	std::vector<ControllerEvent::Type>	m_handledEvents;
+	TerrainModel*			m_terrainModel;
+	Mouse*					m_mouse;
+	Keyboard*				m_keyboard;
+	std::vector<unsigned>	m_handledMsgs;
 
 
 public:
 	Controller3DExplore();
 	virtual ~Controller3DExplore() {}
 
-	virtual bool CanHandle(ControllerEvent::IEvent* event) const override;
-	virtual void Control(ControllerEvent::IEvent* event) override;
+	virtual bool CanHandle(unsigned int message) const override;
+	virtual void Control(unsigned int message, float* fparam, unsigned* uparam) override;
 	virtual void SetTerrainModel(TerrainModel* pModel) override;
 	virtual void SetMouse(Mouse* mouse) override;
 	virtual void SetKeyboard(Keyboard* keyboard) override;

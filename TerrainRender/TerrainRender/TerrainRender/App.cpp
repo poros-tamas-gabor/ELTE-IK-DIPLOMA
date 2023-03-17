@@ -6,12 +6,12 @@
 #include "ImGui/imgui_impl_win32.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_dx11.h"
+#include "resource.h"
 
 
 //TODO: DELETE
 #include "Controller/GuiController.h"
 #include "Controller/Controller3DExplore.h"
-#include "Controller/ControllerEvents.h"
 
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -307,10 +307,7 @@ void App::Update()
 {
 	float dt = (float)this->_timer.GetMilisecondsElapsed();
 	this->_timer.Restart();
-
-	ControllerEvent::NewFrameEvent event;
-	event.SetElapsedMiliseconds(dt);
-	this->m_terrainController.Control(&event);
+	this->m_terrainController.Control(IDC_TIME_ELLAPSED, &dt, NULL);
 }
 
 

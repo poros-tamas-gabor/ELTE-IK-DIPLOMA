@@ -6,14 +6,14 @@ class GuiController : public IController
 {
 private:
 	TerrainModel*							m_terrainModel;
-	std::vector<ControllerEvent::Type>		m_handledEvents;
+	std::vector<unsigned>					m_handledEvents;
 
 public:
 	GuiController();
 	virtual ~GuiController();
 
-	virtual bool CanHandle(ControllerEvent::IEvent* event) const override;
-	virtual void Control(ControllerEvent::IEvent* event) override;
+	virtual bool CanHandle(unsigned int message) const override;
+	virtual void Control(unsigned int message, float* fparam, unsigned* uparam) override;
 	virtual void SetTerrainModel(TerrainModel* pModel) override;
 	virtual void SetMouse(Mouse* mouse) override;
 	virtual void SetKeyboard(Keyboard* keyboard) override;
@@ -22,6 +22,7 @@ public:
 	virtual void Shutdown() override;
 
 private:
+	void OpenFileDialog(wchar_t* filePath, unsigned buffer);
 };
 
 

@@ -12,12 +12,8 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
-#include "Event/CameraRotateEvent.h"
-#include "Event/CameraMoveEvent.h"
-#include "Event/FileSelectEvent.h"
 #include "Persistence/DataAccess.h"
 #include "CompositeRenderable.h"
-#include "Event/ModelEvent.h"
 #pragma comment(lib, "D3DCompiler.lib")
 #pragma comment(lib, "d3d11.lib")
 
@@ -45,15 +41,17 @@ public:
 	void	Shutdown();
 	bool	Render(ID3D11DeviceContext* deviceContext);
 
-	void	EventHandler(ModelEvent::IEvent* event);
+
 
 
 	bool	LoadTerrain(const wchar_t* filepath);
 	bool	LoadCameraTrajectory(const wchar_t* filepath);
 
-	void	OnMoveCamera(const CameraMoveEvent::Event& event);
-	void	OnRotateCamera(const CameraRotateEvent::Event& event);
-	void	OnFileSelect(const FileSelectEvent::Event& event);
+	void	MoveCamera(unsigned message, float timeElapsed);
+	void	RotateCamera(unsigned message, float pitch, float yaw);
+	void	ResetCamera(void);
+	void	UpdateCameraProperties(unsigned message, float data);
+
 
 };
 

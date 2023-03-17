@@ -1,25 +1,28 @@
 #include "Controller3DExplore.h"
 #include "../Model/TerrainModel.h"
-#include "ControllerEvents.h"
+#include "../resource.h"
+
 
 Controller3DExplore::Controller3DExplore()
 {
-	m_handledEvents.push_back(ControllerEvent::NewFrame);
+	m_handledMsgs.push_back(IDC_TIME_ELLAPSED);
 }
-bool Controller3DExplore::CanHandle(ControllerEvent::IEvent* event) const
+bool Controller3DExplore::CanHandle(unsigned int message) const
 {
-	auto it = std::find(m_handledEvents.begin(), m_handledEvents.end(), event->GetEventType());
-	return it != m_handledEvents.end();
+	auto it = std::find(m_handledMsgs.begin(), m_handledMsgs.end(), message);
+	return it != m_handledMsgs.end();
 }
 
-void Controller3DExplore::Control(ControllerEvent::IEvent* event)
+void Controller3DExplore::Control(unsigned int message, float* fparam, unsigned* uparam)
 {
 	float TimeEllapsed = 0;
-	if (event->GetEventType() == ControllerEvent::Type::NewFrame)
+	switch (message)
 	{
-		if (ControllerEvent::NewFrameEvent* castedEvent = dynamic_cast<ControllerEvent::NewFrameEvent*>(event))
+	case IDC_TIME_ELLAPSED:
+	{
+		if(fparam != nullptr)
 		{
-			TimeEllapsed = castedEvent->GetElapsedMiliseconds();
+			TimeEllapsed = *fparam;
 
 			while (!m_keyboard->KeyBufferIsEmpty())
 			{
@@ -38,45 +41,38 @@ void Controller3DExplore::Control(ControllerEvent::IEvent* event)
 
 			if (m_keyboard->KeyIsPressed(VK_SPACE))
 			{
-				CameraMoveEvent::Type type = CameraMoveEvent::Type::MoveUp;
-				this->_terrainModel->OnMoveCamera(CameraMoveEvent::Event(type, TimeEllapsed));
+				this->m_terrainModel->MoveCamera(IDC_CAMERA_MOVE_UP, TimeEllapsed);
 			}
 			if (m_keyboard->KeyIsPressed('C'))
 			{
-				CameraMoveEvent::Type type = CameraMoveEvent::Type::MoveDown;
-				this->_terrainModel->OnMoveCamera(CameraMoveEvent::Event(type, TimeEllapsed));
+				this->m_terrainModel->MoveCamera(IDC_CAMERA_MOVE_DOWN, TimeEllapsed);
 			}
 			if (m_keyboard->KeyIsPressed('W'))
 			{
-				CameraMoveEvent::Type type = CameraMoveEvent::Type::MoveForward;
-				this->_terrainModel->OnMoveCamera(CameraMoveEvent::Event(type, TimeEllapsed));
-
+				this->m_terrainModel->MoveCamera(IDC_CAMERA_MOVE_FORWARD, TimeEllapsed);
 			}
 			if (m_keyboard->KeyIsPressed('S'))
 			{
-				CameraMoveEvent::Type type = CameraMoveEvent::Type::MoveBack;
-				this->_terrainModel->OnMoveCamera(CameraMoveEvent::Event(type, TimeEllapsed));
-
+				this->m_terrainModel->MoveCamera(IDC_CAMERA_MOVE_BACK, TimeEllapsed);
 			}
 			if (m_keyboard->KeyIsPressed('A'))
 			{
-				CameraMoveEvent::Type type = CameraMoveEvent::Type::MoveLeft;
-				this->_terrainModel->OnMoveCamera(CameraMoveEvent::Event(type, TimeEllapsed));
-
+				this->m_terrainModel->MoveCamera(IDC_CAMERA_MOVE_LEFT, TimeEllapsed);
 			}
 			if (m_keyboard->KeyIsPressed('D'))
 			{
-				CameraMoveEvent::Type type = CameraMoveEvent::Type::MoveRight;
-				this->_terrainModel->OnMoveCamera(CameraMoveEvent::Event(type, TimeEllapsed));
+				this->m_terrainModel->MoveCamera(IDC_CAMERA_MOVE_RIGHT, TimeEllapsed);
 			}
 		}
-
+	}
+	default:
+		break;
 	}
 
 }
 void Controller3DExplore::SetTerrainModel(TerrainModel* pModel)
 {
-	this->_terrainModel = pModel;
+	this->m_terrainModel = pModel;
 }
 void Controller3DExplore::SetMouse(Mouse* mouse)
 {
@@ -112,9 +108,7 @@ void Controller3DExplore::ControlMouse(const MouseEvent& e) const
 
 			if (m_mouse->IsLeftDown())
 			{
-				CameraRotateEvent::Event event(CameraRotateEvent::Type::Rotate, { (float)pitch, (float)yaw });
-
-				this->_terrainModel->OnRotateCamera(event);
+				this->m_terrainModel->RotateCamera(IDC_CAMERA_ROTATE, (float)pitch, (float)yaw);
 			}
 
 		}
@@ -124,8 +118,7 @@ void Controller3DExplore::ControlMouse(const MouseEvent& e) const
 	{
 		if (m_mouse->IsLeftDown())
 		{
-			CameraRotateEvent::Event event(CameraRotateEvent::Type::Rotate, { (float)e.GetPosY(), (float)e.GetPosX() });
-			this->_terrainModel->OnRotateCamera(event);
+			this->m_terrainModel->RotateCamera(IDC_CAMERA_ROTATE, (float)e.GetPosY(), (float)e.GetPosX());
 		}
 	}
 }

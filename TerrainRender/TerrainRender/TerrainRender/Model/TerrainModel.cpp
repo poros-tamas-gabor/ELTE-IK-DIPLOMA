@@ -3,6 +3,7 @@
 TerrainModel::TerrainModel() = default;
 TerrainModel::~TerrainModel() = default;
 
+
 bool TerrainModel::Initalize(HWND hwnd, IDataAccess* persistence, ID3D11Device* device, int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView)
 {
 	bool bresult;
@@ -152,5 +153,7 @@ void TerrainModel::UpdateCameraProperties(unsigned message, float data)
 		break;
 	}
 }
+
+
 
 

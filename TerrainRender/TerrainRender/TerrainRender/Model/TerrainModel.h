@@ -16,6 +16,7 @@
 #include "CompositeRenderable.h"
 #include "RenderableCreator.h"
 #include "VertexShaderPolygon.h"
+#include "CameraTrajectory.h"
 #pragma comment(lib, "D3DCompiler.lib")
 #pragma comment(lib, "d3d11.lib")
 
@@ -31,6 +32,8 @@ private:
 	CompositeRenderable<VertexPolygon>		m_polygons;
 	Light									m_light;
 	SunPosition								m_sunPosition;
+	CameraTrajectory* m_cameraTrajectory;
+
 	ID3D11Device*							m_device;
 	ID3D11DeviceContext*					m_deviceContext;
 	IDataAccess*							m_persistence;

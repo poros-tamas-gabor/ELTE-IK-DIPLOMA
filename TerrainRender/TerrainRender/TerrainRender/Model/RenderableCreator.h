@@ -17,5 +17,12 @@ public:
 	virtual IRenderable<VertexPolygon>* CreateRenderable() const override;
 
 };
+
+class CameraTrajectoryCreator : public IRenderableCreator<VertexPolygon>
+{
+public:
+	virtual IRenderable<VertexPolygon>* CreateRenderable() const override;
+
+};
 #endif // !POLYGON_MESH_CREATOR
 

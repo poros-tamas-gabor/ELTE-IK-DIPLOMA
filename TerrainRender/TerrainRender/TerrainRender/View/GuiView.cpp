@@ -48,7 +48,7 @@ void GuiView::ShowSettingWindow()
         if (ImGui::CollapsingHeader("Camera Properties"))
         {
             static float cameraSpeed = 0.005f;
-            if (ImGui::SliderFloat("Camera speed", &cameraSpeed, 0, 0.01, "%.3f"))
+            if (ImGui::SliderFloat("Camera speed", &cameraSpeed, 0, /*0.01*/ 1, "%.3f" ))
             {
                 this->m_terrainController->Control(IDC_SLIDER_CAMERA_SPEED, &cameraSpeed, NULL);
             }

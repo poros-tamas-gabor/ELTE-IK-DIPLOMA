@@ -17,7 +17,7 @@ private:
 	IPixelShader*					m_pixelShader = NULL;
 	ID3D11Device*					m_device = NULL;
 
-private:
+public:
 	bool Add(IRenderable<V>* renderable)
 	{
 		if (std::find(this->m_renderables.begin(), this->m_renderables.end(), renderable) != this->m_renderables.end())

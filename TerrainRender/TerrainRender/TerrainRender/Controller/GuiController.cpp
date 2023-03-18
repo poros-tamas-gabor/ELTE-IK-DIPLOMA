@@ -67,7 +67,7 @@ void GuiController::Control(unsigned int message, float* fparam, unsigned* upara
 	{
 		wchar_t filePath[260];
 		this->OpenFileDialog(filePath, 260);
-		//this->m_terrainModel->LoadTerrain(filePath);
+		this->m_terrainModel->LoadCameraTrajectory(filePath);
 		break;
 	}
 	case IDC_BUTTON_FIlE_CAMERA_PROPERTIES:

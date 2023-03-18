@@ -1,5 +1,6 @@
 #include "TerrainModel.h"
 #include "../resource.h"
+
 TerrainModel::TerrainModel() = default;
 TerrainModel::~TerrainModel() = default;
 
@@ -12,6 +13,8 @@ bool TerrainModel::Initalize(HWND hwnd, IDataAccess* persistence, ID3D11Device* 
 		return false;
 
 	this->m_persistence = persistence;
+
+	this->m_device = device;
 
 	bresult = this->m_vertexShader.Initialize(device, hwnd);
 	if (!bresult)
@@ -38,7 +41,7 @@ bool TerrainModel::Initalize(HWND hwnd, IDataAccess* persistence, ID3D11Device* 
 
 
 	this->m_polygons.Initialize(device, &m_vertexShaderPolygon, &m_pixelShader, NULL, NULL);
-	this->AddGrid(10, { 1.0f, 1.0f, 1.0f, 1.0f }, 20, 20);
+	this->AddGrid(2000, { 1.0f, 1.0f, 1.0f, 1.0f }, 200, 200);
 
 	return true;
 }
@@ -127,6 +130,20 @@ bool TerrainModel::LoadTerrain(const wchar_t* filepath)
 	}
 
 	return bresult;
+}
+
+bool	TerrainModel::LoadCameraTrajectory(const wchar_t* filepath)
+{
+	std::vector<CameraPose> cameraPoses;
+	bool result = m_persistence->LoadCameraTrajectory(filepath, cameraPoses);
+	if (result)
+	{
+		m_cameraTrajectory = new CameraTrajectory;
+
+		if (m_cameraTrajectory->Initialize(m_device, &m_vertexShaderPolygon, &m_pixelShader, cameraPoses))
+			this->m_polygons.Add(m_cameraTrajectory);
+	}
+	return result;
 }
 void TerrainModel::ResetCamera()
 {

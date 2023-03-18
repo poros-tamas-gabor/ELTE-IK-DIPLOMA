@@ -128,11 +128,11 @@ bool TextFileDataAccess::LoadTerrain(const wchar_t* filename, std::vector<Vertex
 
 bool TextFileDataAccess::CreateCameraPose(CameraPose& cameraPose, const std::string& line, const std::vector<std::string>& headers) 
 {
-    bool bresult = std::regex_match(line, std::regex("(-?[0-9]+[.]?[0-9]*(e[+-][0-9]+)?)(;(-?[0-9]+[.]?[0-9]*(e[+-][0-9]+)?))*"));
-    if (!bresult)
-    {
-        return false;
-    }
+    //bool bresult = std::regex_match(line, std::regex("(-?[0-9]+[.]?[0-9]*(e[+-][0-9]+)?)(;(-?[0-9]+[.]?[0-9]*(e[+-][0-9]+)?))*"));
+   //if (!bresult)
+   //{
+   //    return false;
+   //}
 
     std::istringstream lineStream(line);
     std::string word;

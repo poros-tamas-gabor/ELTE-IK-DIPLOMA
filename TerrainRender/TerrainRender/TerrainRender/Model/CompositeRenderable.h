@@ -13,9 +13,9 @@ class CompositeRenderable : public IRenderable<V>
 {
 private:
 	std::vector<IRenderable<V>*>	m_renderables;
-	IVertexShader* m_vertexShader;
-	IPixelShader* m_pixelShader;
-	ID3D11Device* m_device;
+	IVertexShader*					m_vertexShader = NULL;
+	IPixelShader*					m_pixelShader = NULL;
+	ID3D11Device*					m_device = NULL;
 
 private:
 	bool Add(IRenderable<V>* renderable)
@@ -43,6 +43,7 @@ public:
 		this->m_device = device;
 		this->m_vertexShader = vertexShader;
 		this->m_pixelShader = pixelShader;
+		return true;
 	}
 	void Shutdown() override
 	{
@@ -72,7 +73,7 @@ public:
 			return false;
 		}
 		renderable->Initialize(this->m_device, m_vertexShader, m_pixelShader, vertices, indexCount);
-		this->Add(renderable);
+		return this->Add(renderable);
 	}
 
 	bool Remove(IRenderable<V>* renderable)

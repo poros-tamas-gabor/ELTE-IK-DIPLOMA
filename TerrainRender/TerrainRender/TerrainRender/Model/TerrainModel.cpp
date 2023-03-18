@@ -19,6 +19,12 @@ bool TerrainModel::Initalize(HWND hwnd, IDataAccess* persistence, ID3D11Device* 
 		return false;
 	}
 
+	bresult = this->m_vertexShaderPolygon.Initialize(device, hwnd);
+	if (!bresult)
+	{
+		return false;
+	}
+
 	bresult = this->m_pixelShader.Initialize(device, hwnd);
 	if (!bresult)
 	{
@@ -28,7 +34,11 @@ bool TerrainModel::Initalize(HWND hwnd, IDataAccess* persistence, ID3D11Device* 
 	this->m_camera.Initialize(screenWidth, screenHeight, screenNear, screenDepth, fieldOfView);
 	this->m_position.Initialize(&this->m_camera);
 
-	this->m_scene.Initialize(device, &m_vertexShader, &m_pixelShader, NULL, NULL);
+	this->m_meshes.Initialize(device, &m_vertexShader, &m_pixelShader, NULL, NULL);
+
+
+	this->m_polygons.Initialize(device, &m_vertexShaderPolygon, &m_pixelShader, NULL, NULL);
+	this->AddGrid(10, { 1.0f, 1.0f, 1.0f, 1.0f }, 20, 20);
 
 	return true;
 }
@@ -37,7 +47,8 @@ void TerrainModel::Shutdown()
 {
 	m_vertexShader.Shutdown();
 	m_pixelShader.Shutdown();
-	m_scene.Shutdown();
+	m_meshes.Shutdown();
+	m_polygons.Shutdown();
 }
 
 bool TerrainModel::Render(ID3D11DeviceContext* deviceContext)
@@ -46,7 +57,9 @@ bool TerrainModel::Render(ID3D11DeviceContext* deviceContext)
 
 	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixIdentity();
 
-	this->m_scene.Render(deviceContext,worldMatrix, m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix(), m_light);
+	this->m_meshes.Render(deviceContext,worldMatrix, m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix(), m_light);
+
+	this->m_polygons.Render(deviceContext, worldMatrix, m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix(), m_light);
 
 	return true;
 }
@@ -110,7 +123,7 @@ bool TerrainModel::LoadTerrain(const wchar_t* filepath)
 	{
 		pVertices = &vertices.at(0);
 		vertexCount = vertices.size();
-		this->m_scene.Add(pVertices, vertexCount, m_polygonMeshCreator);
+		this->m_meshes.Add(pVertices, vertexCount, m_polygonMeshCreator);
 	}
 
 	return bresult;
@@ -154,6 +167,44 @@ void TerrainModel::UpdateCameraProperties(unsigned message, float data)
 	}
 }
 
+void TerrainModel::AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int gridZ)
+{
+	std::vector<VertexPolygon> vertices;
+	if (size <= 0 || gridX <= 0 || gridZ <= 0)
+		return;
 
+	float gridXStep = size / gridX;
+	float gridZStep = size / gridZ;
+
+	for (int i = 0; i <= gridX; i++)
+	{
+		VertexPolygon polygon;
+		polygon.color = color;
+		float zCoord = size / 2;
+		float xCoord = (-size / 2) + i * gridXStep;
+		polygon.position = { xCoord, 0.0f, zCoord };
+		vertices.push_back(polygon);
+
+		polygon.position = { xCoord, 0.0f, -zCoord };
+		vertices.push_back(polygon);
+	}
+
+	for (int i = 0; i <= gridZ; i++)
+	{
+		VertexPolygon polygon;
+		polygon.color = color;
+		float xCoord = size / 2;
+		float zCoord = (-size / 2) + i * gridZStep;
+		polygon.position = { xCoord, 0.0f, zCoord };
+		vertices.push_back(polygon);
+
+		polygon.position = { -xCoord, 0.0f, zCoord };
+		vertices.push_back(polygon);
+	}
+
+	VertexPolygon* pVertex = &vertices[0];
+	unsigned verteCount = vertices.size();
+	this->m_polygons.Add(pVertex, verteCount, m_polygonCreator);
+}
 
 

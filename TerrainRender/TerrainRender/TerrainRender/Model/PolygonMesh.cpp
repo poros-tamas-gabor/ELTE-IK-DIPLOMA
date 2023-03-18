@@ -31,7 +31,7 @@ void PolygonMesh::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX w
 		//return false;
 	}
 	this->RenderBuffers(deviceContext);
-	this->m_pixelShader->Render(deviceContext, this->GetIndexCount());
+	this->m_pixelShader->Render(deviceContext, this->GetVertexCount());
 
 }
 

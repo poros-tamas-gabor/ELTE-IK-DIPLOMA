@@ -15,24 +15,27 @@
 #include "Persistence/DataAccess.h"
 #include "CompositeRenderable.h"
 #include "RenderableCreator.h"
+#include "VertexShaderPolygon.h"
 #pragma comment(lib, "D3DCompiler.lib")
 #pragma comment(lib, "d3d11.lib")
 
 class TerrainModel : public IModel
 {
 private:
-	VertexShader					m_vertexShader;
-	PixelShader						m_pixelShader;
-	Camera							m_camera;
-	Position						m_position;
-	CompositeRenderable<Vertex>		m_scene;
-	Light							m_light;
-	SunPosition						m_sunPosition;
-	ID3D11Device*					m_device;
-	ID3D11DeviceContext*			m_deviceContext;
-	IDataAccess*					m_persistence;
-	PolygonCreator					m_polygonCreator;
-	PolygonMeshCreator				m_polygonMeshCreator;
+	VertexShader							m_vertexShader;
+	VertexShaderPolygon						m_vertexShaderPolygon;
+	PixelShader								m_pixelShader;
+	Camera									m_camera;
+	Position								m_position;
+	CompositeRenderable<Vertex>				m_meshes;
+	CompositeRenderable<VertexPolygon>		m_polygons;
+	Light									m_light;
+	SunPosition								m_sunPosition;
+	ID3D11Device*							m_device;
+	ID3D11DeviceContext*					m_deviceContext;
+	IDataAccess*							m_persistence;
+	PolygonCreator							m_polygonCreator;
+	PolygonMeshCreator						m_polygonMeshCreator;
 
 
 	
@@ -57,8 +60,8 @@ public:
 	void	RotateCamera(unsigned message, float pitch, float yaw);
 	void	ResetCamera(void);
 	void	UpdateCameraProperties(unsigned message, float data);
-
-
+private:
+	void	AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int gridZ);
 };
 
 #endif

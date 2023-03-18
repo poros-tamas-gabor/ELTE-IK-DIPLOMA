@@ -7,7 +7,7 @@ bool VertexShaderPolygon::Initialize(ID3D11Device* device, HWND hwnd)
 {
 	bool result;
 
-	result = this->InitializeShader(device, hwnd, L"Model/vertexShaderGrid.hlsl");
+	result = this->InitializeShader(device, hwnd, L"Model/vertexShaderPolygon.hlsl");
 	if (!result)
 	{
 		return false;

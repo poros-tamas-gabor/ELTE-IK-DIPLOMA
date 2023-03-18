@@ -52,6 +52,18 @@
     <Filter Include="Header Files\Model\Interface">
       <UniqueIdentifier>{00835c65-94e7-4417-86dd-3f57a9f1bdf8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Model\Renderable">
+      <UniqueIdentifier>{54b806da-ac74-450e-bc8f-e7c03aa60488}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Model\Shader">
+      <UniqueIdentifier>{daf86994-21d3-48fb-978d-fe01edc5da27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Model\Renderable">
+      <UniqueIdentifier>{3e9b2e0e-e226-4011-9f27-e6b08b3ecb4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Model\Shader">
+      <UniqueIdentifier>{ecabc229-809d-401f-9e87-ac085bc75833}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -111,30 +123,6 @@
     <ClCompile Include="View\TerrainView.cpp">
       <Filter>Source Files\View</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Camera.cpp">
-      <Filter>Header Files\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Light.cpp">
-      <Filter>Header Files\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\PolygonMesh.cpp">
-      <Filter>Header Files\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\PixelShader.cpp">
-      <Filter>Header Files\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Position.cpp">
-      <Filter>Header Files\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\VertexShader.cpp">
-      <Filter>Header Files\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\SunPosition.cpp">
-      <Filter>Header Files\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\TerrainModel.cpp">
-      <Filter>Header Files\Model</Filter>
-    </ClCompile>
     <ClCompile Include="Controller\Controller3DExplore.cpp">
       <Filter>Header Files\Controller</Filter>
     </ClCompile>
@@ -144,14 +132,38 @@
     <ClCompile Include="Controller\CompositeController.cpp">
       <Filter>Header Files\Controller</Filter>
     </ClCompile>
-    <ClCompile Include="Model\VertexShaderPolygon.cpp">
-      <Filter>Header Files\Model</Filter>
+    <ClCompile Include="Model\Camera.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Light.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Position.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\SunPosition.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\TerrainModel.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\PolygonMesh.cpp">
+      <Filter>Source Files\Model\Renderable</Filter>
     </ClCompile>
     <ClCompile Include="Model\Polygon.cpp">
-      <Filter>Header Files\Model</Filter>
+      <Filter>Source Files\Model\Renderable</Filter>
     </ClCompile>
     <ClCompile Include="Model\RenderableCreator.cpp">
-      <Filter>Header Files\Model</Filter>
+      <Filter>Source Files\Model\Renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\VertexShader.cpp">
+      <Filter>Source Files\Model\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\VertexShaderPolygon.cpp">
+      <Filter>Source Files\Model\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\PixelShader.cpp">
+      <Filter>Source Files\Model\Shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -239,22 +251,10 @@
     <ClInclude Include="Model\Light.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
-    <ClInclude Include="Model\PolygonMesh.h">
-      <Filter>Header Files\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\PixelShader.h">
-      <Filter>Header Files\Model</Filter>
-    </ClInclude>
     <ClInclude Include="Model\Position.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
-    <ClInclude Include="Model\VertexShader.h">
-      <Filter>Header Files\Model</Filter>
-    </ClInclude>
     <ClInclude Include="Model\SunPosition.h">
-      <Filter>Header Files\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Vertex.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
     <ClInclude Include="Model\TerrainModel.h">
@@ -263,20 +263,8 @@
     <ClInclude Include="Controller\IController.h">
       <Filter>Header Files\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="Model\CompositeRenderable.h">
-      <Filter>Header Files\Model</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\VertexShaderPolygon.h">
-      <Filter>Header Files\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Polygon.h">
-      <Filter>Header Files\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\VertexPolygon.h">
-      <Filter>Header Files\Model</Filter>
     </ClInclude>
     <ClInclude Include="Model\IPixelShader.h">
       <Filter>Header Files\Model\Interface</Filter>
@@ -293,19 +281,43 @@
     <ClInclude Include="Model\IRenderableCreator.h">
       <Filter>Header Files\Model\Interface</Filter>
     </ClInclude>
+    <ClInclude Include="Model\CompositeRenderable.h">
+      <Filter>Header Files\Model\Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Polygon.h">
+      <Filter>Header Files\Model\Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PolygonMesh.h">
+      <Filter>Header Files\Model\Renderable</Filter>
+    </ClInclude>
     <ClInclude Include="Model\RenderableCreator.h">
-      <Filter>Header Files\Model</Filter>
+      <Filter>Header Files\Model\Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Vertex.h">
+      <Filter>Header Files\Model\Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\VertexPolygon.h">
+      <Filter>Header Files\Model\Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\VertexShader.h">
+      <Filter>Header Files\Model\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\VertexShaderPolygon.h">
+      <Filter>Header Files\Model\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PixelShader.h">
+      <Filter>Header Files\Model\Shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Model\pixelShader.hlsl">
-      <Filter>Header Files\Model</Filter>
-    </FxCompile>
     <FxCompile Include="Model\vertexShader.hlsl">
-      <Filter>Header Files\Model</Filter>
+      <Filter>Header Files\Model\Shader</Filter>
     </FxCompile>
     <FxCompile Include="Model\vertexShaderPolygon.hlsl">
-      <Filter>Header Files\Model</Filter>
+      <Filter>Header Files\Model\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Model\pixelShader.hlsl">
+      <Filter>Header Files\Model\Shader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

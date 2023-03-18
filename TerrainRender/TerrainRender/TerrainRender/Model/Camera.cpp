@@ -3,10 +3,10 @@
 Camera::Camera()
 {
 	this->_positionX = 0.0f;
-	this->_positionY = 0.0f;
+	this->_positionY = 2.0f;
 	this->_positionZ = -2.0f;
 
-	this->_rotationX = 0.0f;
+	this->_rotationX = DirectX::XM_PIDIV4;
 	this->_rotationY = 0.0f;
 	this->_rotationZ = 0.0f;
 

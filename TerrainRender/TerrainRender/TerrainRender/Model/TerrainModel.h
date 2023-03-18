@@ -14,22 +14,28 @@
 #include <DirectXMath.h>
 #include "Persistence/DataAccess.h"
 #include "CompositeRenderable.h"
+#include "RenderableCreator.h"
 #pragma comment(lib, "D3DCompiler.lib")
 #pragma comment(lib, "d3d11.lib")
 
 class TerrainModel : public IModel
 {
 private:
-	VertexShader				m_vertexShader;
-	PixelShader					m_pixelShader;
-	Camera						m_camera;
-	Position					m_position;
-	CompositeRenderable			m_scene;
-	Light						m_light;
-	SunPosition					m_sunPosition;
-	ID3D11Device*				m_device;
-	ID3D11DeviceContext*		m_deviceContext;
-	IDataAccess*				m_persistence;
+	VertexShader					m_vertexShader;
+	PixelShader						m_pixelShader;
+	Camera							m_camera;
+	Position						m_position;
+	CompositeRenderable<Vertex>		m_scene;
+	Light							m_light;
+	SunPosition						m_sunPosition;
+	ID3D11Device*					m_device;
+	ID3D11DeviceContext*			m_deviceContext;
+	IDataAccess*					m_persistence;
+	PolygonCreator					m_polygonCreator;
+	PolygonMeshCreator				m_polygonMeshCreator;
+
+
+	
 
 
 public:

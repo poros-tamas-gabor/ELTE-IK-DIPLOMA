@@ -160,15 +160,17 @@
     <ClCompile Include="Input\MouseEvent.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model\Camera.cpp" />
-    <ClCompile Include="Model\CompositeRenderable.cpp" />
     <ClCompile Include="Model\Light.cpp" />
+    <ClCompile Include="Model\Polygon.cpp" />
     <ClCompile Include="Model\PolygonMesh.cpp" />
     <ClCompile Include="Model\Persistence\DataAccess.cpp" />
     <ClCompile Include="Model\PixelShader.cpp" />
     <ClCompile Include="Model\Position.cpp" />
+    <ClCompile Include="Model\RenderableCreator.cpp" />
     <ClCompile Include="Model\SunPosition.cpp" />
     <ClCompile Include="Model\TerrainModel.cpp" />
     <ClCompile Include="Model\VertexShader.cpp" />
+    <ClCompile Include="Model\VertexShaderPolygon.cpp" />
     <ClCompile Include="RenderWindow.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="View\D3DView.cpp" />
@@ -196,19 +198,26 @@
     <ClInclude Include="Input\MouseEvent.h" />
     <ClInclude Include="Model\Camera.h" />
     <ClInclude Include="Model\CompositeRenderable.h" />
+    <ClInclude Include="Model\IPixelShader.h" />
+    <ClInclude Include="Model\Polygon.h" />
     <ClInclude Include="Model\IModel.h" />
     <ClInclude Include="Model\IRenderable.h" />
+    <ClInclude Include="Model\IVertexShader.h" />
     <ClInclude Include="Model\Light.h" />
     <ClInclude Include="Model\PolygonMesh.h" />
     <ClInclude Include="Model\Persistence\CameraPose.h" />
     <ClInclude Include="Model\Persistence\ModelStructs.h" />
     <ClInclude Include="Model\Persistence\DataAccess.h" />
     <ClInclude Include="Model\PixelShader.h" />
+    <ClInclude Include="Model\RenderableCreator.h" />
     <ClInclude Include="Model\Position.h" />
+    <ClInclude Include="Model\IRenderableCreator.h" />
     <ClInclude Include="Model\SunPosition.h" />
     <ClInclude Include="Model\TerrainModel.h" />
     <ClInclude Include="Model\Vertex.h" />
+    <ClInclude Include="Model\VertexPolygon.h" />
     <ClInclude Include="Model\VertexShader.h" />
+    <ClInclude Include="Model\VertexShaderPolygon.h" />
     <ClInclude Include="RenderWindow.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Timer.h" />
@@ -222,6 +231,9 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Model\vertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Model\vertexShaderPolygon.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
     </FxCompile>
   </ItemGroup>

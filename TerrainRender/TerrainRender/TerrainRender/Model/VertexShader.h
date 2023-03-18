@@ -5,10 +5,11 @@
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 #include "Light.h"
+#include "IVertexShader.h"
 #pragma comment(lib, "D3DCompiler.lib")
 #pragma comment(lib, "d3d11.lib")
 
-class VertexShader
+class VertexShader : public IVertexShader
 {
 public:
 	struct MatrixBuffer
@@ -37,12 +38,12 @@ public:
 	VertexShader& operator=(const VertexShader& other) = delete;
 
 
-	bool Initialize(ID3D11Device*, HWND);
-	void Shutdown();
-	bool Render(ID3D11DeviceContext*, DirectX::XMMATRIX worldmat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat,const Light& light);
+	bool Initialize(ID3D11Device*, HWND) override;
+	void Shutdown() override;
+	bool Render(ID3D11DeviceContext*, DirectX::XMMATRIX worldmat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat,const Light& light) override;
 
-	ID3D11VertexShader* GetVertexShader(void);
-	ID3D11InputLayout* GetInputLayout(void);
+	ID3D11VertexShader* GetVertexShader(void) override;
+	ID3D11InputLayout* GetInputLayout(void) override;
 
 private:
 	bool SetShadeParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldmat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 ambientColor, DirectX::XMFLOAT4 diffuseColor, DirectX::XMFLOAT4	lightDirection);

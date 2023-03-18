@@ -23,7 +23,7 @@ struct VS_INPUT
 struct VS_OUTPUT
 {
     float4 position : SV_POSITION;
-    float4 normal   : NORMAL;
+    //float4 normal   : NORMAL;
     float4 color    : COLOR;
 };
 
@@ -31,10 +31,11 @@ struct VS_OUTPUT
 VS_OUTPUT main(VS_INPUT input) 
 {
     VS_OUTPUT output;
+    float4 normal;
 
     output.color    = input.color;
     output.position = float4(input.position, 1.0f);
-    output.normal   = float4(input.normal, 0.0f);
+    normal   = float4(input.normal, 0.0f);
     
     output.position = mul(output.position, worldMat);
     output.position = mul(output.position, viewMat);
@@ -44,10 +45,10 @@ VS_OUTPUT main(VS_INPUT input)
     float4 lightDir = lightDirection;
     //lightDir *= -1;
 
-    output.normal = mul(output.normal, worldMat);
-    output.normal = normalize(output.normal);
+    normal = mul(normal, worldMat);
+    normal = normalize(normal);
 
-    float diffuseBrightness = saturate(dot(output.normal, lightDir));
+    float diffuseBrightness = saturate(dot(normal, lightDir));
     output.color *= saturate(diffuseBrightness * diffuseColor);
 
     float4 ambient = saturate(input.color * ambientColor);

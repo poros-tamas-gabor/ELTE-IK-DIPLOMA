@@ -110,7 +110,7 @@ bool TerrainModel::LoadTerrain(const wchar_t* filepath)
 	{
 		pVertices = &vertices.at(0);
 		vertexCount = vertices.size();
-		this->m_scene.Add(pVertices, vertexCount);
+		this->m_scene.Add(pVertices, vertexCount, m_polygonMeshCreator);
 	}
 
 	return bresult;

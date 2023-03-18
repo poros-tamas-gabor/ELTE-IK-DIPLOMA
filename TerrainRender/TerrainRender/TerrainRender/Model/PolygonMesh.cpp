@@ -2,7 +2,7 @@
 #include	"../ErrorHandler.h"
 #include	<memory>
 
-bool PolygonMesh::Initialize(ID3D11Device* device, VertexShader* vertexShader, PixelShader* pixelShader, Vertex* vertices, UINT indexCount)
+bool PolygonMesh::Initialize(ID3D11Device* device, IVertexShader* vertexShader, IPixelShader* pixelShader, Vertex* vertices, UINT indexCount)
 {
 	if (device == nullptr || vertexShader == nullptr || pixelShader == nullptr)
 		return false;

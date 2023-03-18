@@ -2,7 +2,7 @@
 #include <commdlg.h>
 #include "../resource.h"
 
-
+const static float PI = 3.14159265358979323846;
 bool GuiView::Initalize(ID3D11Device* _device, ID3D11DeviceContext* _deviceContext, IController* controller)
 {
     bool result;
@@ -47,22 +47,52 @@ void GuiView::ShowSettingWindow()
         }
         if (ImGui::CollapsingHeader("Camera Properties"))
         {
-            static float cameraSpeed = 0.005f;
-            if (ImGui::SliderFloat("Camera speed", &cameraSpeed, 0, /*0.01*/ 1, "%.3f" ))
+            if (ImGui::TreeNode("Speed"))
             {
-                this->m_terrainController->Control(IDC_SLIDER_CAMERA_SPEED, &cameraSpeed, NULL);
+                static float cameraSpeed = 0.005f;
+                if (ImGui::SliderFloat("Camera speed", &cameraSpeed, 0, /*0.01*/ 1, "%.3f"))
+                {
+                    this->m_terrainController->Control(IDC_SLIDER_CAMERA_SPEED, &cameraSpeed, NULL);
+                }
+                static float cameraRotationSpeed = 0.001f;
+                if (ImGui::SliderFloat("Camera Rotation speed", &cameraRotationSpeed, 0, 0.002, "%.3f"))
+                {
+                    this->m_terrainController->Control(IDC_SLIDER_CAMERA_ROTATION_SPEED, &cameraRotationSpeed, NULL);
+                }
+                ImGui::TreePop();
             }
-            static float cameraRotationSpeed = 0.001f;
-            if (ImGui::SliderFloat("Camera Rotation speed", &cameraRotationSpeed, 0, 0.002, "%.3f"))
+
+            if (ImGui::TreeNode("Projection Properties"))
             {
-                this->m_terrainController->Control(IDC_SLIDER_CAMERA_ROTATION_SPEED, &cameraRotationSpeed, NULL);
+                static float fov = PI / 2;
+                if (ImGui::SliderFloat("Field of view", &fov, 1, /*0.01*/ PI, "%.3f"))
+                {
+                    this->m_terrainController->Control(IDC_SLIDER_PROJECTION_FIELD_OF_VIEW, &fov, NULL);
+                }
+                static float nearScreen = 1;
+                if (ImGui::SliderFloat("NearScreen", &nearScreen, 0.5, /*0.01*/ 5, "%.3f"))
+                {
+                    this->m_terrainController->Control(IDC_SLIDER_PROJECTION_NEAR_SCREEN, &nearScreen, NULL);
+                }
+                static float farScreen = 1000;
+                if (ImGui::SliderFloat("FarScreen", &farScreen, 10, /*0.01*/ 3000, "%.3f"))
+                {
+                    this->m_terrainController->Control(IDC_SLIDER_PROJECTION_FAR_SCREEN, &farScreen, NULL);
+                }
+                ImGui::TreePop();
             }
+
             if (ImGui::Button("Reset Camera"))
             {
 
                 this->m_terrainController->Control(IDC_BUTTON_CAMERA_RESET, NULL, NULL);
             }
         }
+
+
+
+
+   
         ImGui::End();
     }
 

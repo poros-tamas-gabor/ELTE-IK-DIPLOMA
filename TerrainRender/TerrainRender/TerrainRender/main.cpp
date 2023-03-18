@@ -6,7 +6,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pScmd
 	App		app;
 	bool	result;
 	
-	result = app.Initialize( hInstance, 800, 600 );
+	result = app.Initialize( hInstance, 1600, 900 );
 
 	if (result)
 	{

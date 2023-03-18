@@ -161,22 +161,29 @@ void TerrainModel::UpdateCameraProperties(unsigned message, float data)
 	case IDC_SET_CAMERA_ROTATION_SPEED:
 	{
 		this->m_position.SetRotationSpeed(data);
+		break;
 	}
 
 	case IDC_SET_CAMERA_FIELD_OF_VIEW:
 	{
-		//this->m_position.SetRotationSpeed(data);
+		this->m_camera.SetFieldOfView(data);
+		break;
 	}
 	case IDC_SET_CAMERA_ASPECT_RATIO:
 	{
 		//this->m_position.SetRotationSpeed(data);
+		break;
 	}
 	case IDC_SET_CAMERA_ASPECT_NEAR_SCREEN:
 	{
+		this->m_camera.SetNearScreen(data);
+		break;
 		//this->m_position.SetRotationSpeed(data);
 	}
 	case IDC_SET_CAMERA_ASPECT_FAR_SCREEN:
 	{
+		this->m_camera.SetFarScreen(data);
+		break;
 		//this->m_position.SetRotationSpeed(data);
 	}
 	default:

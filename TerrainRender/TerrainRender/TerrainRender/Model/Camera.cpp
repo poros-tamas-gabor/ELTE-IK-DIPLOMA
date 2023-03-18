@@ -62,7 +62,27 @@ void Camera::Initialize(int screenWidth, int screenHeight, float screenNear, flo
 
 void Camera::SetProjectionValues(float fovRadian, float aspectRatio, float nearScreen, float farScreen)
 {
+	this->m_fovRadian = fovRadian;
+	this->m_aspectRatio = aspectRatio;
+	this->m_nearScreen = nearScreen;
+	this->m_farScreen = farScreen;
 	this->_projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(fovRadian, aspectRatio, nearScreen, farScreen);
+}
+
+void Camera::SetFieldOfView(float fovRad)
+{
+	this->m_fovRadian = fovRad;
+	this->_projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(m_fovRadian, m_aspectRatio, m_nearScreen, m_farScreen);
+}
+void Camera::SetNearScreen(float nearZ)
+{
+	this->m_nearScreen = nearZ;
+	this->_projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(m_fovRadian, m_aspectRatio, m_nearScreen, m_farScreen);
+}
+void Camera::SetFarScreen(float farZ)
+{
+	this->m_farScreen = farZ;
+	this->_projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(m_fovRadian, m_aspectRatio, m_nearScreen, m_farScreen);
 }
 
 void Camera::SetLookAtPos(const DirectX::XMFLOAT3& lookAtFloat)

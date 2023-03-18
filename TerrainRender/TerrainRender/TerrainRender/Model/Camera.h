@@ -20,6 +20,9 @@ private:
 	float	_rotationY;		//in radian
 	float	_rotationZ;		//in radian
 
+public:
+	float	m_fovRadian, m_aspectRatio, m_nearScreen, m_farScreen;
+
 
 public:
 	Camera();
@@ -29,6 +32,9 @@ public:
 	void Initialize(int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView);
 
 	void SetProjectionValues(float fovRad, float aspectRatio, float nearZ, float farZ);
+	void SetFieldOfView(float fovRad);
+	void SetNearScreen(float nearZ);
+	void SetFarScreen(float farZ);
 
 	void SetPosition(float x, float y, float z);
 	void SetRotationRad(float x, float y, float z);

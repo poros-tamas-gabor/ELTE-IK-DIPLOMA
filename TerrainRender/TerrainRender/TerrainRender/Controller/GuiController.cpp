@@ -3,7 +3,6 @@
 #include "../Model/TerrainModel.h"
 #include "../resource.h"
 
-
 GuiController::GuiController()
 {
 	m_handledEvents.push_back(IDC_BUTTON_FIlE_TERRAIN);
@@ -12,6 +11,9 @@ GuiController::GuiController()
 	m_handledEvents.push_back(IDC_SLIDER_CAMERA_SPEED);
 	m_handledEvents.push_back(IDC_SLIDER_CAMERA_ROTATION_SPEED);
 	m_handledEvents.push_back(IDC_BUTTON_CAMERA_RESET);
+	m_handledEvents.push_back(IDC_SLIDER_PROJECTION_FIELD_OF_VIEW);
+	m_handledEvents.push_back(IDC_SLIDER_PROJECTION_NEAR_SCREEN);
+	m_handledEvents.push_back(IDC_SLIDER_PROJECTION_FAR_SCREEN);
 }
 GuiController::~GuiController() {}
 
@@ -90,6 +92,22 @@ void GuiController::Control(unsigned int message, float* fparam, unsigned* upara
 	case IDC_BUTTON_CAMERA_RESET:
 	{
 		this->m_terrainModel->ResetCamera();
+		break;
+	}
+
+	case IDC_SLIDER_PROJECTION_FIELD_OF_VIEW:
+	{
+		this->m_terrainModel->UpdateCameraProperties(IDC_SET_CAMERA_FIELD_OF_VIEW, *fparam);
+		break;
+	}
+	case IDC_SLIDER_PROJECTION_NEAR_SCREEN:
+	{
+		this->m_terrainModel->UpdateCameraProperties(IDC_SET_CAMERA_ASPECT_NEAR_SCREEN, *fparam);
+		break;
+	}
+	case IDC_SLIDER_PROJECTION_FAR_SCREEN:
+	{
+		this->m_terrainModel->UpdateCameraProperties(IDC_SET_CAMERA_ASPECT_FAR_SCREEN, *fparam);
 		break;
 	}
 	}

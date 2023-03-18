@@ -26,7 +26,6 @@ private:
 	VertexShader							m_vertexShader;
 	VertexShaderPolygon						m_vertexShaderPolygon;
 	PixelShader								m_pixelShader;
-	Camera									m_camera;
 	Position								m_position;
 	CompositeRenderable<Vertex>				m_meshes;
 	CompositeRenderable<VertexPolygon>		m_polygons;
@@ -40,7 +39,8 @@ private:
 	PolygonCreator							m_polygonCreator;
 	PolygonMeshCreator						m_polygonMeshCreator;
 
-
+public:
+	Camera									m_camera;
 	
 
 

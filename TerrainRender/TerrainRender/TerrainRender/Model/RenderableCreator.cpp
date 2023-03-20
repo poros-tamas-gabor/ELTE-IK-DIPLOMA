@@ -1,7 +1,7 @@
 #include "RenderableCreator.h"
 #include "PolygonMesh.h"
-#include "Polygon.h"
-#include "CameraTrajectory.h"
+#include "LineList.h"
+
 IRenderable<Vertex>* PolygonMeshCreator::CreateRenderable() const
 {
 	return new PolygonMesh;
@@ -9,11 +9,8 @@ IRenderable<Vertex>* PolygonMeshCreator::CreateRenderable() const
 
 IRenderable<VertexPolygon>* PolygonCreator::CreateRenderable() const
 {
-	return new PolygonLine;
+	return new LineList;
 }
 
-IRenderable<VertexPolygon>* CameraTrajectoryCreator::CreateRenderable() const
-{
-	return new CameraTrajectory;
-}
+
 

@@ -141,10 +141,10 @@ bool TextFileDataAccess::CreateCameraPose(CameraPose& cameraPose, const std::str
     while ((std::getline(lineStream, word, ';'))) {
         i++;
         if (headers.at(i) == "sec") {
-            cameraPose.sec = std::stoi(word);
+            cameraPose.epochtime.setSeconds(std::stoll(word));
         }
         else if (headers.at(i) == "nsec") {
-            cameraPose.nsec = std::stoi(word);
+            cameraPose.epochtime.setNanoseconds(std::stoll(word));
         }
         else if (headers.at(i) == "yaw") {
             cameraPose.yaw = std::stof(word);

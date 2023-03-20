@@ -31,7 +31,7 @@ private:
 	CompositeRenderable<VertexPolygon>		m_polygons;
 	Light									m_light;
 	SunPosition								m_sunPosition;
-	CameraTrajectory* m_cameraTrajectory;
+	CameraTrajectory						m_cameraTrajectory;
 
 	ID3D11Device*							m_device;
 	ID3D11DeviceContext*					m_deviceContext;
@@ -59,6 +59,7 @@ public:
 	bool	LoadTerrain(const wchar_t* filepath);
 	bool	LoadCameraTrajectory(const wchar_t* filepath);
 
+	void	Flythrough(unsigned message, double elapsedMillisec);
 	void	MoveCamera(unsigned message, float timeElapsed);
 	void	RotateCamera(unsigned message, float pitch, float yaw);
 	void	ResetCamera(void);

@@ -41,27 +41,36 @@ void Controller3DExplore::Control(unsigned int message, float* fparam, unsigned*
 
 			if (m_keyboard->KeyIsPressed(VK_SPACE))
 			{
-				this->m_terrainModel->MoveCamera(IDC_CAMERA_MOVE_UP, TimeEllapsed);
+				this->m_terrainModel->MoveCamera(IDM_CAMERA_MOVE_UP, TimeEllapsed);
 			}
 			if (m_keyboard->KeyIsPressed('C'))
 			{
-				this->m_terrainModel->MoveCamera(IDC_CAMERA_MOVE_DOWN, TimeEllapsed);
+				this->m_terrainModel->MoveCamera(IDM_CAMERA_MOVE_DOWN, TimeEllapsed);
 			}
 			if (m_keyboard->KeyIsPressed('W'))
 			{
-				this->m_terrainModel->MoveCamera(IDC_CAMERA_MOVE_FORWARD, TimeEllapsed);
+				this->m_terrainModel->MoveCamera(IDM_CAMERA_MOVE_FORWARD, TimeEllapsed);
 			}
 			if (m_keyboard->KeyIsPressed('S'))
 			{
-				this->m_terrainModel->MoveCamera(IDC_CAMERA_MOVE_BACK, TimeEllapsed);
+				this->m_terrainModel->MoveCamera(IDM_CAMERA_MOVE_BACK, TimeEllapsed);
 			}
 			if (m_keyboard->KeyIsPressed('A'))
 			{
-				this->m_terrainModel->MoveCamera(IDC_CAMERA_MOVE_LEFT, TimeEllapsed);
+				this->m_terrainModel->MoveCamera(IDM_CAMERA_MOVE_LEFT, TimeEllapsed);
 			}
 			if (m_keyboard->KeyIsPressed('D'))
 			{
-				this->m_terrainModel->MoveCamera(IDC_CAMERA_MOVE_RIGHT, TimeEllapsed);
+				this->m_terrainModel->MoveCamera(IDM_CAMERA_MOVE_RIGHT, TimeEllapsed);
+			}
+
+			if (m_keyboard->KeyIsPressed('O'))
+			{
+				this->m_terrainModel->Flythrough(IDM_CAMERA_TRAJECTORY_START, TimeEllapsed);
+			}
+			if (m_keyboard->KeyIsPressed('P'))
+			{
+				this->m_terrainModel->Flythrough(IDM_CAMERA_TRAJECTORY_NEXT_FRAME, TimeEllapsed);
 			}
 		}
 	}
@@ -108,7 +117,7 @@ void Controller3DExplore::ControlMouse(const MouseEvent& e) const
 
 			if (m_mouse->IsLeftDown())
 			{
-				this->m_terrainModel->RotateCamera(IDC_CAMERA_ROTATE, (float)pitch, (float)yaw);
+				this->m_terrainModel->RotateCamera(IDM_CAMERA_ROTATE, (float)pitch, (float)yaw);
 			}
 
 		}
@@ -118,7 +127,7 @@ void Controller3DExplore::ControlMouse(const MouseEvent& e) const
 	{
 		if (m_mouse->IsLeftDown())
 		{
-			this->m_terrainModel->RotateCamera(IDC_CAMERA_ROTATE, (float)e.GetPosY(), (float)e.GetPosX());
+			this->m_terrainModel->RotateCamera(IDM_CAMERA_ROTATE, (float)e.GetPosY(), (float)e.GetPosX());
 		}
 	}
 }

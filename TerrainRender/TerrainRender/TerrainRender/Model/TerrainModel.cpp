@@ -1,5 +1,6 @@
 #include "TerrainModel.h"
 #include "../resource.h"
+#include "PolyLine.h"
 
 TerrainModel::TerrainModel() = default;
 TerrainModel::~TerrainModel() = default;
@@ -67,37 +68,54 @@ bool TerrainModel::Render(ID3D11DeviceContext* deviceContext)
 	return true;
 }
 
+void TerrainModel::Flythrough(unsigned message, double elapsedMillisec)
+{
+	switch (message)
+	{
 
+	case IDM_CAMERA_TRAJECTORY_START:
+	case IDM_CAMERA_TRAJECTORY_STOP:
+	{
+		this->m_cameraTrajectory.Reset();
+		break;
+	}
+	case IDM_CAMERA_TRAJECTORY_NEXT_FRAME:
+	{
+		this->m_cameraTrajectory.UpdateCamera(elapsedMillisec);
+		break;
+	}
+	}
+}
 void TerrainModel::MoveCamera(unsigned message, float timeElapsed)
 {
 	switch (message)
 	{
-	case IDC_CAMERA_MOVE_FORWARD:
+	case IDM_CAMERA_MOVE_FORWARD:
 	{
 		this->m_position.MoveForward(timeElapsed);
 		break;
 	}
-	case IDC_CAMERA_MOVE_BACK:
+	case IDM_CAMERA_MOVE_BACK:
 	{
 		this->m_position.MoveBack(timeElapsed);
 		break;
 	}
-	case IDC_CAMERA_MOVE_LEFT:
+	case IDM_CAMERA_MOVE_LEFT:
 	{
 		this->m_position.MoveLeft(timeElapsed);
 		break;
 	}
-	case IDC_CAMERA_MOVE_RIGHT:
+	case IDM_CAMERA_MOVE_RIGHT:
 	{
 		this->m_position.MoveRight(timeElapsed);
 		break;
 	}
-	case IDC_CAMERA_MOVE_UP:
+	case IDM_CAMERA_MOVE_UP:
 	{
 		this->m_position.MoveUp(timeElapsed);
 		break;
 	}
-	case IDC_CAMERA_MOVE_DOWN:
+	case IDM_CAMERA_MOVE_DOWN:
 	{
 		this->m_position.MoveDown(timeElapsed);
 		break;
@@ -109,7 +127,7 @@ void TerrainModel::RotateCamera(unsigned message, float pitch, float yaw)
 {
 	switch (message)
 	{
-	case IDC_CAMERA_ROTATE:
+	case IDM_CAMERA_ROTATE:
 
 		this->m_position.RotatePitchYaw(pitch, yaw);
 		break;
@@ -138,49 +156,60 @@ bool	TerrainModel::LoadCameraTrajectory(const wchar_t* filepath)
 	bool result = m_persistence->LoadCameraTrajectory(filepath, cameraPoses);
 	if (result)
 	{
-		m_cameraTrajectory = new CameraTrajectory;
+		PolyLine* polyline = new PolyLine;
+		std::vector<VertexPolygon> vertices;
+		for (const CameraPose& camerapose : cameraPoses)
+		{
+			VertexPolygon vertex;
+			vertex.position = { (float)camerapose.east,-(float)camerapose.down,(float)camerapose.north };
+			vertex.color = { 1.0f, 0.0f, 1.0f, 1.0f };
+			vertices.push_back(vertex);
+		}
+		polyline->Initialize(this->m_device, &this->m_vertexShaderPolygon, &this->m_pixelShader, &vertices.at(0), vertices.size());
 
-		if (m_cameraTrajectory->Initialize(m_device, &m_vertexShaderPolygon, &m_pixelShader, cameraPoses))
-			this->m_polygons.Add(m_cameraTrajectory);
+		m_polygons.Add(polyline);
+		m_cameraTrajectory.Initialize(cameraPoses, polyline, &m_camera);
 	}
 	return result;
 }
+
 void TerrainModel::ResetCamera()
 {
 	this->m_camera.SetLookAtPos({ 0,0,0 });
 }
+
 void TerrainModel::UpdateCameraProperties(unsigned message, float data)
 {
 	switch (message)
 	{
-	case IDC_SET_CAMERA_SPEED:
+	case IDM_SET_CAMERA_SPEED:
 	{
 		this->m_position.SetSpeed(data);
 		break;
 	}
-	case IDC_SET_CAMERA_ROTATION_SPEED:
+	case IDM_SET_CAMERA_ROTATION_SPEED:
 	{
 		this->m_position.SetRotationSpeed(data);
 		break;
 	}
 
-	case IDC_SET_CAMERA_FIELD_OF_VIEW:
+	case IDM_SET_CAMERA_FIELD_OF_VIEW:
 	{
 		this->m_camera.SetFieldOfView(data);
 		break;
 	}
-	case IDC_SET_CAMERA_ASPECT_RATIO:
+	case IDM_SET_CAMERA_ASPECT_RATIO:
 	{
 		//this->m_position.SetRotationSpeed(data);
 		break;
 	}
-	case IDC_SET_CAMERA_ASPECT_NEAR_SCREEN:
+	case IDM_SET_CAMERA_ASPECT_NEAR_SCREEN:
 	{
 		this->m_camera.SetNearScreen(data);
 		break;
 		//this->m_position.SetRotationSpeed(data);
 	}
-	case IDC_SET_CAMERA_ASPECT_FAR_SCREEN:
+	case IDM_SET_CAMERA_ASPECT_FAR_SCREEN:
 	{
 		this->m_camera.SetFarScreen(data);
 		break;

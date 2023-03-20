@@ -1,9 +1,9 @@
-#include "Polygon.h"
+#include "LineList.h"
 
 #include	"../ErrorHandler.h"
 #include	<memory>
 
-bool PolygonLine::Initialize(ID3D11Device* device, IVertexShader* vertexShader, IPixelShader* pixelShader, VertexPolygon* vertices, UINT indexCount)
+bool LineList::Initialize(ID3D11Device* device, IVertexShader* vertexShader, IPixelShader* pixelShader, VertexPolygon* vertices, UINT indexCount)
 {
 	if (device == nullptr || vertexShader == nullptr || pixelShader == nullptr)
 		return false;
@@ -19,12 +19,12 @@ bool PolygonLine::Initialize(ID3D11Device* device, IVertexShader* vertexShader, 
 	}
 	return true;
 }
-void PolygonLine::Shutdown()
+void LineList::Shutdown()
 {
 	// Shutdown the vertex and index buffers.
 	this->ShutdownBuffers();
 }
-void PolygonLine::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light& light)
+void LineList::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light& light)
 {
 	bool bresult = this->m_vertexShader->Render(deviceContext, worldMat, viewMat, projectionMat, light);
 	if (!bresult)
@@ -36,17 +36,17 @@ void PolygonLine::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX w
 
 }
 
-int PolygonLine::GetIndexCount() const
+int LineList::GetIndexCount() const
 {
 	return 0;
 }
-int PolygonLine::GetVertexCount() const
+int LineList::GetVertexCount() const
 {
 	return this->_vertexCount;
 
 }
 
-bool PolygonLine::InitializeBuffers(ID3D11Device* device, VertexPolygon* vertices, UINT indexCount)
+bool LineList::InitializeBuffers(ID3D11Device* device, VertexPolygon* vertices, UINT indexCount)
 {
 
 	D3D11_BUFFER_DESC						vertexBufferDesc;
@@ -85,7 +85,7 @@ bool PolygonLine::InitializeBuffers(ID3D11Device* device, VertexPolygon* vertice
 
 
 }
-void PolygonLine::ShutdownBuffers()
+void LineList::ShutdownBuffers()
 {
 
 	// Release the vertex buffer.
@@ -97,7 +97,7 @@ void PolygonLine::ShutdownBuffers()
 
 	return;
 }
-void PolygonLine::RenderBuffers(ID3D11DeviceContext* deviceContext)
+void LineList::RenderBuffers(ID3D11DeviceContext* deviceContext)
 {
 	unsigned int stride;
 	unsigned int offset;

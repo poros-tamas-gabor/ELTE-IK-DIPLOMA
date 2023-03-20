@@ -45,6 +45,9 @@ void GuiView::ShowSettingWindow()
             }
 
         }
+
+
+
         if (ImGui::CollapsingHeader("Camera Properties"))
         {
             if (ImGui::TreeNode("Speed"))

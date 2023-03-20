@@ -64,6 +64,9 @@
     <Filter Include="Source Files\Model\Shader">
       <UniqueIdentifier>{ecabc229-809d-401f-9e87-ac085bc75833}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Model\Math">
+      <UniqueIdentifier>{ecce6271-ed35-47b2-a016-36fc6725fd1a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -150,7 +153,7 @@
     <ClCompile Include="Model\PolygonMesh.cpp">
       <Filter>Source Files\Model\Renderable</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Polygon.cpp">
+    <ClCompile Include="Model\LineList.cpp">
       <Filter>Source Files\Model\Renderable</Filter>
     </ClCompile>
     <ClCompile Include="Model\RenderableCreator.cpp">
@@ -166,6 +169,12 @@
       <Filter>Source Files\Model\Shader</Filter>
     </ClCompile>
     <ClCompile Include="Model\CameraTrajectory.cpp">
+      <Filter>Source Files\Model\Renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Persistence\EpochTime.cpp">
+      <Filter>Source Files\Model\Persistence</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\PolyLine.cpp">
       <Filter>Source Files\Model\Renderable</Filter>
     </ClCompile>
   </ItemGroup>
@@ -233,9 +242,6 @@
     <ClInclude Include="Controller\GuiController.h">
       <Filter>Header Files\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Persistence\CameraPose.h">
-      <Filter>Header Files\Model\Persistence</Filter>
-    </ClInclude>
     <ClInclude Include="View\IView.h">
       <Filter>Source Files\View</Filter>
     </ClInclude>
@@ -287,7 +293,7 @@
     <ClInclude Include="Model\CompositeRenderable.h">
       <Filter>Header Files\Model\Renderable</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Polygon.h">
+    <ClInclude Include="Model\LineList.h">
       <Filter>Header Files\Model\Renderable</Filter>
     </ClInclude>
     <ClInclude Include="Model\PolygonMesh.h">
@@ -311,8 +317,17 @@
     <ClInclude Include="Model\PixelShader.h">
       <Filter>Header Files\Model\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="Model\CameraTrajectory.h">
+    <ClInclude Include="Model\Math\IInterpolation.h">
+      <Filter>Header Files\Model\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Persistence\EpochTime.h">
+      <Filter>Header Files\Model\Persistence</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PolyLine.h">
       <Filter>Header Files\Model\Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\CameraTrajectory.h">
+      <Filter>Header Files\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

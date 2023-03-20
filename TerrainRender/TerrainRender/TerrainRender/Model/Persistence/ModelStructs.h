@@ -1,6 +1,8 @@
 #ifndef MODEL_STRUCTS_H
 #define MODEL_STRUCTS_H
 
+#include "EpochTime.h"
+
 struct ModelTime
 {
 	int year;
@@ -16,5 +18,45 @@ struct ModelLocation
 	double lat;
 	double longitude;
 };
+
+struct CameraPose {
+
+	EpochTime epochtime;
+
+	double yaw;
+	double pitch;
+	double roll;
+
+	double north;
+	double east;
+	double down;
+};
+
+struct Vector3D
+{
+public:
+	double x;
+	double y;
+	double z;
+
+	Vector3D operator*(double factor) const
+	{
+		return { this->x * factor, this->y * factor, this->z * factor};
+	}
+
+	Vector3D operator+(const Vector3D& other) const
+	{
+		return { this->x + other.x, this->y + other.y, this->z + other.z };
+	}
+	Vector3D operator-(const Vector3D& other) const
+	{
+		return { this->x - other.x, this->y - other.y, this->z - other.z };
+	}
+};
+
+inline Vector3D operator*(double factor, const Vector3D& other)
+{
+	return other * factor;
+}
 
 #endif // !MODEL_VERTEX_H

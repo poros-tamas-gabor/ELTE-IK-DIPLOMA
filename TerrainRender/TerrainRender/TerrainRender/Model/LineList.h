@@ -1,9 +1,9 @@
-#ifndef	POLYGON_H
-#define	POLYGON_H
+#ifndef	LINE_LIST_H
+#define	LINE_LIST_H
 
 #include "IRenderable.h"
 #include "VertexPolygon.h"
-class PolygonLine : public IRenderable<VertexPolygon>
+class LineList : public IRenderable<VertexPolygon>
 {
 protected:
 	ID3D11Buffer* m_vertexBuffer;
@@ -12,10 +12,10 @@ protected:
 	IVertexShader* m_vertexShader;
 
 public:
-	PolygonLine() = default;
-	virtual ~PolygonLine() = default;
-	PolygonLine(const PolygonLine&) = delete;
-	PolygonLine& operator=(const PolygonLine&) = delete;
+	LineList() = default;
+	virtual ~LineList() = default;
+	LineList(const LineList&) = delete;
+	LineList& operator=(const LineList&) = delete;
 
 
 	virtual bool Initialize(ID3D11Device* device, IVertexShader*, IPixelShader*, VertexPolygon* vertices, UINT indexCount) override;

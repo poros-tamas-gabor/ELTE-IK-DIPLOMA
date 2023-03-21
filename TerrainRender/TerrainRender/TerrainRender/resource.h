@@ -2,12 +2,7 @@
 #define TERRAIN_RENDER_RESOURCE_H
 
 
-// -------------------------------------
-//	
-//	Message ID for Terrain Model (IDM)
-//  100-999
-//
-// -------------------------------------
+
 #define IDM_CAMERA_MOVE_FORWARD			100
 #define IDM_CAMERA_MOVE_BACK			101
 #define IDM_CAMERA_MOVE_LEFT			102
@@ -25,51 +20,37 @@
 
 #define IDM_CAMERA_TRAJECTORY_NEXT_FRAME		120
 #define IDM_CAMERA_TRAJECTORY_START				121
+#define IDM_CAMERA_TRAJECTORY_PAUS_ilyennincsDELETE				122
 #define IDM_CAMERA_TRAJECTORY_STOP				123
 
 
-// -------------------------------------
-//	
-//	Message ID for Terrain Controller (IDC) 
-//  1000-9999
-//
-// -------------------------------------
+//#define IDC_FIlE_TERRAIN				200
+//#define IDC_FIlE_CAMERA_TRAJECTORY		201
+//#define IDC_FIlE_CAMERA_PROPERTIES		202
+
+
+
 //TODO: GOOD NAME FOR TJIS
 #define IDC_TIME_ELLAPSED						1000
 
-// File
-#define IDC_BUTTON_FIlE_TERRAIN					2000
-#define IDC_BUTTON_FIlE_CAMERA_TRAJECTORY		2001
-#define IDC_BUTTON_FIlE_CAMERA_PROPERTIES		2002
+#define IDC_BUTTON_CAMERA_RESET					2000
+#define IDC_SLIDER_CAMERA_SPEED					2101
+#define IDC_SLIDER_CAMERA_ROTATION_SPEED		2102
+#define IDC_SLIDER_PROJECTION_FIELD_OF_VIEW		2103
+#define IDC_SLIDER_PROJECTION_NEAR_SCREEN		2104
+#define IDC_SLIDER_PROJECTION_FAR_SCREEN		2105
 
-// Mode
-#define IDC_BUTTON_FLYTHROUGH_MODE				2100
-#define IDC_BUTTON_3DEXPLORE_MODE				2101
+#define IDC_BUTTON_FLYTHROUGH_MODE				2200
+#define IDC_BUTTON_3DEXPLORE_MODE				2201
+#define IDC_BUTTON_FLYTHROUGH_START				2210
+#define IDC_BUTTON_FLYTHROUGH_PAUSE				2211
+#define IDC_BUTTON_FLYTHROUGH_STOP				2212
+#define IDC_BUTTON_FLYTHROUGH_RECORD			2213
+#define IDC_SLIDER_FLYTHROUGH_SPEED				2220
 
-// 3DExpolore Mode
-#define IDC_BUTTON_CAMERA_RESET					3000
-#define IDC_SLIDER_CAMERA_SPEED					3101
-#define IDC_SLIDER_CAMERA_ROTATION_SPEED		3102
-#define IDC_SLIDER_PROJECTION_FIELD_OF_VIEW		3103
-#define IDC_SLIDER_PROJECTION_NEAR_SCREEN		3104
-#define IDC_SLIDER_PROJECTION_FAR_SCREEN		3105
-
-// Flythrough mode
-#define IDC_BUTTON_FLYTHROUGH_START				4210
-#define IDC_BUTTON_FLYTHROUGH_PAUSE				4211
-#define IDC_BUTTON_FLYTHROUGH_STOP				4212
-#define IDC_BUTTON_FLYTHROUGH_RECORD			4213
-#define IDC_SLIDER_FLYTHROUGH_SPEED				4220
-
-
-
-
-// -------------------------------------
-//	
-//	Message ID for Terrain Controller from Terrain Controller (IDCC) 
-//  10000-
-//
-// -------------------------------------
+#define IDC_BUTTON_FIlE_TERRAIN					3000
+#define IDC_BUTTON_FIlE_CAMERA_TRAJECTORY		3001
+#define IDC_BUTTON_FIlE_CAMERA_PROPERTIES		3002
 
 #define	IDCC_ACTIVATE_FLYTHROUGH				10000
 #define	IDCC_ACTIVATE_3DEXPLORE					10001
@@ -77,5 +58,16 @@
 #define	IDCC_PAUSE_FLYTHROUGH					10003
 #define	IDCC_STOP_FLYTHROUGH					10004
 #define	IDCC_SPEED_FLYTHROUGH					10005
-
+//#define IDC_BUTTON_RESET                1000
+//#define IDC_BUTTON_ABOUT                1001
+//#define IDC_SLIDER_PITCH                1002
+//#define IDC_SLIDER_YAW                  1003
+//#define IDC_SLIDER_ROLL                 1004
+//#define IDC_SLIDER_POSX                 1005
+//#define IDC_SLIDER_POSY                 1006
+//#define IDC_SLIDER_POSZ                 1007
+//#define IDC_SLIDER_TARX                 1008
+//#define IDC_SLIDER_TARY                 1009
+//#define IDC_SLIDER_TARZ                 1010
+//#define IDC_LABEL_PITCH                 1011
 #endif

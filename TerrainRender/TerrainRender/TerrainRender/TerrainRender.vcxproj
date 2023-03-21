@@ -146,7 +146,9 @@
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Controller\CompositeController.cpp" />
     <ClCompile Include="Controller\Controller3DExplore.cpp" />
+    <ClCompile Include="Controller\ContollerFlythrough.cpp" />
     <ClCompile Include="Controller\GuiController.cpp" />
+    <ClCompile Include="Controller\MessageSystem.cpp" />
     <ClCompile Include="ErrorHandler.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_demo.cpp" />
@@ -184,8 +186,10 @@
     <ClInclude Include="App.h" />
     <ClInclude Include="Controller\CompositeController.h" />
     <ClInclude Include="Controller\Controller3DExplore.h" />
+    <ClInclude Include="Controller\ControllerFlythrough.h" />
     <ClInclude Include="Controller\GuiController.h" />
     <ClInclude Include="Controller\IController.h" />
+    <ClInclude Include="Controller\MessageSystem.h" />
     <ClInclude Include="ErrorHandler.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />

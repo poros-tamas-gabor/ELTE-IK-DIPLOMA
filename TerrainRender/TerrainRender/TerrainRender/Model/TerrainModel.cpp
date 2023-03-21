@@ -154,6 +154,7 @@ bool	TerrainModel::LoadCameraTrajectory(const wchar_t* filepath)
 {
 	std::vector<CameraPose> cameraPoses;
 	bool result = m_persistence->LoadCameraTrajectory(filepath, cameraPoses);
+	this->m_cameraTrajectoryIsloaded = result;
 	if (result)
 	{
 		PolyLine* polyline = new PolyLine;
@@ -173,6 +174,10 @@ bool	TerrainModel::LoadCameraTrajectory(const wchar_t* filepath)
 	return result;
 }
 
+bool TerrainModel::IsTrajectoryLoaded(void) const
+{
+	return m_cameraTrajectoryIsloaded;
+}
 void TerrainModel::ResetCamera()
 {
 	this->m_camera.SetLookAtPos({ 0,0,0 });

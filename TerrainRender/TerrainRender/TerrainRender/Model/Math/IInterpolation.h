@@ -6,7 +6,7 @@
 template <typename X, typename Y> class Iitenterpolation {
 public:
     virtual ~Iitenterpolation() = default;
-    virtual bool CreateInterpolation(const std::vector<X>& Xs,
+    virtual bool Calculate(const std::vector<X>& Xs,
         const std::vector<Y>& containerY, const X& x, Y& y) = 0;
 };
 
@@ -14,7 +14,7 @@ template <typename X, typename Y>
 class LinearInterpolation : public Iitenterpolation<X, Y> {
 
 public:
-    bool CreateInterpolation(const std::vector<X>& Xs, const std::vector<Y>& Ys,
+    bool Calculate(const std::vector<X>& Xs, const std::vector<Y>& Ys,
         const X& x, Y& y) override {
         int index;
         index = binarySearch(Xs, x);

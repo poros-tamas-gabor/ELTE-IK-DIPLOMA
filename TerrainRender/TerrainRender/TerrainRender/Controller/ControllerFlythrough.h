@@ -1,18 +1,28 @@
-#ifndef GUI_CONTROLLER_H
-#define GUI_CONTROLLER_H
+#ifndef CONTROLLER_FLYTHROUGH_H
+#define CONTROLLER_FLYTHROUGH_H
 
+#include "../Input/Mouse.h"
+#include "../Input/Keyboard.h"
 #include "IController.h"
-class GuiController : public IController
+
+class TerrainModel;
+class ControllerFlythrough : public IController
 {
 private:
-	TerrainModel*				m_terrainModel;
-	std::vector<unsigned>		m_handledMsgs;
-	MessageSystem*				m_messageSystem;
-	bool						m_isActive;
+	TerrainModel* m_terrainModel;
+	Mouse* m_mouse;
+	Keyboard* m_keyboard;
+	std::vector<unsigned>	m_handledMsgs;
+	MessageSystem* m_messageSystem;
+
+	bool					m_isActive = false;
+	bool					m_isRunning = false;
+	float					m_speed = 1.0f;
+
 
 public:
-	GuiController();
-	virtual ~GuiController();
+	ControllerFlythrough();
+	virtual ~ControllerFlythrough() {}
 
 	virtual bool CanHandle(unsigned int message) const override;
 	virtual void Control(unsigned int message, float* fparam, unsigned* uparam) override;
@@ -27,9 +37,9 @@ public:
 	virtual void Shutdown() override;
 
 private:
-	void OpenFileDialog(wchar_t* filePath, unsigned buffer);
 
 	void SetMessageSystem(MessageSystem* messageSystem);
+
 };
 
 

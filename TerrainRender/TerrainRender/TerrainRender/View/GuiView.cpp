@@ -46,24 +46,74 @@ void GuiView::ShowSettingWindow()
 
         }
 
+        if (ImGui::CollapsingHeader("Mode"))
+        {
+            static bool selected[2] = { true, false };
+            const char* mode[2] = { "3DExplore", "Flythrough"};
+            const unsigned msgs[2] = { IDC_BUTTON_3DEXPLORE_MODE, IDC_BUTTON_FLYTHROUGH_MODE };
+            
+            for (int i = 0; i < 2; i++)
+            {
+                ImGui::PushID(i);
+                if (ImGui::Selectable(mode[i], selected + i, 0, ImVec2(50, 50)))
+                {
+                    this->m_terrainController->Control(msgs[i], NULL, NULL);
+                    selected[(i + 1) % 2] ^= 1;
+                }
+
+                if (i == 0)
+                    ImGui::SameLine();
+                ImGui::PopID();
+            }
+
+        }
+
+        if (ImGui::CollapsingHeader("Flythrough"))
+        {
+            if (ImGui::Button("Play"))
+            {
+                this->m_terrainController->Control(IDC_BUTTON_FLYTHROUGH_START, NULL, NULL);
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Pause"))
+            {
+                this->m_terrainController->Control(IDC_BUTTON_FLYTHROUGH_PAUSE, NULL, NULL);
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Stop"))
+            {
+                this->m_terrainController->Control(IDC_BUTTON_FLYTHROUGH_STOP, NULL, NULL);
+            }
+
+            if (ImGui::Button("Record"))
+            {
+                this->m_terrainController->Control(IDC_BUTTON_FLYTHROUGH_RECORD, NULL, NULL);
+            }
+            static float flythrough_speed = 1;
+            if (ImGui::SliderFloat("Camera speed", &flythrough_speed, 0.5, 10, "%.3f"))
+            {
+                this->m_terrainController->Control(IDC_SLIDER_FLYTHROUGH_SPEED, &flythrough_speed, NULL);
+            }
+
+        }
+
+        if (ImGui::CollapsingHeader("3D Explore"))
+        {
+            static float cameraSpeed = 0.005f;
+            if (ImGui::SliderFloat("Camera speed", &cameraSpeed, 0, /*0.01*/ 1, "%.3f"))
+            {
+                this->m_terrainController->Control(IDC_SLIDER_CAMERA_SPEED, &cameraSpeed, NULL);
+            }
+            static float cameraRotationSpeed = 0.001f;
+            if (ImGui::SliderFloat("Camera Rotation speed", &cameraRotationSpeed, 0, 0.002, "%.3f"))
+            {
+                this->m_terrainController->Control(IDC_SLIDER_CAMERA_ROTATION_SPEED, &cameraRotationSpeed, NULL);
+            }
+        }
 
 
         if (ImGui::CollapsingHeader("Camera Properties"))
         {
-            if (ImGui::TreeNode("Speed"))
-            {
-                static float cameraSpeed = 0.005f;
-                if (ImGui::SliderFloat("Camera speed", &cameraSpeed, 0, /*0.01*/ 1, "%.3f"))
-                {
-                    this->m_terrainController->Control(IDC_SLIDER_CAMERA_SPEED, &cameraSpeed, NULL);
-                }
-                static float cameraRotationSpeed = 0.001f;
-                if (ImGui::SliderFloat("Camera Rotation speed", &cameraRotationSpeed, 0, 0.002, "%.3f"))
-                {
-                    this->m_terrainController->Control(IDC_SLIDER_CAMERA_ROTATION_SPEED, &cameraRotationSpeed, NULL);
-                }
-                ImGui::TreePop();
-            }
 
             if (ImGui::TreeNode("Projection Properties"))
             {

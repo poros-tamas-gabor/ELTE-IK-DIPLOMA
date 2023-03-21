@@ -38,6 +38,7 @@ private:
 	IDataAccess*							m_persistence;
 	PolygonCreator							m_polygonCreator;
 	PolygonMeshCreator						m_polygonMeshCreator;
+	bool									m_cameraTrajectoryIsloaded = false;
 
 public:
 	Camera									m_camera;
@@ -58,6 +59,7 @@ public:
 
 	bool	LoadTerrain(const wchar_t* filepath);
 	bool	LoadCameraTrajectory(const wchar_t* filepath);
+	bool	IsTrajectoryLoaded(void) const;
 
 	void	Flythrough(unsigned message, double elapsedMillisec);
 	void	MoveCamera(unsigned message, float timeElapsed);

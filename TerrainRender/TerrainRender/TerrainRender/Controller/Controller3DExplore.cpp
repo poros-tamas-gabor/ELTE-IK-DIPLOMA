@@ -6,7 +6,16 @@
 Controller3DExplore::Controller3DExplore()
 {
 	m_handledMsgs.push_back(IDC_TIME_ELLAPSED);
+	m_handledMsgs.push_back(IDCC_ACTIVATE_FLYTHROUGH);
+	m_handledMsgs.push_back(IDCC_ACTIVATE_3DEXPLORE);
+
 }
+
+void Controller3DExplore::SetMessageSystem(MessageSystem* messageSystem)
+{
+	m_messageSystem = messageSystem;
+}
+
 bool Controller3DExplore::CanHandle(unsigned int message) const
 {
 	auto it = std::find(m_handledMsgs.begin(), m_handledMsgs.end(), message);
@@ -18,8 +27,20 @@ void Controller3DExplore::Control(unsigned int message, float* fparam, unsigned*
 	float TimeEllapsed = 0;
 	switch (message)
 	{
+	case IDCC_ACTIVATE_3DEXPLORE:
+	{
+		this->m_isActive = true;
+		break;
+	}
+	case IDCC_ACTIVATE_FLYTHROUGH:
+	{
+		this->m_isActive = false;
+		break;
+	}
 	case IDC_TIME_ELLAPSED:
 	{
+		if (!IsActive())
+			return;
 		if(fparam != nullptr)
 		{
 			TimeEllapsed = *fparam;
@@ -73,6 +94,8 @@ void Controller3DExplore::Control(unsigned int message, float* fparam, unsigned*
 				this->m_terrainModel->Flythrough(IDM_CAMERA_TRAJECTORY_NEXT_FRAME, TimeEllapsed);
 			}
 		}
+		break;
+		
 	}
 	default:
 		break;
@@ -91,6 +114,22 @@ void Controller3DExplore::SetKeyboard(Keyboard* keyboard)
 {
 	this->m_keyboard = keyboard;
 }
+
+void Controller3DExplore::Disable()
+{
+	this->m_isActive = false;
+}
+bool Controller3DExplore::IsActive() const
+{
+	return this->m_isActive;
+}
+
+void Controller3DExplore::Activate()
+{
+	this->m_isActive = true;
+}
+
+
 
 bool Controller3DExplore::Initialize(TerrainModel* pModel, Mouse* mouse, Keyboard* keyboard)
 {

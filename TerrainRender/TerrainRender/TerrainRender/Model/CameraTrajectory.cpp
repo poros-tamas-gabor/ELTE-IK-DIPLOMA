@@ -41,11 +41,11 @@ void CameraTrajectory::UpdateCamera(double elapsedmsec)
 
 	bool result;
 	Vector3D currentPosition;
-	result = m_interpolation.CreateInterpolation(this->m_elapsedmsecs, this->m_positions, this->m_elapsedmsec, currentPosition);
+	result = m_interpolation.Calculate(this->m_elapsedmsecs, this->m_positions, this->m_elapsedmsec, currentPosition);
 	if (!result)
 		return;
 	Vector3D currentRotation;
-	result = m_interpolation.CreateInterpolation(this->m_elapsedmsecs, this->m_rotations, this->m_elapsedmsec, currentRotation);
+	result = m_interpolation.Calculate(this->m_elapsedmsecs, this->m_rotations, this->m_elapsedmsec, currentRotation);
 	if (!result)
 		return;
 	

@@ -20,7 +20,6 @@ private:
 	float	_rotationY;		//in radian
 	float	_rotationZ;		//in radian
 
-public:
 	float	m_fovRadian, m_aspectRatio, m_nearScreen, m_farScreen;
 
 

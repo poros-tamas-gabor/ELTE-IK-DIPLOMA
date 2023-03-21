@@ -2,25 +2,53 @@
 #include <algorithm>
 #include "../Model/TerrainModel.h"
 #include "../resource.h"
+#include "MessageSystem.h"
 
 GuiController::GuiController()
 {
-	m_handledEvents.push_back(IDC_BUTTON_FIlE_TERRAIN);
-	m_handledEvents.push_back(IDC_BUTTON_FIlE_CAMERA_TRAJECTORY);
-	m_handledEvents.push_back(IDC_BUTTON_FIlE_CAMERA_PROPERTIES);
-	m_handledEvents.push_back(IDC_SLIDER_CAMERA_SPEED);
-	m_handledEvents.push_back(IDC_SLIDER_CAMERA_ROTATION_SPEED);
-	m_handledEvents.push_back(IDC_BUTTON_CAMERA_RESET);
-	m_handledEvents.push_back(IDC_SLIDER_PROJECTION_FIELD_OF_VIEW);
-	m_handledEvents.push_back(IDC_SLIDER_PROJECTION_NEAR_SCREEN);
-	m_handledEvents.push_back(IDC_SLIDER_PROJECTION_FAR_SCREEN);
+	m_handledMsgs.push_back(IDC_BUTTON_FIlE_TERRAIN);
+	m_handledMsgs.push_back(IDC_BUTTON_FIlE_CAMERA_TRAJECTORY);
+	m_handledMsgs.push_back(IDC_BUTTON_FIlE_CAMERA_PROPERTIES);
+	m_handledMsgs.push_back(IDC_SLIDER_CAMERA_SPEED);
+	m_handledMsgs.push_back(IDC_SLIDER_CAMERA_ROTATION_SPEED);
+	m_handledMsgs.push_back(IDC_BUTTON_CAMERA_RESET);
+	m_handledMsgs.push_back(IDC_SLIDER_PROJECTION_FIELD_OF_VIEW);
+	m_handledMsgs.push_back(IDC_SLIDER_PROJECTION_NEAR_SCREEN);
+	m_handledMsgs.push_back(IDC_SLIDER_PROJECTION_FAR_SCREEN);
+
+
+	m_handledMsgs.push_back(IDC_BUTTON_FLYTHROUGH_MODE);
+	m_handledMsgs.push_back(IDC_BUTTON_3DEXPLORE_MODE);
+	m_handledMsgs.push_back(IDC_BUTTON_FLYTHROUGH_START);
+	m_handledMsgs.push_back(IDC_BUTTON_FLYTHROUGH_PAUSE);
+	m_handledMsgs.push_back(IDC_BUTTON_FLYTHROUGH_PAUSE);
+	m_handledMsgs.push_back(IDC_BUTTON_FLYTHROUGH_STOP);
+	m_handledMsgs.push_back(IDC_BUTTON_FLYTHROUGH_RECORD);
+	m_handledMsgs.push_back(IDC_SLIDER_FLYTHROUGH_SPEED);
+
 }
 GuiController::~GuiController() {}
 
+void GuiController::SetMessageSystem(MessageSystem* messageSystem)
+{
+	m_messageSystem = messageSystem;
+}
+
 bool GuiController::CanHandle(unsigned int message) const
 {
-	auto it = std::find(m_handledEvents.begin(), m_handledEvents.end(), message);
-	return it != m_handledEvents.end();
+	auto it = std::find(m_handledMsgs.begin(), m_handledMsgs.end(), message);
+	return it != m_handledMsgs.end();
+}
+
+void GuiController::Disable() {
+	m_isActive = false;
+}
+void GuiController::Activate() {
+	m_isActive = true;
+}
+
+bool GuiController::IsActive() const {
+	return m_isActive;
 }
 
 void GuiController::OpenFileDialog(wchar_t* filePath, unsigned buffer)
@@ -108,6 +136,44 @@ void GuiController::Control(unsigned int message, float* fparam, unsigned* upara
 	case IDC_SLIDER_PROJECTION_FAR_SCREEN:
 	{
 		this->m_terrainModel->UpdateCameraProperties(IDM_SET_CAMERA_ASPECT_FAR_SCREEN, *fparam);
+		break;
+	}
+	case IDC_BUTTON_FLYTHROUGH_MODE:
+	{
+		if (this->m_terrainModel->IsTrajectoryLoaded())
+		{
+			this->m_messageSystem->Publish(IDCC_ACTIVATE_FLYTHROUGH, NULL, NULL);
+		}
+		else
+		{
+			throw 666;
+
+		}
+		break;
+	}
+	case IDC_BUTTON_3DEXPLORE_MODE:
+	{
+		this->m_messageSystem->Publish(IDCC_ACTIVATE_3DEXPLORE, NULL, NULL);
+		break;
+
+	}
+	case IDC_BUTTON_FLYTHROUGH_START:
+	{
+		this->m_messageSystem->Publish(IDCC_START_FLYTHROUGH, NULL, NULL);
+		break;
+	}
+	case IDC_BUTTON_FLYTHROUGH_PAUSE:
+	{
+		this->m_messageSystem->Publish(IDCC_PAUSE_FLYTHROUGH ,NULL, NULL);
+		break;
+	}
+	case IDC_BUTTON_FLYTHROUGH_STOP:{
+		this->m_messageSystem->Publish(IDCC_STOP_FLYTHROUGH, NULL, NULL);
+		break;
+	}
+	case IDC_BUTTON_FLYTHROUGH_RECORD: {break; }
+	case IDC_SLIDER_FLYTHROUGH_SPEED: {
+		this->m_messageSystem->Publish(IDCC_SPEED_FLYTHROUGH, fparam, uparam);
 		break;
 	}
 	}

@@ -46,9 +46,6 @@
     <Filter Include="Source Files\View">
       <UniqueIdentifier>{402ecc78-d297-4172-9c8e-3f6515935196}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Controller\Event">
-      <UniqueIdentifier>{6e102699-eea5-48f5-8c12-a370e2fa361f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Model\Interface">
       <UniqueIdentifier>{00835c65-94e7-4417-86dd-3f57a9f1bdf8}</UniqueIdentifier>
     </Filter>
@@ -176,6 +173,12 @@
     </ClCompile>
     <ClCompile Include="Model\PolyLine.cpp">
       <Filter>Source Files\Model\Renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller\MessageSystem.cpp">
+      <Filter>Header Files\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller\ContollerFlythrough.cpp">
+      <Filter>Header Files\Controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -328,6 +331,12 @@
     </ClInclude>
     <ClInclude Include="Model\CameraTrajectory.h">
       <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\MessageSystem.h">
+      <Filter>Header Files\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\ControllerFlythrough.h">
+      <Filter>Header Files\Controller</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

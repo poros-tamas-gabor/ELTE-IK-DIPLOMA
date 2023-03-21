@@ -13,6 +13,9 @@ private:
 	Mouse*					m_mouse;
 	Keyboard*				m_keyboard;
 	std::vector<unsigned>	m_handledMsgs;
+	MessageSystem*			m_messageSystem;
+
+	bool					m_isActive;
 
 
 public:
@@ -26,12 +29,15 @@ public:
 	virtual void SetKeyboard(Keyboard* keyboard) override;
 
 	virtual bool Initialize(TerrainModel* pModel, Mouse* mouse, Keyboard* keyboard) override;
+	virtual void Disable() override;
+	virtual void Activate() override;
+	virtual bool IsActive() const  override;
 	virtual void Shutdown() override;
 
 private:
 
 	void ControlMouse(const MouseEvent& e) const;
-	//void ControlKeyboard(const KeyboardEvent& e, float dt) ;
+	void SetMessageSystem(MessageSystem* messageSystem);
 
 };
 

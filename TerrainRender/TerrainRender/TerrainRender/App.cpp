@@ -12,6 +12,7 @@
 //TODO: DELETE
 #include "Controller/GuiController.h"
 #include "Controller/Controller3DExplore.h"
+#include "Controller/ControllerFlythrough.h"
 
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -284,6 +285,11 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 
 		guic->Initialize(&this->m_terrainModel, &this->_mouse, &this->_keyboard);
 		this->m_terrainController.AddController(guic);
+
+		IControllerPtr fly = std::make_shared<ControllerFlythrough>();
+
+		fly->Initialize(&this->m_terrainModel, &this->_mouse, &this->_keyboard);
+		this->m_terrainController.AddController(fly);
 
 
 	}

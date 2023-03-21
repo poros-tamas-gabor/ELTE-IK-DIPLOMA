@@ -2,15 +2,18 @@
 #define COMPOSITE_CONTROLLER_H
 
 #include "IController.h"
+#include "MessageSystem.h"
 #include <vector>
 
 class CompositeController : public IController
 {
 private:
+	MessageSystem				m_messageSystem;
 	std::vector<IControllerPtr>	m_controllers;
-	TerrainModel* m_terrainModel;
-	Mouse* m_mouse;
-	Keyboard* m_keyboard;
+	TerrainModel*				m_terrainModel;
+	Mouse*						m_mouse;
+	Keyboard*					m_keyboard;
+	bool						m_isActive;
 
 public:
 	CompositeController();
@@ -22,11 +25,15 @@ public:
 	virtual void SetMouse(Mouse* mouse) override;
 	virtual void SetKeyboard(Keyboard* keyboard) override;
 	virtual void Shutdown() override;
+	virtual void Disable() override;
+	virtual void Activate() override;
+	virtual bool IsActive() const  override;
 
 	void AddController(IControllerPtr controller);
 	void RemoveController(IControllerPtr controller);
 
-public:
+private:
+	void SetMessageSystem(MessageSystem* messageSystem);
 
 };
 

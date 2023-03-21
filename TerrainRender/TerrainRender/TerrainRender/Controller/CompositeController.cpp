@@ -1,11 +1,14 @@
 #include "CompositeController.h"
 #include <algorithm>
-CompositeController::CompositeController()
+CompositeController::CompositeController() : m_messageSystem(m_controllers), m_isActive(true)
 {
 	m_terrainModel = NULL;
 	m_mouse = NULL;
 	m_keyboard = NULL;
 }
+
+
+void CompositeController::SetMessageSystem(MessageSystem*) {}
 
 void CompositeController::SetTerrainModel(TerrainModel* pModel)
 {
@@ -44,10 +47,7 @@ bool CompositeController::CanHandle(unsigned int message) const
 
 void CompositeController::Control(unsigned int message, float* fparam, unsigned* uparam)
 {
-	for (IControllerPtr controller : m_controllers)
-	{
-		controller->Control(message, fparam, uparam);
-	}
+	m_messageSystem.Publish(message, fparam, uparam);
 }
 
 void CompositeController::Shutdown()
@@ -58,8 +58,22 @@ void CompositeController::Shutdown()
 	}
 }
 
+void CompositeController::Disable()
+{
+	this->m_isActive = false;
+}
+void CompositeController::Activate()
+{
+	this->m_isActive = true;
+}
+bool CompositeController::IsActive() const
+{
+	return this->m_isActive;
+}
+
 void CompositeController::AddController(IControllerPtr controller)
 {
+	controller->SetMessageSystem(&m_messageSystem);
 	this->m_controllers.push_back(controller);
 }
 void CompositeController::RemoveController(IControllerPtr controller)

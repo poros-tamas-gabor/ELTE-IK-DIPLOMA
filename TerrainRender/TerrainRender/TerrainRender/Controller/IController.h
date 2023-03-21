@@ -5,7 +5,7 @@
 #include "../Input/Keyboard.h"
 #include <memory>
 
-
+class MessageSystem;
 class TerrainModel; //TODO: Use IModel
 class IController {
 public:
@@ -20,6 +20,10 @@ public:
     virtual bool Initialize(TerrainModel* pModel, Mouse* mouse, Keyboard* keyboard) = 0;
 
     virtual void Shutdown() = 0;
+    virtual void Disable() = 0;
+    virtual void Activate() = 0;
+    virtual bool IsActive() const = 0 ;
+    virtual void SetMessageSystem(MessageSystem* messageSystem) = 0;
 };
 typedef std::shared_ptr<IController> IControllerPtr;
 

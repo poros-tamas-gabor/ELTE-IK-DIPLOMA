@@ -46,31 +46,35 @@ bool PixelShader::InitializeShader(ID3D11Device* device, HWND hwnd, const WCHAR*
 	flags |= D3DCOMPILE_DEBUG;
 #endif
 
-	result = D3DCompileFromFile(psFilename, NULL, NULL, "main", "ps_5_0", flags, 0, &pixelShaderBuffer, &errorMessage);
-	if (FAILED(result))
+	try
 	{
-		if (errorMessage)
+		result = D3DCompileFromFile(psFilename, NULL, NULL, "main", "ps_5_0", flags, 0, &pixelShaderBuffer, &errorMessage);
+		if (FAILED(result))
 		{
-			std::wstring errormsg = L"Failed to Compile the pixel shader code. Filename: ";
-			errormsg += psFilename;
-			ErrorHandler::log(result, errormsg);
+			if (errorMessage)
+			{
+				std::wstring errormsg = L"Failed to Compile the vertex shader code. Filename: ";
+				errormsg += psFilename;
+				throw COMException(result, errormsg, __FILEW__, __FUNCTIONW__, __LINE__);
+			}
+			else
+				throw COMException(result, L"Missing Shader File", __FILEW__, __FUNCTIONW__, __LINE__);
 		}
-		else
-		{
-			ErrorHandler::log(result, L"Missing Shader File");
 
-		}
+		// Create the pixel shader from the buffer.
+		result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &this->m_pixelShader);
+
+		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create the pixel shader from the buffer");
+
+		pixelShaderBuffer->Release();
+	}
+
+	catch (const COMException& exception)
+	{
+		ErrorHandler::Log(exception);
 		return false;
 	}
 
-	// Create the pixel shader from the buffer.
-	result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &this->m_pixelShader);
-	if (FAILED(result))
-	{
-		ErrorHandler::log(result, L"Failed to Create the pixel shader from the buffer");
-	}
-
-	pixelShaderBuffer->Release();
 
 	return true;
 

@@ -5,11 +5,15 @@
 #include <windows.h>
 #include <comdef.h>
 #include <string>
+#include "COMException.h"
+#include "TRException.h"
 
 class ErrorHandler
 {
 public:
-	static void log(std::string message);
-	static void log(HRESULT hr, std::wstring message);
+	static void Log(std::string message);
+	static void Log(HRESULT hr, std::wstring message);
+	static void Log(const COMException& exception);
+	static void Log(const TRException& exception);
 };
 #endif

@@ -177,6 +177,7 @@
     <ClCompile Include="Model\VertexShader.cpp" />
     <ClCompile Include="Model\VertexShaderPolygon.cpp" />
     <ClCompile Include="RenderWindow.cpp" />
+    <ClCompile Include="StringConverter.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="View\D3DView.cpp" />
     <ClCompile Include="View\TerrainView.cpp" />
@@ -184,6 +185,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
+    <ClInclude Include="COMException.h" />
     <ClInclude Include="Controller\CompositeController.h" />
     <ClInclude Include="Controller\Controller3DExplore.h" />
     <ClInclude Include="Controller\ControllerFlythrough.h" />
@@ -230,7 +232,9 @@
     <ClInclude Include="Model\VertexShaderPolygon.h" />
     <ClInclude Include="RenderWindow.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="StringConverter.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="TRException.h" />
     <ClInclude Include="View\D3DView.h" />
     <ClInclude Include="View\TerrainView.h" />
     <ClInclude Include="View\GuiView.h" />

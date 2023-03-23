@@ -13,7 +13,7 @@ static LRESULT CALLBACK MessageHandlerSetup(HWND hwnd, UINT umessage, WPARAM wpa
 		App* pApp = reinterpret_cast<App*>(pCreate->lpCreateParams);
 		if (pApp == nullptr) //Sanity check
 		{
-			ErrorHandler::log("Critical Error: Pointer to window container is null during WM_NCCREATE.");
+			ErrorHandler::Log("Critical Error: Pointer to window container is null during WM_NCCREATE.");
 			exit(-1);
 		}
 		SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pApp));
@@ -76,7 +76,7 @@ bool RenderWindow::Initialize(App* pApp, int screenWidth, int screenHeight)
 
 	if (this->_hwnd == nullptr)
 	{
-		ErrorHandler::log(GetLastError(), L"CreateWindowEX Failed for window: " + _window_title);
+		ErrorHandler::Log(GetLastError(), L"CreateWindowEX Failed for window: " + _window_title);
 		return false;
 	}
 	// Bring the window up on the screen and set it as main focus.

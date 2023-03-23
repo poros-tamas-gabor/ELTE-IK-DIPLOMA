@@ -57,30 +57,32 @@ bool LineList::InitializeBuffers(ID3D11Device* device, VertexPolygon* vertices, 
 	// Set the number of indices in the index array.
 	this->_vertexCount = indexCount;
 
-
-	// Set up the description of the static vertex buffer.
-	ZeroMemory(&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
-	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = sizeof(VertexPolygon) * this->_vertexCount;
-	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDesc.CPUAccessFlags = 0;
-	vertexBufferDesc.MiscFlags = 0;
-	vertexBufferDesc.StructureByteStride = 0;
-
-	// Give the subresource structure a pointer to the vertex data.
-	vertexData.pSysMem = vertices;
-	vertexData.SysMemPitch = 0;
-	vertexData.SysMemSlicePitch = 0;
-
-	// Now create the vertex buffer.
-	result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
-	if (FAILED(result))
+	try
 	{
-		ErrorHandler::log(result, L"Failed to Create vertexbuffer");
+		// Set up the description of the static vertex buffer.
+		ZeroMemory(&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
+		vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+		vertexBufferDesc.ByteWidth = sizeof(VertexPolygon) * this->_vertexCount;
+		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		vertexBufferDesc.CPUAccessFlags = 0;
+		vertexBufferDesc.MiscFlags = 0;
+		vertexBufferDesc.StructureByteStride = 0;
+
+		// Give the subresource structure a pointer to the vertex data.
+		vertexData.pSysMem = vertices;
+		vertexData.SysMemPitch = 0;
+		vertexData.SysMemSlicePitch = 0;
+
+		// Now create the vertex buffer.
+		result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
+		
+		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create vertexbuffer");
+	}
+	catch (const COMException& exception)
+	{
+		ErrorHandler::Log(exception);
 		return false;
 	}
-
-
 	return true;
 
 

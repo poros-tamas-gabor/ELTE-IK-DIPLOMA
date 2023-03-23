@@ -8,7 +8,6 @@
 #include "ImGui/imgui_impl_dx11.h"
 #include "resource.h"
 
-
 //TODO: DELETE
 #include "Controller/GuiController.h"
 #include "Controller/Controller3DExplore.h"
@@ -28,7 +27,7 @@ App::App()
 
 	if ( RegisterRawInputDevices( &rid, 1, sizeof(rid) ) == FALSE )
 	{
-		ErrorHandler::log(GetLastError(), L"Failed to register raw input devices.");
+		ErrorHandler::Log(GetLastError(), L"Failed to register raw input devices.");
 		exit(-1);
 	}
 }

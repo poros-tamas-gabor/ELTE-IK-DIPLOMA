@@ -5,7 +5,7 @@
 
 Controller3DExplore::Controller3DExplore()
 {
-	m_handledMsgs.push_back(IDC_TIME_ELLAPSED);
+	m_handledMsgs.push_back(IDC_TIME_ELAPSED);
 	m_handledMsgs.push_back(IDCC_ACTIVATE_FLYTHROUGH);
 	m_handledMsgs.push_back(IDCC_ACTIVATE_3DEXPLORE);
 
@@ -22,7 +22,7 @@ bool Controller3DExplore::CanHandle(unsigned int message) const
 	return it != m_handledMsgs.end();
 }
 
-void Controller3DExplore::Control(unsigned int message, float* fparam, unsigned* uparam)
+void Controller3DExplore::HandleMessage(unsigned int message, float* fparam, unsigned* uparam)
 {
 	float TimeEllapsed = 0;
 	switch (message)
@@ -37,7 +37,7 @@ void Controller3DExplore::Control(unsigned int message, float* fparam, unsigned*
 		this->m_isActive = false;
 		break;
 	}
-	case IDC_TIME_ELLAPSED:
+	case IDC_TIME_ELAPSED:
 	{
 		if (!IsActive())
 			return;
@@ -115,19 +115,12 @@ void Controller3DExplore::SetKeyboard(Keyboard* keyboard)
 	this->m_keyboard = keyboard;
 }
 
-void Controller3DExplore::Disable()
-{
-	this->m_isActive = false;
-}
 bool Controller3DExplore::IsActive() const
 {
 	return this->m_isActive;
 }
 
-void Controller3DExplore::Activate()
-{
-	this->m_isActive = true;
-}
+
 
 
 

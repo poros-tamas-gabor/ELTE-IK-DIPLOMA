@@ -5,7 +5,7 @@
 
 ControllerFlythrough::ControllerFlythrough()
 {
-	m_handledMsgs.push_back(IDC_TIME_ELLAPSED);
+	m_handledMsgs.push_back(IDC_TIME_ELAPSED);
 	m_handledMsgs.push_back(IDCC_ACTIVATE_FLYTHROUGH);
 	m_handledMsgs.push_back(IDCC_ACTIVATE_3DEXPLORE);
 	m_handledMsgs.push_back(IDCC_START_FLYTHROUGH);
@@ -25,7 +25,7 @@ bool ControllerFlythrough::CanHandle(unsigned int message) const
 	return it != m_handledMsgs.end();
 }
 
-void ControllerFlythrough::Control(unsigned int message, float* fparam, unsigned* uparam)
+void ControllerFlythrough::HandleMessage(unsigned int message, float* fparam, unsigned* uparam)
 {
 	switch (message)
 	{
@@ -70,7 +70,7 @@ void ControllerFlythrough::Control(unsigned int message, float* fparam, unsigned
 		}
 		break;
 	}
-	case IDC_TIME_ELLAPSED:
+	case IDC_TIME_ELAPSED:
 	{
 		if (fparam != nullptr)
 		{
@@ -120,19 +120,12 @@ void ControllerFlythrough::SetKeyboard(Keyboard* keyboard)
 	this->m_keyboard = keyboard;
 }
 
-void ControllerFlythrough::Disable()
-{
-	this->m_isActive = false;
-}
+
 bool ControllerFlythrough::IsActive() const
 {
 	return this->m_isActive;
 }
 
-void ControllerFlythrough::Activate()
-{
-	this->m_isActive = true;
-}
 
 
 

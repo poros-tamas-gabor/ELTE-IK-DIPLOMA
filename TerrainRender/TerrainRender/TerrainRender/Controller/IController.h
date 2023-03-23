@@ -11,7 +11,7 @@ class IController {
 public:
     virtual ~IController() {}
     virtual bool CanHandle(unsigned int) const = 0;
-    virtual void Control(unsigned int message, float* fparam, unsigned* uparam) = 0;
+    virtual void HandleMessage(unsigned int message, float* fparam, unsigned* uparam) = 0;
 
     virtual void SetTerrainModel(TerrainModel* pModel) = 0;
     virtual void SetMouse(Mouse* mouse) = 0;
@@ -20,8 +20,6 @@ public:
     virtual bool Initialize(TerrainModel* pModel, Mouse* mouse, Keyboard* keyboard) = 0;
 
     virtual void Shutdown() = 0;
-    virtual void Disable() = 0;
-    virtual void Activate() = 0;
     virtual bool IsActive() const = 0 ;
     virtual void SetMessageSystem(MessageSystem* messageSystem) = 0;
 };

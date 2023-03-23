@@ -23,14 +23,12 @@ public:
 	virtual ~Controller3DExplore() {}
 
 	virtual bool CanHandle(unsigned int message) const override;
-	virtual void Control(unsigned int message, float* fparam, unsigned* uparam) override;
+	virtual void HandleMessage(unsigned int message, float* fparam, unsigned* uparam) override;
 	virtual void SetTerrainModel(TerrainModel* pModel) override;
 	virtual void SetMouse(Mouse* mouse) override;
 	virtual void SetKeyboard(Keyboard* keyboard) override;
 
 	virtual bool Initialize(TerrainModel* pModel, Mouse* mouse, Keyboard* keyboard) override;
-	virtual void Disable() override;
-	virtual void Activate() override;
 	virtual bool IsActive() const  override;
 	virtual void Shutdown() override;
 

@@ -35,7 +35,7 @@
 //
 // -------------------------------------
 //TODO: GOOD NAME FOR TJIS
-#define IDC_TIME_ELLAPSED						1000
+#define IDC_TIME_ELAPSED						1000
 
 // File
 #define IDC_BUTTON_FIlE_TERRAIN					2000

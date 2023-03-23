@@ -45,7 +45,7 @@ bool CompositeController::CanHandle(unsigned int message) const
 	return false;
 }
 
-void CompositeController::Control(unsigned int message, float* fparam, unsigned* uparam)
+void CompositeController::HandleMessage(unsigned int message, float* fparam, unsigned* uparam)
 {
 	m_messageSystem.Publish(message, fparam, uparam);
 }
@@ -58,14 +58,6 @@ void CompositeController::Shutdown()
 	}
 }
 
-void CompositeController::Disable()
-{
-	this->m_isActive = false;
-}
-void CompositeController::Activate()
-{
-	this->m_isActive = true;
-}
 bool CompositeController::IsActive() const
 {
 	return this->m_isActive;

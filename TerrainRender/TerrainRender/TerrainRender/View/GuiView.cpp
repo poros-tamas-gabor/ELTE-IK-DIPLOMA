@@ -36,12 +36,12 @@ void GuiView::ShowSettingWindow()
             
             if (ImGui::Button("Set Terrain Path"))
             {
-                this->m_terrainController->Control(IDC_BUTTON_FIlE_TERRAIN, NULL, NULL);
+                this->m_terrainController->HandleMessage(IDC_BUTTON_FIlE_TERRAIN, NULL, NULL);
             }
 
             if (ImGui::Button("Set Trajectory Path"))
             {
-                this->m_terrainController->Control(IDC_BUTTON_FIlE_CAMERA_TRAJECTORY, NULL, NULL);
+                this->m_terrainController->HandleMessage(IDC_BUTTON_FIlE_CAMERA_TRAJECTORY, NULL, NULL);
             }
 
         }
@@ -57,7 +57,7 @@ void GuiView::ShowSettingWindow()
                 ImGui::PushID(i);
                 if (ImGui::Selectable(mode[i], selected + i, 0, ImVec2(50, 50)))
                 {
-                    this->m_terrainController->Control(msgs[i], NULL, NULL);
+                    this->m_terrainController->HandleMessage(msgs[i], NULL, NULL);
                     selected[(i + 1) % 2] ^= 1;
                 }
 
@@ -72,27 +72,27 @@ void GuiView::ShowSettingWindow()
         {
             if (ImGui::Button("Play"))
             {
-                this->m_terrainController->Control(IDC_BUTTON_FLYTHROUGH_START, NULL, NULL);
+                this->m_terrainController->HandleMessage(IDC_BUTTON_FLYTHROUGH_START, NULL, NULL);
             }
             ImGui::SameLine();
             if (ImGui::Button("Pause"))
             {
-                this->m_terrainController->Control(IDC_BUTTON_FLYTHROUGH_PAUSE, NULL, NULL);
+                this->m_terrainController->HandleMessage(IDC_BUTTON_FLYTHROUGH_PAUSE, NULL, NULL);
             }
             ImGui::SameLine();
             if (ImGui::Button("Stop"))
             {
-                this->m_terrainController->Control(IDC_BUTTON_FLYTHROUGH_STOP, NULL, NULL);
+                this->m_terrainController->HandleMessage(IDC_BUTTON_FLYTHROUGH_STOP, NULL, NULL);
             }
 
             if (ImGui::Button("Record"))
             {
-                this->m_terrainController->Control(IDC_BUTTON_FLYTHROUGH_RECORD, NULL, NULL);
+                this->m_terrainController->HandleMessage(IDC_BUTTON_FLYTHROUGH_RECORD, NULL, NULL);
             }
             static float flythrough_speed = 1;
             if (ImGui::SliderFloat("Camera speed", &flythrough_speed, 0.5, 10, "%.3f"))
             {
-                this->m_terrainController->Control(IDC_SLIDER_FLYTHROUGH_SPEED, &flythrough_speed, NULL);
+                this->m_terrainController->HandleMessage(IDC_SLIDER_FLYTHROUGH_SPEED, &flythrough_speed, NULL);
             }
 
         }
@@ -102,12 +102,12 @@ void GuiView::ShowSettingWindow()
             static float cameraSpeed = 0.005f;
             if (ImGui::SliderFloat("Camera speed", &cameraSpeed, 0, /*0.01*/ 1, "%.3f"))
             {
-                this->m_terrainController->Control(IDC_SLIDER_CAMERA_SPEED, &cameraSpeed, NULL);
+                this->m_terrainController->HandleMessage(IDC_SLIDER_CAMERA_SPEED, &cameraSpeed, NULL);
             }
             static float cameraRotationSpeed = 0.001f;
             if (ImGui::SliderFloat("Camera Rotation speed", &cameraRotationSpeed, 0, 0.002, "%.3f"))
             {
-                this->m_terrainController->Control(IDC_SLIDER_CAMERA_ROTATION_SPEED, &cameraRotationSpeed, NULL);
+                this->m_terrainController->HandleMessage(IDC_SLIDER_CAMERA_ROTATION_SPEED, &cameraRotationSpeed, NULL);
             }
         }
 
@@ -120,17 +120,17 @@ void GuiView::ShowSettingWindow()
                 static float fov = PI / 2;
                 if (ImGui::SliderFloat("Field of view", &fov, 1, /*0.01*/ PI, "%.3f"))
                 {
-                    this->m_terrainController->Control(IDC_SLIDER_PROJECTION_FIELD_OF_VIEW, &fov, NULL);
+                    this->m_terrainController->HandleMessage(IDC_SLIDER_PROJECTION_FIELD_OF_VIEW, &fov, NULL);
                 }
                 static float nearScreen = 1;
                 if (ImGui::SliderFloat("NearScreen", &nearScreen, 0.5, /*0.01*/ 5, "%.3f"))
                 {
-                    this->m_terrainController->Control(IDC_SLIDER_PROJECTION_NEAR_SCREEN, &nearScreen, NULL);
+                    this->m_terrainController->HandleMessage(IDC_SLIDER_PROJECTION_NEAR_SCREEN, &nearScreen, NULL);
                 }
                 static float farScreen = 1000;
                 if (ImGui::SliderFloat("FarScreen", &farScreen, 10, /*0.01*/ 3000, "%.3f"))
                 {
-                    this->m_terrainController->Control(IDC_SLIDER_PROJECTION_FAR_SCREEN, &farScreen, NULL);
+                    this->m_terrainController->HandleMessage(IDC_SLIDER_PROJECTION_FAR_SCREEN, &farScreen, NULL);
                 }
                 ImGui::TreePop();
             }
@@ -138,7 +138,7 @@ void GuiView::ShowSettingWindow()
             if (ImGui::Button("Reset Camera"))
             {
 
-                this->m_terrainController->Control(IDC_BUTTON_CAMERA_RESET, NULL, NULL);
+                this->m_terrainController->HandleMessage(IDC_BUTTON_CAMERA_RESET, NULL, NULL);
             }
         }
 

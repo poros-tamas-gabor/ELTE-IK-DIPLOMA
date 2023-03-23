@@ -313,7 +313,7 @@ void App::Update()
 {
 	float dt = (float)this->_timer.GetMilisecondsElapsed();
 	this->_timer.Restart();
-	this->m_terrainController.Control(IDC_TIME_ELLAPSED, &dt, NULL);
+	this->m_terrainController.HandleMessage(IDC_TIME_ELAPSED, &dt, NULL);
 }
 
 

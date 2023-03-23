@@ -40,12 +40,6 @@ bool GuiController::CanHandle(unsigned int message) const
 	return it != m_handledMsgs.end();
 }
 
-void GuiController::Disable() {
-	m_isActive = false;
-}
-void GuiController::Activate() {
-	m_isActive = true;
-}
 
 bool GuiController::IsActive() const {
 	return m_isActive;
@@ -82,7 +76,7 @@ void GuiController::OpenFileDialog(wchar_t* filePath, unsigned buffer)
 		OutputDebugStringW(filePath);
 	}
 }
-void GuiController::Control(unsigned int message, float* fparam, unsigned* uparam)
+void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned* uparam)
 {
 	switch (message)
 	{

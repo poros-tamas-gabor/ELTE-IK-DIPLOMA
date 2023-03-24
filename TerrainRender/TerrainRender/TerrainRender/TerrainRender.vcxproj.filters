@@ -64,6 +64,9 @@
     <Filter Include="Header Files\Model\Math">
       <UniqueIdentifier>{ecce6271-ed35-47b2-a016-36fc6725fd1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Model\Persistence\Async">
+      <UniqueIdentifier>{bf888376-c594-4eb3-9826-71d543755c9d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -190,7 +193,7 @@
       <Filter>Source Files\Model\Persistence</Filter>
     </ClCompile>
     <ClCompile Include="Model\Persistence\ReadSTLChunk.cpp">
-      <Filter>Header Files\Model\Persistence</Filter>
+      <Filter>Header Files\Model\Persistence\Async</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -366,7 +369,7 @@
       <Filter>Header Files\Model\Interface</Filter>
     </ClInclude>
     <ClInclude Include="Model\Persistence\ReadSTLChunk.h">
-      <Filter>Header Files\Model\Persistence</Filter>
+      <Filter>Header Files\Model\Persistence\Async</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

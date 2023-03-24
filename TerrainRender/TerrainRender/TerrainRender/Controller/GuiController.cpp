@@ -25,6 +25,7 @@ GuiController::GuiController()
 	m_handledMsgs.push_back(IDC_BUTTON_FLYTHROUGH_STOP);
 	m_handledMsgs.push_back(IDC_BUTTON_FLYTHROUGH_RECORD);
 	m_handledMsgs.push_back(IDC_SLIDER_FLYTHROUGH_SPEED);
+	m_handledMsgs.push_back(IDC_BUTTON_FIlE_TERRAIN_PROJECT);
 
 }
 GuiController::~GuiController() {}
@@ -68,13 +69,55 @@ void GuiController::OpenFileDialog(wchar_t* filePath, unsigned buffer)
 	ofn.lpstrFileTitle = NULL;
 	ofn.nMaxFileTitle = 0;
 	ofn.lpstrInitialDir = NULL;
-	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST; 
 
 	// Display the Open dialog box. 
 	if (GetOpenFileName(&ofn) == TRUE)
 	{
 		OutputDebugStringW(filePath);
 	}
+}
+
+void GuiController::OpenFileDialogMultipleSelection(std::vector<std::wstring>& files)
+{
+	wchar_t filePath[260];      // buffer for file name
+	OPENFILENAME ofn;			// common dialog box structure
+	HWND hwnd = NULL;           // owner window
+	HANDLE hf;					// file handle
+
+	// Initialize OPENFILENAME
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = hwnd;
+	ofn.lpstrFile = filePath;
+	//
+	// Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
+	// use the contents of szFile to initialize itself.
+	//
+	ofn.lpstrFile[0] = '\0';
+	ofn.nMaxFile = sizeof(wchar_t) * 260;
+	ofn.lpstrFilter = L"All\0*.*\0Text\0*.TXT\0";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR | OFN_ALLOWMULTISELECT | OFN_EXPLORER;
+
+	// Display the Open dialog box. 
+	if (GetOpenFileName(&ofn) == TRUE)
+	{
+		wchar_t* str = ofn.lpstrFile;
+		std::wstring directory = str;
+		str += (directory.length() + 1);
+		while (*str) {
+			std::wstring filename = str;
+			str += (filename.length() + 1);
+			files.push_back(directory + L"\\" + filename);
+		}
+	}
+
+
+
 }
 void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned* uparam)
 {
@@ -101,6 +144,19 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 		//this->m_terrainModel->LoadTerrain(filePath);
 		break;
 	}
+	case IDC_BUTTON_FIlE_TERRAIN_PROJECT:
+	{
+		std::vector<std::wstring> files;
+		this->OpenFileDialogMultipleSelection(files);
+
+		for (auto& file : files)
+		{
+			OutputDebugStringW(file.c_str());
+		}
+		this->m_terrainModel->LoadTerrainProject(files);
+		break;
+	}
+
 	case IDC_SLIDER_CAMERA_SPEED:
 	{
 		this->m_terrainModel->UpdateCameraProperties(IDM_SET_CAMERA_SPEED, *fparam);

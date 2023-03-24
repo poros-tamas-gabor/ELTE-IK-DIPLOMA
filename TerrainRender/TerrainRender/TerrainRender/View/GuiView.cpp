@@ -38,8 +38,7 @@ void GuiView::ShowSettingWindow()
         if (ImGui::CollapsingHeader("File"))
         {
             ImGui::Separator();
-            ImGui::Text("text");
-            ImGui::Separator();
+
             
             if (ImGui::Button("Set Terrain Path"))
             {
@@ -49,6 +48,12 @@ void GuiView::ShowSettingWindow()
             if (ImGui::Button("Set Trajectory Path"))
             {
                 this->m_terrainController->HandleMessage(IDC_BUTTON_FIlE_CAMERA_TRAJECTORY, NULL, NULL);
+            }
+
+            ImGui::Separator(); ImGui::Separator();
+            if (ImGui::Button("Set Terrain Project"))
+            {
+                this->m_terrainController->HandleMessage(IDC_BUTTON_FIlE_TERRAIN_PROJECT, NULL, NULL);
             }
 
         }

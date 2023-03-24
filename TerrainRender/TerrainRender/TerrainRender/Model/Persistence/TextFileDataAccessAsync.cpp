@@ -72,7 +72,7 @@ bool TextFileDataAccessAsync::LoadTerrain(const wchar_t* filename, std::vector<V
 
     vertices.clear();
 
-    for (Facet facet : m_faces)
+    for (const Facet& facet : m_faces)
     {
         for (int i = 0; i < 3; i++)
         {
@@ -94,5 +94,6 @@ bool TextFileDataAccessAsync::LoadTerrain(const wchar_t* filename, std::vector<V
 }
 bool TextFileDataAccessAsync::LoadCameraTrajectory(const wchar_t* filename, std::vector<CameraPose>& cameraPoses)
 {
-    return false;
+    TextFileDataAccess p;
+    return p.LoadCameraTrajectory(filename, cameraPoses);
 }

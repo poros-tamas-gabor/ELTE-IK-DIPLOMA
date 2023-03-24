@@ -59,6 +59,8 @@ public:
 
 	bool	LoadTerrain(const wchar_t* filepath);
 	bool	LoadCameraTrajectory(const wchar_t* filepath);
+	bool	LoadTerrainProject(const std::vector<std::wstring>& files);
+
 	bool	IsTrajectoryLoaded(void) const;
 
 	void	Flythrough(unsigned message, double elapsedMillisec);

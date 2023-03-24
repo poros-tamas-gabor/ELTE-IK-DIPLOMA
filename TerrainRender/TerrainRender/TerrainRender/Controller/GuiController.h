@@ -26,6 +26,7 @@ public:
 
 private:
 	void OpenFileDialog(wchar_t* filePath, unsigned buffer);
+	void OpenFileDialogMultipleSelection(std::vector<std::wstring>& files);
 
 	void SetMessageSystem(MessageSystem* messageSystem);
 };

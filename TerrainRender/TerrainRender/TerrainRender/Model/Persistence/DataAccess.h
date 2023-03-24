@@ -51,6 +51,6 @@ public:
     TextFileDataAccessAsync& operator=(const TextFileDataAccessAsync&) = delete;
     ~TextFileDataAccessAsync() = default;
     bool LoadTerrain(const wchar_t* filename, std::vector<Vertex>& vertices) override;
-    bool LoadCameraTrajectory(const wchar_t* filename, std::vector<CameraPose>& cameraPoses) override;
+    bool LoadCameraTrajectory(const wchar_t*, std::vector<CameraPose>& cameraPoses) override;
 };
 #endif // ! PERSISTENCE_H

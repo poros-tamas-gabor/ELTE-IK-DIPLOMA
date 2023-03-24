@@ -150,6 +150,16 @@ bool TerrainModel::LoadTerrain(const wchar_t* filepath)
 	return bresult;
 }
 
+bool	TerrainModel::LoadTerrainProject(const std::vector<std::wstring>& files)
+{
+	for (const std::wstring& filepath : files)
+	{
+		this->LoadTerrain(filepath.c_str());
+	}
+	return true;
+
+}
+
 bool	TerrainModel::LoadCameraTrajectory(const wchar_t* filepath)
 {
 	std::vector<CameraPose> cameraPoses;

@@ -7,89 +7,57 @@
 #include <vector>
 #include <regex>
 
-
-bool TextFileDataAccess::CreateVertex(Vertex& vertex,const std::string& line,std::vector<Vertex>& vertices, STLLineType& type, int& vertexCount) {
+bool TextFileDataAccess::CreateVertex(Vertex& vertex, const std::string& line, std::vector<Vertex>& vertices, STLLineType& type, int& vertexCount) {
     bool bresult;
     switch (type) {
     case BEGIN: {
-        //bresult = std::regex_match(line, std::regex("solid.+"));
         type = FACET;
-        //return bresult;
         return true;
     }
     case FACET:
     case END: {
-        vertex.color    = { 1.0f, 1.0f, 1.0f, 1.0f };
-        vertex.normal   = { 0,0,0};
+        vertex.color = { 1.0f, 1.0f, 1.0f, 1.0f };
+        vertex.normal = { 0,0,0 };
         vertex.position = { 0,0,0 };
 
-       bresult = std::regex_match(line, std::regex("endsolid.+"));
-       if (bresult)
-       {
-           return true;
-       }
-       // bresult = std::regex_match(
-        //    line, std::regex("[ \t\r\n\f]*facet[ \t\r\n\f]*normal([ \t\r\n\f]*-?[0-9]+[.]?[0-9]*(e[+-][0-9]+)?){3}"));
-        //if (!bresult) {
-        //    return false;
-        //}
-        std::stringstream sstream(line);
+        if (line.find("endsolid") != std::string::npos) {
+            return true;
+        }
+
+        std::istringstream iss(line);
         std::string word;
-        sstream >> word; // facet
-        sstream >> word; // normal
-        sstream >> word; // x
-        vertex.normal.x = std::stof(word);
-        sstream >> word; // y
-        vertex.normal.y = std::stof(word);
-        sstream >> word; // z
-        vertex.normal.z = std::stof(word);
+        iss >> word >> word; // skip "facet" and "normal"
+        iss >> vertex.normal.x >> vertex.normal.y >> vertex.normal.z;
         type = LOOP;
         return true;
     }
     case LOOP: {
-        //bresult = std::regex_match(line, std::regex("[ \t\r\n\f]*outer[ \t\r\n\f]*loop"));
         type = VERTEX;
-        //return bresult;
         return true;
     }
     case VERTEX: {
-       //bresult = std::regex_match(
-       //    line, std::regex("[ \t\r\n\f]*vertex([ \t\r\n\f]*-?[0-9]+[.]?[0-9]*(e[+-][0-9]+)?){3}"));
-        //if (!bresult) {
-        //    return false;
-        //}
-        std::stringstream sstream(line);
+        std::istringstream iss(line);
         std::string word;
-        sstream >> word; // vertex
-        sstream >> word; // x
-        vertex.position.x = std::stof(word);
-        sstream >> word; // y
-        vertex.position.y = std::stof(word);
-        sstream >> word; // z
-        vertex.position.z = std::stof(word);
+        iss >> word; // skip "vertex"
+        iss >> vertex.position.x >> vertex.position.y >> vertex.position.z;
         vertices.push_back(vertex);
 
         if (vertexCount < 2) {
             vertexCount++;
             type = VERTEX;
         }
-        else if (vertexCount == 2) {
+        else  {
             vertexCount = 0;
             type = ENDLOOP;
         }
-        //return bresult;
         return true;
     }
     case ENDLOOP: {
-        //bresult = std::regex_match(line, std::regex("[ \t\r\n\f]*endloop"));
         type = ENDFACET;
         return true;
-        //return bresult;
     }
     case ENDFACET: {
-        //bresult = std::regex_match(line, std::regex("[ \t\r\n\f]*endfacet"));
         type = FACET;
-        //return bresult;
         return true;
     }
     }
@@ -128,11 +96,6 @@ bool TextFileDataAccess::LoadTerrain(const wchar_t* filename, std::vector<Vertex
 
 bool TextFileDataAccess::CreateCameraPose(CameraPose& cameraPose, const std::string& line, const std::vector<std::string>& headers) 
 {
-    //bool bresult = std::regex_match(line, std::regex("(-?[0-9]+[.]?[0-9]*(e[+-][0-9]+)?)(;(-?[0-9]+[.]?[0-9]*(e[+-][0-9]+)?))*"));
-   //if (!bresult)
-   //{
-   //    return false;
-   //}
 
     std::istringstream lineStream(line);
     std::string word;

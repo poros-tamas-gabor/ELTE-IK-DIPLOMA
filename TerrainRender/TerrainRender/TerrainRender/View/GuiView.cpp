@@ -1,6 +1,7 @@
 #include "GuiView.h"
 #include <commdlg.h>
 #include "../resource.h"
+#include "../ImGui/imguistyleserializer.h" 
 
 const static float PI = 3.14159265358979323846;
 bool GuiView::Initalize(ID3D11Device* _device, ID3D11DeviceContext* _deviceContext, IController* controller)
@@ -13,8 +14,8 @@ bool GuiView::Initalize(ID3D11Device* _device, ID3D11DeviceContext* _deviceConte
     }
     this->m_terrainController = controller;
     // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
-    //ImGui::StyleColorsLight();
+    ImGui::ResetStyle(28);
+
     // Setup Platform/Renderer backends
     result = ImGui_ImplDX11_Init(_device, _deviceContext);
     return result;
@@ -28,6 +29,12 @@ void GuiView::ShowSettingWindow()
     if (show_setting_window)
     {
         ImGui::Begin("Setting Window", &show_setting_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+        static int style = 28;
+        if (ImGui::SliderInt("Style", &style, 0, 38))
+        {
+            ImGui::ResetStyle(style);
+        }
+
         if (ImGui::CollapsingHeader("File"))
         {
             ImGui::Separator();

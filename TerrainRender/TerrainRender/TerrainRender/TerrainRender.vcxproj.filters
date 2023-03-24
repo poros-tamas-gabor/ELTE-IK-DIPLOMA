@@ -183,6 +183,9 @@
     <ClCompile Include="StringConverter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ImGui\imguistyleserializer.cpp">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -349,6 +352,9 @@
     </ClInclude>
     <ClInclude Include="TRException.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imguistyleserializer.h">
+      <Filter>Resource Files\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

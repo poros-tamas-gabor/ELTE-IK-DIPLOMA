@@ -259,7 +259,7 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 
 	bool result;
 
-	this->m_dataAccess = new TextFileDataAccess;
+	this->m_dataAccess = new TextFileDataAccessAsync;
 	if (this->m_dataAccess == nullptr)
 		return false;
 

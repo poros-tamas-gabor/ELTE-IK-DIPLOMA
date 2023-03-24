@@ -186,6 +186,9 @@
     <ClCompile Include="ImGui\imguistyleserializer.cpp">
       <Filter>Resource Files\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="Model\Persistence\TextFileDataAccessAsync.cpp">
+      <Filter>Source Files\Model\Persistence</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">

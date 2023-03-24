@@ -168,6 +168,7 @@
     <ClCompile Include="Model\Light.cpp" />
     <ClCompile Include="Model\Persistence\EpochTime.cpp" />
     <ClCompile Include="Model\LineList.cpp" />
+    <ClCompile Include="Model\Persistence\TextFileDataAccessAsync.cpp" />
     <ClCompile Include="Model\PolygonMesh.cpp" />
     <ClCompile Include="Model\Persistence\DataAccess.cpp" />
     <ClCompile Include="Model\PixelShader.cpp" />

@@ -59,4 +59,15 @@ inline Vector3D operator*(double factor, const Vector3D& other)
 	return other * factor;
 }
 
+struct Vector4D
+{
+	float x, y, z, w;
+};
+
+struct Facet
+{
+	Vector3D normal;
+	Vector3D position[3];
+};
+
 #endif // !MODEL_VERTEX_H

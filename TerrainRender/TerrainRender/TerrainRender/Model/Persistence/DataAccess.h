@@ -5,6 +5,7 @@
 #include <vector>
 #include <sstream>
 #include <mutex>
+#include "ReadSTLChunk.h"
 
 
 class IDataAccess
@@ -16,9 +17,6 @@ public:
 };
 
 class TextFileDataAccess : public IDataAccess {
-
-private:
-    enum STLLineType { BEGIN, FACET, LOOP, VERTEX, ENDLOOP, ENDFACET, END };
 
 private:
     bool CreateVertex(Vertex& vertex, const std::string& line, std::vector<Vertex>& vertices, STLLineType& type, int& vertexCount);
@@ -35,19 +33,15 @@ public:
 
 class TextFileDataAccessAsync : public IDataAccess {
 
-
-
-private:
-    enum STLLineType { BEGIN, FACET, LOOP, VERTEX, ENDLOOP, ENDFACET, END };
-private:
+    friend class ReadSTLChunk;
 
 private:
     const int minChunkSize = 2629781;
-    std::mutex queueMutex;
-    std::vector<Facet> faces;
+    std::mutex m_mutex;
+    std::vector<Facet> m_faces;
 private:
     void ReadChunk(const std::wstring& filepath, int start, int end);
-    bool ReadFile(const std::wstring& filepath);
+    bool ReadFile(const std::wstring& filepath, ICallableCreatorPtr creator);
     bool CreateFacet(Facet& facet, const std::string& line, STLLineType& type, int& vertexCount);
     int GetNumThreads(int fileSize);
 

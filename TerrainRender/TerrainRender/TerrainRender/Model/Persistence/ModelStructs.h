@@ -70,4 +70,5 @@ struct Facet
 	Vector3D position[3];
 };
 
+enum STLLineType { BEGIN, FACET, LOOP, VERTEX, ENDLOOP, ENDFACET, END };
 #endif // !MODEL_VERTEX_H

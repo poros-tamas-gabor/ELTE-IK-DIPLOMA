@@ -189,6 +189,9 @@
     <ClCompile Include="Model\Persistence\TextFileDataAccessAsync.cpp">
       <Filter>Source Files\Model\Persistence</Filter>
     </ClCompile>
+    <ClCompile Include="Model\Persistence\ReadSTLChunk.cpp">
+      <Filter>Header Files\Model\Persistence</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -358,6 +361,12 @@
     </ClInclude>
     <ClInclude Include="ImGui\imguistyleserializer.h">
       <Filter>Resource Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Persistence\ICallable.h">
+      <Filter>Header Files\Model\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Persistence\ReadSTLChunk.h">
+      <Filter>Header Files\Model\Persistence</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

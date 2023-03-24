@@ -168,6 +168,7 @@
     <ClCompile Include="Model\Light.cpp" />
     <ClCompile Include="Model\Persistence\EpochTime.cpp" />
     <ClCompile Include="Model\LineList.cpp" />
+    <ClCompile Include="Model\Persistence\ReadSTLChunk.cpp" />
     <ClCompile Include="Model\Persistence\TextFileDataAccessAsync.cpp" />
     <ClCompile Include="Model\PolygonMesh.cpp" />
     <ClCompile Include="Model\Persistence\DataAccess.cpp" />
@@ -219,6 +220,8 @@
     <ClInclude Include="Model\IRenderable.h" />
     <ClInclude Include="Model\IVertexShader.h" />
     <ClInclude Include="Model\Light.h" />
+    <ClInclude Include="Model\Persistence\ICallable.h" />
+    <ClInclude Include="Model\Persistence\ReadSTLChunk.h" />
     <ClInclude Include="Model\PolygonMesh.h" />
     <ClInclude Include="Model\Persistence\ModelStructs.h" />
     <ClInclude Include="Model\Persistence\DataAccess.h" />

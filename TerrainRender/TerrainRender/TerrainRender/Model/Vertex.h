@@ -3,7 +3,7 @@
 #include <DirectXMath.h>
 
 
-struct Vertex
+struct VertexMesh
 {
 	DirectX::XMFLOAT3 position;
 	DirectX::XMFLOAT3 normal;

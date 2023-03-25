@@ -21,12 +21,12 @@ private:
 	std::vector<double>						m_elapsedmsecs;
 	std::vector<Vector3D>					m_positions;
 	std::vector<Vector3D>					m_rotations;
-	IRenderable<VertexPolygon>*				m_renderable;
+	IRenderable<VertexPolyLine>*				m_renderable;
 	Camera*									m_camera;
 	LinearInterpolation<double, Vector3D>	m_interpolation;
 
 public:
-	bool Initialize(const std::vector<CameraPose>& cameraPoses, IRenderable<VertexPolygon>* renderable, Camera* camera);
+	bool Initialize(const std::vector<CameraPose>& cameraPoses, IRenderable<VertexPolyLine>* renderable, Camera* camera);
 
 	void UpdateCamera(double elapsedmsecs);
 	void Reset();

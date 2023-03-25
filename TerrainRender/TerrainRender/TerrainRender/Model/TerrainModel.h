@@ -2,8 +2,10 @@
 #define TERRAIN_MODEL_H
 
 #include "IModel.h"
-#include "PixelShader.h"
-#include "VertexShader.h"
+#include "PixelShaderMesh.h"
+#include "VertexShaderMesh.h"
+#include "VertexShaderPolyLine.h"
+#include "PixelShaderPolyLine.h"
 #include "Camera.h"
 #include "Position.h"
 #include "SunPosition.h"
@@ -15,7 +17,6 @@
 #include "Persistence/DataAccess.h"
 #include "CompositeRenderable.h"
 #include "RenderableCreator.h"
-#include "VertexShaderPolygon.h"
 #include "CameraTrajectory.h"
 #pragma comment(lib, "D3DCompiler.lib")
 #pragma comment(lib, "d3d11.lib")
@@ -23,22 +24,22 @@
 class TerrainModel : public IModel
 {
 private:
-	VertexShader							m_vertexShader;
-	VertexShaderPolygon						m_vertexShaderPolygon;
-	PixelShader								m_pixelShader;
-	Position								m_position;
-	CompositeRenderable<Vertex>				m_meshes;
-	CompositeRenderable<VertexPolygon>		m_polygons;
-	Light									m_light;
-	SunPosition								m_sunPosition;
-	CameraTrajectory						m_cameraTrajectory;
+	VertexShaderMesh							m_vertexShaderMesh;
+	PixelShaderMesh								m_pixelShaderMesh;
+	VertexShaderPolyLine						m_vertexShaderPolyLine;
+	PixelShaderPolyLine							m_pixelShaderPolyLine;
 
-	ID3D11Device*							m_device;
-	ID3D11DeviceContext*					m_deviceContext;
-	IDataAccess*							m_persistence;
-	PolygonCreator							m_polygonCreator;
-	PolygonMeshCreator						m_polygonMeshCreator;
-	bool									m_cameraTrajectoryIsloaded = false;
+	Position									m_position;
+	CompositeRenderable<VertexMesh>				m_meshes;
+	CompositeRenderable<VertexPolyLine>			m_polylines;
+	Light										m_light;
+	SunPosition									m_sunPosition;
+	CameraTrajectory							m_cameraTrajectory;
+
+	ID3D11Device*								m_device;
+	ID3D11DeviceContext*						m_deviceContext;
+	IDataAccess*								m_persistence;
+	bool										m_cameraTrajectoryIsloaded = false;
 
 public:
 	Camera									m_camera;
@@ -53,9 +54,6 @@ public:
 	bool	Initalize(HWND hwnd, IDataAccess* persistence, ID3D11Device* device, int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView = (DirectX::XM_PI / 4.0f));
 	void	Shutdown();
 	bool	Render(ID3D11DeviceContext* deviceContext);
-
-
-
 
 	bool	LoadTerrain(const wchar_t* filepath);
 	bool	LoadCameraTrajectory(const wchar_t* filepath);

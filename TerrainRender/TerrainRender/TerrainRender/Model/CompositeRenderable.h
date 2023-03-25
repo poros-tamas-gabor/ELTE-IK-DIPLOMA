@@ -65,9 +65,9 @@ public:
 			renderable->Render(deviceContext, worldMat, viewMat, projectionMat, light);
 		}
 	}
-	bool Add(V* vertices, UINT indexCount, const IRenderableCreator<V>& polygonCreator)
+	bool Add(V* vertices, UINT indexCount, const IRenderableCreator<V>& renderableCreator)
 	{
-		IRenderable<V>* renderable = polygonCreator.CreateRenderable();
+		IRenderable<V>* renderable = renderableCreator.CreateRenderable();
 		if (!renderable)
 		{
 			return false;

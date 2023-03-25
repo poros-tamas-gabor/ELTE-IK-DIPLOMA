@@ -17,19 +17,25 @@ bool TerrainModel::Initalize(HWND hwnd, IDataAccess* persistence, ID3D11Device* 
 
 	this->m_device = device;
 
-	bresult = this->m_vertexShader.Initialize(device, hwnd);
+	bresult = this->m_vertexShaderMesh.Initialize(device, hwnd);
 	if (!bresult)
 	{
 		return false;
 	}
 
-	bresult = this->m_vertexShaderPolygon.Initialize(device, hwnd);
+	bresult = this->m_vertexShaderPolyLine.Initialize(device, hwnd);
 	if (!bresult)
 	{
 		return false;
 	}
 
-	bresult = this->m_pixelShader.Initialize(device, hwnd);
+	bresult = this->m_pixelShaderMesh.Initialize(device, hwnd);
+	if (!bresult)
+	{
+		return false;
+	}
+
+	bresult = this->m_pixelShaderPolyLine.Initialize(device, hwnd);
 	if (!bresult)
 	{
 		return false;
@@ -38,10 +44,8 @@ bool TerrainModel::Initalize(HWND hwnd, IDataAccess* persistence, ID3D11Device* 
 	this->m_camera.Initialize(screenWidth, screenHeight, screenNear, screenDepth, fieldOfView);
 	this->m_position.Initialize(&this->m_camera);
 
-	this->m_meshes.Initialize(device, &m_vertexShader, &m_pixelShader, NULL, NULL);
-
-
-	this->m_polygons.Initialize(device, &m_vertexShaderPolygon, &m_pixelShader, NULL, NULL);
+	this->m_meshes.Initialize(device, &m_vertexShaderMesh, &m_pixelShaderMesh, NULL, NULL);
+	this->m_polylines.Initialize(device, &m_vertexShaderPolyLine, &m_pixelShaderPolyLine, NULL, NULL);
 	this->AddGrid(2000, { 1.0f, 1.0f, 1.0f, 1.0f }, 200, 200);
 
 	return true;
@@ -49,10 +53,12 @@ bool TerrainModel::Initalize(HWND hwnd, IDataAccess* persistence, ID3D11Device* 
 
 void TerrainModel::Shutdown()
 {
-	m_vertexShader.Shutdown();
-	m_pixelShader.Shutdown();
+	m_vertexShaderMesh.Shutdown();
+	m_pixelShaderMesh.Shutdown();
+	m_pixelShaderPolyLine.Shutdown();
+	m_vertexShaderPolyLine.Shutdown();
 	m_meshes.Shutdown();
-	m_polygons.Shutdown();
+	m_polylines.Shutdown();
 }
 
 bool TerrainModel::Render(ID3D11DeviceContext* deviceContext)
@@ -63,7 +69,7 @@ bool TerrainModel::Render(ID3D11DeviceContext* deviceContext)
 
 	this->m_meshes.Render(deviceContext,worldMatrix, m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix(), m_light);
 
-	this->m_polygons.Render(deviceContext, worldMatrix, m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix(), m_light);
+	this->m_polylines.Render(deviceContext, worldMatrix, m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix(), m_light);
 
 	return true;
 }
@@ -136,18 +142,21 @@ void TerrainModel::RotateCamera(unsigned message, float pitch, float yaw)
 
 bool TerrainModel::LoadTerrain(const wchar_t* filepath)
 {
-	Vertex*				pVertices;
-	UINT				vertexCount;
-	std::vector<Vertex> vertices;
+	VertexMesh*				pVertices;
+	UINT					vertexCount;
+	std::vector<VertexMesh> vertices;
+
+
 	bool bresult = m_persistence->LoadTerrain(filepath, vertices);
 	if (bresult)
 	{
 		pVertices = &vertices.at(0);
 		vertexCount = vertices.size();
-		this->m_meshes.Add(pVertices, vertexCount, m_polygonMeshCreator);
+		PolygonMeshCreator creator;
+		this->m_meshes.Add(pVertices, vertexCount, creator);
 	}
-
 	return bresult;
+
 }
 
 bool	TerrainModel::LoadTerrainProject(const std::vector<std::wstring>& files)
@@ -168,17 +177,16 @@ bool	TerrainModel::LoadCameraTrajectory(const wchar_t* filepath)
 	if (result)
 	{
 		PolyLine* polyline = new PolyLine;
-		std::vector<VertexPolygon> vertices;
+		std::vector<VertexPolyLine> vertices;
 		for (const CameraPose& camerapose : cameraPoses)
 		{
-			VertexPolygon vertex;
+			VertexPolyLine vertex;
 			vertex.position = { (float)camerapose.east,-(float)camerapose.down,(float)camerapose.north };
 			vertex.color = { 1.0f, 0.0f, 1.0f, 1.0f };
 			vertices.push_back(vertex);
 		}
-		polyline->Initialize(this->m_device, &this->m_vertexShaderPolygon, &this->m_pixelShader, &vertices.at(0), vertices.size());
-
-		m_polygons.Add(polyline);
+		polyline->Initialize(this->m_device, &this->m_vertexShaderPolyLine, &this->m_pixelShaderPolyLine, &vertices.at(0), vertices.size());
+		m_polylines.Add(polyline);
 		m_cameraTrajectory.Initialize(cameraPoses, polyline, &m_camera);
 	}
 	return result;
@@ -237,7 +245,7 @@ void TerrainModel::UpdateCameraProperties(unsigned message, float data)
 
 void TerrainModel::AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int gridZ)
 {
-	std::vector<VertexPolygon> vertices;
+	std::vector<VertexPolyLine> vertices;
 	if (size <= 0 || gridX <= 0 || gridZ <= 0)
 		return;
 
@@ -246,7 +254,7 @@ void TerrainModel::AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int g
 
 	for (int i = 0; i <= gridX; i++)
 	{
-		VertexPolygon polygon;
+		VertexPolyLine polygon;
 		polygon.color = color;
 		float zCoord = size / 2;
 		float xCoord = (-size / 2) + i * gridXStep;
@@ -259,7 +267,7 @@ void TerrainModel::AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int g
 
 	for (int i = 0; i <= gridZ; i++)
 	{
-		VertexPolygon polygon;
+		VertexPolyLine polygon;
 		polygon.color = color;
 		float xCoord = size / 2;
 		float zCoord = (-size / 2) + i * gridZStep;
@@ -270,9 +278,10 @@ void TerrainModel::AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int g
 		vertices.push_back(polygon);
 	}
 
-	VertexPolygon* pVertex = &vertices[0];
+	VertexPolyLine* pVertex = &vertices[0];
 	unsigned verteCount = vertices.size();
-	this->m_polygons.Add(pVertex, verteCount, m_polygonCreator);
+	LineListCreator	lineListCreator;
+	this->m_polylines.Add(pVertex, verteCount, lineListCreator);
 }
 
 

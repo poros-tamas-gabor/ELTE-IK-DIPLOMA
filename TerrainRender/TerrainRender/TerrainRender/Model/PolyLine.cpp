@@ -6,7 +6,7 @@ void PolyLine::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	unsigned int offset;
 
 	//set vertex buffer stride and offset
-	stride = sizeof(VertexPolygon);
+	stride = sizeof(VertexPolyLine);
 	offset = 0;
 
 	// Set the vertex buffer to active in the input assembler so it can be rendered.

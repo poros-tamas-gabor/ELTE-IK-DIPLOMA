@@ -1,5 +1,5 @@
-#ifndef VERTEX_SHADER_POLYGON_H
-#define	VERTEX_SHADER_POLYGON_H
+#ifndef VERTEX_SHADER_POLYLINE_H
+#define	VERTEX_SHADER_POLYLINE_H
 
 #include <d3d11.h>
 #include <d3dcompiler.h>
@@ -9,7 +9,7 @@
 #pragma comment(lib, "D3DCompiler.lib")
 #pragma comment(lib, "d3d11.lib")
 
-class VertexShaderPolygon : public IVertexShader
+class VertexShaderPolyLine : public IVertexShader
 {
 public:
 	struct MatrixBuffer
@@ -21,18 +21,18 @@ public:
 
 private:
 	ID3D11VertexShader* m_vertexShader;
-	ID3D11InputLayout* m_layout;
-	ID3D11Buffer* m_matrixBuffer;
+	ID3D11InputLayout*	m_layout;
+	ID3D11Buffer*		m_matrixBuffer;
 
 public:
-	VertexShaderPolygon();
-	VertexShaderPolygon(const VertexShaderPolygon& other) = delete;
-	VertexShaderPolygon& operator=(const VertexShaderPolygon& other) = delete;
+	VertexShaderPolyLine();
+	VertexShaderPolyLine(const VertexShaderPolyLine& other) = delete;
+	VertexShaderPolyLine& operator=(const VertexShaderPolyLine& other) = delete;
 
 
 	virtual bool Initialize(ID3D11Device*, HWND) override;
 	virtual void Shutdown() override;
-	virtual bool Render(ID3D11DeviceContext*, DirectX::XMMATRIX worldmat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light& light) override;
+	virtual bool Render(ID3D11DeviceContext*, DirectX::XMMATRIX worldmat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light&) override;
 
 	virtual ID3D11VertexShader* GetVertexShader(void) override;
 	virtual ID3D11InputLayout* GetInputLayout(void) override;

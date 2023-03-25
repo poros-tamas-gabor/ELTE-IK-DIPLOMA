@@ -3,7 +3,7 @@
 #include	"../ErrorHandler.h"
 #include	<memory>
 
-bool LineList::Initialize(ID3D11Device* device, IVertexShader* vertexShader, IPixelShader* pixelShader, VertexPolygon* vertices, UINT indexCount)
+bool LineList::Initialize(ID3D11Device* device, IVertexShader* vertexShader, IPixelShader* pixelShader, VertexPolyLine* vertices, UINT indexCount)
 {
 	if (device == nullptr || vertexShader == nullptr || pixelShader == nullptr)
 		return false;
@@ -32,7 +32,7 @@ void LineList::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worl
 		//return false;
 	}
 	this->RenderBuffers(deviceContext);
-	this->m_pixelShader->Render(deviceContext, this->GetVertexCount());
+	this->m_pixelShader->Render(deviceContext, this->GetVertexCount(), light);
 
 }
 
@@ -46,12 +46,12 @@ int LineList::GetVertexCount() const
 
 }
 
-bool LineList::InitializeBuffers(ID3D11Device* device, VertexPolygon* vertices, UINT indexCount)
+bool LineList::InitializeBuffers(ID3D11Device* device, VertexPolyLine* vertices, UINT indexCount)
 {
 
 	D3D11_BUFFER_DESC						vertexBufferDesc;
 	HRESULT									result;
-	D3D11_SUBRESOURCE_DATA					vertexData, indexData;
+	D3D11_SUBRESOURCE_DATA					vertexData;
 
 	// Set the number of vertices in the vertex array.
 	// Set the number of indices in the index array.
@@ -62,7 +62,7 @@ bool LineList::InitializeBuffers(ID3D11Device* device, VertexPolygon* vertices, 
 		// Set up the description of the static vertex buffer.
 		ZeroMemory(&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
 		vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-		vertexBufferDesc.ByteWidth = sizeof(VertexPolygon) * this->_vertexCount;
+		vertexBufferDesc.ByteWidth = sizeof(VertexPolyLine) * this->_vertexCount;
 		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		vertexBufferDesc.CPUAccessFlags = 0;
 		vertexBufferDesc.MiscFlags = 0;
@@ -105,7 +105,7 @@ void LineList::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	unsigned int offset;
 
 	//set vertex buffer stride and offset
-	stride = sizeof(VertexPolygon);
+	stride = sizeof(VertexPolyLine);
 	offset = 0;
 
 	// Set the vertex buffer to active in the input assembler so it can be rendered.

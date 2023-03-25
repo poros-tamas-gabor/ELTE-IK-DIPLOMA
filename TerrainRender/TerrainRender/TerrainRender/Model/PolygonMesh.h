@@ -6,11 +6,11 @@
 #include <DirectXMath.h>
 #include "../Model/Persistence/ModelStructs.h"
 #include "IRenderable.h"
-#include "VertexShader.h"
-#include "PixelShader.h"
+#include "VertexShaderMesh.h"
+#include "PixelShaderMesh.h"
 #include "Vertex.h"
 
-class PolygonMesh : public IRenderable<Vertex>
+class PolygonMesh : public IRenderable<VertexMesh>
 {
 private:
 	ID3D11Buffer*	m_vertexBuffer;
@@ -28,7 +28,7 @@ public:
 	PolygonMesh& operator=(const PolygonMesh&) = delete;
 
 
-	bool Initialize(ID3D11Device* device, IVertexShader*, IPixelShader*, Vertex* vertices, UINT indexCount) override;
+	bool Initialize(ID3D11Device* device, IVertexShader*, IPixelShader*, VertexMesh* vertices, UINT indexCount) override;
 	void Shutdown() override;
 	void Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat,const Light& light) override;
  
@@ -36,7 +36,7 @@ public:
 	int GetVertexCount() const;
 
 private:
-	bool InitializeBuffers(ID3D11Device*, Vertex* vertices, UINT indexCount);
+	bool InitializeBuffers(ID3D11Device*, VertexMesh* vertices, UINT indexCount);
 	void ShutdownBuffers();
 	void RenderBuffers(ID3D11DeviceContext*);
 };

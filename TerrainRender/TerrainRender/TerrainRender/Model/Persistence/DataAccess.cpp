@@ -6,8 +6,9 @@
 #include "ModelStructs.h"
 #include <vector>
 #include <regex>
+#include "../../ErrorHandler.h"
 
-bool TextFileDataAccess::CreateVertex(Vertex& vertex, const std::string& line, std::vector<Vertex>& vertices, STLLineType& type, int& vertexCount) {
+bool TextFileDataAccess::CreateVertex(VertexMesh& vertex, const std::string& line, std::vector<VertexMesh>& vertices, STLLineType& type, int& vertexCount) {
     bool bresult;
     switch (type) {
     case BEGIN: {
@@ -28,6 +29,10 @@ bool TextFileDataAccess::CreateVertex(Vertex& vertex, const std::string& line, s
         std::string word;
         iss >> word >> word; // skip "facet" and "normal"
         iss >> vertex.normal.x >> vertex.normal.y >> vertex.normal.z;
+        if (iss.fail())
+        {
+            THROW_TREXCEPTION(L"failed to load facet normal");
+        }
         type = LOOP;
         return true;
     }
@@ -40,6 +45,10 @@ bool TextFileDataAccess::CreateVertex(Vertex& vertex, const std::string& line, s
         std::string word;
         iss >> word; // skip "vertex"
         iss >> vertex.position.x >> vertex.position.y >> vertex.position.z;
+        if (iss.fail())
+        {
+            THROW_TREXCEPTION(L"failed to load facet position");
+        }
         vertices.push_back(vertex);
 
         if (vertexCount < 2) {
@@ -63,34 +72,49 @@ bool TextFileDataAccess::CreateVertex(Vertex& vertex, const std::string& line, s
     }
 }
 
-bool TextFileDataAccess::LoadTerrain(const wchar_t* filename, std::vector<Vertex>& vertices)
+bool TextFileDataAccess::LoadTerrain(const wchar_t* filename, std::vector<VertexMesh>& vertices)
 {
 	std::ifstream   input;
 	std::string     line;
     STLLineType     type = STLLineType::BEGIN;
-	Vertex          vertex;
+	VertexMesh          vertex;
 
 	input.open(filename, std::ifstream::in);
 
 	if (!input.is_open())
 		return false;
-
-	vertices.clear();
-
-    bool isCorrect = true;
-    int vertexCount = 0;
-    while ((std::getline(input, line)) && isCorrect) 
+    try
     {
-        isCorrect = CreateVertex(vertex, line, vertices, type, vertexCount);
+	    vertices.clear();
+
+        bool isCorrect = true;
+        int vertexCount = 0;
+        while ((std::getline(input, line)) && isCorrect) 
+        {
+            isCorrect = CreateVertex(vertex, line, vertices, type, vertexCount);
+        }
+        if (!isCorrect) 
+        {
+            vertices.clear();
+        }
+
+        input.close();
+
+        return isCorrect;
     }
-    if (!isCorrect) 
+    catch (TRException& e)
     {
-        vertices.clear();
+        ErrorHandler::Log(e);
     }
-
-    input.close();
-
-    return isCorrect;
+    catch (std::exception& e)
+    {
+        ErrorHandler::Log(e);
+    }
+    catch (...)
+    {
+        ErrorHandler::Log("Unknown exception");
+    }
+    return false;
 }
 
 
@@ -147,28 +171,58 @@ bool TextFileDataAccess::LoadCameraTrajectory( const wchar_t* filename, std::vec
 
     cameraPoses.clear();
 
-    bool isCorrect = true;
-    // read first line
-    std::getline(input, line);
 
-    //read the headers
-    std::istringstream lineStream(line);
-    while ((std::getline(lineStream, word, ';'))) {
-        headers.push_back(word);
-    }
+    try
+    {
+        bool isCorrect = true;
+        // read first line
+        std::getline(input, line);
 
-    while ((std::getline(input, line)) && isCorrect) {
-        cameraPose = CameraPose();
-        isCorrect = CreateCameraPose(cameraPose, line, headers);
-        if (isCorrect) {
-            cameraPoses.push_back(cameraPose);
+        //read the headers
+        std::istringstream lineStream(line);
+        while ((std::getline(lineStream, word, ';'))) {
+            headers.push_back(word);
         }
-    }
-    if (!isCorrect) {
-        cameraPoses.clear();
-    }
 
-    input.close();
+        std::vector<std::string>::iterator it;
+        //TODO: CHECK headers
+        for (it = headers.begin(); it != headers.end(); it++)
+        {
+            if(*it == "nsec")
+                break;
+        }
+        if (it == headers.end())
+        {
+            THROW_TREXCEPTION(L"nsec missing");
+        }
 
-    return isCorrect;
+        while ((std::getline(input, line)) && isCorrect) {
+            cameraPose = CameraPose();
+            isCorrect = CreateCameraPose(cameraPose, line, headers);
+            if (isCorrect) {
+                cameraPoses.push_back(cameraPose);
+            }
+        }
+        if (!isCorrect) {
+            cameraPoses.clear();
+        }
+
+        input.close();
+
+        return isCorrect;
+    }
+    catch (TRException& e)
+    {
+        ErrorHandler::Log(e);
+    }
+    catch (std::exception& e)
+    {
+        ErrorHandler::Log(e);
+    }
+    catch (...)
+    {
+        ErrorHandler::Log("Unknown exception");
+    }
+    return false;
+
 }

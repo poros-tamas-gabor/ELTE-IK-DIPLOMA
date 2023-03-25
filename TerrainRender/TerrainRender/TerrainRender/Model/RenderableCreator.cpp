@@ -1,16 +1,21 @@
 #include "RenderableCreator.h"
 #include "PolygonMesh.h"
 #include "LineList.h"
+#include "PolyLine.h"
 
-IRenderable<Vertex>* PolygonMeshCreator::CreateRenderable() const
+IRenderable<VertexMesh>* PolygonMeshCreator::CreateRenderable() const
 {
 	return new PolygonMesh;
 }
 
-IRenderable<VertexPolygon>* PolygonCreator::CreateRenderable() const
+IRenderable<VertexPolyLine>* LineListCreator::CreateRenderable() const
 {
 	return new LineList;
 }
 
+IRenderable<VertexPolyLine>* PolyLineCreator::CreateRenderable() const
+{
+	return new PolyLine;
+}
 
 

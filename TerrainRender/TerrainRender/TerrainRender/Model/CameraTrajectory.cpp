@@ -1,6 +1,6 @@
 #include "CameraTrajectory.h"
 
-bool CameraTrajectory::Initialize(const std::vector<CameraPose>& cameraPoses, IRenderable<VertexPolygon>* renderable, Camera* camera)
+bool CameraTrajectory::Initialize(const std::vector<CameraPose>& cameraPoses, IRenderable<VertexPolyLine>* renderable, Camera* camera)
 {
 	if (renderable == nullptr || camera == nullptr)
 	{

@@ -11,6 +11,7 @@
 #include <mutex>
 
 #include <memory>
+#include "../../ErrorHandler.h"
 int TextFileDataAccessAsync::GetNumThreads(int fileSize)
 {
     int maxNumThreads = std::thread::hardware_concurrency();
@@ -63,34 +64,51 @@ bool TextFileDataAccessAsync::ReadFile(const std::wstring& filepath, ICallableCr
 
 
 
-bool TextFileDataAccessAsync::LoadTerrain(const wchar_t* filename, std::vector<Vertex>& vertices)
+bool TextFileDataAccessAsync::LoadTerrain(const wchar_t* filename, std::vector<VertexMesh>& vertices)
 {
     std::time_t now = std::time(NULL);
     m_faces.clear();
     ICallableCreatorPtr creator = std::make_shared<ReadSTLChunkCreator>();
-    this->ReadFile(filename, creator);
-
     vertices.clear();
+
+    try
+    {
+
+    this->ReadFile(filename, creator);
 
     for (const Facet& facet : m_faces)
     {
         for (int i = 0; i < 3; i++)
         {
-            Vertex vertex;
+            VertexMesh vertex;
             vertex.color = { 1.0f, 1.0f, 1.0f, 1.0f };
             vertex.normal = { (float)facet.normal.x, (float)facet.normal.y,(float)facet.normal.z };
             vertex.position = { (float)facet.position[i].x, (float)facet.position[i].y, (float)facet.position[i].z };
 
             vertices.push_back(vertex);
         }
-
     }
     std::time_t end = std::time(NULL);
     std::wstring str = L"Loading time : in sec: ";
     str += std::to_wstring(end - now);
     str += L"\n";
     OutputDebugString(str.c_str());
-    return true;
+    return !vertices.empty();
+    }
+
+    catch (TRException& e)
+    {
+        ErrorHandler::Log(e);
+    }
+    catch (std::exception& e)
+    {
+        ErrorHandler::Log(e);
+    }
+    catch (...)
+    {
+        ErrorHandler::Log("Unknown exception");
+    }
+    return false;
 }
 bool TextFileDataAccessAsync::LoadCameraTrajectory(const wchar_t* filename, std::vector<CameraPose>& cameraPoses)
 {

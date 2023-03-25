@@ -2,7 +2,7 @@
 #include	"../ErrorHandler.h"
 #include	<memory>
 
-bool PolygonMesh::Initialize(ID3D11Device* device, IVertexShader* vertexShader, IPixelShader* pixelShader, Vertex* vertices, UINT indexCount)
+bool PolygonMesh::Initialize(ID3D11Device* device, IVertexShader* vertexShader, IPixelShader* pixelShader, VertexMesh* vertices, UINT indexCount)
 {
 	if (device == nullptr || vertexShader == nullptr || pixelShader == nullptr)
 		return false;
@@ -25,14 +25,22 @@ void PolygonMesh::Shutdown()
 }
 void PolygonMesh::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat,const Light& light)
 {
-	bool bresult = this->m_vertexShader->Render(deviceContext, worldMat, viewMat, projectionMat, light);
-	if (!bresult)
-	{
-		//return false;
-	}
-	this->RenderBuffers(deviceContext);
-	this->m_pixelShader->Render(deviceContext, this->GetVertexCount());
+	try {
+		bool bresult = this->m_vertexShader->Render(deviceContext, worldMat, viewMat, projectionMat, light);
+		if (!bresult)
+			THROW_TREXCEPTION(L"Failed to render vertex shader");
 
+		this->RenderBuffers(deviceContext);
+		bresult = this->m_pixelShader->Render(deviceContext, this->GetVertexCount(), light);
+		if(!bresult)
+			THROW_TREXCEPTION(L"Failed to render pixel shader");
+
+
+	}
+	catch (TRException& exception)
+	{
+		ErrorHandler::Log(exception);
+	}
 }
 
 int PolygonMesh::GetIndexCount() const
@@ -45,7 +53,7 @@ int PolygonMesh::GetVertexCount() const
 
 }
 
-bool PolygonMesh::InitializeBuffers(ID3D11Device* device, Vertex* vertices, UINT indexCount)
+bool PolygonMesh::InitializeBuffers(ID3D11Device* device, VertexMesh* vertices, UINT indexCount)
 {
 	std::unique_ptr<unsigned long[]>		indices;
 	D3D11_BUFFER_DESC						vertexBufferDesc, indexBufferDesc;
@@ -60,7 +68,7 @@ bool PolygonMesh::InitializeBuffers(ID3D11Device* device, Vertex* vertices, UINT
 		//Allocate memory for the array of vertices and indices
 		indices = std::make_unique<unsigned long[]>(this->_vertexCount);
 
-		for (int i = 0; i < indexCount; i++)
+		for (unsigned int i = 0; i < indexCount; i++)
 		{
 			//vertices[i].color = { 1.0f, 0.0f, 0.0f, 1.0f };
 			//vertices[i].normal = { v.normal.x , v.normal.y, v.normal.z };
@@ -72,7 +80,7 @@ bool PolygonMesh::InitializeBuffers(ID3D11Device* device, Vertex* vertices, UINT
 		// Set up the description of the static vertex buffer.
 		ZeroMemory(&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
 		vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-		vertexBufferDesc.ByteWidth = sizeof(Vertex) * this->_vertexCount;
+		vertexBufferDesc.ByteWidth = sizeof(VertexMesh) * this->_vertexCount;
 		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		vertexBufferDesc.CPUAccessFlags = 0;
 		vertexBufferDesc.MiscFlags = 0;
@@ -140,7 +148,7 @@ void PolygonMesh::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	unsigned int offset;
 
 	//set vertex buffer stride and offset
-	stride = sizeof(Vertex);
+	stride = sizeof(VertexMesh);
 	offset = 0;
 
 	// Set the vertex buffer to active in the input assembler so it can be rendered.

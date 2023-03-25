@@ -4,18 +4,23 @@
 #include "IRenderableCreator.h"
 #include  "Vertex.h"
 #include  "VertexPolygon.h"
-class PolygonMeshCreator : public IRenderableCreator<Vertex>
+class PolygonMeshCreator : public IRenderableCreator<VertexMesh>
 {
 public:
-	virtual IRenderable<Vertex>* CreateRenderable() const override;
+	virtual IRenderable<VertexMesh>* CreateRenderable() const override;
 };
 
 
-class PolygonCreator : public IRenderableCreator<VertexPolygon>
+class LineListCreator : public IRenderableCreator<VertexPolyLine>
 {
 public:
-	virtual IRenderable<VertexPolygon>* CreateRenderable() const override;
+	virtual IRenderable<VertexPolyLine>* CreateRenderable() const override;
+};
 
+class PolyLineCreator : public IRenderableCreator<VertexPolyLine>
+{
+public:
+	virtual IRenderable<VertexPolyLine>* CreateRenderable() const override;
 };
 
 #endif // !POLYGON_MESH_CREATOR

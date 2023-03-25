@@ -1,13 +1,13 @@
-#include "VertexShaderPolygon.h"
+#include "VertexShaderMesh.h"
 #include "../ErrorHandler.h"
 
-VertexShaderPolygon::VertexShaderPolygon() : m_vertexShader(nullptr), m_layout(nullptr), m_matrixBuffer(nullptr) {}
+VertexShaderMesh::VertexShaderMesh() : m_vertexShader(nullptr), m_layout(nullptr), m_matrixBuffer(nullptr) {}
 
-bool VertexShaderPolygon::Initialize(ID3D11Device* device, HWND hwnd)
+bool VertexShaderMesh::Initialize(ID3D11Device* device, HWND hwnd)
 {
 	bool result;
 
-	result = this->InitializeShader(device, hwnd, L"Model/vertexShaderPolygon.hlsl");
+	result = this->InitializeShader(device, hwnd, L"Model/vertexShaderMesh.hlsl");
 	if (!result)
 	{
 		return false;
@@ -15,14 +15,14 @@ bool VertexShaderPolygon::Initialize(ID3D11Device* device, HWND hwnd)
 	return true;
 }
 
-void VertexShaderPolygon::Shutdown()
+void VertexShaderMesh::Shutdown()
 {
 	// Shutdown the vertex and pixel shaders as well as the related objects.
 	this->ShutdownShader();
 	return;
 }
 
-void VertexShaderPolygon::ShutdownShader()
+void VertexShaderMesh::ShutdownShader()
 {
 	if (this->m_vertexShader)
 	{
@@ -41,23 +41,21 @@ void VertexShaderPolygon::ShutdownShader()
 	}
 }
 
-bool VertexShaderPolygon::InitializeShader(ID3D11Device* device, HWND hwnd, const WCHAR* vsFilename)
+bool VertexShaderMesh::InitializeShader(ID3D11Device* device, HWND hwnd, const WCHAR* vsFilename)
 {
 	HRESULT						result;
-	ID3D10Blob*					errorMessage = nullptr;
-	ID3D10Blob*					vertexShaderBuffer = nullptr;
-	D3D11_INPUT_ELEMENT_DESC	polygonLayout[2];
+	ID3D10Blob* errorMessage = nullptr;
+	ID3D10Blob* vertexShaderBuffer = nullptr;
+	D3D11_INPUT_ELEMENT_DESC	polygonLayout[3];
 	unsigned int				numElements;
 	D3D11_BUFFER_DESC			matrixBufferDesc;
-
 
 	UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
 	flags |= D3DCOMPILE_DEBUG;
 #endif
 
-	try
-	{
+	try {
 		result = D3DCompileFromFile(vsFilename, NULL, NULL, "main", "vs_5_0", flags, 0, &vertexShaderBuffer, &errorMessage);
 		if (FAILED(result))
 		{
@@ -72,7 +70,7 @@ bool VertexShaderPolygon::InitializeShader(ID3D11Device* device, HWND hwnd, cons
 		}
 		// Create the vertex shader from the buffer.
 		result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &this->m_vertexShader);
-		
+
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create the vertex shader from the buffer");
 
 		//Create vertx input description
@@ -85,13 +83,21 @@ bool VertexShaderPolygon::InitializeShader(ID3D11Device* device, HWND hwnd, cons
 		polygonLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 		polygonLayout[0].InstanceDataStepRate = 0;
 
-		polygonLayout[1].SemanticName = "COLOR";
+		polygonLayout[1].SemanticName = "NORMAL";
 		polygonLayout[1].SemanticIndex = 0;
-		polygonLayout[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		polygonLayout[1].Format = DXGI_FORMAT_R32G32B32_FLOAT;
 		polygonLayout[1].InputSlot = 0;
 		polygonLayout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 		polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 		polygonLayout[1].InstanceDataStepRate = 0;
+
+		polygonLayout[2].SemanticName = "COLOR";
+		polygonLayout[2].SemanticIndex = 0;
+		polygonLayout[2].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		polygonLayout[2].InputSlot = 0;
+		polygonLayout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+		polygonLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+		polygonLayout[2].InstanceDataStepRate = 0;
 
 		numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
@@ -105,7 +111,7 @@ bool VertexShaderPolygon::InitializeShader(ID3D11Device* device, HWND hwnd, cons
 
 		// Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
 		matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-		matrixBufferDesc.ByteWidth = sizeof(VertexShaderPolygon::MatrixBuffer);
+		matrixBufferDesc.ByteWidth = sizeof(VertexShaderMesh::MatrixBuffer);
 		matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		matrixBufferDesc.MiscFlags = 0;
@@ -116,23 +122,23 @@ bool VertexShaderPolygon::InitializeShader(ID3D11Device* device, HWND hwnd, cons
 
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create constant buffer");
 	}
-	catch (const COMException &exception)
+	catch (const COMException& exception)
 	{
 		ErrorHandler::Log(exception);
+		return false;
 	}
-
 
 	return true;
 
 }
 
-void VertexShaderPolygon::RenderShader(ID3D11DeviceContext* deviceContext)
+void VertexShaderMesh::RenderShader(ID3D11DeviceContext* deviceContext)
 {
 	deviceContext->IASetInputLayout(this->m_layout);
 
 	deviceContext->VSSetShader(this->m_vertexShader, NULL, 0);
 }
-bool VertexShaderPolygon::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light& light)
+bool VertexShaderMesh::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light&)
 {
 	bool bresult;
 	bresult = this->SetShadeParameters(deviceContext, worldMat, viewMat, projectionMat);
@@ -144,11 +150,11 @@ bool VertexShaderPolygon::Render(ID3D11DeviceContext* deviceContext, DirectX::XM
 	return true;
 }
 
-bool VertexShaderPolygon::SetShadeParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat)
+bool VertexShaderMesh::SetShadeParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat)
 {
 	HRESULT						result;
 	D3D11_MAPPED_SUBRESOURCE	mappedResource;
-	MatrixBuffer*				matrixDataPtr;
+	MatrixBuffer* matrixDataPtr;
 	unsigned int				bufferNumber;
 
 	try {
@@ -187,14 +193,15 @@ bool VertexShaderPolygon::SetShadeParameters(ID3D11DeviceContext* deviceContext,
 		return false;
 	}
 
+
 	return true;
 }
 
-ID3D11VertexShader* VertexShaderPolygon::GetVertexShader(void)
+ID3D11VertexShader* VertexShaderMesh::GetVertexShader(void)
 {
 	return this->m_vertexShader;
 }
-ID3D11InputLayout* VertexShaderPolygon::GetInputLayout(void)
+ID3D11InputLayout* VertexShaderMesh::GetInputLayout(void)
 {
 	return this->m_layout;
 }

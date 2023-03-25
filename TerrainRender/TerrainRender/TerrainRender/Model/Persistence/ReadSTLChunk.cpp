@@ -1,44 +1,63 @@
 #include "ReadSTLChunk.h"
-
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include "../../ErrorHandler.h"
 ReadSTLChunk::ReadSTLChunk(const std::wstring& filepath, int start, int end, TextFileDataAccessAsync* persistence) : 
     m_filepath(filepath), m_start(start), m_end(end), m_mutex(persistence->m_mutex), m_faces(persistence->m_faces) {}
+
 void ReadSTLChunk::ReadChunk()
 {
-    std::ifstream file(m_filepath);
+    try
+    {
+        std::ifstream file(m_filepath);
 
-    if (!file.is_open())
-        return;
+        if (!file.is_open())
+            return;
 
-    file.seekg(m_start, std::ios_base::beg);
+        file.seekg(m_start, std::ios_base::beg);
 
-    std::string line;
-    STLLineType type = BEGIN;
+        std::string line;
+        STLLineType type = BEGIN;
 
-    if (m_start == 0) {
-        std::getline(file, line); // skip header
-        type = FACET;
-    }
-    else if (std::getline(file, line) && line.find("endfacet") != std::string::npos) {
-        type = FACET;
-    }
-    else {
-        int step_back = 0;
-        while (std::getline(file, line) && line.find("endfacet") == std::string::npos && step_back < m_start) {
-            file.seekg(m_start - step_back, std::ios_base::beg);
-            step_back++;
+        if (m_start == 0) {
+            std::getline(file, line); // skip header
+            type = FACET;
         }
-        type = FACET;
+        else if (std::getline(file, line) && line.find("endfacet") != std::string::npos) {
+            type = FACET;
+        }
+        else {
+            int step_back = 0;
+            while (std::getline(file, line) && line.find("endfacet") == std::string::npos && step_back < m_start) {
+                file.seekg(m_start - step_back, std::ios_base::beg);
+                step_back++;
+            }
+            type = FACET;
+        }
+
+        int pos = file.tellg();
+        Facet facet;
+        int vertexCount = 0;
+        while (pos < m_end && std::getline(file, line)) {
+            CreateFacet(facet, line, type, vertexCount);
+            pos = file.tellg();
+        }
+
+        file.close();
+    }
+    catch (TRException& e)
+    {
+        ErrorHandler::Log(e);
+    }
+    catch (std::exception& e)
+    {
+        ErrorHandler::Log(e);
+    }
+    catch (...)
+    {
+        ErrorHandler::Log("Unknown exception");
     }
 
-    int pos = file.tellg();
-    Facet facet;
-    int vertexCount = 0;
-    while (pos < m_end && std::getline(file, line)) {
-        CreateFacet(facet, line, type, vertexCount);
-        pos = file.tellg();
-    }
-
-    file.close();
 }
 bool ReadSTLChunk::CreateFacet(Facet& facet, const std::string& line, STLLineType& type, int& vertexCount)
 {
@@ -61,6 +80,10 @@ bool ReadSTLChunk::CreateFacet(Facet& facet, const std::string& line, STLLineTyp
         std::string word;
         iss >> word >> word; // skip "facet" and "normal"
         iss >> facet.normal.x >> facet.normal.y >> facet.normal.z;
+        if (iss.fail())
+        {
+            THROW_TREXCEPTION(L"failed to load facet normal");
+        }
         type = LOOP;
         return true;
     }
@@ -74,7 +97,10 @@ bool ReadSTLChunk::CreateFacet(Facet& facet, const std::string& line, STLLineTyp
         iss >> word; // skip "vertex"
         iss >> facet.position[vertexCount].x >> facet.position[vertexCount].y >> facet.position[vertexCount].z;
     
-    
+        if (iss.fail())
+        {
+            THROW_TREXCEPTION(L"failed to load facet position");
+        }
     
         if (vertexCount < 2) {
             vertexCount++;

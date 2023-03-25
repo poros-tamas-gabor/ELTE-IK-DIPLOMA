@@ -260,17 +260,17 @@ bool D3DView::Initalize(HWND hwnd, float screenWidth, float screenHeight, bool f
 
 		// Set the depth stencil state.
 		this->_deviceContext->OMSetDepthStencilState(this->_depthStencilState, 1);
-		//
-		//// Initialize the depth stencil view.
-		//ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
-		//
-		//// Set up the depth stencil view description.
-		//depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-		//depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-		//depthStencilViewDesc.Texture2D.MipSlice = 0;
-		//
-		// Create the depth stencil view.
-		result = this->_device->CreateDepthStencilView(this->_depthStencilBuffer, NULL/* & depthStencilViewDesc*/, &this->_depthStencilView);
+		
+		// Initialize the depth stencil view.
+		ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
+		
+		// Set up the depth stencil view description.
+		depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		depthStencilViewDesc.Texture2D.MipSlice = 0;
+		
+		//Create the depth stencil view.
+		result = this->_device->CreateDepthStencilView(this->_depthStencilBuffer, &depthStencilViewDesc, &this->_depthStencilView);
 
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create the depth stencil view");
 
@@ -282,7 +282,7 @@ bool D3DView::Initalize(HWND hwnd, float screenWidth, float screenHeight, bool f
 		ZeroMemory(&rasterDesc, sizeof(D3D11_RASTERIZER_DESC));
 
 		rasterDesc.AntialiasedLineEnable = false;
-		rasterDesc.CullMode = D3D11_CULL_NONE;//D3D11_CULL_BACK;
+		rasterDesc.CullMode = D3D11_CULL_BACK;//D3D11_CULL_NONE;//D3D11_CULL_BACK;
 		rasterDesc.DepthBias = 0;
 		rasterDesc.DepthBiasClamp = 0.0f;
 		rasterDesc.DepthClipEnable = true;

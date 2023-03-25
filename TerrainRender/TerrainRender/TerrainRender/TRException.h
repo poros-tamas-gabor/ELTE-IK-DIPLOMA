@@ -5,7 +5,7 @@
 #include "StringConverter.h"
 #include <string>
 
-
+#define THROW_TREXCEPTION(msg) throw TRException(msg,__FILE__, __FUNCTION__, __LINE__ )
 class TRException 
 {
 private:

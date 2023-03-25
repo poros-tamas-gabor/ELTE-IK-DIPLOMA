@@ -15,5 +15,6 @@ public:
 	static void Log(HRESULT hr, std::wstring message);
 	static void Log(const COMException& exception);
 	static void Log(const TRException& exception);
+	static void Log(const std::exception& exception);
 };
 #endif

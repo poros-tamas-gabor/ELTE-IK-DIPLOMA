@@ -27,3 +27,9 @@ void ErrorHandler::Log(const TRException& exception)
 	MessageBoxW(NULL, errorMsg.c_str(), L"Error", MB_ICONERROR);
 }
 
+void ErrorHandler::Log(const std::exception& exception)
+{
+	std::string errorMsg = exception.what();
+	MessageBoxA(NULL, errorMsg.c_str(), "Error", MB_ICONERROR);
+}
+

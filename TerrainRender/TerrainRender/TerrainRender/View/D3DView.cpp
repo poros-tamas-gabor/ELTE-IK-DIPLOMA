@@ -132,7 +132,7 @@ bool D3DView::Initalize(HWND hwnd, float screenWidth, float screenHeight, bool f
 		D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
 		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
 		D3D11_RASTERIZER_DESC rasterDesc;
-		D3D11_VIEWPORT viewport;
+		
 
 		// Store the vsync setting.
 		this->_vsync = vsync;
@@ -301,16 +301,16 @@ bool D3DView::Initalize(HWND hwnd, float screenWidth, float screenHeight, bool f
 		this->_deviceContext->RSSetState(this->_rasterState);
 
 		// Setup the viewport for rendering.
-		ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
-		viewport.Width = (float)screenWidth;
-		viewport.Height = (float)screenHeight;
-		viewport.MinDepth = 0.0f;
-		viewport.MaxDepth = 1.0f;
-		viewport.TopLeftX = 0.0f;
-		viewport.TopLeftY = 0.0f;
+		ZeroMemory(&_viewport, sizeof(D3D11_VIEWPORT));
+		_viewport.Width = (float)screenWidth;
+		_viewport.Height = (float)screenHeight;
+		_viewport.MinDepth = 0.0f;
+		_viewport.MaxDepth = 1.0f;
+		_viewport.TopLeftX = 0.0f;
+		_viewport.TopLeftY = 0.0f;
 		//
 		// Create the viewport.
-		this->_deviceContext->RSSetViewports(1, &viewport);
+		this->_deviceContext->RSSetViewports(1, &_viewport);
 	}
 
 	catch (COMException& exception)
@@ -398,4 +398,13 @@ ID3D11Device* D3DView::GetDevice()
 ID3D11DeviceContext* D3DView::GetDeviceContext()
 {
 	return this->_deviceContext;
+}
+
+void D3DView::SetBackBufferRenderTarget()
+{
+	_deviceContext->OMSetRenderTargets(1, &_renderTargetView, _depthStencilView);
+}
+void D3DView::ResetViewport()
+{
+	_deviceContext->RSSetViewports(1, &_viewport);
 }

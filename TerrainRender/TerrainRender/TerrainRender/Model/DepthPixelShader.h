@@ -1,6 +1,5 @@
-#ifndef PIXEL_SHADER_MESH_H
-#define	PIXEL_SHADER_MESH_H
-
+#ifndef DEPTH_PIXEL_SHADER_H
+#define	DEPTH_PIXEL_SHADER_H
 
 #include "IPixelShader.h"
 #include <d3d11.h>
@@ -9,31 +8,23 @@
 #pragma comment(lib, "D3DCompiler.lib")
 #pragma comment(lib, "d3d11.lib")
 
-class PixelShaderMesh : public IPixelShader
+class DepthPixelShader : public IPixelShader
 {
-public:
-	struct LightBuffer
-	{
-		DirectX::XMFLOAT4	ambientColor;
-		DirectX::XMFLOAT4	diffuseColor;
-		DirectX::XMFLOAT4	inverseLightDirection;
-	};
 
 private:
-	ID3D11PixelShader*	m_pixelShader;
-	ID3D11Buffer*		m_lightBuffer;
-	ID3D11SamplerState* m_sampleStateClamp;
+	ID3D11PixelShader* m_pixelShader;
+
 
 
 public:
-	PixelShaderMesh();
-	PixelShaderMesh(const PixelShaderMesh& other) = delete;
-	PixelShaderMesh& operator=(const PixelShaderMesh& other) = delete;
+	DepthPixelShader();
+	DepthPixelShader(const DepthPixelShader& other) = delete;
+	DepthPixelShader& operator=(const DepthPixelShader& other) = delete;
 
 	bool Initialize(ID3D11Device*, HWND) override;
 	void Shutdown() override;
 	bool Render(ID3D11DeviceContext*, int vertexCount, const Light& light) override;
-	void SetShaderResources(ID3D11DeviceContext* deviceContext, ID3D11ShaderResourceView* depthMapTexture);
+
 	ID3D11PixelShader* GetPixelShader(void) override;
 
 private:
@@ -44,3 +35,4 @@ private:
 	void RenderShader(ID3D11DeviceContext* deviceContext, int vertexCount);
 };
 #endif // !SHADER_H
+

@@ -13,8 +13,6 @@ class CompositeRenderable : public IRenderable<V>
 {
 private:
 	std::vector<IRenderable<V>*>	m_renderables;
-	IVertexShader*					m_vertexShader = NULL;
-	IPixelShader*					m_pixelShader = NULL;
 	ID3D11Device*					m_device = NULL;
 
 public:
@@ -33,16 +31,14 @@ public:
 public:
 
 	virtual ~CompositeRenderable() = default;
-	bool Initialize(ID3D11Device* device, IVertexShader* vertexShader, IPixelShader* pixelShader, V* vertices, UINT indexCount) override
+	bool Initialize(ID3D11Device* device,  V* vertices, UINT indexCount) override
 	{
-		if (device == nullptr || vertexShader == nullptr || pixelShader == nullptr)
+		if (device == nullptr )
 		{
 			return false;
 		}
 
 		this->m_device = device;
-		this->m_vertexShader = vertexShader;
-		this->m_pixelShader = pixelShader;
 		return true;
 	}
 	void Shutdown() override
@@ -56,13 +52,13 @@ public:
 			}
 		}
 	}
-	void Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light& light) override
+	void Render(ID3D11DeviceContext* deviceContext, IVertexShader& vertexShader, IPixelShader& pixelShader, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light& light) override
 	{
 		DirectX::XMMATRIX mat = DirectX::XMMatrixIdentity();
 
 		for (IRenderable<V>* renderable : m_renderables)
 		{
-			renderable->Render(deviceContext, worldMat, viewMat, projectionMat, light);
+			renderable->Render(deviceContext, vertexShader, pixelShader, worldMat, viewMat, projectionMat, light);
 		}
 	}
 	bool Add(V* vertices, UINT indexCount, const IRenderableCreator<V>& renderableCreator)
@@ -72,7 +68,7 @@ public:
 		{
 			return false;
 		}
-		renderable->Initialize(this->m_device, m_vertexShader, m_pixelShader, vertices, indexCount);
+		renderable->Initialize(this->m_device, vertices, indexCount);
 		return this->Add(renderable);
 	}
 

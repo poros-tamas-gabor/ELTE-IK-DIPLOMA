@@ -28,6 +28,7 @@ private:
 	ID3D11DepthStencilView*		_depthStencilView;
 	ID3D11DepthStencilState*	_depthStencilState;
 	ID3D11RasterizerState*		_rasterState;
+	D3D11_VIEWPORT				_viewport;
 
 	bool						_vsync = true;
 	int							_videoCardMemory;
@@ -42,6 +43,9 @@ public:
 
 	void BeginScene(float, float, float, float);
 	void EndScene();
+
+	void SetBackBufferRenderTarget();
+	void ResetViewport();
 
 
 	ID3D11Device*			GetDevice();

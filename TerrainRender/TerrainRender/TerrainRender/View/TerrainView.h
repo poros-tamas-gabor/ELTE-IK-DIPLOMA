@@ -8,6 +8,7 @@
 #include "GuiView.h"
 #include "../Controller/IController.h"
 #include "../Model/TerrainModel.h"
+#include "ShadowMap.h"
 //TODO : TerrainModel to IMODEL
 
 
@@ -19,11 +20,13 @@ class TerrainView : public IView
 private:
 	D3DView					m_d3dView;
 	GuiView					m_guiView;
+	ShadowMap				m_shadowMap;
 
 	TerrainModel*			m_terrainModel;
 	IController*			m_terrainController;
 
 	bool			Render();
+	bool			RenderShadowMap();
 public:
 
 	TerrainView();

@@ -1,9 +1,14 @@
 #include "TerrainModel.h"
 #include "../resource.h"
 #include "PolyLine.h"
+#include "../ErrorHandler.h"
 
 TerrainModel::TerrainModel() = default;
 TerrainModel::~TerrainModel() = default;
+const int SHADOWMAP_WIDTH = 1024;
+const int SHADOWMAP_HEIGHT = 1024;
+const float SHADOWMAP_DEPTH = 50.0f;
+const float SHADOWMAP_NEAR = 1.0f;
 
 
 bool TerrainModel::Initalize(HWND hwnd, IDataAccess* persistence, ID3D11Device* device, int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView)
@@ -18,34 +23,32 @@ bool TerrainModel::Initalize(HWND hwnd, IDataAccess* persistence, ID3D11Device* 
 	this->m_device = device;
 
 	bresult = this->m_vertexShaderMesh.Initialize(device, hwnd);
-	if (!bresult)
-	{
-		return false;
-	}
+	THROW_TREXCEPTION_IF_FAILED(bresult, L"Failed to Initialize vertex shader for meshes");
 
 	bresult = this->m_vertexShaderPolyLine.Initialize(device, hwnd);
-	if (!bresult)
-	{
-		return false;
-	}
+	THROW_TREXCEPTION_IF_FAILED(bresult, L"Failed to Initialize vertex shader for polylines");
 
 	bresult = this->m_pixelShaderMesh.Initialize(device, hwnd);
-	if (!bresult)
-	{
-		return false;
-	}
+	THROW_TREXCEPTION_IF_FAILED(bresult, L"Failed to Initialize pixel shader for meshes");
 
 	bresult = this->m_pixelShaderPolyLine.Initialize(device, hwnd);
-	if (!bresult)
-	{
-		return false;
-	}
+	THROW_TREXCEPTION_IF_FAILED(bresult, L"Failed to Initialize pixel shader for polylines");
+
+	// Initialize the depth shader object.
+	bresult = m_depthPixelShader.Initialize(device, hwnd);
+	THROW_TREXCEPTION_IF_FAILED(bresult, L"Failed to initialize the depth shader object.");
+
+	// Initialize the depth shader object.
+	bresult = m_depthVertexShader.Initialize(device, hwnd);
+	THROW_TREXCEPTION_IF_FAILED(bresult, L"Failed to initialize the depth shader object.");
+
+	this->m_light.Initialize(20.0f, SHADOWMAP_DEPTH, SHADOWMAP_NEAR);
 
 	this->m_camera.Initialize(screenWidth, screenHeight, screenNear, screenDepth, fieldOfView);
 	this->m_position.Initialize(&this->m_camera);
 
-	this->m_meshes.Initialize(device, &m_vertexShaderMesh, &m_pixelShaderMesh, NULL, NULL);
-	this->m_polylines.Initialize(device, &m_vertexShaderPolyLine, &m_pixelShaderPolyLine, NULL, NULL);
+	this->m_meshes.Initialize(device, NULL, NULL);
+	this->m_polylines.Initialize(device, NULL, NULL);
 	this->AddGrid(2000, { 1.0f, 1.0f, 1.0f, 1.0f }, 200, 200);
 
 	return true;
@@ -59,17 +62,32 @@ void TerrainModel::Shutdown()
 	m_vertexShaderPolyLine.Shutdown();
 	m_meshes.Shutdown();
 	m_polylines.Shutdown();
+	m_depthPixelShader.Shutdown();
+	m_depthVertexShader.Shutdown();
 }
 
-bool TerrainModel::Render(ID3D11DeviceContext* deviceContext)
+bool TerrainModel::RenderShadowMap(ID3D11DeviceContext* deviceContext)
 {
 	this->m_camera.Render();
+	this->m_light.Render();
 
 	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixIdentity();
 
-	this->m_meshes.Render(deviceContext,worldMatrix, m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix(), m_light);
+	this->m_meshes.Render(deviceContext, m_depthVertexShader, m_depthPixelShader, worldMatrix, m_light.GetLightViewMatrix(), m_light.GetLightOrthoProjectionMatrix(), m_light);
 
-	this->m_polylines.Render(deviceContext, worldMatrix, m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix(), m_light);
+	return true;
+}
+bool TerrainModel::Render(ID3D11DeviceContext* deviceContext, ID3D11ShaderResourceView* depthMapTexture)
+{
+	this->m_camera.Render();
+	this->m_light.Render();
+
+	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixIdentity();
+
+	m_pixelShaderMesh.SetShaderResources(deviceContext, depthMapTexture);
+	this->m_meshes.Render(deviceContext,m_vertexShaderMesh, m_pixelShaderMesh, worldMatrix, m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix(), m_light);
+
+	this->m_polylines.Render(deviceContext, m_vertexShaderPolyLine, m_pixelShaderPolyLine, worldMatrix, m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix(), m_light);
 
 	return true;
 }
@@ -185,7 +203,7 @@ bool	TerrainModel::LoadCameraTrajectory(const wchar_t* filepath)
 			vertex.color = { 1.0f, 0.0f, 1.0f, 1.0f };
 			vertices.push_back(vertex);
 		}
-		polyline->Initialize(this->m_device, &this->m_vertexShaderPolyLine, &this->m_pixelShaderPolyLine, &vertices.at(0), vertices.size());
+		polyline->Initialize(this->m_device, &vertices.at(0), vertices.size());
 		m_polylines.Add(polyline);
 		m_cameraTrajectory.Initialize(cameraPoses, polyline, &m_camera);
 	}

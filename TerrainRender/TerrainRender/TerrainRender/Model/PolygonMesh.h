@@ -17,9 +17,6 @@ private:
 	ID3D11Buffer*	m_indexBuffer;
 	unsigned int	_vertexCount;
 	unsigned int	_indexCount;
-	IPixelShader*	m_pixelShader;
-	IVertexShader*	m_vertexShader;
-
 
 public:
 	PolygonMesh() = default;
@@ -28,9 +25,9 @@ public:
 	PolygonMesh& operator=(const PolygonMesh&) = delete;
 
 
-	bool Initialize(ID3D11Device* device, IVertexShader*, IPixelShader*, VertexMesh* vertices, UINT indexCount) override;
+	bool Initialize(ID3D11Device* device,  VertexMesh* vertices, UINT indexCount) override;
 	void Shutdown() override;
-	void Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat,const Light& light) override;
+	void Render(ID3D11DeviceContext* deviceContext, IVertexShader& vertexShader, IPixelShader& pixelshader, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat,const Light& light) override;
  
 	int GetIndexCount() const;
 	int GetVertexCount() const;

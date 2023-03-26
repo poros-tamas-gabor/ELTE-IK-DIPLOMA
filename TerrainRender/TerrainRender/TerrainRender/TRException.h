@@ -6,6 +6,7 @@
 #include <string>
 
 #define THROW_TREXCEPTION(msg) throw TRException(msg,__FILE__, __FUNCTION__, __LINE__ )
+#define THROW_TREXCEPTION_IF_FAILED(result, msg) if(!result ) throw TRException(msg,__FILE__, __FUNCTION__, __LINE__ )
 class TRException 
 {
 private:

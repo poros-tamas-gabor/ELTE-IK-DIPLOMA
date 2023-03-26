@@ -8,8 +8,6 @@ class LineList : public IRenderable<VertexPolyLine>
 protected:
 	ID3D11Buffer* m_vertexBuffer;
 	unsigned int	_vertexCount;
-	IPixelShader* m_pixelShader;
-	IVertexShader* m_vertexShader;
 
 public:
 	LineList() = default;
@@ -18,9 +16,9 @@ public:
 	LineList& operator=(const LineList&) = delete;
 
 
-	virtual bool Initialize(ID3D11Device* device, IVertexShader*, IPixelShader*, VertexPolyLine* vertices, UINT indexCount) override;
+	virtual bool Initialize(ID3D11Device* device,  VertexPolyLine* vertices, UINT indexCount) override;
 	void Shutdown() override;
-	void Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light& light) override;
+	void Render(ID3D11DeviceContext* deviceContext, IVertexShader&, IPixelShader&, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light& light) override;
  
 	int GetIndexCount() const;
 	int GetVertexCount() const;

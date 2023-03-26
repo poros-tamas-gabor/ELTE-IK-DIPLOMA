@@ -1,0 +1,93 @@
+#include "DepthPixelShader.h"
+#include "../ErrorHandler.h"
+
+DepthPixelShader::DepthPixelShader() : m_pixelShader(nullptr) {}
+
+bool DepthPixelShader::Initialize(ID3D11Device* device, HWND hwnd)
+{
+	bool result;
+
+	result = this->InitializeShader(device, hwnd, L"Model/depthPixelShader.hlsl");
+	if (!result)
+	{
+		return false;
+	}
+	return true;
+}
+
+void DepthPixelShader::Shutdown()
+{
+	// Shutdown the vertex and pixel shaders as well as the related objects.
+	this->ShutdownShader();
+	return;
+}
+
+void DepthPixelShader::ShutdownShader()
+{
+	if (this->m_pixelShader)
+	{
+		this->m_pixelShader->Release();
+		this->m_pixelShader = nullptr;
+	}
+}
+
+bool DepthPixelShader::InitializeShader(ID3D11Device* device, HWND hwnd, const WCHAR* psFilename)
+{
+	HRESULT						result;
+	ID3D10Blob* errorMessage = nullptr;
+	ID3D10Blob* pixelShaderBuffer = nullptr;
+	unsigned int				numElements;
+	D3D11_BUFFER_DESC			lightBufferDesc;
+	UINT						flags = D3DCOMPILE_ENABLE_STRICTNESS;
+	try
+	{
+		// Compile the pixel shader code.
+		result = D3DCompileFromFile(psFilename, NULL, NULL, "main", "ps_5_0", flags, 0, &pixelShaderBuffer, &errorMessage);
+		if (FAILED(result))
+		{
+			if (errorMessage)
+			{
+				std::wstring errormsg = L"Failed to Compile the pixel shader code. Filename: ";
+				errormsg += psFilename;
+				throw COMException(result, errormsg, __FILEW__, __FUNCTIONW__, __LINE__);
+			}
+			else
+				throw COMException(result, L"Missing Shader File", __FILEW__, __FUNCTIONW__, __LINE__);
+		}
+
+		// Create the pixel shader from the buffer.
+		result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &this->m_pixelShader);
+
+		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create the pixel shader from the buffer");
+
+		pixelShaderBuffer->Release();
+		pixelShaderBuffer = nullptr;
+	}
+
+	catch (const COMException& exception)
+	{
+		ErrorHandler::Log(exception);
+		return false;
+	}
+
+
+	return true;
+
+}
+
+ID3D11PixelShader* DepthPixelShader::GetPixelShader(void)
+{
+	return this->m_pixelShader;
+}
+
+bool DepthPixelShader::Render(ID3D11DeviceContext* deviceContext, int vertexCount, const Light& light)
+{
+	this->RenderShader(deviceContext, vertexCount);
+	return true;
+}
+void DepthPixelShader::RenderShader(ID3D11DeviceContext* deviceContext, int vertexCount) {
+
+	deviceContext->PSSetShader(this->m_pixelShader, NULL, 0);
+	deviceContext->Draw(vertexCount, 0);
+}
+

@@ -1,5 +1,10 @@
 #include "Light.h"
 
+
+void Light::Initialize(float width, float nearZ, float farZ)
+{
+	m_orthoProjectionMatrix = DirectX::XMMatrixOrthographicLH(width, width, nearZ, farZ);
+}
 void Light::SetAmbientColor(const DirectX::XMFLOAT4& ambientColor)
 {
 	this->_ambientColor = ambientColor;
@@ -8,14 +13,16 @@ void Light::SetDiffuseColor(const DirectX::XMFLOAT4& diffuseColor)
 {
 	this->_diffuseColor = diffuseColor;
 }
-void Light::SetInverseDirection(const DirectX::XMFLOAT4& direction)
-{
-	this->_inverseDirection = direction;
-}
+//void Light::SetInverseDirection(const DirectX::XMFLOAT4& direction)
+//{
+//	this->_inverseDirection = direction;
+//}
 
 void Light::Render()
 {
-
+	// Setup the position of the camera in the world.
+	DirectX::XMVECTOR lightPosition = DirectX::XMVectorSet(- _inverseDirection.x,- _inverseDirection.y, - _inverseDirection.z, _inverseDirection.w);
+	m_viewMatrix = DirectX::XMMatrixLookAtLH(lightPosition, DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f), DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
 }
 
 void Light::SetInverseDirectionBySunPosition(double azimuth, double elevation)
@@ -41,4 +48,13 @@ DirectX::XMFLOAT4 Light::GetDiffuseColor(void) const
 DirectX::XMFLOAT4 Light::GetInverseDirection(void) const
 {
 	return this->_inverseDirection;
+}
+
+DirectX::XMMATRIX Light::GetLightViewMatrix(void) const
+{
+	return m_viewMatrix;
+}
+DirectX::XMMATRIX Light::GetLightOrthoProjectionMatrix(void) const
+{
+	return m_orthoProjectionMatrix;
 }

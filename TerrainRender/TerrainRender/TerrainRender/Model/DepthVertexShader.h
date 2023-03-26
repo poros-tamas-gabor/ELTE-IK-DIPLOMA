@@ -1,5 +1,5 @@
-#ifndef VERTEX_SHADER_MESH_H
-#define	VERTEX_SHADER_MESH_H
+#ifndef DEPTH_VERTEX_SHADER_H
+#define	DEPTH_VERTEX_SHADER_H
 
 #include <d3d11.h>
 #include <d3dcompiler.h>
@@ -9,7 +9,7 @@
 #pragma comment(lib, "D3DCompiler.lib")
 #pragma comment(lib, "d3d11.lib")
 
-class VertexShaderMesh : public IVertexShader
+class DepthVertexShader : public IVertexShader
 {
 public:
 	struct MatrixBuffer
@@ -17,8 +17,6 @@ public:
 		DirectX::XMMATRIX worldMat;
 		DirectX::XMMATRIX viewMat;
 		DirectX::XMMATRIX projectionMat;
-		DirectX::XMMATRIX lightViewMatrix;
-		DirectX::XMMATRIX lightProjectionMatrix;
 	};
 
 private:
@@ -27,9 +25,9 @@ private:
 	ID3D11Buffer* m_matrixBuffer;
 
 public:
-	VertexShaderMesh();
-	VertexShaderMesh(const VertexShaderMesh& other) = delete;
-	VertexShaderMesh& operator=(const VertexShaderMesh& other) = delete;
+	DepthVertexShader();
+	DepthVertexShader(const DepthVertexShader& other) = delete;
+	DepthVertexShader& operator=(const DepthVertexShader& other) = delete;
 
 
 	bool Initialize(ID3D11Device*, HWND) override;

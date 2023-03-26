@@ -2,13 +2,10 @@
 #include	"../ErrorHandler.h"
 #include	<memory>
 
-bool PolygonMesh::Initialize(ID3D11Device* device, IVertexShader* vertexShader, IPixelShader* pixelShader, VertexMesh* vertices, UINT indexCount)
+bool PolygonMesh::Initialize(ID3D11Device* device, VertexMesh* vertices, UINT indexCount)
 {
-	if (device == nullptr || vertexShader == nullptr || pixelShader == nullptr)
+	if (device == nullptr)
 		return false;
-
-	this->m_pixelShader		= pixelShader;
-	this->m_vertexShader	= vertexShader;
 
 	bool bresult;
 	bresult = this->InitializeBuffers(device, vertices, indexCount);
@@ -23,15 +20,16 @@ void PolygonMesh::Shutdown()
 	// Shutdown the vertex and index buffers.
 	this->ShutdownBuffers();
 }
-void PolygonMesh::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat,const Light& light)
+void PolygonMesh::Render(ID3D11DeviceContext* deviceContext, IVertexShader& vertexShader, IPixelShader& pixelShader, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat,const Light& light)
 {
 	try {
-		bool bresult = this->m_vertexShader->Render(deviceContext, worldMat, viewMat, projectionMat, light);
+		bool bresult = vertexShader.Render(deviceContext, worldMat, viewMat, projectionMat, light);
 		if (!bresult)
 			THROW_TREXCEPTION(L"Failed to render vertex shader");
 
 		this->RenderBuffers(deviceContext);
-		bresult = this->m_pixelShader->Render(deviceContext, this->GetVertexCount(), light);
+
+		bresult = pixelShader.Render(deviceContext, this->GetVertexCount(), light);
 		if(!bresult)
 			THROW_TREXCEPTION(L"Failed to render pixel shader");
 

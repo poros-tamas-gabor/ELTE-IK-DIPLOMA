@@ -3,13 +3,10 @@
 #include	"../ErrorHandler.h"
 #include	<memory>
 
-bool LineList::Initialize(ID3D11Device* device, IVertexShader* vertexShader, IPixelShader* pixelShader, VertexPolyLine* vertices, UINT indexCount)
+bool LineList::Initialize(ID3D11Device* device, VertexPolyLine* vertices, UINT indexCount)
 {
-	if (device == nullptr || vertexShader == nullptr || pixelShader == nullptr)
+	if (device == nullptr )
 		return false;
-
-	this->m_pixelShader = pixelShader;
-	this->m_vertexShader = vertexShader;
 
 	bool bresult;
 	bresult = this->InitializeBuffers(device, vertices, indexCount);
@@ -24,15 +21,15 @@ void LineList::Shutdown()
 	// Shutdown the vertex and index buffers.
 	this->ShutdownBuffers();
 }
-void LineList::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light& light)
+void LineList::Render(ID3D11DeviceContext* deviceContext, IVertexShader& vertexShader, IPixelShader& pixelShader, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light& light)
 {
-	bool bresult = this->m_vertexShader->Render(deviceContext, worldMat, viewMat, projectionMat, light);
+	bool bresult = vertexShader.Render(deviceContext, worldMat, viewMat, projectionMat, light);
 	if (!bresult)
 	{
 		//return false;
 	}
 	this->RenderBuffers(deviceContext);
-	this->m_pixelShader->Render(deviceContext, this->GetVertexCount(), light);
+	pixelShader.Render(deviceContext, this->GetVertexCount(), light);
 
 }
 

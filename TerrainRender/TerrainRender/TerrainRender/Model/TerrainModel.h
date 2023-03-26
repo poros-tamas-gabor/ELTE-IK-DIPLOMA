@@ -6,6 +6,8 @@
 #include "VertexShaderMesh.h"
 #include "VertexShaderPolyLine.h"
 #include "PixelShaderPolyLine.h"
+#include "DepthPixelShader.h"
+#include "DepthVertexShader.h"
 #include "Camera.h"
 #include "Position.h"
 #include "SunPosition.h"
@@ -28,6 +30,8 @@ private:
 	PixelShaderMesh								m_pixelShaderMesh;
 	VertexShaderPolyLine						m_vertexShaderPolyLine;
 	PixelShaderPolyLine							m_pixelShaderPolyLine;
+	DepthPixelShader							m_depthPixelShader;
+	DepthVertexShader							m_depthVertexShader;
 
 	Position									m_position;
 	CompositeRenderable<VertexMesh>				m_meshes;
@@ -41,6 +45,7 @@ private:
 	IDataAccess*								m_persistence;
 	bool										m_cameraTrajectoryIsloaded = false;
 
+
 public:
 	Camera									m_camera;
 	
@@ -53,7 +58,8 @@ public:
 	~TerrainModel();
 	bool	Initalize(HWND hwnd, IDataAccess* persistence, ID3D11Device* device, int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView = (DirectX::XM_PI / 4.0f));
 	void	Shutdown();
-	bool	Render(ID3D11DeviceContext* deviceContext);
+	bool	Render(ID3D11DeviceContext* deviceContext, ID3D11ShaderResourceView* depthMapTexture);
+	bool	RenderShadowMap(ID3D11DeviceContext* deviceContext);
 
 	bool	LoadTerrain(const wchar_t* filepath);
 	bool	LoadCameraTrajectory(const wchar_t* filepath);

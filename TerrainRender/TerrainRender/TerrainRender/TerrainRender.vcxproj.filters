@@ -73,6 +73,9 @@
     <Filter Include="Header Files\Model\Shader\Ployline">
       <UniqueIdentifier>{bd09b1be-b9fd-4626-892c-58efcefc1b34}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Model\Shader\DepthShader">
+      <UniqueIdentifier>{fa10512f-4de0-4ad4-968b-14b907786b9d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -203,6 +206,15 @@
     </ClCompile>
     <ClCompile Include="Model\VertexShaderPolyLine.cpp">
       <Filter>Header Files\Model\Shader\Ployline</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\DepthVertexShader.cpp">
+      <Filter>Header Files\Model\Shader\DepthShader</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\DepthPixelShader.cpp">
+      <Filter>Header Files\Model\Shader\DepthShader</Filter>
+    </ClCompile>
+    <ClCompile Include="View\ShadowMap.cpp">
+      <Filter>Source Files\View</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -383,6 +395,15 @@
     <ClInclude Include="Model\VertexShaderPolyLine.h">
       <Filter>Header Files\Model\Shader\Ployline</Filter>
     </ClInclude>
+    <ClInclude Include="Model\DepthPixelShader.h">
+      <Filter>Header Files\Model\Shader\DepthShader</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\DepthVertexShader.h">
+      <Filter>Header Files\Model\Shader\DepthShader</Filter>
+    </ClInclude>
+    <ClInclude Include="View\ShadowMap.h">
+      <Filter>Source Files\View</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Model\pixelShaderMesh.hlsl">
@@ -396,6 +417,12 @@
     </FxCompile>
     <FxCompile Include="Model\vertexShaderPolyLine.hlsl">
       <Filter>Header Files\Model\Shader\Ployline</Filter>
+    </FxCompile>
+    <FxCompile Include="Model\depthPixelShader.hlsl">
+      <Filter>Header Files\Model\Shader\DepthShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Model\depthVertexShader.hlsl">
+      <Filter>Header Files\Model\Shader\DepthShader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

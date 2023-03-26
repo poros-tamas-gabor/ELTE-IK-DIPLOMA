@@ -1,7 +1,7 @@
 #include "PixelShaderMesh.h"
 #include "../ErrorHandler.h"
 
-PixelShaderMesh::PixelShaderMesh() : m_pixelShader(nullptr), m_lightBuffer(nullptr) {}
+PixelShaderMesh::PixelShaderMesh() : m_pixelShader(nullptr), m_lightBuffer(nullptr), m_sampleStateClamp(nullptr){}
 
 bool PixelShaderMesh::Initialize(ID3D11Device* device, HWND hwnd)
 {
@@ -34,6 +34,11 @@ void PixelShaderMesh::ShutdownShader()
 		this->m_lightBuffer->Release();
 		this->m_lightBuffer = nullptr;
 	}
+	if (this->m_sampleStateClamp)
+	{
+		this->m_sampleStateClamp->Release();
+		this->m_sampleStateClamp = nullptr;
+	}
 }
 
 bool PixelShaderMesh::InitializeShader(ID3D11Device* device, HWND hwnd, const WCHAR* psFilename)
@@ -42,6 +47,7 @@ bool PixelShaderMesh::InitializeShader(ID3D11Device* device, HWND hwnd, const WC
 	ID3D10Blob*					errorMessage = nullptr;
 	ID3D10Blob*					pixelShaderBuffer = nullptr;
 	D3D11_BUFFER_DESC			lightBufferDesc = {0};
+	D3D11_SAMPLER_DESC			samplerDesc;
 	UINT						flags = D3DCOMPILE_ENABLE_STRICTNESS;
 	try
 	{
@@ -66,6 +72,25 @@ bool PixelShaderMesh::InitializeShader(ID3D11Device* device, HWND hwnd, const WC
 
 		pixelShaderBuffer->Release();
 		pixelShaderBuffer = nullptr;
+
+		// Create a clamp texture sampler state description.
+		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+		samplerDesc.MipLODBias = 0.0f;
+		samplerDesc.MaxAnisotropy = 1;
+		samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+		samplerDesc.BorderColor[0] = 0;
+		samplerDesc.BorderColor[1] = 0;
+		samplerDesc.BorderColor[2] = 0;
+		samplerDesc.BorderColor[3] = 0;
+		samplerDesc.MinLOD = 0;
+		samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+		// Create the texture sampler state.
+		result = device->CreateSamplerState(&samplerDesc, &m_sampleStateClamp);
+		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create the texture sampler state");
 
 
 		//setup light
@@ -109,7 +134,16 @@ bool PixelShaderMesh::Render(ID3D11DeviceContext* deviceContext, int vertexCount
 void PixelShaderMesh::RenderShader(ID3D11DeviceContext* deviceContext, int vertexCount) {
 
 	deviceContext->PSSetShader(this->m_pixelShader, NULL, 0);
+
+	//The new clamp sampler state is set in the pixel shader here.
+	deviceContext->PSSetSamplers(0, 1, &m_sampleStateClamp);
 	deviceContext->Draw(vertexCount, 0);
+}
+
+void PixelShaderMesh::SetShaderResources(ID3D11DeviceContext* deviceContext, ID3D11ShaderResourceView* depthMapTexture)
+{
+	// The shadow map texture is set in the pixel shader here.
+	deviceContext->PSSetShaderResources(0, 1, &depthMapTexture);
 }
 
 bool PixelShaderMesh::SetShadeParameters(ID3D11DeviceContext* deviceContext, const Light& light)
@@ -120,6 +154,9 @@ bool PixelShaderMesh::SetShadeParameters(ID3D11DeviceContext* deviceContext, con
 	unsigned int				bufferNumber;
 
 	try {
+
+
+
 		// Set the position of the constant buffer in the pixel shader.
 		bufferNumber = 0;
 

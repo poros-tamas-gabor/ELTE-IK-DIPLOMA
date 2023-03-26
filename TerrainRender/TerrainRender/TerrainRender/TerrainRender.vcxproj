@@ -165,6 +165,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model\Camera.cpp" />
     <ClCompile Include="Model\CameraTrajectory.cpp" />
+    <ClCompile Include="Model\DepthPixelShader.cpp" />
+    <ClCompile Include="Model\DepthVertexShader.cpp" />
     <ClCompile Include="Model\Light.cpp" />
     <ClCompile Include="Model\Persistence\EpochTime.cpp" />
     <ClCompile Include="Model\LineList.cpp" />
@@ -185,6 +187,7 @@
     <ClCompile Include="StringConverter.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="View\D3DView.cpp" />
+    <ClCompile Include="View\ShadowMap.cpp" />
     <ClCompile Include="View\TerrainView.cpp" />
     <ClCompile Include="View\GuiView.cpp" />
   </ItemGroup>
@@ -213,6 +216,8 @@
     <ClInclude Include="Input\MouseEvent.h" />
     <ClInclude Include="Model\Camera.h" />
     <ClInclude Include="Model\CompositeRenderable.h" />
+    <ClInclude Include="Model\DepthPixelShader.h" />
+    <ClInclude Include="Model\DepthVertexShader.h" />
     <ClInclude Include="Model\IPixelShader.h" />
     <ClInclude Include="Model\Math\IInterpolation.h" />
     <ClInclude Include="Model\Persistence\EpochTime.h" />
@@ -245,11 +250,18 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TRException.h" />
     <ClInclude Include="View\D3DView.h" />
+    <ClInclude Include="View\ShadowMap.h" />
     <ClInclude Include="View\TerrainView.h" />
     <ClInclude Include="View\GuiView.h" />
     <ClInclude Include="View\IView.h" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Model\depthPixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Model\depthVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="Model\pixelShaderMesh.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
     </FxCompile>

@@ -10,7 +10,7 @@ CompositeController::CompositeController() : m_messageSystem(m_controllers), m_i
 
 void CompositeController::SetMessageSystem(MessageSystem*) {}
 
-void CompositeController::SetTerrainModel(TerrainModel* pModel)
+void CompositeController::SetTerrainModel(IModelPtr pModel)
 {
 	this->m_terrainModel = pModel;
 }
@@ -23,7 +23,7 @@ void CompositeController::SetKeyboard(Keyboard* keyboard)
 	this->m_keyboard = keyboard;
 }
 
-bool CompositeController::Initialize(TerrainModel* pModel, Mouse* mouse, Keyboard* keyboard)
+bool CompositeController::Initialize(IModelPtr pModel, Mouse* mouse, Keyboard* keyboard)
 {
 	if (pModel == nullptr || mouse == nullptr || keyboard == nullptr)
 	{

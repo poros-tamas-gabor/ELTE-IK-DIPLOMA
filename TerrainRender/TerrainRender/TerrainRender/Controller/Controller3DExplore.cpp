@@ -102,7 +102,7 @@ void Controller3DExplore::HandleMessage(unsigned int message, float* fparam, uns
 	}
 
 }
-void Controller3DExplore::SetTerrainModel(TerrainModel* pModel)
+void Controller3DExplore::SetTerrainModel(IModelPtr pModel)
 {
 	this->m_terrainModel = pModel;
 }
@@ -124,9 +124,9 @@ bool Controller3DExplore::IsActive() const
 
 
 
-bool Controller3DExplore::Initialize(TerrainModel* pModel, Mouse* mouse, Keyboard* keyboard)
+bool Controller3DExplore::Initialize(IModelPtr pModel, Mouse* mouse, Keyboard* keyboard)
 {
-	if (pModel == nullptr || mouse == nullptr || keyboard == nullptr)
+	if (pModel.get() == nullptr || mouse == nullptr || keyboard == nullptr)
 	{
 		return false;
 	}

@@ -107,7 +107,7 @@ void ControllerFlythrough::HandleMessage(unsigned int message, float* fparam, un
 	}
 
 }
-void ControllerFlythrough::SetTerrainModel(TerrainModel* pModel)
+void ControllerFlythrough::SetTerrainModel(IModelPtr pModel)
 {
 	this->m_terrainModel = pModel;
 }
@@ -129,7 +129,7 @@ bool ControllerFlythrough::IsActive() const
 
 
 
-bool ControllerFlythrough::Initialize(TerrainModel* pModel, Mouse* mouse, Keyboard* keyboard)
+bool ControllerFlythrough::Initialize(IModelPtr pModel, Mouse* mouse, Keyboard* keyboard)
 {
 	if (pModel == nullptr || mouse == nullptr || keyboard == nullptr)
 	{

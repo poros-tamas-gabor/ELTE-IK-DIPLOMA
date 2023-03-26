@@ -67,12 +67,16 @@ ID3D11DeviceContext* TerrainView::GetDeviceContext()
 }
 
 
-void TerrainView::SetController(IController* terrainController)
+void TerrainView::SetController(IControllerPtr terrainController)
 {
 	this->m_terrainController = terrainController;
 }
-void TerrainView::SetModel(TerrainModel* terrainModel)
+void TerrainView::SetModel(TerrainModelPtr terrainModel)
 {
 	this->m_terrainModel = terrainModel;
+}
+
+void TerrainView::HandleIRenderableInfo(const std::vector<IRenderableInformation>& irenderableinfo) {
+	this->m_guiView.HandleIRenderableInfo(irenderableinfo);
 }
 

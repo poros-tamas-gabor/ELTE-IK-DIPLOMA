@@ -10,6 +10,7 @@ bool LineList::Initialize(ID3D11Device* device, IVertexShader* vertexShader, IPi
 
 	this->m_pixelShader = pixelShader;
 	this->m_vertexShader = vertexShader;
+	this->ResetTransformation();
 
 	bool bresult;
 	bresult = this->InitializeBuffers(device, vertices, indexCount);
@@ -26,7 +27,8 @@ void LineList::Shutdown()
 }
 void LineList::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light& light)
 {
-	bool bresult = this->m_vertexShader->Render(deviceContext, worldMat, viewMat, projectionMat, light);
+	DirectX::XMMATRIX worldMatrix = m_localMatrix * worldMat;
+	bool bresult = this->m_vertexShader->Render(deviceContext, worldMatrix, viewMat, projectionMat, light);
 	if (!bresult)
 	{
 		//return false;
@@ -113,4 +115,47 @@ void LineList::RenderBuffers(ID3D11DeviceContext* deviceContext)
 
 	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+}
+
+void LineList::SetName(const std::wstring& name)
+{
+	m_name = name;
+}
+
+std::wstring LineList::GetName()
+{
+	return m_name;
+}
+void LineList::Rotate(float yaw, float pitch, float roll)
+{
+	m_rotation = { pitch, yaw, roll };
+	CalculateLocalMatrix();
+}
+void LineList::Translate(float x, float y, float z)
+{
+	m_translation = { x,y,z };
+	CalculateLocalMatrix();
+}
+void LineList::Scale(float x, float y, float z)
+{
+	m_scaling = { x, y, z };
+	CalculateLocalMatrix();
+}
+void LineList::ResetTransformation()
+{
+	m_scaling = { 1, 1, 1 };
+	m_translation = { 0,0,0 };
+	m_rotation = { 0, 0, 0 };
+	CalculateLocalMatrix();
+}
+void LineList::CalculateLocalMatrix(void)
+{
+	DirectX::XMMATRIX scalingMatrix = DirectX::XMMatrixScaling(m_scaling.x, m_scaling.y, m_scaling.z);
+	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(m_rotation.x, m_rotation.y, m_rotation.z);
+	DirectX::XMMATRIX translationMatrix = DirectX::XMMatrixTranslation(m_translation.x, m_translation.y, m_translation.z);
+	m_localMatrix = scalingMatrix * rotationMatrix * translationMatrix;
+}
+DirectX::XMMATRIX LineList::GetLocalMatrix(void)
+{
+	return m_localMatrix;
 }

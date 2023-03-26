@@ -30,6 +30,11 @@ App::App()
 		ErrorHandler::Log(GetLastError(), L"Failed to register raw input devices.");
 		exit(-1);
 	}
+
+	this->m_terrainController = std::make_shared<CompositeController>();
+	this->m_terrainModel = std::make_shared<TerrainModel>();
+	this->m_terrainView = std::make_shared<TerrainView>();
+	srand(time(nullptr));
 }
 App::~App() {};
 
@@ -194,7 +199,7 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 			return DefWindowProc(hwnd, umessage, wparam, lparam);
 		}
 		//https://learn.microsoft.com/en-us/windows/win32/inputdev/using-raw-input
-		UINT dwSize;
+		UINT dwSize = 0;
 
 		GetRawInputData((HRAWINPUT)lparam, RID_INPUT, NULL, &dwSize, sizeof(RAWINPUTHEADER));
 		if (dwSize > 0)
@@ -254,8 +259,8 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-	this->m_terrainView.SetController(&this->m_terrainController);
-	this->m_terrainView.SetModel(&this->m_terrainModel);
+	this->m_terrainView->SetController(this->m_terrainController);
+	this->m_terrainView->SetModel(this->m_terrainModel);
 
 	bool result;
 
@@ -269,7 +274,7 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 
 	ImGui_ImplWin32_Init(this->_renderWindow.GetHWND());
 
-	result = this->m_terrainController.Initialize(&this->m_terrainModel, &this->_mouse, &this->_keyboard);
+	result = this->m_terrainController->Initialize(this->m_terrainModel, &this->_mouse, &this->_keyboard);
 	if (!result)
 		return false;
 
@@ -277,27 +282,29 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 	{
 		IControllerPtr c = std::make_shared<Controller3DExplore>();
 
-		c->Initialize(&this->m_terrainModel, &this->_mouse, &this->_keyboard);
-		this->m_terrainController.AddController(c);
+		c->Initialize(m_terrainModel, &this->_mouse, &this->_keyboard);
+		this->m_terrainController->AddController(c);
 
 		IControllerPtr guic = std::make_shared<GuiController>();
 
-		guic->Initialize(&this->m_terrainModel, &this->_mouse, &this->_keyboard);
-		this->m_terrainController.AddController(guic);
+		guic->Initialize(this->m_terrainModel, &this->_mouse, &this->_keyboard);
+		this->m_terrainController->AddController(guic);
 
 		IControllerPtr fly = std::make_shared<ControllerFlythrough>();
 
-		fly->Initialize(&this->m_terrainModel, &this->_mouse, &this->_keyboard);
-		this->m_terrainController.AddController(fly);
+		fly->Initialize(this->m_terrainModel, &this->_mouse, &this->_keyboard);
+		this->m_terrainController->AddController(fly);
 
 
 	}
 
-	result = this->m_terrainView.Initalize(_renderWindow.GetHWND(), screenWidth, screenHeight);
+	result = this->m_terrainView->Initalize(_renderWindow.GetHWND(), (float)screenWidth, (float)screenHeight);
 	if (!result)
 		return false;
 
-	result = this->m_terrainModel.Initalize(_renderWindow.GetHWND(), m_dataAccess, m_terrainView.GetDevice(), screenWidth, screenHeight, 1, 500);
+	result = this->m_terrainModel->Initalize(_renderWindow.GetHWND(), m_dataAccess, m_terrainView->GetDevice(), screenWidth, screenHeight, 1, 500);
+
+	this->m_terrainModel->m_modelMessageSystem.Subscribe(m_terrainView);
 
 	_timer.Start();
 	return true;
@@ -312,13 +319,13 @@ void App::Update()
 {
 	float dt = (float)this->_timer.GetMilisecondsElapsed();
 	this->_timer.Restart();
-	this->m_terrainController.HandleMessage(IDC_TIME_ELAPSED, &dt, NULL);
+	this->m_terrainController->HandleMessage(IDC_TIME_ELAPSED, &dt, NULL);
 }
 
 
 void App::RenderFrame()
 {
-	this->m_terrainView.RenderFrame();
+	this->m_terrainView->RenderFrame();
 
 }
 void App::Run()
@@ -336,9 +343,9 @@ void App::Shutdown()
 	{
 		delete this->m_dataAccess;
 	}
-	this->m_terrainController.Shutdown();
-	this->m_terrainModel.Shutdown();
-	this->m_terrainView.Shutdown();
+	this->m_terrainController->Shutdown();
+	this->m_terrainModel->Shutdown();
+	this->m_terrainView->Shutdown();
 
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();

@@ -12,6 +12,8 @@ bool PolygonMesh::Initialize(ID3D11Device* device, IVertexShader* vertexShader, 
 
 	bool bresult;
 	bresult = this->InitializeBuffers(device, vertices, indexCount);
+
+	this->ResetTransformation();
 	if (!bresult)
 	{
 		return false;
@@ -26,7 +28,9 @@ void PolygonMesh::Shutdown()
 void PolygonMesh::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat,const Light& light)
 {
 	try {
-		bool bresult = this->m_vertexShader->Render(deviceContext, worldMat, viewMat, projectionMat, light);
+
+		DirectX::XMMATRIX worldMatrix = m_localMatrix * worldMat;
+		bool bresult = this->m_vertexShader->Render(deviceContext, worldMatrix, viewMat, projectionMat, light);
 		if (!bresult)
 			THROW_TREXCEPTION(L"Failed to render vertex shader");
 
@@ -159,4 +163,47 @@ void PolygonMesh::RenderBuffers(ID3D11DeviceContext* deviceContext)
 
 	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
+void PolygonMesh::SetName(const std::wstring& name)
+{
+	m_name = name;
+}
+
+std::wstring PolygonMesh::GetName(void)
+{
+	return m_name;
+}
+void PolygonMesh::Rotate(float yaw, float pitch, float roll)
+{
+	m_rotation = { pitch, yaw, roll };
+	CalculateLocalMatrix();
+}
+void PolygonMesh::Translate(float x, float y, float z)
+{
+	m_translation = { x,y,z };
+	CalculateLocalMatrix();
+}
+void PolygonMesh::Scale(float x, float y, float z)
+{
+	m_scaling = { x, y, z };
+	CalculateLocalMatrix();
+}
+void PolygonMesh::ResetTransformation()
+{
+	m_scaling = { 1, 1, 1 };
+	m_translation = { 0,0,0 };
+	m_rotation = { 0, 0, 0 };
+	CalculateLocalMatrix();
+}
+void PolygonMesh::CalculateLocalMatrix(void)
+{
+	DirectX::XMMATRIX scalingMatrix = DirectX::XMMatrixScaling(m_scaling.x, m_scaling.y, m_scaling.z);
+	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(m_rotation.x, m_rotation.y, m_rotation.z);
+	DirectX::XMMATRIX translationMatrix = DirectX::XMMatrixTranslation(m_translation.x, m_translation.y, m_translation.z);
+	m_localMatrix = scalingMatrix * rotationMatrix * translationMatrix;
+}
+DirectX::XMMATRIX PolygonMesh::GetLocalMatrix(void)
+{
+	return m_localMatrix;
 }

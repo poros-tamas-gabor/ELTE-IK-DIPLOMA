@@ -2,9 +2,10 @@
 #include <commdlg.h>
 #include "../resource.h"
 #include "../ImGui/imguistyleserializer.h" 
+#include "../StringConverter.h"
 
 const static float PI = 3.14159265358979323846;
-bool GuiView::Initalize(ID3D11Device* _device, ID3D11DeviceContext* _deviceContext, IController* controller)
+bool GuiView::Initalize(ID3D11Device* _device, ID3D11DeviceContext* _deviceContext, IControllerPtr controller)
 {
     bool result;
 
@@ -154,10 +155,21 @@ void GuiView::ShowSettingWindow()
             }
         }
 
+        if (ImGui::CollapsingHeader("Renderables"))
+        {
+            for (const IRenderableInformation& info : m_IRenderableInfo)
+            {
+                ImGui::PushID(info.id);
+                if (ImGui::TreeNode(StringConverter::WideToString(info.name).c_str()))
+                {
+                    ImGui::TextWrapped("id: %d", info.id);
 
+                    ImGui::TreePop();
 
-
-   
+                }
+                ImGui::PopID();
+            }
+        }
         ImGui::End();
     }
 
@@ -179,4 +191,9 @@ void GuiView::Shutdown()
 {
     ImGui_ImplDX11_Shutdown();
     
+}
+
+void GuiView::HandleIRenderableInfo(const std::vector<IRenderableInformation>& irenderableinformation)
+{
+    m_IRenderableInfo = irenderableinformation;
 }

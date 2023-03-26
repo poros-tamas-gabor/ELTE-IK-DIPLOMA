@@ -155,7 +155,8 @@ bool TerrainModel::LoadTerrain(const wchar_t* filepath)
 		pVertices = &vertices.at(0);
 		vertexCount = vertices.size();
 		PolygonMeshCreator creator;
-		this->m_meshes.Add(pVertices, vertexCount, creator);
+		this->m_meshes.Add(pVertices, vertexCount, creator, filepath);
+		this->m_modelMessageSystem.PublishRenderableInformation(CollectIRenderableInfo());
 	}
 	return bresult;
 
@@ -178,7 +179,6 @@ bool	TerrainModel::LoadCameraTrajectory(const wchar_t* filepath)
 	this->m_cameraTrajectoryIsloaded = result;
 	if (result)
 	{
-		PolyLine* polyline = new PolyLine;
 		std::vector<VertexPolyLine> vertices;
 		for (const CameraPose& camerapose : cameraPoses)
 		{
@@ -187,10 +187,13 @@ bool	TerrainModel::LoadCameraTrajectory(const wchar_t* filepath)
 			vertex.color = { 1.0f, 0.0f, 1.0f, 1.0f };
 			vertices.push_back(vertex);
 		}
-		polyline->Initialize(this->m_device, &this->m_vertexShaderPolyLine, &this->m_pixelShaderPolyLine, &vertices.at(0), vertices.size());
-		m_polylines.Add(polyline);
+		PolyLineCreator creator;
+		m_polylines.Add(&vertices.at(0), vertices.size(), creator, filepath);
+		IRendarablePtr<VertexPolyLine> polyline = m_polylines.GetLastAddedComponent();
 		m_cameraTrajectory.Initialize(cameraPoses, polyline, &m_camera);
+		this->m_modelMessageSystem.PublishRenderableInformation(CollectIRenderableInfo());
 	}
+
 	return result;
 }
 
@@ -245,6 +248,16 @@ void TerrainModel::UpdateCameraProperties(unsigned message, float data)
 	}
 }
 
+std::vector<IRenderableInformation> TerrainModel::CollectIRenderableInfo()
+{
+	std::vector<IRenderableInformation> polylineInfo;
+	std::vector<IRenderableInformation> meshInfo;
+	m_polylines.CollectIRenderableInformation(polylineInfo);
+	m_meshes.CollectIRenderableInformation(meshInfo);
+	polylineInfo.insert(polylineInfo.end(), meshInfo.begin(), meshInfo.end());
+	return polylineInfo;
+}
+
 void TerrainModel::AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int gridZ)
 {
 	std::vector<VertexPolyLine> vertices;
@@ -283,7 +296,8 @@ void TerrainModel::AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int g
 	VertexPolyLine* pVertex = &vertices[0];
 	unsigned verteCount = vertices.size();
 	LineListCreator	lineListCreator;
-	this->m_polylines.Add(pVertex, verteCount, lineListCreator);
+	this->m_polylines.Add(pVertex, verteCount, lineListCreator, L"Grid");
+	this->m_modelMessageSystem.PublishRenderableInformation(CollectIRenderableInfo());
 }
 
 

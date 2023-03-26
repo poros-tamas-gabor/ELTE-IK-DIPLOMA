@@ -12,13 +12,14 @@ template <class V>
 class CompositeRenderable : public IRenderable<V>
 {
 private:
-	std::vector<IRenderable<V>*>	m_renderables;
+	std::wstring					m_name;
+	std::vector<IRendarablePtr<V>>		m_renderables;
 	IVertexShader*					m_vertexShader = NULL;
 	IPixelShader*					m_pixelShader = NULL;
 	ID3D11Device*					m_device = NULL;
 
-public:
-	bool Add(IRenderable<V>* renderable)
+private:
+	bool Add(IRendarablePtr<V> renderable)
 	{
 		if (std::find(this->m_renderables.begin(), this->m_renderables.end(), renderable) != this->m_renderables.end())
 		{
@@ -47,36 +48,35 @@ public:
 	}
 	void Shutdown() override
 	{
-		for (IRenderable<V>* renderable : m_renderables)
+		for (IRendarablePtr<V> renderable : m_renderables)
 		{
 			if (renderable)
 			{
 				renderable->Shutdown();
-				delete renderable;
+				//delete renderable;
 			}
 		}
 	}
 	void Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light& light) override
 	{
-		DirectX::XMMATRIX mat = DirectX::XMMatrixIdentity();
-
-		for (IRenderable<V>* renderable : m_renderables)
+		for (IRendarablePtr<V> renderable : m_renderables)
 		{
 			renderable->Render(deviceContext, worldMat, viewMat, projectionMat, light);
 		}
 	}
-	bool Add(V* vertices, UINT indexCount, const IRenderableCreator<V>& renderableCreator)
+	bool Add(V* vertices, UINT indexCount, const IRenderableCreator<V>& renderableCreator, const std::wstring& renderableName)
 	{
-		IRenderable<V>* renderable = renderableCreator.CreateRenderable();
+		IRendarablePtr<V> renderable = renderableCreator.CreateRenderable();
 		if (!renderable)
 		{
 			return false;
 		}
+		renderable->SetName(renderableName);
 		renderable->Initialize(this->m_device, m_vertexShader, m_pixelShader, vertices, indexCount);
 		return this->Add(renderable);
 	}
 
-	bool Remove(IRenderable<V>* renderable)
+	bool Remove(IRendarablePtr<V> renderable)
 	{
 		if (std::find(this->m_renderables.begin(), this->m_renderables.end(), renderable) != this->m_renderables.end())
 		{
@@ -84,6 +84,92 @@ public:
 			return true;
 		}
 		return false;
+	}
+
+	void SetName(const std::wstring& name) override
+	{
+		m_name = name;
+	}
+	void Rotate(float yaw, float pitch, float roll) override
+	{
+		for (IRendarablePtr<V> renderable : m_renderables)
+		{
+			renderable->Rotate(yaw, pitch, roll);
+		}
+	}
+	void Translate(float x, float y, float z) override
+	{
+		for (IRendarablePtr<V> renderable : m_renderables)
+		{
+			renderable->Translate(x, y, z);
+		}
+	}
+	void Scale(float x, float y, float z) override
+	{
+		for (IRendarablePtr<V> renderable : m_renderables)
+		{
+			renderable->Scale(x, y, z);
+		}
+	}
+
+	DirectX::XMMATRIX GetLocalMatrix(void)  override
+	{
+		//TODO 
+		return DirectX::XMMatrixIdentity();
+	}
+
+	void ResetTransformation() override
+	{
+		for (IRendarablePtr<V> renderable : m_renderables)
+		{
+			renderable->ResetTransformation();
+		}
+	}
+	
+	void RotateComponent(unsigned componentID, float yaw, float pitch, float roll)
+	{
+		for (IRendarablePtr<V> renderable : m_renderables)
+		{
+			if(renderable->GetID() == componentID)
+				renderable->Rotate(yaw, pitch, roll);
+		}
+	}
+	void TranslateComponent(unsigned componentID, float x, float y, float z)
+	{
+		for (IRendarablePtr<V> renderable : m_renderables)
+		{
+			if (renderable->GetID() == componentID)
+				renderable->Translate(x, y, z);
+		}
+	}
+	void ScaleComponent(unsigned componentID, float x, float y, float z)
+	{
+		for (IRendarablePtr<V> renderable : m_renderables)
+		{
+			if (renderable->GetID() == componentID)
+				renderable->Scale(x, y, z);
+		}
+	}
+
+	void CollectIRenderableInformation(std::vector<IRenderableInformation>& vector)
+	{
+		for (IRendarablePtr<V> renderable : m_renderables)
+		{
+			IRenderableInformation info;
+			info.id = renderable->GetID();
+			info.name = renderable->GetName();
+
+			vector.push_back(info);
+		}
+	}
+	std::wstring GetName(void)
+	{
+		return m_name;
+	}
+
+	IRendarablePtr<V> GetLastAddedComponent(void)
+	{
+		return m_renderables.back();
 	}
 };
 #endif

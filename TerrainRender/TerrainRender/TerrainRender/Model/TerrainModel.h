@@ -18,6 +18,8 @@
 #include "CompositeRenderable.h"
 #include "RenderableCreator.h"
 #include "CameraTrajectory.h"
+#include "ModelMessageSystem.h"
+#include <memory>
 #pragma comment(lib, "D3DCompiler.lib")
 #pragma comment(lib, "d3d11.lib")
 
@@ -47,7 +49,8 @@ private:
 	bool										m_cameraTrajectoryIsloaded = false;
 
 public:
-	Camera									m_camera;
+	Camera										m_camera;
+	ModelMessageSystem							m_modelMessageSystem;
 	
 
 
@@ -56,23 +59,24 @@ public:
 	TerrainModel();
 	TerrainModel(const TerrainModel&) = delete;
 	~TerrainModel();
-	bool	Initalize(HWND hwnd, IDataAccess* persistence, ID3D11Device* device, int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView = (DirectX::XM_PI / 4.0f));
-	void	Shutdown();
-	bool	Render(ID3D11DeviceContext* deviceContext);
+	bool	Initalize(HWND hwnd, IDataAccess* persistence, ID3D11Device* device, int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView = (DirectX::XM_PI / 4.0f)) override;
+	void	Shutdown() override;
+	bool	Render(ID3D11DeviceContext* deviceContext) override;
 
-	bool	LoadTerrain(const wchar_t* filepath);
-	bool	LoadCameraTrajectory(const wchar_t* filepath);
-	bool	LoadTerrainProject(const std::vector<std::wstring>& files);
+	bool	LoadTerrain(const wchar_t* filepath) override;
+	bool	LoadCameraTrajectory(const wchar_t* filepath) override;
+	bool	LoadTerrainProject(const std::vector<std::wstring>& files) override;
 
-	bool	IsTrajectoryLoaded(void) const;
+	bool	IsTrajectoryLoaded(void) const override;
 
-	void	Flythrough(unsigned message, double elapsedMillisec);
-	void	MoveCamera(unsigned message, float timeElapsed);
-	void	RotateCamera(unsigned message, float pitch, float yaw);
-	void	ResetCamera(void);
-	void	UpdateCameraProperties(unsigned message, float data);
+	void	Flythrough(unsigned message, double elapsedMillisec) override;
+	void	MoveCamera(unsigned message, float timeElapsed) override;
+	void	RotateCamera(unsigned message, float pitch, float yaw) override;
+	void	ResetCamera(void) override;
+	void	UpdateCameraProperties(unsigned message, float data) override;
 private:
+	std::vector < IRenderableInformation>	CollectIRenderableInfo();
 	void	AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int gridZ);
 };
-
+typedef std::shared_ptr<TerrainModel> TerrainModelPtr;
 #endif

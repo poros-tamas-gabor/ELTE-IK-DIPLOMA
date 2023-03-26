@@ -5,7 +5,6 @@
 #include "Persistence/ModelStructs.h"
 #include "Math/IInterpolation.h"
 #include "Persistence/EpochTime.h"
-#include "VertexPolygon.h"
 #include <DirectXMath.h>
 #include <vector>
 #include <ctime>
@@ -21,12 +20,12 @@ private:
 	std::vector<double>						m_elapsedmsecs;
 	std::vector<Vector3D>					m_positions;
 	std::vector<Vector3D>					m_rotations;
-	IRenderable<VertexPolyLine>*			m_renderable;
+	IRendarablePtr<VertexPolyLine> 			m_renderable;
 	Camera*									m_camera;
 	LinearInterpolation<double, Vector3D>	m_interpolation;
 
 public:
-	bool Initialize(const std::vector<CameraPose>& cameraPoses, IRenderable<VertexPolyLine>* renderable, Camera* camera);
+	bool Initialize(const std::vector<CameraPose>& cameraPoses, IRendarablePtr<VertexPolyLine>  renderable, Camera* camera);
 
 	void UpdateCamera(double elapsedmsecs);
 	void Reset();

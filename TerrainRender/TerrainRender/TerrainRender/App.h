@@ -22,9 +22,9 @@ private:
 	RenderWindow				_renderWindow;
 	
 	Timer						_timer;
-	TerrainModel				m_terrainModel;
-	TerrainView					m_terrainView;
-	CompositeController			m_terrainController;
+	TerrainModelPtr				m_terrainModel;
+	TerrainViewPtr				m_terrainView;
+	CompositeControllerPtr		m_terrainController;
 	IDataAccess*				m_dataAccess;
 
 

@@ -11,7 +11,10 @@ D3DView::D3DView() :
 	_depthStencilBuffer(nullptr),
 	_depthStencilView(nullptr),
 	_depthStencilState(nullptr),
-	_rasterState(nullptr) {}
+	_rasterState(nullptr),
+	_videoCardDescription(""),
+	_videoCardMemory(NULL)
+{}
 
 D3DView::~D3DView() {}
 

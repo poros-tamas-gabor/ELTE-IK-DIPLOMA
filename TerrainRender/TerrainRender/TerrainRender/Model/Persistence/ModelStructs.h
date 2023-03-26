@@ -2,6 +2,33 @@
 #define MODEL_STRUCTS_H
 
 #include "EpochTime.h"
+#include <DirectXMath.h>
+#include <string>
+
+
+struct VertexMesh
+{
+	DirectX::XMFLOAT3 position;
+	DirectX::XMFLOAT3 normal;
+	DirectX::XMFLOAT4 color;
+};
+
+struct VertexPolyLine
+{
+	DirectX::XMFLOAT3 position;
+	DirectX::XMFLOAT4 color;
+};
+
+struct IRenderableInformation
+{
+	unsigned			id;
+	std::wstring		name;
+	DirectX::XMMATRIX	localMatrix;
+	DirectX::XMFLOAT3	rotation;
+	DirectX::XMFLOAT3	scale;
+	DirectX::XMFLOAT3	translation;
+
+};
 
 struct ModelTime
 {

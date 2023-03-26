@@ -8,6 +8,6 @@ class IRenderableCreator
 {
 public:
 	virtual ~IRenderableCreator() = default;
-	virtual IRenderable<V>* CreateRenderable() const = 0;
+	virtual IRendarablePtr<V> CreateRenderable() const = 0;
 };
 #endif

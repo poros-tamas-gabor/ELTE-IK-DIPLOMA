@@ -2,14 +2,19 @@
 #define	LINE_LIST_H
 
 #include "IRenderable.h"
-#include "VertexPolygon.h"
 class LineList : public IRenderable<VertexPolyLine>
 {
 protected:
-	ID3D11Buffer* m_vertexBuffer;
-	unsigned int	_vertexCount;
-	IPixelShader* m_pixelShader;
-	IVertexShader* m_vertexShader;
+	ID3D11Buffer*		m_vertexBuffer;
+	unsigned int		_vertexCount;
+	IPixelShader*		m_pixelShader;
+	IVertexShader*		m_vertexShader;
+
+	std::wstring		m_name;
+	DirectX::XMFLOAT3	m_rotation;
+	DirectX::XMFLOAT3	m_scaling;
+	DirectX::XMFLOAT3	m_translation;
+	DirectX::XMMATRIX	m_localMatrix;
 
 public:
 	LineList() = default;
@@ -25,10 +30,19 @@ public:
 	int GetIndexCount() const;
 	int GetVertexCount() const;
 
+	void SetName(const std::wstring& name) override;
+	std::wstring GetName(void) override;
+	void Rotate(float yaw, float pitch, float roll) override;
+	void Translate(float x, float y, float z) override;
+	void Scale(float x, float y, float z) override;
+	void ResetTransformation() override;
+	DirectX::XMMATRIX GetLocalMatrix(void) override;
+
 protected:
 	bool InitializeBuffers(ID3D11Device*, VertexPolyLine* vertices, UINT indexCount);
 	void ShutdownBuffers();
 	virtual void RenderBuffers(ID3D11DeviceContext*);
+	void CalculateLocalMatrix(void);
 
 };
 #endif

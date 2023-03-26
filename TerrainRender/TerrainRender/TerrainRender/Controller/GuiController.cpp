@@ -3,6 +3,7 @@
 #include "../Model/TerrainModel.h"
 #include "../resource.h"
 #include "MessageSystem.h"
+#include <commdlg.h>
 
 GuiController::GuiController()
 {
@@ -228,7 +229,7 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 	}
 	}
 }
-void GuiController::SetTerrainModel(TerrainModel* pModel)
+void GuiController::SetTerrainModel(IModelPtr pModel)
 {
 	this->m_terrainModel = pModel;
 }
@@ -237,7 +238,7 @@ void GuiController::SetMouse(Mouse* mouse) {}
 void GuiController::SetKeyboard(Keyboard* keyboard) {}
 
 
-bool GuiController::Initialize(TerrainModel* pModel, Mouse* mouse, Keyboard* keyboard) 
+bool GuiController::Initialize(IModelPtr pModel, Mouse* mouse, Keyboard* keyboard)
 {
 	if (pModel == nullptr)
 		return false;

@@ -5,15 +5,16 @@
 #include "../Input/Keyboard.h"
 #include "IController.h"
 
-class TerrainModel;
+#include "../Model/TerrainModel.h"
+
 class ControllerFlythrough : public IController
 {
 private:
-	TerrainModel* m_terrainModel;
-	Mouse* m_mouse;
-	Keyboard* m_keyboard;
+	IModelPtr				m_terrainModel;
+	Mouse*					m_mouse;
+	Keyboard*				m_keyboard;
 	std::vector<unsigned>	m_handledMsgs;
-	MessageSystem* m_messageSystem;
+	MessageSystem*			m_messageSystem;
 
 	bool					m_isActive = false;
 	bool					m_isRunning = false;
@@ -26,11 +27,11 @@ public:
 
 	virtual bool CanHandle(unsigned int message) const override;
 	virtual void HandleMessage(unsigned int message, float* fparam, unsigned* uparam) override;
-	virtual void SetTerrainModel(TerrainModel* pModel) override;
+	virtual void SetTerrainModel(IModelPtr pModel) override;
 	virtual void SetMouse(Mouse* mouse) override;
 	virtual void SetKeyboard(Keyboard* keyboard) override;
 
-	virtual bool Initialize(TerrainModel* pModel, Mouse* mouse, Keyboard* keyboard) override;
+	virtual bool Initialize(IModelPtr pModel, Mouse* mouse, Keyboard* keyboard) override;
 	virtual bool IsActive() const  override;
 	virtual void Shutdown() override;
 

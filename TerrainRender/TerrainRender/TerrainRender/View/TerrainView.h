@@ -20,8 +20,8 @@ private:
 	D3DView					m_d3dView;
 	GuiView					m_guiView;
 
-	TerrainModel*			m_terrainModel;
-	IController*			m_terrainController;
+	TerrainModelPtr			m_terrainModel;
+	IControllerPtr			m_terrainController;
 
 	bool			Render();
 public:
@@ -35,14 +35,16 @@ public:
 	//void Update(const ModelEvent::Event& event) override;
 	//void ExecuteControl(eventType eventType, const void* data);
 
-	void SetController(IController* terrainController);
-	void SetModel(TerrainModel* terrainModel);
+	void SetController(IControllerPtr terrainController);
+	void SetModel(TerrainModelPtr terrainModel);
+
+	void HandleIRenderableInfo(const std::vector<IRenderableInformation>&) override;
 
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetDeviceContext();
 
 
 };
-
+typedef std::shared_ptr<TerrainView> TerrainViewPtr;
 
 #endif

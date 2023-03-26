@@ -3,19 +3,19 @@
 #include "LineList.h"
 #include "PolyLine.h"
 
-IRenderable<VertexMesh>* PolygonMeshCreator::CreateRenderable() const
+IRendarablePtr<VertexMesh> PolygonMeshCreator::CreateRenderable() const
 {
-	return new PolygonMesh;
+	return   std::make_shared<PolygonMesh>();
 }
 
-IRenderable<VertexPolyLine>* LineListCreator::CreateRenderable() const
+IRendarablePtr<VertexPolyLine> LineListCreator::CreateRenderable() const
 {
-	return new LineList;
+	return std::make_shared<LineList>();
 }
 
-IRenderable<VertexPolyLine>* PolyLineCreator::CreateRenderable() const
+IRendarablePtr<VertexPolyLine> PolyLineCreator::CreateRenderable() const
 {
-	return new PolyLine;
+	return std::make_shared<PolyLine>(); 
 }
 
 

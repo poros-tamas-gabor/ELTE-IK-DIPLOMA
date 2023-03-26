@@ -24,6 +24,11 @@
 class TerrainModel : public IModel
 {
 private:
+
+	std::time_t									m_epochTime = 1664534690;
+	double										m_lat = 47.497913;
+	double										m_longitude = 19.040236;
+
 	VertexShaderMesh							m_vertexShaderMesh;
 	PixelShaderMesh								m_pixelShaderMesh;
 	VertexShaderPolyLine						m_vertexShaderPolyLine;

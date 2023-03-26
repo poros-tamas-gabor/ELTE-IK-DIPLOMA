@@ -51,8 +51,11 @@ void CameraTrajectory::UpdateCamera(double elapsedmsec)
 	
 	this->m_camera->SetPosition(currentPosition.x, currentPosition.y, currentPosition.z);
 	this->m_camera->SetRotationRad(currentRotation.x, currentRotation.y, currentRotation.z);
+}
 
-
+EpochTime CameraTrajectory::GetCurrentEpochTime(void) const
+{
+	return this->m_start.AddMilliSeconds(m_elapsedmsec);
 }
 
 

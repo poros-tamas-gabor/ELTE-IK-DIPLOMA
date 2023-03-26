@@ -21,7 +21,7 @@ private:
 	std::vector<double>						m_elapsedmsecs;
 	std::vector<Vector3D>					m_positions;
 	std::vector<Vector3D>					m_rotations;
-	IRenderable<VertexPolyLine>*				m_renderable;
+	IRenderable<VertexPolyLine>*			m_renderable;
 	Camera*									m_camera;
 	LinearInterpolation<double, Vector3D>	m_interpolation;
 
@@ -30,6 +30,7 @@ public:
 
 	void UpdateCamera(double elapsedmsecs);
 	void Reset();
+	EpochTime GetCurrentEpochTime(void) const;
 
 
 	void Shutdown();

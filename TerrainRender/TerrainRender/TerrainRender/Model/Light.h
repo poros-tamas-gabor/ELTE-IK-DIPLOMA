@@ -2,6 +2,7 @@
 #define LIGHT_H
 
 #include <DirectXMath.h>
+#include "SunPosition.h"
 
 class Light
 {
@@ -17,7 +18,7 @@ public:
 	Light(const Light&) = delete;
 	Light& operator=(const Light&) = delete;
 
-	void Render();
+	void UpdateSunPosition(std::time_t currentEpochTime, double lat, double longitude);
 	void SetInverseDirection(const DirectX::XMFLOAT4& direction);
 	void SetDiffuseColor(const DirectX::XMFLOAT4& diffuseColor);
 	void SetAmbientColor(const DirectX::XMFLOAT4& ambientColor);

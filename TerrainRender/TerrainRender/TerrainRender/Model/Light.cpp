@@ -1,5 +1,6 @@
 #include "Light.h"
 
+
 void Light::SetAmbientColor(const DirectX::XMFLOAT4& ambientColor)
 {
 	this->_ambientColor = ambientColor;
@@ -13,9 +14,14 @@ void Light::SetInverseDirection(const DirectX::XMFLOAT4& direction)
 	this->_inverseDirection = direction;
 }
 
-void Light::Render()
+void Light::UpdateSunPosition(std::time_t currentEpochTime, double lat, double longitude)
 {
-
+	SunPosition sunposition;
+	sunposition.SetTimeLocation(currentEpochTime, lat, longitude);
+	sunposition.CalculateSunPosition();
+	double azimuth = sunposition.GetAzimuth();
+	double elevation = sunposition.GetElevation();
+	SetInverseDirectionBySunPosition(azimuth, elevation);
 }
 
 void Light::SetInverseDirectionBySunPosition(double azimuth, double elevation)

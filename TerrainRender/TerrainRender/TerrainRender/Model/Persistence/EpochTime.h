@@ -11,6 +11,8 @@ public:
 
     double diffInMillis(const EpochTime& other) const;
 
+    EpochTime AddMilliSeconds(double millisecond) const;
+
     // getters
     long long getSeconds() const;
     long long getNanoseconds() const;

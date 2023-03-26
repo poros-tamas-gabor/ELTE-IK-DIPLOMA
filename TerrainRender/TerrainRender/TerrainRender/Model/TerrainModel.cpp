@@ -83,11 +83,13 @@ void TerrainModel::Flythrough(unsigned message, double elapsedMillisec)
 	case IDM_CAMERA_TRAJECTORY_STOP:
 	{
 		this->m_cameraTrajectory.Reset();
+		this->m_light.UpdateSunPosition(m_cameraTrajectory.GetCurrentEpochTime().getSeconds(), m_lat, m_longitude);
 		break;
 	}
 	case IDM_CAMERA_TRAJECTORY_NEXT_FRAME:
 	{
 		this->m_cameraTrajectory.UpdateCamera(elapsedMillisec);
+		this->m_light.UpdateSunPosition(m_cameraTrajectory.GetCurrentEpochTime().getSeconds(), m_lat, m_longitude);
 		break;
 	}
 	}

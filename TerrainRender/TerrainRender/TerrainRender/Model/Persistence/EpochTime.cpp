@@ -37,6 +37,18 @@ double EpochTime::diffInMillis(const EpochTime& other) const
     return ellapsedMillisec;
 }
 
+EpochTime EpochTime::AddMilliSeconds(double millisecond) const
+{
+    long long sec = m_seconds + long long(millisecond / msecPerSec);
+    millisecond = fmod(millisecond, msecPerSec);
+    long long nsec = m_nanoseconds + long long(millisecond * nsecPermSec);
+    if (nsec >= nsecPerSec) {
+        sec += nsec / nsecPerSec;
+        nsec %= nsecPerSec;
+    }
+    return EpochTime(sec, nsec);
+}
+
 
 // getters
 long long EpochTime::getSeconds() const { return m_seconds; }

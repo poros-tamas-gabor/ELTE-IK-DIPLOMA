@@ -4,6 +4,7 @@
 #include "EpochTime.h"
 #include <DirectXMath.h>
 #include <string>
+#include <vector>
 
 
 struct VertexMesh
@@ -17,17 +18,6 @@ struct VertexPolyLine
 {
 	DirectX::XMFLOAT3 position;
 	DirectX::XMFLOAT4 color;
-};
-
-struct IRenderableInformation
-{
-	unsigned			id;
-	std::wstring		name;
-	DirectX::XMMATRIX	localMatrix;
-	DirectX::XMFLOAT3	rotation;
-	DirectX::XMFLOAT3	scale;
-	DirectX::XMFLOAT3	translation;
-
 };
 
 struct ModelTime
@@ -98,4 +88,45 @@ struct Facet
 };
 
 enum STLLineType { BEGIN, FACET, LOOP, VERTEX, ENDLOOP, ENDFACET, END };
+
+
+
+struct IRenderableState
+{
+	unsigned			id;
+	std::wstring		name;
+	DirectX::XMMATRIX	localMatrix;
+	DirectX::XMFLOAT3	rotation;
+	DirectX::XMFLOAT3	scale;
+	DirectX::XMFLOAT3	translation;
+};
+
+struct SunPositionState
+{
+	double azimuth;
+	double elevation;
+};
+struct FlythroughState
+{
+	unsigned			currentFrame;
+	EpochTime			currentEpochTime;
+	DirectX::XMFLOAT3	currentPosition;
+	DirectX::XMFLOAT3	currentRotation;
+	SunPositionState	currentSunPosition;
+};
+
+struct Explore3DState
+{
+	EpochTime			currentEpochTime;
+	DirectX::XMFLOAT3	currentPosition;
+	DirectX::XMFLOAT3	currentRotation;
+	SunPositionState	currentSunPosition;
+};
+
+struct IModelStateInformation
+{
+	std::vector<IRenderableState>		IRenderableInformation;
+	FlythroughState						flythroughstate;
+	Explore3DState						explore3Dstate;
+};
 #endif // !MODEL_VERTEX_H

@@ -28,6 +28,9 @@ GuiController::GuiController()
 	m_handledMsgs.push_back(IDC_SLIDER_FLYTHROUGH_SPEED);
 	m_handledMsgs.push_back(IDC_BUTTON_FIlE_TERRAIN_PROJECT);
 
+	m_handledMsgs.push_back(IDC_SLIDER_IRENDERABLE_SCALE);
+	m_handledMsgs.push_back(IDC_SLIDER_IRENDERABLE_ROTATION);
+	m_handledMsgs.push_back(IDC_SLIDER_IRENDERABLE_TRANSLATION);
 }
 GuiController::~GuiController() {}
 
@@ -218,15 +221,34 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 		this->m_messageSystem->Publish(IDCC_PAUSE_FLYTHROUGH ,NULL, NULL);
 		break;
 	}
-	case IDC_BUTTON_FLYTHROUGH_STOP:{
+	case IDC_BUTTON_FLYTHROUGH_STOP:
+	{
 		this->m_messageSystem->Publish(IDCC_STOP_FLYTHROUGH, NULL, NULL);
 		break;
 	}
-	case IDC_BUTTON_FLYTHROUGH_RECORD: {break; }
-	case IDC_SLIDER_FLYTHROUGH_SPEED: {
+	case IDC_BUTTON_FLYTHROUGH_RECORD: 
+	{break; }
+	case IDC_SLIDER_FLYTHROUGH_SPEED: 
+	{
 		this->m_messageSystem->Publish(IDCC_SPEED_FLYTHROUGH, fparam, uparam);
 		break;
 	}
+	case IDC_SLIDER_IRENDERABLE_SCALE: 		 
+	{
+		this->m_terrainModel->TransformIRenderable(IDM_TRANSFORMATION_IRENDERABLE_SCALE, *uparam, fparam);
+		break;
+	}
+	case IDC_SLIDER_IRENDERABLE_ROTATION:	 
+	{
+		this->m_terrainModel->TransformIRenderable(IDM_TRANSFORMATION_IRENDERABLE_ROTATION, *uparam, fparam);
+		break; 
+	}
+	case IDC_SLIDER_IRENDERABLE_TRANSLATION:
+	{
+		this->m_terrainModel->TransformIRenderable(IDM_TRANSFORMATION_IRENDERABLE_TRANSLATION, *uparam, fparam);
+		break;
+	}
+
 	}
 }
 void GuiController::SetTerrainModel(IModelPtr pModel)

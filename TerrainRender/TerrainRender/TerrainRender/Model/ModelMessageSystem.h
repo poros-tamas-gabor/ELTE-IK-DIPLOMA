@@ -11,7 +11,9 @@ private:
 
 public:
 	ModelMessageSystem() = default;
-	void PublishRenderableInformation(const std::vector<IRenderableInformation>&);
+	void PublishModelState(const std::vector<IRenderableState>&);
+	void PublishModelState(const FlythroughState&);
+	void PublishModelState(const Explore3DState&);
 	bool Subscribe(IViewPtr view);
 	bool Unsubscribe(IViewPtr view);
 

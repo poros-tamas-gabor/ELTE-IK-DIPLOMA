@@ -32,7 +32,7 @@ public:
 
 	void SetName(const std::wstring& name) override;
 	std::wstring GetName(void) override;
-	void Rotate(float yaw, float pitch, float roll) override;
+	void Rotate(float pitch, float yaw, float roll) override;
 	void Translate(float x, float y, float z) override;
 	void Scale(float x, float y, float z) override;
 	void ResetTransformation() override;

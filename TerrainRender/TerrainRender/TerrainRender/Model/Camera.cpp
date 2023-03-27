@@ -28,6 +28,17 @@ void Camera::SetRotationRad(float x, float y, float z)
 	this->_rotationZ = z;
 }
 
+DirectX::XMFLOAT3 Camera::GetPositionFloat3(void)
+{
+	DirectX::XMFLOAT3 position = { this->_positionX, this->_positionY, this->_positionZ };
+	return position;
+}
+DirectX::XMFLOAT3 Camera::GetRotationRadFloat3(void)
+{
+	DirectX::XMFLOAT3 rotation = { this->_rotationX, this->_rotationY, this->_rotationZ };
+	return rotation;
+}
+
 DirectX::XMVECTOR Camera::GetPosition(void)
 {
 	DirectX::XMFLOAT3 position = { this->_positionX, this->_positionY, this->_positionZ };

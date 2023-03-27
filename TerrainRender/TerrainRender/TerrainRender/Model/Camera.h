@@ -44,6 +44,8 @@ public:
 
 	DirectX::XMVECTOR GetPosition(void);
 	DirectX::XMVECTOR GetRotationRad(void);
+	DirectX::XMFLOAT3 GetPositionFloat3(void);
+	DirectX::XMFLOAT3 GetRotationRadFloat3(void);
 
 	void Render();
 	DirectX::XMMATRIX GetViewMatrix(void);

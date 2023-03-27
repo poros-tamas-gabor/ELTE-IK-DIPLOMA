@@ -6,10 +6,12 @@
 #include "../Model/Persistence/ModelStructs.h"
 class IView
 {
+
 public:
 	virtual ~IView() {}
-	virtual void HandleIRenderableInfo(const std::vector<IRenderableInformation>&) = 0;
-	//virtual void Update(const ModelEvent::Event& event) = 0;
+	virtual void HandleIModelState(const std::vector<IRenderableState>&) = 0;
+	virtual void HandleIModelState(const FlythroughState&) = 0;
+	virtual void HandleIModelState(const Explore3DState&) = 0;
 };
 
 typedef std::shared_ptr<IView> IViewPtr;

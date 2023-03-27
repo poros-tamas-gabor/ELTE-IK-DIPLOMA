@@ -1,10 +1,24 @@
 #include "ModelMessageSystem.h"
 
-void ModelMessageSystem::PublishRenderableInformation(const std::vector<IRenderableInformation>& IRenderableinfo)
+void ModelMessageSystem::PublishModelState(const std::vector<IRenderableState>& IRenderableinfo)
 {
 	for (IViewPtr view : m_subscriber)
 	{
-		view->HandleIRenderableInfo(IRenderableinfo);
+		view->HandleIModelState(IRenderableinfo);
+	}
+}
+void ModelMessageSystem::PublishModelState(const FlythroughState& state)
+{
+	for (IViewPtr view : m_subscriber)
+	{
+		view->HandleIModelState(state);
+	}
+}
+void ModelMessageSystem::PublishModelState(const Explore3DState& state)
+{
+	for (IViewPtr view : m_subscriber)
+	{
+		view->HandleIModelState(state);
 	}
 }
 bool ModelMessageSystem::Subscribe(IViewPtr view)

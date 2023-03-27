@@ -38,7 +38,9 @@ public:
 	void SetController(IControllerPtr terrainController);
 	void SetModel(TerrainModelPtr terrainModel);
 
-	void HandleIRenderableInfo(const std::vector<IRenderableInformation>&) override;
+	void HandleIModelState(const std::vector<IRenderableState>&) override;	
+	void HandleIModelState(const FlythroughState&) override;
+	void HandleIModelState(const Explore3DState&) override;
 
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetDeviceContext();

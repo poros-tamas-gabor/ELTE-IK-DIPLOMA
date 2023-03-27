@@ -126,7 +126,7 @@ std::wstring LineList::GetName()
 {
 	return m_name;
 }
-void LineList::Rotate(float yaw, float pitch, float roll)
+void LineList::Rotate(float pitch, float yaw, float roll)
 {
 	m_rotation = { pitch, yaw, roll };
 	CalculateLocalMatrix();

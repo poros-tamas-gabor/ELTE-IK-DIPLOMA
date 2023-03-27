@@ -14,17 +14,34 @@
 class GuiView : public IView
 {
 private:
-	IControllerPtr			m_terrainController;
-
+	struct IRenderableTransformation
+	{
+		unsigned	id;
+		float	rotation[3]		= {0.0f,0.0f,0.0f};
+		float	tranlation[3]	= { 0.0f,0.0f,0.0f };
+		float	scaling			= 1.0f;
+	};
+private:
+	IControllerPtr							m_terrainController;
 	//ModelStates:
-	std::vector<IRenderableInformation> m_IRenderableInfo;
+	std::vector<IRenderableTransformation>	m_trasnformations;
+	std::vector<IRenderableState>			m_IRenderableState;
+	FlythroughState							m_flythroughState;
+	Explore3DState							m_explore3dState;
 public:
 	bool Initalize(ID3D11Device* _device, ID3D11DeviceContext* _deviceContext, IControllerPtr controller);
 
 	void BeginFrame();
 	void EndFrame();
 	void ShowSettingWindow();
-	void HandleIRenderableInfo(const std::vector<IRenderableInformation>&) override;
+	void MenuBar();
+	void GeneralTab();
+	void FlythroughTab();
+	void Explore3DTab();
+
+	void HandleIModelState(const std::vector<IRenderableState>&) override;
+	void HandleIModelState(const FlythroughState&) override;
+	void HandleIModelState(const Explore3DState&) override;
 
 	void Shutdown();
 };

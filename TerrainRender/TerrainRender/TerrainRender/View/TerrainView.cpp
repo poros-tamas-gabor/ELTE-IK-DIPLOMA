@@ -76,7 +76,16 @@ void TerrainView::SetModel(TerrainModelPtr terrainModel)
 	this->m_terrainModel = terrainModel;
 }
 
-void TerrainView::HandleIRenderableInfo(const std::vector<IRenderableInformation>& irenderableinfo) {
-	this->m_guiView.HandleIRenderableInfo(irenderableinfo);
+void TerrainView::HandleIModelState(const std::vector<IRenderableState>& state) {
+	this->m_guiView.HandleIModelState(state);
+}
+
+void TerrainView::HandleIModelState(const FlythroughState& state)
+{
+	this->m_guiView.HandleIModelState(state);
+}
+void TerrainView::HandleIModelState(const Explore3DState& state) 
+{
+	this->m_guiView.HandleIModelState(state);
 }
 

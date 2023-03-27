@@ -126,12 +126,12 @@ public:
 		}
 	}
 	
-	void RotateComponent(unsigned componentID, float yaw, float pitch, float roll)
+	void RotateComponent(unsigned componentID, float pitch, float yaw,  float roll)
 	{
 		for (IRendarablePtr<V> renderable : m_renderables)
 		{
 			if(renderable->GetID() == componentID)
-				renderable->Rotate(yaw, pitch, roll);
+				renderable->Rotate(pitch, yaw,  roll);
 		}
 	}
 	void TranslateComponent(unsigned componentID, float x, float y, float z)
@@ -151,11 +151,11 @@ public:
 		}
 	}
 
-	void CollectIRenderableInformation(std::vector<IRenderableInformation>& vector)
+	void CollectIRenderableState(std::vector<IRenderableState>& vector)
 	{
 		for (IRendarablePtr<V> renderable : m_renderables)
 		{
-			IRenderableInformation info;
+			IRenderableState info;
 			info.id = renderable->GetID();
 			info.name = renderable->GetName();
 

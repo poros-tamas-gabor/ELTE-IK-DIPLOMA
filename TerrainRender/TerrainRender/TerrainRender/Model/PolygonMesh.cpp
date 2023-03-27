@@ -174,7 +174,7 @@ std::wstring PolygonMesh::GetName(void)
 {
 	return m_name;
 }
-void PolygonMesh::Rotate(float yaw, float pitch, float roll)
+void PolygonMesh::Rotate(float pitch, float yaw, float roll)
 {
 	m_rotation = { pitch, yaw, roll };
 	CalculateLocalMatrix();

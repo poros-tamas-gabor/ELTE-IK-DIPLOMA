@@ -30,6 +30,7 @@ public:
 	virtual void	RotateCamera(unsigned message, float pitch, float yaw) = 0;
 	virtual void	ResetCamera(void) = 0;
 	virtual void	UpdateCameraProperties(unsigned message, float data) = 0;
+	virtual void	TransformIRenderable(unsigned message, unsigned id, float parameters[]) = 0;
 };
 
 typedef std::shared_ptr<IModel> IModelPtr;

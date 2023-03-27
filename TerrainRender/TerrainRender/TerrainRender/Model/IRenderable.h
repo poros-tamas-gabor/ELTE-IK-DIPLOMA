@@ -29,7 +29,7 @@ public:
 
 	virtual void SetName(const std::wstring& name) = 0;
 	virtual std::wstring GetName(void) = 0;
-	virtual void Rotate(float yaw, float pitch, float roll) = 0;
+	virtual void Rotate(float pitch, float yaw, float roll) = 0;
 	virtual void Translate(float x, float y, float z) = 0;
 	virtual void Scale(float x, float y, float z) = 0;
 	virtual void ResetTransformation() = 0;

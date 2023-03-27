@@ -48,3 +48,12 @@ DirectX::XMFLOAT4 Light::GetInverseDirection(void) const
 {
 	return this->_inverseDirection;
 }
+
+double Light::GetAzimuth(void) const
+{
+	return m_azimuth;
+}
+double Light::GetElevation(void) const
+{
+	return m_elevation;
+}

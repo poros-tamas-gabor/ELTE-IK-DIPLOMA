@@ -102,24 +102,6 @@
     <ClCompile Include="Timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ImGui\imgui_impl_win32.cpp">
-      <Filter>Resource Files\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_widgets.cpp">
-      <Filter>Resource Files\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui.cpp">
-      <Filter>Resource Files\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_demo.cpp">
-      <Filter>Resource Files\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_draw.cpp">
-      <Filter>Resource Files\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_impl_dx11.cpp">
-      <Filter>Resource Files\ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="Model\Persistence\DataAccess.cpp">
       <Filter>Source Files\Model\Persistence</Filter>
     </ClCompile>
@@ -183,9 +165,6 @@
     <ClCompile Include="StringConverter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ImGui\imguistyleserializer.cpp">
-      <Filter>Resource Files\ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="Model\Persistence\TextFileDataAccessAsync.cpp">
       <Filter>Source Files\Model\Persistence</Filter>
     </ClCompile>
@@ -203,6 +182,33 @@
     </ClCompile>
     <ClCompile Include="Model\VertexShaderPolyLine.cpp">
       <Filter>Header Files\Model\Shader\Ployline</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelMessageSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_draw.cpp">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_dx11.cpp">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_win32.cpp">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_tables.cpp">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_widgets.cpp">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imguistyleserializer.cpp">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui.cpp">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_demo.cpp">
+      <Filter>Resource Files\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -238,30 +244,6 @@
     </ClInclude>
     <ClInclude Include="Controller\Controller3DExplore.h">
       <Filter>Header Files\Controller</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui_impl_dx11.h">
-      <Filter>Resource Files\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui_impl_win32.h">
-      <Filter>Resource Files\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui_internal.h">
-      <Filter>Resource Files\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imstb_rectpack.h">
-      <Filter>Resource Files\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imstb_textedit.h">
-      <Filter>Resource Files\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imstb_truetype.h">
-      <Filter>Resource Files\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imconfig.h">
-      <Filter>Resource Files\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui.h">
-      <Filter>Resource Files\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="Controller\CompositeController.h">
       <Filter>Header Files\Controller</Filter>
@@ -329,12 +311,6 @@
     <ClInclude Include="Model\RenderableCreator.h">
       <Filter>Header Files\Model\Renderable</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Vertex.h">
-      <Filter>Header Files\Model\Renderable</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\VertexPolygon.h">
-      <Filter>Header Files\Model\Renderable</Filter>
-    </ClInclude>
     <ClInclude Include="Model\Math\IInterpolation.h">
       <Filter>Header Files\Model\Math</Filter>
     </ClInclude>
@@ -362,9 +338,6 @@
     <ClInclude Include="TRException.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\imguistyleserializer.h">
-      <Filter>Resource Files\ImGui</Filter>
-    </ClInclude>
     <ClInclude Include="Model\Persistence\ICallable.h">
       <Filter>Header Files\Model\Interface</Filter>
     </ClInclude>
@@ -382,6 +355,36 @@
     </ClInclude>
     <ClInclude Include="Model\VertexShaderPolyLine.h">
       <Filter>Header Files\Model\Shader\Ployline</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelMessageSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_dx11.h">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_win32.h">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_internal.h">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imguistyleserializer.h">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_rectpack.h">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_textedit.h">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_truetype.h">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imconfig.h">
+      <Filter>Resource Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui.h">
+      <Filter>Resource Files\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

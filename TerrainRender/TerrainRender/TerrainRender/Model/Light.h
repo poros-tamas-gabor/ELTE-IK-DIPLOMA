@@ -12,6 +12,9 @@ private:
 	DirectX::XMFLOAT4 _diffuseColor = {0.4f, 0.4f, 0.4f, 1.0f};
 	DirectX::XMFLOAT4 _inverseDirection = {1.0f, 1.0f, 1.0f, 1.0f};
 
+	double m_azimuth;
+	double m_elevation;
+
 public:
 	Light() = default;
 	~Light() = default;
@@ -27,6 +30,8 @@ public:
 	DirectX::XMFLOAT4 GetDiffuseColor( void ) const;
 	DirectX::XMFLOAT4 GetAmbientColor( void ) const;
 	DirectX::XMFLOAT4 GetInverseDirection( void ) const;
+	double GetAzimuth(void) const;
+	double GetElevation(void) const;
 };
 
 #endif

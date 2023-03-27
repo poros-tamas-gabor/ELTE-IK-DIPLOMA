@@ -103,30 +103,26 @@ struct IRenderableState
 
 struct SunPositionState
 {
-	double azimuth;
-	double elevation;
+	double azimuth = 0;
+	double elevation = 0;
 };
 struct FlythroughState
 {
-	unsigned			currentFrame;
-	EpochTime			currentEpochTime;
-	DirectX::XMFLOAT3	currentPosition;
-	DirectX::XMFLOAT3	currentRotation;
+	bool				IsTrajectoryLoaded	= false;
+	unsigned			currentFrame		= 0;
+	EpochTime			currentEpochTime	= { 0,0 };
+	DirectX::XMFLOAT3	currentPosition		= { 0,0,0 };
+	DirectX::XMFLOAT3	currentRotation		= { 0,0,0 };
 	SunPositionState	currentSunPosition;
 };
 
 struct Explore3DState
 {
-	EpochTime			currentEpochTime;
-	DirectX::XMFLOAT3	currentPosition;
-	DirectX::XMFLOAT3	currentRotation;
+	EpochTime			currentEpochTime	= { 0,0 };
+	DirectX::XMFLOAT3	currentPosition		= { 0,0,0 };
+	DirectX::XMFLOAT3	currentRotation		= { 0,0,0 };
 	SunPositionState	currentSunPosition;
 };
 
-struct IModelStateInformation
-{
-	std::vector<IRenderableState>		IRenderableInformation;
-	FlythroughState						flythroughstate;
-	Explore3DState						explore3Dstate;
-};
+
 #endif // !MODEL_VERTEX_H

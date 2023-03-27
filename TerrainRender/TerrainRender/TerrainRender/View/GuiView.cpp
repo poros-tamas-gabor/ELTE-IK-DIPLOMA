@@ -3,8 +3,49 @@
 #include "../resource.h"
 #include "../ImGui/imguistyleserializer.h" 
 #include "../StringConverter.h"
+#include "../ImGui/imgui_internal.h"
 #include <iomanip>
 #include <ctime>
+
+
+bool ToggleButton(const char* str_id, bool* isFlythroughOn, bool isActive)
+{
+    ImVec4* colors = ImGui::GetStyle().Colors;
+    ImVec2 p = ImGui::GetCursorScreenPos();
+    ImDrawList* draw_list = ImGui::GetWindowDrawList();
+
+    float height = ImGui::GetFrameHeight();
+    float width = height * 1.55f;
+    float radius = height * 0.50f;
+
+    bool isClicked = false;
+
+    ImGui::InvisibleButton(str_id, ImVec2(width, height));
+    if (ImGui::IsItemClicked() && isActive) 
+    {
+        *isFlythroughOn = !*isFlythroughOn;
+        isClicked = true;
+    }
+    ImGuiContext& gg = *GImGui;
+    float ANIM_SPEED = 0.085f;
+    if (gg.LastActiveId == gg.CurrentWindow->GetID(str_id))
+        float t_anim = ImSaturate(gg.LastActiveIdTimer / ANIM_SPEED);
+    if (ImGui::IsItemHovered())
+        draw_list->AddRectFilled(p, ImVec2(p.x + width, p.y + height), ImGui::GetColorU32(*isFlythroughOn ? colors[ImGuiCol_ButtonActive] : ImVec4(0.78f, 0.78f, 0.78f, 1.0f)), height * 0.5f);
+    else
+        draw_list->AddRectFilled(p, ImVec2(p.x + width, p.y + height), ImGui::GetColorU32(*isFlythroughOn ? colors[ImGuiCol_Button] : ImVec4(0.85f, 0.85f, 0.85f, 1.0f)), height * 0.50f);
+    draw_list->AddCircleFilled(ImVec2(p.x + radius + (*isFlythroughOn ? 1 : 0) * (width - radius * 2.0f), p.y + radius), radius - 1.5f, IM_COL32(255, 255, 255, 255));
+
+    ImGui::SameLine();
+
+    if(*isFlythroughOn)
+        ImGui::Text("Flythrough");
+    else
+        ImGui::Text("Explore 3D");
+
+    return isClicked;
+
+}
 
 const static float PI = 3.14159265358979323846;
 bool GuiView::Initalize(ID3D11Device* _device, ID3D11DeviceContext* _deviceContext, IControllerPtr controller)
@@ -31,7 +72,18 @@ void GuiView::ShowSettingWindow()
     ImGui::Begin("Setting Window", &show_setting_window, ImGuiWindowFlags_MenuBar ); 
     
     MenuBar();
+    static bool isFlythroughOn = false;
+    bool isTrajectoryLoaded = m_flythroughState.IsTrajectoryLoaded;
+    if (ToggleButton("Mode", &isFlythroughOn, isTrajectoryLoaded))
+    {
+        if(isFlythroughOn)
+            this->m_terrainController->HandleMessage(IDC_BUTTON_FLYTHROUGH_MODE, NULL, NULL);
+        else
+            this->m_terrainController->HandleMessage(IDC_BUTTON_3DEXPLORE_MODE, NULL, NULL);
+    }
 
+
+    ImGui::Text("isFlyModeon: %d", isFlythroughOn);
     if (ImGui::BeginTabBar("TabBar"))
     {
         if (ImGui::BeginTabItem("General"))
@@ -39,17 +91,23 @@ void GuiView::ShowSettingWindow()
             GeneralTab();
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("Explore 3D"))
+        if (!isFlythroughOn)
         {
-            Explore3DTab();
-            ImGui::EndTabItem();
+            if (ImGui::BeginTabItem("Explore 3D"))
+            {
+                Explore3DTab();
+                ImGui::EndTabItem();
+            }
         }
-        
-        if (ImGui::BeginTabItem("Flythrough"))
+        if (isFlythroughOn)
         {
-            FlythroughTab();
-            ImGui::EndTabItem();
+            if (ImGui::BeginTabItem("Flythrough"))
+            {
+                FlythroughTab();
+                ImGui::EndTabItem();
+            }
         }
+
         ImGui::EndTabBar();
     }
     ImGui::End();
@@ -84,24 +142,6 @@ void GuiView::MenuBar()
 
 void GuiView::GeneralTab()
 {
-    static bool selected[2] = { true, false };
-    const char* mode[2] = { "3DExplore", "Flythrough" };
-    const unsigned msgs[2] = { IDC_BUTTON_3DEXPLORE_MODE, IDC_BUTTON_FLYTHROUGH_MODE };
-
-    for (int i = 0; i < 2; i++)
-    {
-        ImGui::PushID(i);
-        if (ImGui::Selectable(mode[i], selected + i, 0, ImVec2(50, 50)))
-        {
-            this->m_terrainController->HandleMessage(msgs[i], NULL, NULL);
-            selected[(i + 1) % 2] ^= 1;
-        }
-
-        if (i == 0)
-            ImGui::SameLine();
-        ImGui::PopID();
-    }
-
     if (ImGui::CollapsingHeader("Camera Properties"))
     {
         static float fov = PI / 2;
@@ -320,6 +360,7 @@ void GuiView::Shutdown()
     ImGui_ImplDX11_Shutdown();
     
 }
+
 
 
 

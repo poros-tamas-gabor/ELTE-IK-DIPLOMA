@@ -78,7 +78,7 @@ void TerrainModel::Flythrough(unsigned message, double elapsedMillisec)
 {
 	switch (message)
 	{
-
+		//TODO what happen when the trajectory ends
 	case IDM_CAMERA_TRAJECTORY_START:
 	case IDM_CAMERA_TRAJECTORY_STOP:
 	{
@@ -195,7 +195,9 @@ bool	TerrainModel::LoadCameraTrajectory(const wchar_t* filepath)
 		m_polylines.Add(&vertices.at(0), vertices.size(), creator, filepath);
 		IRendarablePtr<VertexPolyLine> polyline = m_polylines.GetLastAddedComponent();
 		m_cameraTrajectory.Initialize(cameraPoses, polyline, &m_camera);
+
 		this->m_modelMessageSystem.PublishModelState(CollectIRenderableInfo());
+		this->m_modelMessageSystem.PublishModelState(CollectFlythroughState());
 	}
 
 	return result;
@@ -285,6 +287,7 @@ FlythroughState	TerrainModel::CollectFlythroughState(void)
 	FlythroughState state;
 	//TODO currentFrame
 	state.currentFrame = 0;
+	state.IsTrajectoryLoaded = this->IsTrajectoryLoaded();
 	state.currentEpochTime = m_cameraTrajectory.GetCurrentEpochTime();
 	state.currentPosition = m_camera.GetPositionFloat3();
 	state.currentRotation = m_camera.GetRotationRadFloat3();

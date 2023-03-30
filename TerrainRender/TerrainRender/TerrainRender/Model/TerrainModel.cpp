@@ -153,9 +153,23 @@ bool TerrainModel::LoadTerrain(const wchar_t* filepath)
 	std::vector<VertexMesh> vertices;
 
 
-	bool bresult = m_persistence->LoadTerrain(filepath, vertices);
+	bool bresult = m_persistence->LoadTerrain(filepath);
 	if (bresult)
 	{
+		const std::vector<Facet>& facets = m_persistence->GetFacets();
+		for (const Facet& facet : facets)
+		{
+			for (int i = 0; i < 3; i++)
+			{
+			    VertexMesh vertex;
+			    vertex.color = { 1.0f, 1.0f, 1.0f, 1.0f };
+			    vertex.normal = { (float)facet.normal[0], (float)facet.normal[2],(float)facet.normal[1] };
+			    vertex.position = { (float)facet.position[2-i][0], (float)facet.position[2-i][2], (float)facet.position[2-i][1] };
+			
+			    vertices.push_back(vertex);
+			}
+		}
+
 		pVertices = &vertices.at(0);
 		vertexCount = vertices.size();
 		PolygonMeshCreator creator;

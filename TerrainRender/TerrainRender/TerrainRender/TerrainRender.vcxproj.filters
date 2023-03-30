@@ -204,7 +204,7 @@
     <ClCompile Include="ImGui\imgui_demo.cpp">
       <Filter>Resource Files\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Persistence\TextFileDataAccessAsync.cpp">
+    <ClCompile Include="Model\Persistence\FileDataAccessAsync.cpp">
       <Filter>Source Files\Model\Persistence</Filter>
     </ClCompile>
   </ItemGroup>

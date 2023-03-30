@@ -171,7 +171,7 @@
     <ClCompile Include="Model\Persistence\EpochTime.cpp" />
     <ClCompile Include="Model\LineList.cpp" />
     <ClCompile Include="Model\Persistence\ReadSTLChunk.cpp" />
-    <ClCompile Include="Model\Persistence\TextFileDataAccessAsync.cpp" />
+    <ClCompile Include="Model\Persistence\FileDataAccessAsync.cpp" />
     <ClCompile Include="Model\PixelShaderPolyLine.cpp" />
     <ClCompile Include="Model\PolygonMesh.cpp" />
     <ClCompile Include="Model\PixelShaderMesh.cpp" />

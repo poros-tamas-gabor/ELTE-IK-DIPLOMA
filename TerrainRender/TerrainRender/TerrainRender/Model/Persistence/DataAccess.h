@@ -11,8 +11,9 @@ class IDataAccess
 {
 public:
 	virtual ~IDataAccess() = default;
-	virtual bool LoadTerrain(const wchar_t*, std::vector<VertexMesh>&) = 0;
+	virtual bool LoadTerrain(const wchar_t*) = 0;
     virtual bool LoadCameraTrajectory(const wchar_t*, std::vector<CameraPose>&) = 0;
+    virtual const std::vector<Facet>& GetFacets(void) = 0;
 };
 
 class BinaryFileDataAccessAsync : public IDataAccess {
@@ -26,13 +27,14 @@ private:
     bool ReadFile(const std::wstring& filepath);
     int GetNumThreads(int fileSize);
     bool CreateCameraPose(CameraPose& cameraPose, const std::string& line, const std::vector<std::string>& headers);
+    const std::vector<Facet>& GetFacets(void);
 
 public:
     BinaryFileDataAccessAsync() = default;
     BinaryFileDataAccessAsync(const BinaryFileDataAccessAsync&) = delete;
     BinaryFileDataAccessAsync& operator=(const BinaryFileDataAccessAsync&) = delete;
     ~BinaryFileDataAccessAsync() = default;
-    bool LoadTerrain(const wchar_t* filename, std::vector<VertexMesh>& vertices) override;
+    bool LoadTerrain(const wchar_t* filename) override;
     bool LoadCameraTrajectory(const wchar_t*, std::vector<CameraPose>& cameraPoses) override;
 };
 #endif // ! PERSISTENCE_H

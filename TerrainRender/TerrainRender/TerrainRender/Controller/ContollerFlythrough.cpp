@@ -8,6 +8,7 @@ ControllerFlythrough::ControllerFlythrough()
 	m_handledMsgs.push_back(IDC_TIME_ELAPSED);
 	m_handledMsgs.push_back(IDCC_ACTIVATE_FLYTHROUGH);
 	m_handledMsgs.push_back(IDCC_ACTIVATE_3DEXPLORE);
+	m_handledMsgs.push_back(IDCC_SPEED_FLYTHROUGH);
 	m_handledMsgs.push_back(IDCC_START_FLYTHROUGH);
 	m_handledMsgs.push_back(IDCC_PAUSE_FLYTHROUGH);
 	m_handledMsgs.push_back(IDCC_STOP_FLYTHROUGH);

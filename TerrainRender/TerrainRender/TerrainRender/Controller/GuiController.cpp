@@ -113,6 +113,10 @@ void GuiController::OpenFileDialogMultipleSelection(std::vector<std::wstring>& f
 		wchar_t* str = ofn.lpstrFile;
 		std::wstring directory = str;
 		str += (directory.length() + 1);
+		
+		//Only one element was selected
+		if (*str == '\0')
+			files.push_back(directory);
 		while (*str) {
 			std::wstring filename = str;
 			str += (filename.length() + 1);

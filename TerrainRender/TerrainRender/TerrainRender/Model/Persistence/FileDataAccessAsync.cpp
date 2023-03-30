@@ -39,18 +39,12 @@ bool BinaryFileDataAccessAsync::ReadFile(const std::wstring& filepath)
         int fileSize = file.tellg();
         file.seekg(0, std::ios::beg);
 
-        // Check the file header
-        char header[80];
-        file.read(header, 80);
-        errormsg = L"Invalid STL file header" + std::wstring(filepath);
-        THROW_TREXCEPTION_IF_FAILED((std::string(header, 5) == "COLOR"), errormsg);
-        THROW_TREXCEPTION_IF_FAILED((std::string(header + 10, 8) == "MATERIAL"), errormsg);
-  
         // Read the number of triangles
         int num_triangles;
+        file.seekg(80, std::ios_base::beg);
         file.read(reinterpret_cast<char*>(&num_triangles), sizeof(num_triangles));
-        errormsg = L"STL file contains no triangles" + std::wstring(filepath);
-        THROW_TREXCEPTION_IF_FAILED((num_triangles > 0), errormsg);
+        errormsg = L"Invalid binary STL file" + std::wstring(filepath);
+        THROW_TREXCEPTION_IF_FAILED((fileSize == 84 + 50 * num_triangles), errormsg);
 
         file.close();
 
@@ -102,35 +96,24 @@ bool BinaryFileDataAccessAsync::ReadFile(const std::wstring& filepath)
 }
 
 
-bool BinaryFileDataAccessAsync::LoadTerrain(const wchar_t* filename, std::vector<VertexMesh>& vertices)
+bool BinaryFileDataAccessAsync::LoadTerrain(const wchar_t* filename)
 {
     std::time_t now = std::time(NULL);
     m_faces.clear();
-    vertices.clear();
+    bool success = false;
+
 
     try
     {
 
-    this->ReadFile(filename);
+     success = this->ReadFile(filename);
 
-    for (const Facet& facet : m_faces)
-    {
-        for (int i = 0; i < 3; i++)
-        {
-            VertexMesh vertex;
-            vertex.color = { 1.0f, 1.0f, 1.0f, 1.0f };
-            vertex.normal = { (float)facet.normal[0], (float)facet.normal[1],(float)facet.normal[2] };
-            vertex.position = { (float)facet.position[i][0], (float)facet.position[i][1], (float)facet.position[i][2] };
-
-            vertices.push_back(vertex);
-        }
-    }
     std::time_t end = std::time(NULL);
     std::wstring str = L"Loading time : in sec: ";
     str += std::to_wstring(end - now);
     str += L"\n";
     OutputDebugString(str.c_str());
-    return !vertices.empty();
+    return success;
     }
 
     catch (TRException& e)
@@ -146,6 +129,11 @@ bool BinaryFileDataAccessAsync::LoadTerrain(const wchar_t* filename, std::vector
         ErrorHandler::Log("Unknown exception");
     }
     return false;
+}
+
+const std::vector<Facet>& BinaryFileDataAccessAsync::GetFacets(void)
+{
+    return m_faces;
 }
 bool BinaryFileDataAccessAsync::CreateCameraPose(CameraPose& cameraPose, const std::string& line, const std::vector<std::string>& headers)
 {

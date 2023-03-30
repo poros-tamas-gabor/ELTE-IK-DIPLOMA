@@ -102,9 +102,6 @@
     <ClCompile Include="Timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Persistence\DataAccess.cpp">
-      <Filter>Source Files\Model\Persistence</Filter>
-    </ClCompile>
     <ClCompile Include="View\D3DView.cpp">
       <Filter>Source Files\View</Filter>
     </ClCompile>
@@ -165,9 +162,6 @@
     <ClCompile Include="StringConverter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Persistence\TextFileDataAccessAsync.cpp">
-      <Filter>Source Files\Model\Persistence</Filter>
-    </ClCompile>
     <ClCompile Include="Model\Persistence\ReadSTLChunk.cpp">
       <Filter>Header Files\Model\Persistence\Async</Filter>
     </ClCompile>
@@ -209,6 +203,9 @@
     </ClCompile>
     <ClCompile Include="ImGui\imgui_demo.cpp">
       <Filter>Resource Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Persistence\TextFileDataAccessAsync.cpp">
+      <Filter>Source Files\Model\Persistence</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

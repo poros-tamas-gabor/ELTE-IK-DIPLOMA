@@ -15,33 +15,18 @@ class ReadSTLChunk : public ICallable
 {
 private:
 	const std::wstring& m_filepath;
-	int m_start;
-	int m_end;
-	std::mutex& m_mutex;
-	std::vector<Facet>& m_faces;
+	int m_begin;
+	int m_numOfFacets;
+	//std::mutex& m_mutex;
+	std::vector<Facet>* m_facets;
 	
 
 public:
-	ReadSTLChunk(const std::wstring& filepath, int start, int end, TextFileDataAccessAsync* persistence);
+	ReadSTLChunk(const std::wstring& filepath, int beginInBytes, int numOfFacets, std::vector<Facet>* facets);
 	void ReadChunk();
-	bool CreateFacet(Facet& facet, const std::string& line, STLLineType& type, int& vertexCount);
 	virtual void operator()() override;
 };
 
 typedef std::shared_ptr<ReadSTLChunk> ReadSTLChunkPtr;
 
-class ReadSTLChunkCreator : public ICallableCreator
-{
-private:
-	std::wstring filepath;
-	int start;
-	int end;
-	TextFileDataAccessAsync* persistence;
-
-public:
-	virtual void Initialize(const std::wstring& filepath, int start, int end, TextFileDataAccessAsync* persistence) override;
-	virtual ICallablePtr Create() override;
-};
-
-typedef std::shared_ptr<ReadSTLChunkCreator> ReadSTLChunkCreatorPtr;
 #endif

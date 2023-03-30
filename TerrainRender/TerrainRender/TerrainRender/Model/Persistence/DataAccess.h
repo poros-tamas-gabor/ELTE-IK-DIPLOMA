@@ -15,40 +15,23 @@ public:
     virtual bool LoadCameraTrajectory(const wchar_t*, std::vector<CameraPose>&) = 0;
 };
 
-class TextFileDataAccess : public IDataAccess {
-
-private:
-    bool CreateVertex(VertexMesh& vertex, const std::string& line, std::vector<VertexMesh>& vertices, STLLineType& type, int& vertexCount);
-    bool CreateCameraPose(CameraPose& cameraPose, const std::string& line, const std::vector<std::string>& headers);
-
-public:
-    TextFileDataAccess() = default;
-    TextFileDataAccess(const TextFileDataAccess&) = delete;
-    TextFileDataAccess& operator=(const TextFileDataAccess&) = delete;
-    ~TextFileDataAccess() = default;
-    bool LoadTerrain(const wchar_t* filename, std::vector<VertexMesh>& vertices) override;
-    bool LoadCameraTrajectory(const wchar_t* filename, std::vector<CameraPose>& cameraPoses) override;
-};
-
-class TextFileDataAccessAsync : public IDataAccess {
+class BinaryFileDataAccessAsync : public IDataAccess {
 
     friend class ReadSTLChunk;
 
 private:
-    const int minChunkSize = 2629781;
-    std::mutex m_mutex;
+    const int minChunkSize = 50000;
     std::vector<Facet> m_faces;
 private:
-    void ReadChunk(const std::wstring& filepath, int start, int end);
-    bool ReadFile(const std::wstring& filepath, ICallableCreatorPtr creator);
-    bool CreateFacet(Facet& facet, const std::string& line, STLLineType& type, int& vertexCount);
+    bool ReadFile(const std::wstring& filepath);
     int GetNumThreads(int fileSize);
+    bool CreateCameraPose(CameraPose& cameraPose, const std::string& line, const std::vector<std::string>& headers);
 
 public:
-    TextFileDataAccessAsync() = default;
-    TextFileDataAccessAsync(const TextFileDataAccessAsync&) = delete;
-    TextFileDataAccessAsync& operator=(const TextFileDataAccessAsync&) = delete;
-    ~TextFileDataAccessAsync() = default;
+    BinaryFileDataAccessAsync() = default;
+    BinaryFileDataAccessAsync(const BinaryFileDataAccessAsync&) = delete;
+    BinaryFileDataAccessAsync& operator=(const BinaryFileDataAccessAsync&) = delete;
+    ~BinaryFileDataAccessAsync() = default;
     bool LoadTerrain(const wchar_t* filename, std::vector<VertexMesh>& vertices) override;
     bool LoadCameraTrajectory(const wchar_t*, std::vector<CameraPose>& cameraPoses) override;
 };

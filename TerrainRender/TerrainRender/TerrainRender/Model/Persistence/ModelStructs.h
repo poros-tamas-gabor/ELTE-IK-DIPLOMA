@@ -81,15 +81,23 @@ struct Vector4D
 	float x, y, z, w;
 };
 
+
+
 struct Facet
 {
-	Vector3D normal;
-	Vector3D position[3];
+	float normal[3];
+	float position[3][3];
 };
 
 enum STLLineType { BEGIN, FACET, LOOP, VERTEX, ENDLOOP, ENDFACET, END };
 
 
+struct stlFile
+{
+	uint8_t     header[80];
+	uint32_t    numOfTriangles;
+	std::vector<Facet> facets;
+};
 
 struct IRenderableState
 {

@@ -74,7 +74,7 @@ bool TerrainModel::Render(ID3D11DeviceContext* deviceContext)
 	return true;
 }
 
-void TerrainModel::Flythrough(unsigned message, double elapsedMillisec)
+void TerrainModel::Flythrough(unsigned message, float* elapsedMillisec, unsigned* frameNum)
 {
 	switch (message)
 	{
@@ -88,7 +88,14 @@ void TerrainModel::Flythrough(unsigned message, double elapsedMillisec)
 	}
 	case IDM_CAMERA_TRAJECTORY_NEXT_FRAME:
 	{
-		this->m_cameraTrajectory.UpdateCamera(elapsedMillisec);
+		this->m_cameraTrajectory.UpdateCamera(*elapsedMillisec);
+		this->m_light.UpdateSunPosition(m_cameraTrajectory.GetCurrentEpochTime().getSeconds(), m_lat, m_longitude);
+		break;
+	}
+	case IDM_CAMERA_TRAJECTORY_FRAME:
+	{
+		this->m_cameraTrajectory.SetCurrentFrame(*frameNum);
+		this->m_cameraTrajectory.UpdateCamera(NULL);
 		this->m_light.UpdateSunPosition(m_cameraTrajectory.GetCurrentEpochTime().getSeconds(), m_lat, m_longitude);
 		break;
 	}
@@ -300,7 +307,8 @@ FlythroughState	TerrainModel::CollectFlythroughState(void)
 {
 	FlythroughState state;
 	//TODO currentFrame
-	state.currentFrame = 0;
+	state.currentFrame = m_cameraTrajectory.GetCurrentFrameNum();
+	state.numberOfFrame = m_cameraTrajectory.GetNumberOfFrame();
 	state.IsTrajectoryLoaded = this->IsTrajectoryLoaded();
 	state.currentEpochTime = m_cameraTrajectory.GetCurrentEpochTime();
 	state.currentPosition = m_camera.GetPositionFloat3();

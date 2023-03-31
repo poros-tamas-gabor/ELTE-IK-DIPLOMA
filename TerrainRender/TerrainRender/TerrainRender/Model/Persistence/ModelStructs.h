@@ -118,6 +118,7 @@ struct FlythroughState
 {
 	bool				IsTrajectoryLoaded	= false;
 	unsigned			currentFrame		= 0;
+	unsigned			numberOfFrame		= 0;
 	EpochTime			currentEpochTime	= { 0,0 };
 	DirectX::XMFLOAT3	currentPosition		= { 0,0,0 };
 	DirectX::XMFLOAT3	currentRotation		= { 0,0,0 };

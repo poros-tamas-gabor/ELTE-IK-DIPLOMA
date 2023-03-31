@@ -85,14 +85,6 @@ void Controller3DExplore::HandleMessage(unsigned int message, float* fparam, uns
 				this->m_terrainModel->MoveCamera(IDM_CAMERA_MOVE_RIGHT, TimeEllapsed);
 			}
 
-			if (m_keyboard->KeyIsPressed('O'))
-			{
-				this->m_terrainModel->Flythrough(IDM_CAMERA_TRAJECTORY_START, TimeEllapsed);
-			}
-			if (m_keyboard->KeyIsPressed('P'))
-			{
-				this->m_terrainModel->Flythrough(IDM_CAMERA_TRAJECTORY_NEXT_FRAME, TimeEllapsed);
-			}
 		}
 		break;
 		

@@ -12,6 +12,7 @@ ControllerFlythrough::ControllerFlythrough()
 	m_handledMsgs.push_back(IDCC_START_FLYTHROUGH);
 	m_handledMsgs.push_back(IDCC_PAUSE_FLYTHROUGH);
 	m_handledMsgs.push_back(IDCC_STOP_FLYTHROUGH);
+	m_handledMsgs.push_back(IDCC_SET_FRAME_FLYTHROUGH);
 
 }
 
@@ -41,7 +42,7 @@ void ControllerFlythrough::HandleMessage(unsigned int message, float* fparam, un
 	{
 		this->m_isActive = true;
 		this->m_isRunning = false;
-		this->m_terrainModel->Flythrough(IDM_CAMERA_TRAJECTORY_START, NULL);
+		this->m_terrainModel->Flythrough(IDM_CAMERA_TRAJECTORY_START, NULL, NULL);
 		break;
 	}
 
@@ -59,7 +60,7 @@ void ControllerFlythrough::HandleMessage(unsigned int message, float* fparam, un
 	case IDCC_STOP_FLYTHROUGH:
 	{
 		this->m_isRunning = false;
-		this->m_terrainModel->Flythrough(IDM_CAMERA_TRAJECTORY_STOP, 0);
+		this->m_terrainModel->Flythrough(IDM_CAMERA_TRAJECTORY_STOP, NULL, NULL);
 		break;
 	}
 
@@ -70,6 +71,13 @@ void ControllerFlythrough::HandleMessage(unsigned int message, float* fparam, un
 			this->m_speed = *fparam;
 		}
 		break;
+	}
+	case IDCC_SET_FRAME_FLYTHROUGH:
+	{
+		if (uparam != nullptr)
+		{
+			this->m_terrainModel->Flythrough(IDM_CAMERA_TRAJECTORY_FRAME, NULL, uparam);
+		}
 	}
 	case IDC_TIME_ELAPSED:
 	{
@@ -87,8 +95,12 @@ void ControllerFlythrough::HandleMessage(unsigned int message, float* fparam, un
 				unsigned char c = m_keyboard->ReadChar();
 			}
 
-			if(m_isActive && m_isRunning)
-				this->m_terrainModel->Flythrough(IDM_CAMERA_TRAJECTORY_NEXT_FRAME, (float)(TimeEllapsed * m_speed));
+			if (m_isActive && m_isRunning)
+			{
+				TimeEllapsed *= m_speed;
+				this->m_terrainModel->Flythrough(IDM_CAMERA_TRAJECTORY_NEXT_FRAME, &TimeEllapsed, NULL);
+
+			}
 
 			if (m_keyboard->KeyIsPressed(VK_SPACE))
 			{
@@ -97,7 +109,7 @@ void ControllerFlythrough::HandleMessage(unsigned int message, float* fparam, un
 
 			if (m_keyboard->KeyIsPressed(VK_ESCAPE))
 			{
-				this->m_terrainModel->Flythrough(IDM_CAMERA_TRAJECTORY_STOP, 0);
+				this->m_terrainModel->Flythrough(IDM_CAMERA_TRAJECTORY_STOP, NULL, NULL);
 				m_isRunning = false;
 			}
 		}

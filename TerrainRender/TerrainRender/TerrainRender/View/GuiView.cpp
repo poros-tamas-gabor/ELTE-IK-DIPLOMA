@@ -252,10 +252,18 @@ void GuiView::FlythroughTab()
 
     ImGui::SeparatorText("Properties");
     static float flythrough_speed = 1;
-    if (ImGui::SliderFloat("Speed", &flythrough_speed, 0.5, 10, "%.3f"))
+    if (ImGui::SliderFloat("Speed", &flythrough_speed, 0.1, 3, "%.3f"))
     {
         this->m_terrainController->HandleMessage(IDC_SLIDER_FLYTHROUGH_SPEED, &flythrough_speed, NULL);
     }
+
+    m_frame = m_flythroughState.currentFrame;
+    ImGui::Text("Frame: %d / %d", m_frame, m_flythroughState.numberOfFrame);
+    if (ImGui::SliderInt("Frames", &m_frame, 0, m_flythroughState.numberOfFrame))
+    {
+        this->m_terrainController->HandleMessage(IDCC_SET_FRAME_FLYTHROUGH, NULL, (unsigned*)(&m_frame));
+    }
+
 
     ImGui::Spacing();
     ImGui::SeparatorText("Position");

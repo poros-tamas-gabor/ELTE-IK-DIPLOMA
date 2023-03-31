@@ -20,19 +20,24 @@ private:
 	std::vector<double>						m_elapsedmsecs;
 	std::vector<Vector3D>					m_positions;
 	std::vector<Vector3D>					m_rotations;
+	unsigned								m_currentFrameNum;
 	IRendarablePtr<VertexPolyLine> 			m_renderable;
 	Camera*									m_camera;
-	LinearInterpolation<double, Vector3D>	m_interpolation;
+
 
 public:
 	bool Initialize(const std::vector<CameraPose>& cameraPoses, IRendarablePtr<VertexPolyLine>  renderable, Camera* camera);
 
 	void UpdateCamera(double elapsedmsecs);
 	void Reset();
-	EpochTime GetCurrentEpochTime(void) const;
-
-
 	void Shutdown();
+
+	EpochTime	GetCurrentEpochTime(void) const;
+	unsigned	GetCurrentFrameNum(void) const;
+	unsigned	GetNumberOfFrame(void) const;
+	void		SetCurrentFrame(unsigned frameNum);
+
+
 
 };
 #endif // !CAMERA_TRAJECTORY_H

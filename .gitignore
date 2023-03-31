@@ -5,7 +5,8 @@ TerrainRender/TerrainRender/TerrainRender/x64/*
 TerrainRender/TerrainRender/x64/*
 TerrainRender/TerrainRender/.vs/
 ._*
-
+TerrainRender/TerrainRender/TerrainRenderUnitTest/
 File/test_landscape02.stl
 File/no_building.stl
 File/test_landscape1dot250M.stl
+File/Wikipedia_puzzle_globe_3D_render.stl

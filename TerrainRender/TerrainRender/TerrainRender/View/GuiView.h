@@ -28,6 +28,7 @@ private:
 	std::vector<IRenderableState>			m_IRenderableState;
 	FlythroughState							m_flythroughState;
 	Explore3DState							m_explore3dState;
+	int										m_frame;
 public:
 	bool Initalize(ID3D11Device* _device, ID3D11DeviceContext* _deviceContext, IControllerPtr controller);
 

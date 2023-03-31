@@ -1,4 +1,5 @@
 #include "CameraTrajectory.h"
+#include "../ErrorHandler.h"
 
 bool CameraTrajectory::Initialize(const std::vector<CameraPose>& cameraPoses, IRendarablePtr<VertexPolyLine> renderable, Camera* camera)
 {
@@ -41,11 +42,15 @@ void CameraTrajectory::UpdateCamera(double elapsedmsec)
 
 	bool result;
 	Vector3D currentPosition;
-	result = m_interpolation.Calculate(this->m_elapsedmsecs, this->m_positions, this->m_elapsedmsec, currentPosition);
+
+	LinearInterpolation<double, Vector3D>	linearInterpolation;
+	result = linearInterpolation.Calculate(this->m_elapsedmsecs, this->m_positions, this->m_elapsedmsec, currentPosition, m_currentFrameNum);
 	if (!result)
 		return;
 	Vector3D currentRotation;
-	result = m_interpolation.Calculate(this->m_elapsedmsecs, this->m_rotations, this->m_elapsedmsec, currentRotation);
+
+	CirclularInterpolation<double> circularInterpolation;
+	result = circularInterpolation.Calculate(this->m_elapsedmsecs, this->m_rotations, this->m_elapsedmsec, currentRotation, m_currentFrameNum);
 	if (!result)
 		return;
 	
@@ -56,6 +61,26 @@ void CameraTrajectory::UpdateCamera(double elapsedmsec)
 EpochTime CameraTrajectory::GetCurrentEpochTime(void) const
 {
 	return this->m_start.AddMilliSeconds(m_elapsedmsec);
+}
+
+unsigned	CameraTrajectory::GetCurrentFrameNum(void) const
+{
+	return this->m_currentFrameNum;
+}
+unsigned	CameraTrajectory::GetNumberOfFrame(void) const
+{
+	return this->m_elapsedmsecs.size();
+}
+void		CameraTrajectory::SetCurrentFrame(unsigned frameNum)
+{
+	try
+	{
+		this->m_elapsedmsec = this->m_elapsedmsecs.at(frameNum);
+	}
+	catch (std::exception& e)
+	{
+		ErrorHandler::Log(e);
+	}
 }
 
 

@@ -31,6 +31,7 @@ GuiController::GuiController()
 	m_handledMsgs.push_back(IDC_SLIDER_IRENDERABLE_SCALE);
 	m_handledMsgs.push_back(IDC_SLIDER_IRENDERABLE_ROTATION);
 	m_handledMsgs.push_back(IDC_SLIDER_IRENDERABLE_TRANSLATION);
+	m_handledMsgs.push_back(IDC_SLIDER_FLYTHROUGH_FRAME);
 }
 GuiController::~GuiController() {}
 
@@ -228,6 +229,11 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 	case IDC_BUTTON_FLYTHROUGH_STOP:
 	{
 		this->m_messageSystem->Publish(IDCC_STOP_FLYTHROUGH, NULL, NULL);
+		break;
+	}
+	case IDC_SLIDER_FLYTHROUGH_FRAME:
+	{
+		this->m_messageSystem->Publish(IDCC_STOP_FLYTHROUGH, fparam, uparam);
 		break;
 	}
 	case IDC_BUTTON_FLYTHROUGH_RECORD: 

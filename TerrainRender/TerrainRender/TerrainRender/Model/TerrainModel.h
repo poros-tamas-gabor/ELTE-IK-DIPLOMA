@@ -68,7 +68,7 @@ public:
 
 	bool	IsTrajectoryLoaded(void) const override;
 
-	void	Flythrough(unsigned message, double elapsedMillisec) override;
+	void	Flythrough(unsigned message, float* elapsedMillisec, unsigned* frameNum) override;
 	void	MoveCamera(unsigned message, float timeElapsed) override;
 	void	RotateCamera(unsigned message, float pitch, float yaw) override;
 	void	ResetCamera(void) override;

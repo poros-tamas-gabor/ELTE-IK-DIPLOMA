@@ -330,12 +330,9 @@ void TerrainModel::CollectExplore3DState(void)
 }
 std::vector<IRenderableState> TerrainModel::CollectIRenderableInfo()
 {
-	std::vector<IRenderableState> polylineInfo;
 	std::vector<IRenderableState> meshInfo;
-	m_polylines.CollectIRenderableState(polylineInfo);
 	m_meshes.CollectIRenderableState(meshInfo);
-	polylineInfo.insert(polylineInfo.end(), meshInfo.begin(), meshInfo.end());
-	return polylineInfo;
+	return meshInfo;
 }
 
 void TerrainModel::AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int gridZ)

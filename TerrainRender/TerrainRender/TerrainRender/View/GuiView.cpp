@@ -169,6 +169,10 @@ void GuiView::GeneralTab()
 
     if (ImGui::CollapsingHeader("Renderables"))
     {
+        if (ImGui::Button("Clear meshes"))
+        {
+            m_terrainController->HandleMessage(IDC_BUTTON_CLEAR_MESHES, NULL, NULL);
+        }
         for (const IRenderableState& info : m_IRenderableState)
         {
             ImGui::PushID(info.id);
@@ -181,6 +185,7 @@ void GuiView::GeneralTab()
 
                 if (it != m_trasnformations.end())
                 {
+
                     ImGui::SeparatorText("Scale");
                     if (ImGui::SliderFloat("slider S", &it->scaling, -PI, PI))
                     {

@@ -12,11 +12,11 @@ template <class V>
 class CompositeRenderable : public IRenderable<V>
 {
 private:
-	std::wstring					m_name;
+	std::wstring						m_name;
 	std::vector<IRendarablePtr<V>>		m_renderables;
-	IVertexShader*					m_vertexShader = NULL;
-	IPixelShader*					m_pixelShader = NULL;
-	ID3D11Device*					m_device = NULL;
+	IVertexShader*						m_vertexShader = NULL;
+	IPixelShader*						m_pixelShader = NULL;
+	ID3D11Device*						m_device = NULL;
 
 private:
 	bool Add(IRendarablePtr<V> renderable)
@@ -165,6 +165,12 @@ public:
 	std::wstring GetName(void)
 	{
 		return m_name;
+	}
+
+	void ClearRenderables(void)
+	{
+		this->Shutdown();
+		this->m_renderables.clear();
 	}
 
 	IRendarablePtr<V> GetLastAddedComponent(void)

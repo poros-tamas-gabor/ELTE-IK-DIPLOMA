@@ -31,6 +31,8 @@ GuiController::GuiController()
 	m_handledMsgs.push_back(IDC_SLIDER_IRENDERABLE_SCALE);
 	m_handledMsgs.push_back(IDC_SLIDER_IRENDERABLE_ROTATION);
 	m_handledMsgs.push_back(IDC_SLIDER_IRENDERABLE_TRANSLATION);
+	m_handledMsgs.push_back(IDC_BUTTON_CLEAR_MESHES);
+
 	m_handledMsgs.push_back(IDC_SLIDER_FLYTHROUGH_FRAME);
 }
 GuiController::~GuiController() {}
@@ -256,6 +258,11 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 	case IDC_SLIDER_IRENDERABLE_TRANSLATION:
 	{
 		this->m_terrainModel->TransformIRenderable(IDM_TRANSFORMATION_IRENDERABLE_TRANSLATION, *uparam, fparam);
+		break;
+	}
+	case IDC_BUTTON_CLEAR_MESHES:
+	{
+		this->m_terrainModel->ClearTerrain();
 		break;
 	}
 

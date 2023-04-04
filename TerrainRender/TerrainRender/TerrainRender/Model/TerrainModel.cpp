@@ -335,6 +335,18 @@ std::vector<IRenderableState> TerrainModel::CollectIRenderableInfo()
 	return meshInfo;
 }
 
+void TerrainModel::ClearTerrain(void)
+{
+	this->m_meshes.ClearRenderables();
+	this->m_modelMessageSystem.PublishModelState(CollectIRenderableInfo());
+
+}
+
+void TerrainModel::ClearCameraTrajectory(void)
+{
+
+}
+
 void TerrainModel::AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int gridZ)
 {
 	std::vector<VertexPolyLine> vertices;

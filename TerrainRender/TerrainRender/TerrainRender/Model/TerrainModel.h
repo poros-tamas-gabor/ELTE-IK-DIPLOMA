@@ -74,6 +74,8 @@ public:
 	void	ResetCamera(void) override;
 	void	UpdateCameraProperties(unsigned message, float data) override;
 	void    TransformIRenderable(unsigned message, unsigned id, float parameters[]) override;
+	void	ClearTerrain(void) override;
+	void	ClearCameraTrajectory(void) override;
 private:
 	std::vector <IRenderableState>	CollectIRenderableInfo(void);
 	FlythroughState					CollectFlythroughState(void);

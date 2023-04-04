@@ -3,6 +3,7 @@ cbuffer MatrixBuffer : register(b0)
     float4x4 worldMat;
     float4x4 viewMat;
     float4x4 projectionMat;
+    float4  color;
 };
 
 struct VS_INPUT
@@ -24,7 +25,7 @@ VS_OUTPUT main(VS_INPUT input)
 {
     VS_OUTPUT output;
 
-    output.color = input.color;
+    output.color = color;
 
     output.position = float4(input.position, 1.0f);
     output.position = mul(output.position, worldMat);

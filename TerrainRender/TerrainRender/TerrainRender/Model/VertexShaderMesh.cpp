@@ -138,10 +138,10 @@ void VertexShaderMesh::RenderShader(ID3D11DeviceContext* deviceContext)
 
 	deviceContext->VSSetShader(this->m_vertexShader, NULL, 0);
 }
-bool VertexShaderMesh::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light&)
+bool VertexShaderMesh::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 color)
 {
 	bool bresult;
-	bresult = this->SetShadeParameters(deviceContext, worldMat, viewMat, projectionMat);
+	bresult = this->SetShadeParameters(deviceContext, worldMat, viewMat, projectionMat, color);
 	if (!bresult)
 	{
 		return false;
@@ -150,7 +150,7 @@ bool VertexShaderMesh::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMAT
 	return true;
 }
 
-bool VertexShaderMesh::SetShadeParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat)
+bool VertexShaderMesh::SetShadeParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 color)
 {
 	HRESULT						result;
 	D3D11_MAPPED_SUBRESOURCE	mappedResource;
@@ -175,6 +175,7 @@ bool VertexShaderMesh::SetShadeParameters(ID3D11DeviceContext* deviceContext, Di
 		matrixDataPtr->worldMat = worldMat;
 		matrixDataPtr->viewMat = viewMat;
 		matrixDataPtr->projectionMat = projectionMat;
+		matrixDataPtr->color = color;
 
 		// Unlock the constant buffer.
 		deviceContext->Unmap(m_matrixBuffer, 0);

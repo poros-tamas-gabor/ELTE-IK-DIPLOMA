@@ -132,7 +132,7 @@ void VertexShaderPolyLine::RenderShader(ID3D11DeviceContext* deviceContext)
 
 	deviceContext->VSSetShader(this->m_vertexShader, NULL, 0);
 }
-bool VertexShaderPolyLine::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light& light)
+bool VertexShaderPolyLine::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 color)
 {
 	bool bresult;
 	bresult = this->SetShadeParameters(deviceContext, worldMat, viewMat, projectionMat);

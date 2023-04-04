@@ -28,7 +28,7 @@ void LineList::Shutdown()
 void LineList::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light& light)
 {
 	DirectX::XMMATRIX worldMatrix = m_localMatrix * worldMat;
-	bool bresult = this->m_vertexShader->Render(deviceContext, worldMatrix, viewMat, projectionMat, light);
+	bool bresult = this->m_vertexShader->Render(deviceContext, worldMatrix, viewMat, projectionMat, m_color);
 	if (!bresult)
 	{
 		//return false;

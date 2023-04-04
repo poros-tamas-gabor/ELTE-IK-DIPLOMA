@@ -32,7 +32,7 @@ public:
 
 	virtual bool Initialize(ID3D11Device*, HWND) override;
 	virtual void Shutdown() override;
-	virtual bool Render(ID3D11DeviceContext*, DirectX::XMMATRIX worldmat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light&) override;
+	virtual bool Render(ID3D11DeviceContext*, DirectX::XMMATRIX worldmat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 color) override;
 
 	virtual ID3D11VertexShader* GetVertexShader(void) override;
 	virtual ID3D11InputLayout* GetInputLayout(void) override;

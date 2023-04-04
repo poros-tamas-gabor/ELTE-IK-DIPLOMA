@@ -258,6 +258,7 @@ void TerrainModel::TransformIRenderable(unsigned message, unsigned id,  float pa
 	case IDM_TRANSFORMATION_IRENDERABLE_COLOR:
 	{
 		m_meshes.SetColorComponent(id, parameters[0], parameters[1], parameters[2], parameters[3]);
+		break;
 	}
 	default:
 		break;

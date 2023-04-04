@@ -17,6 +17,7 @@ public:
 		DirectX::XMMATRIX worldMat;
 		DirectX::XMMATRIX viewMat;
 		DirectX::XMMATRIX projectionMat;
+		DirectX::XMFLOAT4 color;
 	};
 
 private:
@@ -32,13 +33,13 @@ public:
 
 	bool Initialize(ID3D11Device*, HWND) override;
 	void Shutdown() override;
-	bool Render(ID3D11DeviceContext*, DirectX::XMMATRIX worldmat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light&) override;
+	bool Render(ID3D11DeviceContext*, DirectX::XMMATRIX worldmat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 color) override;
 
 	ID3D11VertexShader* GetVertexShader(void) override;
 	ID3D11InputLayout* GetInputLayout(void) override;
 
 private:
-	bool SetShadeParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldmat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat);
+	bool SetShadeParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldmat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 color);
 	bool InitializeShader(ID3D11Device*, HWND, const WCHAR*);
 	void ShutdownShader();
 	void RenderShader(ID3D11DeviceContext* deviceContext);

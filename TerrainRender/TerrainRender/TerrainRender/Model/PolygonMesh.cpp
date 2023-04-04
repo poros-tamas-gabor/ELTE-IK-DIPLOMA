@@ -30,7 +30,7 @@ void PolygonMesh::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX w
 	try {
 
 		DirectX::XMMATRIX worldMatrix = m_localMatrix * worldMat;
-		bool bresult = this->m_vertexShader->Render(deviceContext, worldMatrix, viewMat, projectionMat, light);
+		bool bresult = this->m_vertexShader->Render(deviceContext, worldMatrix, viewMat, projectionMat, m_color);
 		if (!bresult)
 			THROW_TREXCEPTION(L"Failed to render vertex shader");
 

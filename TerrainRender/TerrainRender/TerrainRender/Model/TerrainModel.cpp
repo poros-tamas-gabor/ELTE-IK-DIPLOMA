@@ -171,7 +171,7 @@ bool TerrainModel::LoadTerrain(const wchar_t* filepath)
 			    VertexMesh vertex;
 			    vertex.normal = { (float)facet.normal[0], (float)facet.normal[2],(float)facet.normal[1] };
 			    vertex.position = { (float)facet.position[2-i][0], (float)facet.position[2-i][2], (float)facet.position[2-i][1] };
-				vertex.color = { 1.0f, 1.0f, 0.0f, 1.0f };
+				vertex.color = { 1.0f, 0.5f, 0.5f, 1.0f };
 			
 			    vertices.push_back(vertex);
 			}

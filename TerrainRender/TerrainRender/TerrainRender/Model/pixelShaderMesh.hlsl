@@ -15,15 +15,22 @@ cbuffer LightBuffer : register(b0)
 
 float4 main(PS_INPUT input) : SV_TARGET
 {
-    float color;
+    float4 color;
     float diffuseBrightness;
     float4 ambient;
+    float3 lightDir = normalize(inverseLightDirection.xyz);
+    float3 normal = normalize(input.normal);
 
-    color = input.color;
-    diffuseBrightness = saturate(dot(input.normal, inverseLightDirection));
-    color *= saturate(diffuseBrightness * diffuseColor);
+    color = ambientColor;
+    diffuseBrightness = saturate(dot(normal, lightDir));
 
-    ambient = saturate(input.color * ambientColor);
-    color += ambient;
+    if (diffuseBrightness > 0.0f)
+    {
+        color += (diffuseColor * diffuseBrightness);
+        color = saturate(color);
+    }
+
+    color *= input.color;
+    color = saturate(color);
     return color;
 }

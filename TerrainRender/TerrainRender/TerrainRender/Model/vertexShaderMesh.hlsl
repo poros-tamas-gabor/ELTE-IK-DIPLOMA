@@ -15,7 +15,7 @@ struct VS_INPUT
 struct VS_OUTPUT
 {
     float4 position : SV_POSITION;
-    float4 normal   : NORMAL;
+    float3 normal   : NORMAL;
     float4 color    : COLOR;
 };
 
@@ -32,8 +32,8 @@ VS_OUTPUT main(VS_INPUT input)
     output.position = mul(output.position, projectionMat);
 
     // Calculate the normal vector against the world matrix only.
-    output.normal = float4(input.normal, 0.0f);
-    output.normal = mul(output.normal, worldMat);
+    output.normal = input.normal;
+    output.normal = mul(output.normal, (float3x3)worldMat);
     output.normal = normalize(output.normal);
 
     return output;

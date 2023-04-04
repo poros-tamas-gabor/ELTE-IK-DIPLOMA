@@ -165,18 +165,6 @@
     <ClCompile Include="Model\Persistence\ReadSTLChunk.cpp">
       <Filter>Header Files\Model\Persistence\Async</Filter>
     </ClCompile>
-    <ClCompile Include="Model\PixelShaderMesh.cpp">
-      <Filter>Header Files\Model\Shader\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\PixelShaderPolyLine.cpp">
-      <Filter>Header Files\Model\Shader\Ployline</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\VertexShaderMesh.cpp">
-      <Filter>Header Files\Model\Shader\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\VertexShaderPolyLine.cpp">
-      <Filter>Header Files\Model\Shader\Ployline</Filter>
-    </ClCompile>
     <ClCompile Include="Model\ModelMessageSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -206,6 +194,18 @@
     </ClCompile>
     <ClCompile Include="Model\Persistence\FileDataAccessAsync.cpp">
       <Filter>Source Files\Model\Persistence</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\PixelShaderMesh.cpp">
+      <Filter>Source Files\Model\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\VertexShaderMesh.cpp">
+      <Filter>Source Files\Model\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\PixelShaderPolyLine.cpp">
+      <Filter>Source Files\Model\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\VertexShaderPolyLine.cpp">
+      <Filter>Source Files\Model\Shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -386,16 +386,16 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Model\pixelShaderMesh.hlsl">
-      <Filter>Header Files\Model\Shader\Mesh</Filter>
-    </FxCompile>
-    <FxCompile Include="Model\pixelShaderPolyLine.hlsl">
-      <Filter>Header Files\Model\Shader\Ployline</Filter>
+      <Filter>Source Files\Model\Shader</Filter>
     </FxCompile>
     <FxCompile Include="Model\vertexShaderMesh.hlsl">
-      <Filter>Header Files\Model\Shader\Mesh</Filter>
+      <Filter>Source Files\Model\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Model\pixelShaderPolyLine.hlsl">
+      <Filter>Source Files\Model\Shader</Filter>
     </FxCompile>
     <FxCompile Include="Model\vertexShaderPolyLine.hlsl">
-      <Filter>Header Files\Model\Shader\Ployline</Filter>
+      <Filter>Source Files\Model\Shader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

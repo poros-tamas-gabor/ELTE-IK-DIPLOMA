@@ -169,9 +169,9 @@ bool TerrainModel::LoadTerrain(const wchar_t* filepath)
 			for (int i = 0; i < 3; i++)
 			{
 			    VertexMesh vertex;
-			    vertex.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 			    vertex.normal = { (float)facet.normal[0], (float)facet.normal[2],(float)facet.normal[1] };
 			    vertex.position = { (float)facet.position[2-i][0], (float)facet.position[2-i][2], (float)facet.position[2-i][1] };
+				vertex.color = { 1.0f, 1.0f, 0.0f, 1.0f };
 			
 			    vertices.push_back(vertex);
 			}
@@ -254,6 +254,10 @@ void TerrainModel::TransformIRenderable(unsigned message, unsigned id,  float pa
 		m_polylines.TranslateComponent(id, parameters[0], parameters[1], parameters[2]);
 		m_meshes.TranslateComponent(id, parameters[0], parameters[1], parameters[2]);
 		break;
+	}
+	case IDM_TRANSFORMATION_IRENDERABLE_COLOR:
+	{
+		m_meshes.SetColorComponent(id, parameters[0], parameters[1], parameters[2], parameters[3]);
 	}
 	default:
 		break;

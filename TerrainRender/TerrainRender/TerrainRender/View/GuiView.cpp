@@ -221,6 +221,14 @@ void GuiView::GeneralTab()
                         unsigned int id = info.id;
                         m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_TRANSLATION, it->tranlation, &id);
                     }
+
+                    ImGui::SeparatorText("Color");
+
+                    if (ImGui::ColorEdit4("color", it->color))
+                    {
+                        unsigned int id = info.id;
+                        m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_COLOR, it->color, &id);
+                    }
                 }
 
 

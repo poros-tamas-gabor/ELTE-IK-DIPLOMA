@@ -44,8 +44,8 @@ void VertexShaderMesh::ShutdownShader()
 bool VertexShaderMesh::InitializeShader(ID3D11Device* device, HWND hwnd, const WCHAR* vsFilename)
 {
 	HRESULT						result;
-	ID3D10Blob* errorMessage = nullptr;
-	ID3D10Blob* vertexShaderBuffer = nullptr;
+	ID3D10Blob*					errorMessage = nullptr;
+	ID3D10Blob*					vertexShaderBuffer = nullptr;
 	D3D11_INPUT_ELEMENT_DESC	polygonLayout[3];
 	unsigned int				numElements;
 	D3D11_BUFFER_DESC			matrixBufferDesc;

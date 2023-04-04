@@ -159,3 +159,8 @@ DirectX::XMMATRIX LineList::GetLocalMatrix(void)
 {
 	return m_localMatrix;
 }
+
+void LineList::SetColor(float r, float g, float b, float a)
+{
+	m_color = { r,g,b,a };
+}

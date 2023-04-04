@@ -177,5 +177,16 @@ public:
 	{
 		return m_renderables.back();
 	}
+
+	void SetColor(float r, float g, float b, float a) override{}
+
+	void SetColorComponent(unsigned componentID, float r, float g, float b, float a)
+	{
+		for (IRendarablePtr<V> renderable : m_renderables)
+		{
+			if (renderable->GetID() == componentID)
+				renderable->SetColor( r,g,b,a);
+		}
+	}
 };
 #endif

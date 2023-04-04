@@ -13,9 +13,7 @@ class PolygonMesh : public IRenderable<VertexMesh>
 {
 private:
 	ID3D11Buffer*	m_vertexBuffer;
-	ID3D11Buffer*	m_indexBuffer;
 	unsigned int	_vertexCount;
-	unsigned int	_indexCount;
 	IPixelShader*	m_pixelShader;
 	IVertexShader*	m_vertexShader;
 
@@ -24,6 +22,7 @@ private:
 	DirectX::XMFLOAT3	m_scaling;
 	DirectX::XMFLOAT3	m_translation;
 	DirectX::XMMATRIX	m_localMatrix;
+	DirectX::XMFLOAT4	m_color = { 1.0f, 1.0f, 1.0f, 1.0f };
 public:
 	PolygonMesh() = default;
 	virtual ~PolygonMesh() = default;
@@ -45,6 +44,7 @@ public:
 	void Scale(float x, float y, float z) override;
 	void ResetTransformation() override;
 	DirectX::XMMATRIX GetLocalMatrix(void) override;
+	void SetColor(float r, float g, float b, float a) override;
 
 private:
 	bool InitializeBuffers(ID3D11Device*, VertexMesh* vertices, UINT indexCount);

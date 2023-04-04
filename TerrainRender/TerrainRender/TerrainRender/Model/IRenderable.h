@@ -34,6 +34,7 @@ public:
 	virtual void Scale(float x, float y, float z) = 0;
 	virtual void ResetTransformation() = 0;
 	virtual DirectX::XMMATRIX GetLocalMatrix(void) = 0;
+	virtual void SetColor(float r, float g, float b, float a) = 0;
 };
 
 template <class V>

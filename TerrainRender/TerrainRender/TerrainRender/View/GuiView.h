@@ -17,9 +17,10 @@ private:
 	struct IRenderableTransformation
 	{
 		unsigned	id;
-		float	rotation[3]		= {0.0f,0.0f,0.0f};
-		float	tranlation[3]	= { 0.0f,0.0f,0.0f };
-		float	scaling			= 1.0f;
+		float		rotation[3]		= {0.0f,0.0f,0.0f};
+		float		tranlation[3]	= { 0.0f,0.0f,0.0f };
+		float		scaling			= 1.0f;
+		float		color[4]		= { 1.0f,1.0f,1.0f,1.0f };
 	};
 private:
 	IControllerPtr							m_terrainController;

@@ -27,14 +27,17 @@ void LineList::Shutdown()
 }
 void LineList::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light& light)
 {
-	DirectX::XMMATRIX worldMatrix = m_localMatrix * worldMat;
-	bool bresult = this->m_vertexShader->Render(deviceContext, worldMatrix, viewMat, projectionMat, m_color);
-	if (!bresult)
+	if (IsSeen())
 	{
-		//return false;
+		DirectX::XMMATRIX worldMatrix = m_localMatrix * worldMat;
+		bool bresult = this->m_vertexShader->Render(deviceContext, worldMatrix, viewMat, projectionMat, m_color);
+		if (!bresult)
+		{
+			//return false;
+		}
+		this->RenderBuffers(deviceContext);
+		this->m_pixelShader->Render(deviceContext, this->GetVertexCount(), light);
 	}
-	this->RenderBuffers(deviceContext);
-	this->m_pixelShader->Render(deviceContext, this->GetVertexCount(), light);
 
 }
 
@@ -163,4 +166,13 @@ DirectX::XMMATRIX LineList::GetLocalMatrix(void)
 void LineList::SetColor(float r, float g, float b, float a)
 {
 	m_color = { r,g,b,a };
+}
+
+void LineList::SetIsSeen(bool isSeen)
+{
+	this->isSeen = isSeen;
+}
+bool LineList::IsSeen(void) const
+{
+	return isSeen;
 }

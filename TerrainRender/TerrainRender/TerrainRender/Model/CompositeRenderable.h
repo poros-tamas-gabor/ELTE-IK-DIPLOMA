@@ -158,6 +158,7 @@ public:
 			IRenderableState info;
 			info.id = renderable->GetID();
 			info.name = renderable->GetName();
+			info.isSeen = renderable->IsSeen();
 
 			vector.push_back(info);
 		}
@@ -186,6 +187,28 @@ public:
 		{
 			if (renderable->GetID() == componentID)
 				renderable->SetColor( r,g,b,a);
+		}
+	}
+
+	void SetIsSeen(bool isSeen)
+	{
+		for (IRendarablePtr<V> renderable : m_renderables)
+		{
+			renderable->SetIsSeen(isSeen);
+		}
+	}
+
+	bool IsSeen(void)const
+	{
+		return true;
+	}
+
+	void SetIsSeenComponent(unsigned componentID, bool isSeen)
+	{
+		for (IRendarablePtr<V> renderable : m_renderables)
+		{
+			if (renderable->GetID() == componentID)
+				renderable->SetIsSeen(isSeen);
 		}
 	}
 };

@@ -16,6 +16,7 @@ protected:
 	DirectX::XMFLOAT3	m_translation;
 	DirectX::XMMATRIX	m_localMatrix;
 	DirectX::XMFLOAT4	m_color = {1.0f, 1.0f, 1.0f, 1.0f};
+	bool				isSeen = true;
 
 public:
 	LineList() = default;
@@ -39,6 +40,8 @@ public:
 	void ResetTransformation() override;
 	DirectX::XMMATRIX GetLocalMatrix(void) override;
 	void SetColor( float r, float g, float b, float a) override;
+	void SetIsSeen(bool isSeen) override;
+	bool IsSeen(void) const override;
 
 protected:
 	bool InitializeBuffers(ID3D11Device*, VertexPolyLine* vertices, UINT indexCount);

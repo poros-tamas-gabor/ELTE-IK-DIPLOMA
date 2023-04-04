@@ -260,6 +260,14 @@ void TerrainModel::TransformIRenderable(unsigned message, unsigned id,  float pa
 		m_meshes.SetColorComponent(id, parameters[0], parameters[1], parameters[2], parameters[3]);
 		break;
 	}
+
+	case IDM_IRENDERABLE_ISSEEN:
+	{
+		bool isSeen = parameters[0] > 0 ? 1 : 0;
+		m_meshes.SetIsSeenComponent(id, isSeen);
+		m_polylines.SetIsSeenComponent(id, isSeen);
+		break;
+	}
 	default:
 		break;
 	}

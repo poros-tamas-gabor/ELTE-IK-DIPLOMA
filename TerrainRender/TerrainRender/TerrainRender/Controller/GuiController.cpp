@@ -33,6 +33,7 @@ GuiController::GuiController()
 	m_handledMsgs.push_back(IDC_SLIDER_IRENDERABLE_TRANSLATION);
 	m_handledMsgs.push_back(IDC_SLIDER_IRENDERABLE_COLOR);
 	m_handledMsgs.push_back(IDC_BUTTON_CLEAR_MESHES);
+	m_handledMsgs.push_back(IDC_CHECKBOX_IRENDERABLE_ISSEEN);
 
 	m_handledMsgs.push_back(IDC_SLIDER_FLYTHROUGH_FRAME);
 }
@@ -246,6 +247,12 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 		this->m_messageSystem->Publish(IDCC_SPEED_FLYTHROUGH, fparam, uparam);
 		break;
 	}
+	case IDC_CHECKBOX_IRENDERABLE_ISSEEN:
+	{
+		this->m_terrainModel->TransformIRenderable(IDM_IRENDERABLE_ISSEEN, *uparam, fparam);
+		break;
+	}
+
 	case IDC_SLIDER_IRENDERABLE_SCALE: 		 
 	{
 		this->m_terrainModel->TransformIRenderable(IDM_TRANSFORMATION_IRENDERABLE_SCALE, *uparam, fparam);

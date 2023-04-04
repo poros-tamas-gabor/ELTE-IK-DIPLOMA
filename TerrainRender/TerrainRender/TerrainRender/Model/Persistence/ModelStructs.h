@@ -107,6 +107,7 @@ struct IRenderableState
 	DirectX::XMFLOAT3	rotation;
 	DirectX::XMFLOAT3	scale;
 	DirectX::XMFLOAT3	translation;
+	bool				isSeen;
 };
 
 struct SunPositionState

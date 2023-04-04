@@ -35,6 +35,8 @@ public:
 	virtual void ResetTransformation() = 0;
 	virtual DirectX::XMMATRIX GetLocalMatrix(void) = 0;
 	virtual void SetColor(float r, float g, float b, float a) = 0;
+	virtual void SetIsSeen(bool isSeen) = 0;
+	virtual bool IsSeen(void) const = 0;
 };
 
 template <class V>

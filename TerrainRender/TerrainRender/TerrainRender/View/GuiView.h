@@ -21,6 +21,7 @@ private:
 		float		tranlation[3]	= { 0.0f,0.0f,0.0f };
 		float		scaling			= 1.0f;
 		float		color[4]		= { 1.0f,1.0f,1.0f,1.0f };
+		bool		isSeen = true;
 	};
 private:
 	IControllerPtr							m_terrainController;

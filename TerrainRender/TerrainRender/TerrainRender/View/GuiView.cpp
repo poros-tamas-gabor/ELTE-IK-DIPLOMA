@@ -186,6 +186,13 @@ void GuiView::GeneralTab()
                 if (it != m_trasnformations.end())
                 {
 
+                    if (ImGui::Checkbox("IsSeen", &it->isSeen))
+                    {
+                        unsigned int id = info.id;
+                        float b = (float)it->isSeen;
+                        m_terrainController->HandleMessage(IDC_CHECKBOX_IRENDERABLE_ISSEEN, &b, &id);
+                    }
+
                     ImGui::SeparatorText("Scale");
                     if (ImGui::SliderFloat("slider S", &it->scaling, -PI, PI))
                     {

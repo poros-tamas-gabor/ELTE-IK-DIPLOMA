@@ -29,6 +29,8 @@ void PolygonMesh::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX w
 {
 	try {
 
+		if (IsSeen())
+		{
 		DirectX::XMMATRIX worldMatrix = m_localMatrix * worldMat;
 		bool bresult = this->m_vertexShader->Render(deviceContext, worldMatrix, viewMat, projectionMat, m_color);
 		if (!bresult)
@@ -38,6 +40,7 @@ void PolygonMesh::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX w
 		bresult = this->m_pixelShader->Render(deviceContext, this->GetVertexCount(), light);
 		if(!bresult)
 			THROW_TREXCEPTION(L"Failed to render pixel shader");
+		}
 
 
 	}
@@ -157,7 +160,6 @@ void PolygonMesh::ResetTransformation()
 void PolygonMesh::SetColor(float r, float g, float b, float a)
 {
 	m_color = { r,g,b,a };
-
 }
 
 void PolygonMesh::CalculateLocalMatrix(void)
@@ -170,4 +172,13 @@ void PolygonMesh::CalculateLocalMatrix(void)
 DirectX::XMMATRIX PolygonMesh::GetLocalMatrix(void)
 {
 	return m_localMatrix;
+}
+void PolygonMesh::SetIsSeen(bool isSeen)
+{
+	this->isSeen = isSeen;
+}
+
+bool PolygonMesh::IsSeen(void) const
+{
+	return isSeen;
 }

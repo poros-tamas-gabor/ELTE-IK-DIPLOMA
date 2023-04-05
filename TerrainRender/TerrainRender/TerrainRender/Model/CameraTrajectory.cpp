@@ -9,7 +9,7 @@ bool CameraTrajectory::Initialize(const std::vector<CameraPose>& cameraPoses, IR
 	}
 	this->m_elapsedmsecs.clear();
 	this->m_positions.clear();
-	this->m_renderable = NULL;
+	this->m_polyLine = NULL;
 	this->m_rotations.clear();
 	this->m_elapsedmsec = 0;
 
@@ -22,10 +22,15 @@ bool CameraTrajectory::Initialize(const std::vector<CameraPose>& cameraPoses, IR
 		this->m_positions.push_back({ (float)camerapose.east,-(float)camerapose.down,(float)camerapose.north });
 		this->m_rotations.push_back({ -(float)camerapose.pitch, (float)camerapose.yaw, -(float)camerapose.roll });
 	}
-	this->m_renderable = renderable;	
+	this->m_polyLine = renderable;	
 	return true;
 } 
 
+
+bool CameraTrajectory::IsInitialized() const
+{
+	return m_rotations.size() != 0 && m_elapsedmsecs.size() != 0 && m_positions.size() != 0 && m_polyLine.get() != nullptr;
+}
 void CameraTrajectory::Shutdown()
 {}
 
@@ -39,7 +44,7 @@ void CameraTrajectory::Reset()
 
 Vector3D  CameraTrajectory::TransformPosition(const Vector3D& vector) const
 {
-	DirectX::XMMATRIX rotation = m_renderable->GetLocalMatrix();
+	DirectX::XMMATRIX rotation = m_polyLine->GetWorldMatrix();
 	DirectX::XMVECTOR vec = DirectX::XMVectorSet(vector.x, vector.y, vector.z, 1.0f);
 	vec = DirectX::XMVector4Transform(vec, rotation);
 	DirectX::XMFLOAT3 vecfloat3;
@@ -49,9 +54,13 @@ Vector3D  CameraTrajectory::TransformPosition(const Vector3D& vector) const
 }
 Vector3D  CameraTrajectory::TransformRotation(const Vector3D& vector) const
 {
-	DirectX::XMMATRIX rotation = m_renderable->GetLocalMatrix();
+	DirectX::XMMATRIX polylineWorldMat = m_polyLine->GetWorldMatrix();
+	DirectX::XMMATRIX cameraRotMat = DirectX::XMMatrixRotationRollPitchYaw(vector.x, vector.y, vector.z);
+
+	DirectX::XMMATRIX mat = cameraRotMat * polylineWorldMat;
+
 	DirectX::XMFLOAT4X4 XMFLOAT4X4_Values;
-	DirectX::XMStoreFloat4x4(&XMFLOAT4X4_Values, DirectX::XMMatrixTranspose(rotation));
+	DirectX::XMStoreFloat4x4(&XMFLOAT4X4_Values, DirectX::XMMatrixTranspose(mat));
 	float pitch = (float)asin(-XMFLOAT4X4_Values._23);
 	float yaw = (float)atan2(XMFLOAT4X4_Values._13, XMFLOAT4X4_Values._33);
 	float roll = (float)atan2(XMFLOAT4X4_Values._21, XMFLOAT4X4_Values._22);
@@ -61,27 +70,27 @@ Vector3D  CameraTrajectory::TransformRotation(const Vector3D& vector) const
 void CameraTrajectory::UpdateCamera(double elapsedmsec)
 {
 	bool result;
-	Vector3D currentRotation;
-	Vector3D currentPosition;
+	Vector3D currentCameraRotation;
+	Vector3D currentCameraPosition;
 
 	this->m_elapsedmsec += elapsedmsec;
 
 
 	LinearInterpolation<double, Vector3D>	linearInterpolation;
-	result = linearInterpolation.Calculate(this->m_elapsedmsecs, this->m_positions, this->m_elapsedmsec, currentPosition, m_currentFrameNum);
+	result = linearInterpolation.Calculate(this->m_elapsedmsecs, this->m_positions, this->m_elapsedmsec, currentCameraPosition, m_currentFrameNum);
 	if (!result)
 		return;
 
 	CirclularInterpolation<double> circularInterpolation;
-	result = circularInterpolation.Calculate(this->m_elapsedmsecs, this->m_rotations, this->m_elapsedmsec, currentRotation, m_currentFrameNum);
+	result = circularInterpolation.Calculate(this->m_elapsedmsecs, this->m_rotations, this->m_elapsedmsec, currentCameraRotation, m_currentFrameNum);
 	if (!result)
 		return;
 
-	currentRotation = TransformRotation(currentRotation);
-	currentPosition = TransformPosition(currentPosition);
+	currentCameraRotation = TransformRotation(currentCameraRotation);
+	currentCameraPosition = TransformPosition(currentCameraPosition);
 	
-	this->m_camera->SetPosition(currentPosition.x, currentPosition.y, currentPosition.z);
-	this->m_camera->SetRotationRad(currentRotation.x, currentRotation.y, currentRotation.z);
+	this->m_camera->SetPosition(currentCameraPosition.x, currentCameraPosition.y, currentCameraPosition.z);
+	this->m_camera->SetRotationRad(currentCameraRotation.x, currentCameraRotation.y, currentCameraRotation.z);
 }
 
 EpochTime CameraTrajectory::GetCurrentEpochTime(void) const
@@ -89,15 +98,15 @@ EpochTime CameraTrajectory::GetCurrentEpochTime(void) const
 	return this->m_start.AddMilliSeconds(m_elapsedmsec);
 }
 
-unsigned	CameraTrajectory::GetCurrentFrameNum(void) const
+unsigned CameraTrajectory::GetCurrentFrameNum(void) const
 {
 	return this->m_currentFrameNum;
 }
-unsigned	CameraTrajectory::GetNumberOfFrame(void) const
+unsigned CameraTrajectory::GetNumberOfFrame(void) const
 {
 	return this->m_elapsedmsecs.size();
 }
-void		CameraTrajectory::SetCurrentFrame(unsigned frameNum)
+void CameraTrajectory::SetCurrentFrame(unsigned frameNum)
 {
 	try
 	{
@@ -107,6 +116,11 @@ void		CameraTrajectory::SetCurrentFrame(unsigned frameNum)
 	{
 		ErrorHandler::Log(e);
 	}
+}
+
+IRenderableState CameraTrajectory::GetTrajectoryPolyLineState() const
+{
+	return m_polyLine->GetState();
 }
 
 

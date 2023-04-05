@@ -21,13 +21,14 @@ private:
 	std::vector<Vector3D>					m_positions;
 	std::vector<Vector3D>					m_rotations;
 	unsigned								m_currentFrameNum;
-	IRendarablePtr<VertexPolyLine> 			m_renderable;
+	IRendarablePtr<VertexPolyLine> 			m_polyLine;
 	Camera*									m_camera;
 
 
 public:
 	bool Initialize(const std::vector<CameraPose>& cameraPoses, IRendarablePtr<VertexPolyLine>  renderable, Camera* camera);
 
+	bool IsInitialized(void) const;
 	void UpdateCamera(double elapsedmsecs);
 	void Reset();
 	void Shutdown();
@@ -35,7 +36,8 @@ public:
 	EpochTime	GetCurrentEpochTime(void) const;
 	unsigned	GetCurrentFrameNum(void) const;
 	unsigned	GetNumberOfFrame(void) const;
-	void		SetCurrentFrame(unsigned frameNum);
+	void			SetCurrentFrame(unsigned frameNum);
+	IRenderableState GetTrajectoryPolyLineState() const;
 
 private:
 	Vector3D TransformPosition(const Vector3D&) const;

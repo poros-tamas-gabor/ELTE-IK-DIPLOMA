@@ -23,7 +23,7 @@ public:
 	virtual bool	LoadCameraTrajectory(const wchar_t* filepath) = 0;
 	virtual bool	LoadTerrainProject(const std::vector<std::wstring>& files) = 0;
  
-	virtual bool	IsTrajectoryLoaded(void) const = 0;
+	virtual bool	IsTrajectoryInitialized(void) const = 0;
 
 	virtual void	Flythrough(unsigned message, float* elapsedMillisec, unsigned* frameNum) = 0;
 	virtual void	MoveCamera(unsigned message, float timeElapsed) = 0;

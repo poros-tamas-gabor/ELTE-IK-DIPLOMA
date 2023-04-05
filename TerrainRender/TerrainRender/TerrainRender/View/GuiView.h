@@ -21,12 +21,12 @@ private:
 		float		tranlation[3]	= { 0.0f,0.0f,0.0f };
 		float		scaling			= 1.0f;
 		float		color[4]		= { 1.0f,1.0f,1.0f,1.0f };
-		bool		isSeen = true;
+		bool		m_isSeen = true;
 	};
 private:
 	IControllerPtr							m_terrainController;
 	//ModelStates:
-	std::vector<IRenderableTransformation>	m_trasnformations;
+	std::vector<IRenderableTransformation>	m_TerrainTrasnformations;
 	std::vector<IRenderableState>			m_IRenderableState;
 	FlythroughState							m_flythroughState;
 	Explore3DState							m_explore3dState;
@@ -41,10 +41,11 @@ public:
 	void GeneralTab();
 	void FlythroughTab();
 	void Explore3DTab();
+	void TerrainListBox();
 
 	void HandleIModelState(const std::vector<IRenderableState>&) override;
 	void HandleIModelState(const FlythroughState&) override;
 	void HandleIModelState(const Explore3DState&) override;
-
+	std::vector<std::string> CollectTerrainIDs(void);
 	void Shutdown();
 };

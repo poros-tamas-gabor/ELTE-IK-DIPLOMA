@@ -42,10 +42,10 @@ public:
 
 	void SetLookAtPos(const DirectX::XMFLOAT3& lookAt);
 
-	DirectX::XMVECTOR GetPosition(void);
-	DirectX::XMVECTOR GetRotationRad(void);
-	DirectX::XMFLOAT3 GetPositionFloat3(void);
-	DirectX::XMFLOAT3 GetRotationRadFloat3(void);
+	DirectX::XMVECTOR GetPositionVec(void);
+	DirectX::XMVECTOR GetRotationVec(void);
+	DirectX::XMFLOAT3 GetPositionF3(void);
+	DirectX::XMFLOAT3 GetRotationF3(void);
 
 	void Render();
 	DirectX::XMMATRIX GetViewMatrix(void);

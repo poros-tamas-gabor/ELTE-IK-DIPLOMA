@@ -31,8 +31,8 @@ void PolygonMesh::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX w
 
 		if (IsSeen())
 		{
-		DirectX::XMMATRIX worldMatrix = m_localMatrix * worldMat;
-		bool bresult = this->m_vertexShader->Render(deviceContext, worldMatrix, viewMat, projectionMat, m_color);
+		m_worldMatrix = m_localMatrix * worldMat;
+		bool bresult = this->m_vertexShader->Render(deviceContext, m_worldMatrix, viewMat, projectionMat, m_color);
 		if (!bresult)
 			THROW_TREXCEPTION(L"Failed to render vertex shader");
 
@@ -169,16 +169,29 @@ void PolygonMesh::CalculateLocalMatrix(void)
 	DirectX::XMMATRIX translationMatrix = DirectX::XMMatrixTranslation(m_translation.x, m_translation.y, m_translation.z);
 	m_localMatrix = scalingMatrix * rotationMatrix * translationMatrix;
 }
-DirectX::XMMATRIX PolygonMesh::GetLocalMatrix(void)
+DirectX::XMMATRIX PolygonMesh::GetWorldMatrix(void)
 {
-	return m_localMatrix;
+	return m_worldMatrix;
 }
-void PolygonMesh::SetIsSeen(bool isSeen)
+void PolygonMesh::SetIsSeen(bool m_isSeen)
 {
-	this->isSeen = isSeen;
+	this->m_isSeen = m_isSeen;
 }
 
 bool PolygonMesh::IsSeen(void) const
 {
-	return isSeen;
+	return m_isSeen;
+}
+
+IRenderableState PolygonMesh::GetState(void) const
+{
+	IRenderableState state;
+	state.id			= this->GetID();
+	state.m_isSeen		= m_isSeen;
+	state.name			= this->m_name;
+	state.rotation		= this->m_rotation;
+	state.scale			= this->m_scaling;
+	state.translation	= this->m_translation;
+
+	return state;
 }

@@ -158,7 +158,7 @@ void LineList::CalculateLocalMatrix(void)
 	DirectX::XMMATRIX translationMatrix = DirectX::XMMatrixTranslation(m_translation.x, m_translation.y, m_translation.z);
 	m_localMatrix = scalingMatrix * rotationMatrix * translationMatrix;
 }
-DirectX::XMMATRIX LineList::GetLocalMatrix(void)
+DirectX::XMMATRIX LineList::GetWorldMatrix(void)
 {
 	return m_localMatrix;
 }
@@ -168,11 +168,23 @@ void LineList::SetColor(float r, float g, float b, float a)
 	m_color = { r,g,b,a };
 }
 
-void LineList::SetIsSeen(bool isSeen)
+void LineList::SetIsSeen(bool m_isSeen)
 {
-	this->isSeen = isSeen;
+	this->m_isSeen = m_isSeen;
 }
 bool LineList::IsSeen(void) const
 {
-	return isSeen;
+	return m_isSeen;
+}
+
+IRenderableState LineList::GetState(void) const
+{
+	IRenderableState state;
+	state.id = this->GetID();
+	state.m_isSeen = m_isSeen;
+	state.name = this->m_name;
+	state.rotation = this->m_rotation;
+	state.scale = this->m_scaling;
+	state.translation = this->m_translation;
+	return state;
 }

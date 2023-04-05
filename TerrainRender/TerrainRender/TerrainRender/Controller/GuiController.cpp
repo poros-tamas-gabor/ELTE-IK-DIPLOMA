@@ -203,7 +203,7 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 	}
 	case IDC_BUTTON_FLYTHROUGH_MODE:
 	{
-		if (this->m_terrainModel->IsTrajectoryLoaded())
+		if (this->m_terrainModel->IsTrajectoryInitialized())
 		{
 			this->m_messageSystem->Publish(IDCC_ACTIVATE_FLYTHROUGH, NULL, NULL);
 		}

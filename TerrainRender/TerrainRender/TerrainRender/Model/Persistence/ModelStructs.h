@@ -101,13 +101,12 @@ struct stlFile
 
 struct IRenderableState
 {
-	unsigned			id;
-	std::wstring		name;
-	DirectX::XMMATRIX	localMatrix;
-	DirectX::XMFLOAT3	rotation;
-	DirectX::XMFLOAT3	scale;
-	DirectX::XMFLOAT3	translation;
-	bool				isSeen;
+	unsigned			id			= 0;
+	std::wstring		name		= L"";
+	bool				m_isSeen		= false;
+	DirectX::XMFLOAT3	rotation	= {0,0,0};
+	DirectX::XMFLOAT3	scale		= { 0,0,0 };
+	DirectX::XMFLOAT3	translation = { 0,0,0 };
 };
 
 struct SunPositionState
@@ -117,20 +116,21 @@ struct SunPositionState
 };
 struct FlythroughState
 {
-	bool				IsTrajectoryLoaded	= false;
-	unsigned			currentFrame		= 0;
-	unsigned			numberOfFrame		= 0;
-	EpochTime			currentEpochTime	= { 0,0 };
-	DirectX::XMFLOAT3	currentPosition		= { 0,0,0 };
-	DirectX::XMFLOAT3	currentRotation		= { 0,0,0 };
+	bool				IsTrajectoryInitialized			= false;
+	unsigned			currentFrame				= 0;
+	unsigned			numberOfFrame				= 0;
+	EpochTime			currentEpochTime			= { 0,0 };
+	DirectX::XMFLOAT3	currentCameraPosition		= { 0,0,0 };
+	DirectX::XMFLOAT3	currentCameraRotation		= { 0,0,0 };
 	SunPositionState	currentSunPosition;
+	IRenderableState	trajectoryPolyLine;
 };
 
 struct Explore3DState
 {
-	EpochTime			currentEpochTime	= { 0,0 };
-	DirectX::XMFLOAT3	currentPosition		= { 0,0,0 };
-	DirectX::XMFLOAT3	currentRotation		= { 0,0,0 };
+	EpochTime			currentEpochTime			= { 0,0 };
+	DirectX::XMFLOAT3	currentCameraPosition		= { 0,0,0 };
+	DirectX::XMFLOAT3	currentCameraRotation		= { 0,0,0 };
 	SunPositionState	currentSunPosition;
 };
 

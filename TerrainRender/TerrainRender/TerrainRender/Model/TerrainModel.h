@@ -45,7 +45,6 @@ private:
 	ID3D11Device*								m_device;
 	ID3D11DeviceContext*						m_deviceContext;
 	IDataAccess*								m_persistence;
-	bool										m_cameraTrajectoryIsloaded = false;
 
 public:
 	Camera										m_camera;
@@ -66,7 +65,7 @@ public:
 	bool	LoadCameraTrajectory(const wchar_t* filepath) override;
 	bool	LoadTerrainProject(const std::vector<std::wstring>& files) override;
 
-	bool	IsTrajectoryLoaded(void) const override;
+	bool	IsTrajectoryInitialized(void) const override;
 
 	void	Flythrough(unsigned message, float* elapsedMillisec, unsigned* frameNum) override;
 	void	MoveCamera(unsigned message, float timeElapsed) override;
@@ -77,7 +76,7 @@ public:
 	void	ClearTerrain(void) override;
 	void	ClearCameraTrajectory(void) override;
 private:
-	std::vector <IRenderableState>	CollectIRenderableInfo(void);
+	std::vector <IRenderableState>	CollectTerrainMeshState(void);
 	FlythroughState					CollectFlythroughState(void);
 	void							CollectExplore3DState(void);
 	void							AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int gridZ);

@@ -22,8 +22,9 @@ private:
 	DirectX::XMFLOAT3	m_scaling;
 	DirectX::XMFLOAT3	m_translation;
 	DirectX::XMMATRIX	m_localMatrix;
+	DirectX::XMMATRIX	m_worldMatrix;
 	DirectX::XMFLOAT4	m_color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	bool isSeen = true;
+	bool m_isSeen = true;
 public:
 	PolygonMesh() = default;
 	virtual ~PolygonMesh() = default;
@@ -44,10 +45,11 @@ public:
 	void Translate(float x, float y, float z) override;
 	void Scale(float x, float y, float z) override;
 	void ResetTransformation() override;
-	DirectX::XMMATRIX GetLocalMatrix(void) override;
+	DirectX::XMMATRIX GetWorldMatrix(void) override;
 	void SetColor(float r, float g, float b, float a) override;
-	void SetIsSeen(bool isSeen) override;
+	void SetIsSeen(bool m_isSeen) override;
 	bool IsSeen(void) const override;
+	IRenderableState	GetState(void) const override;
 
 private:
 	bool InitializeBuffers(ID3D11Device*, VertexMesh* vertices, UINT indexCount);

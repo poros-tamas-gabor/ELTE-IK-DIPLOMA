@@ -181,7 +181,7 @@ bool TerrainModel::LoadTerrain(const wchar_t* filepath)
 		vertexCount = vertices.size();
 		PolygonMeshCreator creator;
 		this->m_meshes.Add(pVertices, vertexCount, creator, filepath);
-		this->m_modelMessageSystem.PublishModelState(CollectIRenderableInfo());
+		this->m_modelMessageSystem.PublishModelState(CollectTerrainMeshState());
 	}
 	return bresult;
 
@@ -201,7 +201,6 @@ bool	TerrainModel::LoadCameraTrajectory(const wchar_t* filepath)
 {
 	std::vector<CameraPose> cameraPoses;
 	bool result = m_persistence->LoadCameraTrajectory(filepath, cameraPoses);
-	this->m_cameraTrajectoryIsloaded = result;
 	if (result)
 	{
 		std::vector<VertexPolyLine> vertices;
@@ -217,16 +216,16 @@ bool	TerrainModel::LoadCameraTrajectory(const wchar_t* filepath)
 		IRendarablePtr<VertexPolyLine> polyline = m_polylines.GetLastAddedComponent();
 		m_cameraTrajectory.Initialize(cameraPoses, polyline, &m_camera);
 
-		this->m_modelMessageSystem.PublishModelState(CollectIRenderableInfo());
+		this->m_modelMessageSystem.PublishModelState(CollectTerrainMeshState());
 		this->m_modelMessageSystem.PublishModelState(CollectFlythroughState());
 	}
 
 	return result;
 }
 
-bool TerrainModel::IsTrajectoryLoaded(void) const
+bool TerrainModel::IsTrajectoryInitialized(void) const
 {
-	return m_cameraTrajectoryIsloaded;
+	return m_cameraTrajectory.IsInitialized();
 }
 void TerrainModel::ResetCamera()
 {
@@ -263,9 +262,9 @@ void TerrainModel::TransformIRenderable(unsigned message, unsigned id,  float pa
 
 	case IDM_IRENDERABLE_ISSEEN:
 	{
-		bool isSeen = parameters[0] > 0 ? 1 : 0;
-		m_meshes.SetIsSeenComponent(id, isSeen);
-		m_polylines.SetIsSeenComponent(id, isSeen);
+		bool m_isSeen = parameters[0] > 0 ? 1 : 0;
+		m_meshes.SetIsSeenComponent(id, m_isSeen);
+		m_polylines.SetIsSeenComponent(id, m_isSeen);
 		break;
 	}
 	default:
@@ -319,15 +318,15 @@ void TerrainModel::UpdateCameraProperties(unsigned message, float data)
 FlythroughState	TerrainModel::CollectFlythroughState(void)
 {
 	FlythroughState state;
-	//TODO currentFrame
-	state.currentFrame = m_cameraTrajectory.GetCurrentFrameNum();
-	state.numberOfFrame = m_cameraTrajectory.GetNumberOfFrame();
-	state.IsTrajectoryLoaded = this->IsTrajectoryLoaded();
-	state.currentEpochTime = m_cameraTrajectory.GetCurrentEpochTime();
-	state.currentPosition = m_camera.GetPositionFloat3();
-	state.currentRotation = m_camera.GetRotationRadFloat3();
-	state.currentSunPosition.azimuth = m_light.GetAzimuth();
-	state.currentSunPosition.elevation = m_light.GetElevation();
+	state.currentFrame					= m_cameraTrajectory.GetCurrentFrameNum();
+	state.numberOfFrame					= m_cameraTrajectory.GetNumberOfFrame();
+	state.IsTrajectoryInitialized			= this->IsTrajectoryInitialized();
+	state.currentEpochTime				= m_cameraTrajectory.GetCurrentEpochTime();
+	state.currentCameraPosition			= m_camera.GetPositionF3();
+	state.currentCameraRotation			= m_camera.GetRotationF3();
+	state.currentSunPosition.azimuth	= m_light.GetAzimuth();
+	state.currentSunPosition.elevation	= m_light.GetElevation();
+	state.trajectoryPolyLine			= m_cameraTrajectory.GetTrajectoryPolyLineState();
 	
 	return state;
 }
@@ -335,27 +334,23 @@ FlythroughState	TerrainModel::CollectFlythroughState(void)
 void TerrainModel::CollectExplore3DState(void)
 {
 	//TODO SET DATE
-	m_explore3DState.currentEpochTime = EpochTime(1664534690, 0);
-	m_explore3DState.currentPosition	= m_camera.GetPositionFloat3();
-	m_explore3DState.currentRotation = m_camera.GetRotationRadFloat3();
+	m_explore3DState.currentEpochTime		= EpochTime(1664534690, 0);
+	m_explore3DState.currentCameraPosition	= m_camera.GetPositionF3();
+	m_explore3DState.currentCameraRotation = m_camera.GetRotationF3();
 	m_explore3DState.currentSunPosition.azimuth = m_light.GetAzimuth();
 	m_explore3DState.currentSunPosition.elevation = m_light.GetElevation();
 }
-std::vector<IRenderableState> TerrainModel::CollectIRenderableInfo()
+std::vector<IRenderableState> TerrainModel::CollectTerrainMeshState()
 {
-	std::vector<IRenderableState> polylineInfo;
 	std::vector<IRenderableState> meshInfo;
-	m_polylines.CollectIRenderableState(polylineInfo);
 	m_meshes.CollectIRenderableState(meshInfo);
-	polylineInfo.insert(polylineInfo.end(), meshInfo.begin(), meshInfo.end());
-	return polylineInfo;
+	return meshInfo;
 }
 
 void TerrainModel::ClearTerrain(void)
 {
 	this->m_meshes.ClearRenderables();
-	this->m_modelMessageSystem.PublishModelState(CollectIRenderableInfo());
-
+	this->m_modelMessageSystem.PublishModelState(CollectTerrainMeshState());
 }
 
 void TerrainModel::ClearCameraTrajectory(void)
@@ -402,7 +397,7 @@ void TerrainModel::AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int g
 	unsigned verteCount = vertices.size();
 	LineListCreator	lineListCreator;
 	this->m_polylines.Add(pVertex, verteCount, lineListCreator, L"Grid");
-	this->m_modelMessageSystem.PublishModelState(CollectIRenderableInfo());
+	this->m_modelMessageSystem.PublishModelState(CollectTerrainMeshState());
 }
 
 

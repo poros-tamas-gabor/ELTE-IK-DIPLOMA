@@ -73,7 +73,7 @@ void GuiView::ShowSettingWindow()
     
     MenuBar();
     static bool isFlythroughOn = false;
-    bool isTrajectoryLoaded = m_flythroughState.IsTrajectoryLoaded;
+    bool isTrajectoryLoaded = m_flythroughState.IsTrajectoryInitialized;
     if (ToggleButton("Mode", &isFlythroughOn, isTrajectoryLoaded))
     {
         if(isFlythroughOn)
@@ -113,6 +113,7 @@ void GuiView::ShowSettingWindow()
     ImGui::End();
 }
 
+
 void GuiView::MenuBar()
 {
     if (ImGui::BeginMenuBar())
@@ -140,6 +141,99 @@ void GuiView::MenuBar()
     }
 }
 
+std::vector<std::string> GuiView::CollectTerrainIDs(void)
+{
+    std::vector<std::string> ids;
+    for (const IRenderableState& info : m_IRenderableState)
+    {
+        std::string id = "Mesh id:" + std::to_string(info.id);
+        ids.push_back(id);
+    }
+    return ids;
+
+}
+
+void GuiView::TerrainListBox()
+{
+    static int item_current_idx = 0; // Here we store our selection data as an index.
+    if (ImGui::BeginListBox(""))
+    {
+        std::vector<std::string> terrainIds = CollectTerrainIDs();
+        for (int n = 0; n < terrainIds.size(); n++)
+        {
+            ImGui::PushID(n);
+            const bool is_selected = (item_current_idx == n);
+            if (ImGui::Selectable(terrainIds.at(n).c_str(), is_selected))
+            {
+                item_current_idx = n;
+                ImGui::OpenPopup("Terrain");
+            }
+            // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+            if (is_selected)
+            {
+                ImGui::SetItemDefaultFocus();
+            }
+
+            if (ImGui::BeginPopup("Terrain")) //BeginPopupContextItem())
+            {
+                ImGui::Text("This is a custom popup for unused space after the last column.");
+
+                unsigned int terrainId = m_IRenderableState.at(item_current_idx).id;
+
+                auto it = std::find_if(m_TerrainTrasnformations.begin(), m_TerrainTrasnformations.end(), [terrainId](IRenderableTransformation t) {return t.id == terrainId; });
+
+                if (it != m_TerrainTrasnformations.end())
+                {
+                    if (ImGui::Checkbox("IsSeen", &it->m_isSeen))
+                    {
+                        float b = (float)it->m_isSeen;
+                        m_terrainController->HandleMessage(IDC_CHECKBOX_IRENDERABLE_ISSEEN, &b, &terrainId);
+                    }
+
+                    ImGui::SeparatorText("Scale");
+                    if (ImGui::SliderFloat("slider S", &it->scaling, 0, 100))
+                    {
+                        m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_SCALE, &it->scaling, &terrainId);
+                    }
+                    if (ImGui::InputFloat("input S", &it->scaling))
+                    {
+                        m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_SCALE, &it->scaling, &terrainId);
+                    }
+
+                    ImGui::SeparatorText("Rotation radian");
+                    if (ImGui::SliderFloat3("slider R", it->rotation, -PI, PI))
+                    {
+                        m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_ROTATION, it->rotation, &terrainId);
+                    }
+                    if (ImGui::InputFloat3("input R", it->rotation))
+                    {
+                        m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_ROTATION, it->rotation, &terrainId);
+                    }
+
+                    ImGui::SeparatorText("Translation");
+                    if (ImGui::DragFloat3("slider T", it->tranlation))
+                    {
+                        m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_TRANSLATION, it->tranlation, &terrainId);
+                    }
+                    if (ImGui::InputFloat3("input T", it->tranlation))
+                    {
+                        m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_TRANSLATION, it->tranlation, &terrainId);
+                    }
+
+                    ImGui::SeparatorText("Color");
+
+                    if (ImGui::ColorEdit4("color", it->color))
+                    {
+                        m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_COLOR, it->color, &terrainId);
+                    }
+                }
+                ImGui::EndPopup();
+            }
+            ImGui::PopID();
+        }
+        ImGui::EndListBox();
+    }
+}
 void GuiView::GeneralTab()
 {
     if (ImGui::CollapsingHeader("Camera Properties"))
@@ -162,89 +256,20 @@ void GuiView::GeneralTab()
 
         if (ImGui::Button("Reset Camera"))
         {
-
             this->m_terrainController->HandleMessage(IDC_BUTTON_CAMERA_RESET, NULL, NULL);
         }
     }
 
-    if (ImGui::CollapsingHeader("Renderables"))
+    if (ImGui::CollapsingHeader("Terrain Meshes"))
     {
-        if (ImGui::Button("Clear meshes"))
+        if (ImGui::Button("Clear Terrain meshes"))
         {
             m_terrainController->HandleMessage(IDC_BUTTON_CLEAR_MESHES, NULL, NULL);
         }
-        for (const IRenderableState& info : m_IRenderableState)
-        {
-            ImGui::PushID(info.id);
-            if (ImGui::TreeNode(std::to_string(info.id).c_str()))
-            {
-                ImGui::TextWrapped("id: %d", info.id);
-                ImGui::TextWrapped("path: %s", StringConverter::WideToString(info.name).c_str());
 
-                auto it = std::find_if(m_trasnformations.begin(), m_trasnformations.end(), [info](IRenderableTransformation t) {return t.id == info.id; });
+        TerrainListBox();
 
-                if (it != m_trasnformations.end())
-                {
-
-                    if (ImGui::Checkbox("IsSeen", &it->isSeen))
-                    {
-                        unsigned int id = info.id;
-                        float b = (float)it->isSeen;
-                        m_terrainController->HandleMessage(IDC_CHECKBOX_IRENDERABLE_ISSEEN, &b, &id);
-                    }
-
-                    ImGui::SeparatorText("Scale");
-                    if (ImGui::SliderFloat("slider S", &it->scaling, -PI, PI))
-                    {
-                        unsigned int id = info.id;
-                        m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_SCALE, &it->scaling, &id);
-                    }
-                    if (ImGui::InputFloat("input S", &it->scaling))
-                    {
-                        unsigned int id = info.id;
-                        m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_SCALE, &it->scaling, &id);
-                    }
-
-                    ImGui::SeparatorText("Rotation radian");
-                    if (ImGui::SliderFloat3("slider R", it->rotation, -PI, PI))
-                    {
-                        unsigned int id = info.id;
-                        m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_ROTATION, it->rotation, &id);
-                    }
-                    if (ImGui::InputFloat3("input R", it->rotation))
-                    {
-                        unsigned int id = info.id;
-                        m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_ROTATION, it->rotation, &id);
-                    }
-
-                    ImGui::SeparatorText("Translation");
-                    if (ImGui::SliderFloat3("slider T", it->tranlation, -PI, PI))
-                    {
-                        unsigned int id = info.id;
-                        m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_TRANSLATION, it->tranlation, &id);
-                    }
-                    if (ImGui::InputFloat3("input T", it->tranlation))
-                    {
-                        unsigned int id = info.id;
-                        m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_TRANSLATION, it->tranlation, &id);
-                    }
-
-                    ImGui::SeparatorText("Color");
-
-                    if (ImGui::ColorEdit4("color", it->color))
-                    {
-                        unsigned int id = info.id;
-                        m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_COLOR, it->color, &id);
-                    }
-                }
-
-
-
-                ImGui::TreePop();
-
-            }
-            ImGui::PopID();
-        }
+ 
     }
 }
 void GuiView::FlythroughTab()
@@ -291,11 +316,11 @@ void GuiView::FlythroughTab()
     {
         ImGui::TableNextRow();
         ImGui::TableSetColumnIndex(0);
-        ImGui::Text("%.4f", m_flythroughState.currentPosition.x);
+        ImGui::Text("%.4f", m_flythroughState.currentCameraPosition.x);
         ImGui::TableSetColumnIndex(1);
-        ImGui::Text("%.4f", m_flythroughState.currentPosition.y);
+        ImGui::Text("%.4f", m_flythroughState.currentCameraPosition.y);
         ImGui::TableSetColumnIndex(2);
-        ImGui::Text("%.4f", m_flythroughState.currentPosition.z);
+        ImGui::Text("%.4f", m_flythroughState.currentCameraPosition.z);
         ImGui::EndTable();
     }
 
@@ -305,11 +330,11 @@ void GuiView::FlythroughTab()
     {
         ImGui::TableNextRow();
         ImGui::TableSetColumnIndex(0);
-        ImGui::Text("%.4f", m_flythroughState.currentRotation.x);
+        ImGui::Text("%.4f", m_flythroughState.currentCameraRotation.x);
         ImGui::TableSetColumnIndex(1);
-        ImGui::Text("%.4f", m_flythroughState.currentRotation.y);
+        ImGui::Text("%.4f", m_flythroughState.currentCameraRotation.y);
         ImGui::TableSetColumnIndex(2);
-        ImGui::Text("%.4f", m_flythroughState.currentRotation.z);
+        ImGui::Text("%.4f", m_flythroughState.currentCameraRotation.z);
         ImGui::EndTable();
     }
     ImGui::SeparatorText("Date and time");
@@ -340,11 +365,11 @@ void GuiView::Explore3DTab()
     {
         ImGui::TableNextRow();
         ImGui::TableSetColumnIndex(0);
-        ImGui::Text("%.4f", m_explore3dState.currentPosition.x);
+        ImGui::Text("%.4f", m_explore3dState.currentCameraPosition.x);
         ImGui::TableSetColumnIndex(1);
-        ImGui::Text("%.4f", m_explore3dState.currentPosition.y);
+        ImGui::Text("%.4f", m_explore3dState.currentCameraPosition.y);
         ImGui::TableSetColumnIndex(2);
-        ImGui::Text("%.4f", m_explore3dState.currentPosition.z);
+        ImGui::Text("%.4f", m_explore3dState.currentCameraPosition.z);
         ImGui::EndTable();
     }
 
@@ -354,11 +379,11 @@ void GuiView::Explore3DTab()
     {
         ImGui::TableNextRow();
         ImGui::TableSetColumnIndex(0);
-        ImGui::Text("%.4f", m_explore3dState.currentRotation.x);
+        ImGui::Text("%.4f", m_explore3dState.currentCameraRotation.x);
         ImGui::TableSetColumnIndex(1);
-        ImGui::Text("%.4f", m_explore3dState.currentRotation.y);
+        ImGui::Text("%.4f", m_explore3dState.currentCameraRotation.y);
         ImGui::TableSetColumnIndex(2);
-        ImGui::Text("%.4f", m_explore3dState.currentRotation.z);
+        ImGui::Text("%.4f", m_explore3dState.currentCameraRotation.z);
         ImGui::EndTable();
     }
     ImGui::SeparatorText("Date and time");
@@ -395,17 +420,20 @@ void GuiView::Shutdown()
 void GuiView::HandleIModelState(const std::vector<IRenderableState>& states)
 {
     m_IRenderableState = states;
+    if (states.empty())
+    {
+        m_TerrainTrasnformations.clear();
+    }
     for (const IRenderableState& state : states)
     {
-        auto it = std::find_if(m_trasnformations.begin(), m_trasnformations.end(), [state](IRenderableTransformation t) {return t.id == state.id; });
+        auto it = std::find_if(m_TerrainTrasnformations.begin(), m_TerrainTrasnformations.end(), [state](IRenderableTransformation t) {return t.id == state.id; });
         //not contains
-        if (it == m_trasnformations.end())
+        if (it == m_TerrainTrasnformations.end())
         {
             IRenderableTransformation tranformation;
             tranformation.id = state.id;
-            m_trasnformations.push_back(tranformation);
+            m_TerrainTrasnformations.push_back(tranformation);
         }
-        //TODO delete from vector
     }
 }
 

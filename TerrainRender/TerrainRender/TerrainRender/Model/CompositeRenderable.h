@@ -17,6 +17,7 @@ private:
 	IVertexShader*						m_vertexShader = NULL;
 	IPixelShader*						m_pixelShader = NULL;
 	ID3D11Device*						m_device = NULL;
+	bool								m_isSeen = true;
 
 private:
 	bool Add(IRendarablePtr<V> renderable)
@@ -112,7 +113,7 @@ public:
 		}
 	}
 
-	DirectX::XMMATRIX GetLocalMatrix(void)  override
+	DirectX::XMMATRIX GetWorldMatrix(void)  override
 	{
 		//TODO 
 		return DirectX::XMMatrixIdentity();
@@ -151,15 +152,15 @@ public:
 		}
 	}
 
+	IRenderableState	GetState(void) const override {
+		return IRenderableState();
+	}
+
 	void CollectIRenderableState(std::vector<IRenderableState>& vector)
 	{
 		for (IRendarablePtr<V> renderable : m_renderables)
 		{
-			IRenderableState info;
-			info.id = renderable->GetID();
-			info.name = renderable->GetName();
-			info.isSeen = renderable->IsSeen();
-
+			IRenderableState info = renderable->GetState();
 			vector.push_back(info);
 		}
 	}
@@ -190,25 +191,26 @@ public:
 		}
 	}
 
-	void SetIsSeen(bool isSeen)
+	void SetIsSeen(bool m_isSeen) override 
 	{
+		m_isSeen = m_isSeen;
 		for (IRendarablePtr<V> renderable : m_renderables)
 		{
-			renderable->SetIsSeen(isSeen);
+			renderable->SetIsSeen(m_isSeen);
 		}
 	}
 
-	bool IsSeen(void)const
+	bool IsSeen(void) const override
 	{
-		return true;
+		return m_isSeen;
 	}
 
-	void SetIsSeenComponent(unsigned componentID, bool isSeen)
+	void SetIsSeenComponent(unsigned componentID, bool m_isSeen)
 	{
 		for (IRendarablePtr<V> renderable : m_renderables)
 		{
 			if (renderable->GetID() == componentID)
-				renderable->SetIsSeen(isSeen);
+				renderable->SetIsSeen(m_isSeen);
 		}
 	}
 };

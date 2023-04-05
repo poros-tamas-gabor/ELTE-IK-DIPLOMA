@@ -37,6 +37,10 @@ public:
 	unsigned	GetNumberOfFrame(void) const;
 	void		SetCurrentFrame(unsigned frameNum);
 
+private:
+	Vector3D TransformPosition(const Vector3D&) const;
+	Vector3D TransformRotation(const Vector3D&) const;
+
 
 
 };

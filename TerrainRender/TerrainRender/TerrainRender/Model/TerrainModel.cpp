@@ -343,9 +343,12 @@ void TerrainModel::CollectExplore3DState(void)
 }
 std::vector<IRenderableState> TerrainModel::CollectIRenderableInfo()
 {
+	std::vector<IRenderableState> polylineInfo;
 	std::vector<IRenderableState> meshInfo;
+	m_polylines.CollectIRenderableState(polylineInfo);
 	m_meshes.CollectIRenderableState(meshInfo);
-	return meshInfo;
+	polylineInfo.insert(polylineInfo.end(), meshInfo.begin(), meshInfo.end());
+	return polylineInfo;
 }
 
 void TerrainModel::ClearTerrain(void)

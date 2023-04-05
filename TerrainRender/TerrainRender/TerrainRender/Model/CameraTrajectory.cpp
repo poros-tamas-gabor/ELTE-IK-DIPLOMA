@@ -36,23 +36,49 @@ void CameraTrajectory::Reset()
 	this->m_camera->SetRotationRad(m_rotations.at(0).x, m_rotations.at(0).y, m_rotations.at(0).z);
 
 }
+
+Vector3D  CameraTrajectory::TransformPosition(const Vector3D& vector) const
+{
+	DirectX::XMMATRIX rotation = m_renderable->GetLocalMatrix();
+	DirectX::XMVECTOR vec = DirectX::XMVectorSet(vector.x, vector.y, vector.z, 1.0f);
+	vec = DirectX::XMVector4Transform(vec, rotation);
+	DirectX::XMFLOAT3 vecfloat3;
+	DirectX::XMStoreFloat3(&vecfloat3, vec);
+	return { vecfloat3.x,vecfloat3.y,vecfloat3.z };
+
+}
+Vector3D  CameraTrajectory::TransformRotation(const Vector3D& vector) const
+{
+	DirectX::XMMATRIX rotation = m_renderable->GetLocalMatrix();
+	DirectX::XMFLOAT4X4 XMFLOAT4X4_Values;
+	DirectX::XMStoreFloat4x4(&XMFLOAT4X4_Values, DirectX::XMMatrixTranspose(rotation));
+	float pitch = (float)asin(-XMFLOAT4X4_Values._23);
+	float yaw = (float)atan2(XMFLOAT4X4_Values._13, XMFLOAT4X4_Values._33);
+	float roll = (float)atan2(XMFLOAT4X4_Values._21, XMFLOAT4X4_Values._22);
+	return { pitch,yaw, roll };
+}
+
 void CameraTrajectory::UpdateCamera(double elapsedmsec)
 {
+	bool result;
+	Vector3D currentRotation;
+	Vector3D currentPosition;
+
 	this->m_elapsedmsec += elapsedmsec;
 
-	bool result;
-	Vector3D currentPosition;
 
 	LinearInterpolation<double, Vector3D>	linearInterpolation;
 	result = linearInterpolation.Calculate(this->m_elapsedmsecs, this->m_positions, this->m_elapsedmsec, currentPosition, m_currentFrameNum);
 	if (!result)
 		return;
-	Vector3D currentRotation;
 
 	CirclularInterpolation<double> circularInterpolation;
 	result = circularInterpolation.Calculate(this->m_elapsedmsecs, this->m_rotations, this->m_elapsedmsec, currentRotation, m_currentFrameNum);
 	if (!result)
 		return;
+
+	currentRotation = TransformRotation(currentRotation);
+	currentPosition = TransformPosition(currentPosition);
 	
 	this->m_camera->SetPosition(currentPosition.x, currentPosition.y, currentPosition.z);
 	this->m_camera->SetRotationRad(currentRotation.x, currentRotation.y, currentRotation.z);

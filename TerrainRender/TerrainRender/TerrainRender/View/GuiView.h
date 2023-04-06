@@ -27,7 +27,8 @@ private:
 	IControllerPtr							m_terrainController;
 	//ModelStates:
 	std::vector<IRenderableTransformation>	m_TerrainTrasnformations;
-	std::vector<IRenderableState>			m_IRenderableState;
+	IRenderableTransformation				m_TrajectoryTransformation;
+	std::vector<IRenderableState>			m_TerrainsState;
 	FlythroughState							m_flythroughState;
 	Explore3DState							m_explore3dState;
 	int										m_frame;
@@ -42,6 +43,7 @@ public:
 	void FlythroughTab();
 	void Explore3DTab();
 	void TerrainListBox();
+	void IRenderablePopUp(unsigned int, IRenderableTransformation& t);
 
 	void HandleIModelState(const std::vector<IRenderableState>&) override;
 	void HandleIModelState(const FlythroughState&) override;

@@ -144,13 +144,66 @@ void GuiView::MenuBar()
 std::vector<std::string> GuiView::CollectTerrainIDs(void)
 {
     std::vector<std::string> ids;
-    for (const IRenderableState& info : m_IRenderableState)
+    for (const IRenderableState& info : m_TerrainsState)
     {
         std::string id = "Mesh id:" + std::to_string(info.id);
         ids.push_back(id);
     }
     return ids;
 
+}
+
+void GuiView::IRenderablePopUp(unsigned int terrainId, IRenderableTransformation& t)
+{
+    if (ImGui::BeginPopup("Terrain")) //BeginPopupContextItem())
+    {
+
+        if (ImGui::Checkbox("IsSeen", &t.m_isSeen))
+        {
+            float b = (float)t.m_isSeen;
+            m_terrainController->HandleMessage(IDC_CHECKBOX_IRENDERABLE_ISSEEN, &b, &terrainId);
+        }
+        
+        ImGui::SeparatorText("Scale");
+        if (ImGui::SliderFloat("slider S", &t.scaling, 0, 100))
+        {
+            m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_SCALE, &t.scaling, &terrainId);
+        }
+
+        if (ImGui::InputFloat("input S", &t.scaling))
+        {
+            m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_SCALE, &t.scaling, &terrainId);
+        }
+
+        ImGui::SeparatorText("Rotation radian");
+        if (ImGui::SliderFloat3("slider R", t.rotation, -PI, PI))
+        {
+            m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_ROTATION, t.rotation, &terrainId);
+        }
+
+        if (ImGui::InputFloat3("input R", t.rotation))
+        {
+            m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_ROTATION, t.rotation, &terrainId);
+        }
+
+        ImGui::SeparatorText("Translation");
+        if (ImGui::DragFloat3("slider T", t.tranlation))
+        {
+            m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_TRANSLATION, t.tranlation, &terrainId);
+        }
+        if (ImGui::InputFloat3("input T", t.tranlation))
+        {
+            m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_TRANSLATION, t.tranlation, &terrainId);
+        }
+
+        ImGui::SeparatorText("Color");
+        if (ImGui::ColorEdit4("color", t.color))
+        {
+            m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_COLOR, t.color, &terrainId);
+        }
+
+        ImGui::EndPopup();
+    }
 }
 
 void GuiView::TerrainListBox()
@@ -174,61 +227,10 @@ void GuiView::TerrainListBox()
                 ImGui::SetItemDefaultFocus();
             }
 
-            if (ImGui::BeginPopup("Terrain")) //BeginPopupContextItem())
-            {
-                ImGui::Text("This is a custom popup for unused space after the last column.");
+            unsigned int terrainId = m_TerrainsState.at(item_current_idx).id;
+            auto it = std::find_if(m_TerrainTrasnformations.begin(), m_TerrainTrasnformations.end(), [terrainId](IRenderableTransformation t) {return t.id == terrainId; });
 
-                unsigned int terrainId = m_IRenderableState.at(item_current_idx).id;
-
-                auto it = std::find_if(m_TerrainTrasnformations.begin(), m_TerrainTrasnformations.end(), [terrainId](IRenderableTransformation t) {return t.id == terrainId; });
-
-                if (it != m_TerrainTrasnformations.end())
-                {
-                    if (ImGui::Checkbox("IsSeen", &it->m_isSeen))
-                    {
-                        float b = (float)it->m_isSeen;
-                        m_terrainController->HandleMessage(IDC_CHECKBOX_IRENDERABLE_ISSEEN, &b, &terrainId);
-                    }
-
-                    ImGui::SeparatorText("Scale");
-                    if (ImGui::SliderFloat("slider S", &it->scaling, 0, 100))
-                    {
-                        m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_SCALE, &it->scaling, &terrainId);
-                    }
-                    if (ImGui::InputFloat("input S", &it->scaling))
-                    {
-                        m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_SCALE, &it->scaling, &terrainId);
-                    }
-
-                    ImGui::SeparatorText("Rotation radian");
-                    if (ImGui::SliderFloat3("slider R", it->rotation, -PI, PI))
-                    {
-                        m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_ROTATION, it->rotation, &terrainId);
-                    }
-                    if (ImGui::InputFloat3("input R", it->rotation))
-                    {
-                        m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_ROTATION, it->rotation, &terrainId);
-                    }
-
-                    ImGui::SeparatorText("Translation");
-                    if (ImGui::DragFloat3("slider T", it->tranlation))
-                    {
-                        m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_TRANSLATION, it->tranlation, &terrainId);
-                    }
-                    if (ImGui::InputFloat3("input T", it->tranlation))
-                    {
-                        m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_TRANSLATION, it->tranlation, &terrainId);
-                    }
-
-                    ImGui::SeparatorText("Color");
-
-                    if (ImGui::ColorEdit4("color", it->color))
-                    {
-                        m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_COLOR, it->color, &terrainId);
-                    }
-                }
-                ImGui::EndPopup();
-            }
+            IRenderablePopUp(terrainId, *it);
             ImGui::PopID();
         }
         ImGui::EndListBox();
@@ -268,8 +270,37 @@ void GuiView::GeneralTab()
         }
 
         TerrainListBox();
+    }
+    if (ImGui::CollapsingHeader("Trajectory"))
+    {
+        static int item_current_idx = 0; // Here we store our selection data as an index.
+        if (ImGui::BeginListBox(""))
+        {
+            std::vector<std::string> terrainIds;
+            terrainIds.push_back("Polyline " + std::to_string(m_flythroughState.trajectoryPolyLine.id));
+            for (int n = 0; n < terrainIds.size(); n++)
+            {
+                ImGui::PushID(n);
+                const bool is_selected = (item_current_idx == n);
+                if (ImGui::Selectable(terrainIds.at(n).c_str(), is_selected))
+                {
+                    item_current_idx = n;
+                    ImGui::OpenPopup("Terrain");
+                }
+                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                if (is_selected)
+                {
+                    ImGui::SetItemDefaultFocus();
+                }
 
- 
+                unsigned int terrainId = m_flythroughState.trajectoryPolyLine.id;
+
+
+                IRenderablePopUp(terrainId,m_TrajectoryTransformation);
+                ImGui::PopID();
+            }
+            ImGui::EndListBox();
+        }
     }
 }
 void GuiView::FlythroughTab()
@@ -308,7 +339,6 @@ void GuiView::FlythroughTab()
     {
         this->m_terrainController->HandleMessage(IDCC_SET_FRAME_FLYTHROUGH, NULL, (unsigned*)(&m_frame));
     }
-
 
     ImGui::Spacing();
     ImGui::SeparatorText("Position");
@@ -419,7 +449,7 @@ void GuiView::Shutdown()
 
 void GuiView::HandleIModelState(const std::vector<IRenderableState>& states)
 {
-    m_IRenderableState = states;
+    m_TerrainsState = states;
     if (states.empty())
     {
         m_TerrainTrasnformations.clear();
@@ -430,6 +460,7 @@ void GuiView::HandleIModelState(const std::vector<IRenderableState>& states)
         //not contains
         if (it == m_TerrainTrasnformations.end())
         {
+            //TODO lehet hogy itt initializalni kell 
             IRenderableTransformation tranformation;
             tranformation.id = state.id;
             m_TerrainTrasnformations.push_back(tranformation);
@@ -440,6 +471,7 @@ void GuiView::HandleIModelState(const std::vector<IRenderableState>& states)
 void GuiView::HandleIModelState(const FlythroughState& state)
 {
     m_flythroughState = state;
+    m_TrajectoryTransformation;
 }
 
 void GuiView::HandleIModelState(const Explore3DState& state)

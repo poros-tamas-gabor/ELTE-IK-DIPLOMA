@@ -75,7 +75,6 @@ void CameraTrajectory::UpdateCamera(double elapsedmsec)
 
 	this->m_elapsedmsec += elapsedmsec;
 
-
 	LinearInterpolation<double, Vector3D>	linearInterpolation;
 	result = linearInterpolation.Calculate(this->m_elapsedmsecs, this->m_positions, this->m_elapsedmsec, currentCameraPosition, m_currentFrameNum);
 	if (!result)

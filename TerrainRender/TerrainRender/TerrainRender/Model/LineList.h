@@ -15,6 +15,7 @@ protected:
 	DirectX::XMFLOAT3	m_scaling;
 	DirectX::XMFLOAT3	m_translation;
 	DirectX::XMMATRIX	m_localMatrix;
+	DirectX::XMMATRIX	m_worldMatrix;
 	DirectX::XMFLOAT4	m_color = {1.0f, 1.0f, 1.0f, 1.0f};
 	bool				m_isSeen = true;
 

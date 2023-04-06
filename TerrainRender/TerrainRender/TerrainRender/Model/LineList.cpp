@@ -29,16 +29,15 @@ void LineList::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worl
 {
 	if (IsSeen())
 	{
-		DirectX::XMMATRIX worldMatrix = m_localMatrix * worldMat;
-		bool bresult = this->m_vertexShader->Render(deviceContext, worldMatrix, viewMat, projectionMat, m_color);
+		m_worldMatrix = m_localMatrix * worldMat;
+		bool bresult = this->m_vertexShader->Render(deviceContext, m_worldMatrix, viewMat, projectionMat, m_color);
 		if (!bresult)
-		{
-			//return false;
-		}
+			THROW_TREXCEPTION(L"Failed to render vertex shader");
 		this->RenderBuffers(deviceContext);
-		this->m_pixelShader->Render(deviceContext, this->GetVertexCount(), light);
+		bresult = this->m_pixelShader->Render(deviceContext, this->GetVertexCount(), light);
+		if (!bresult)
+			THROW_TREXCEPTION(L"Failed to render pixel shader");
 	}
-
 }
 
 int LineList::GetIndexCount() const
@@ -160,7 +159,7 @@ void LineList::CalculateLocalMatrix(void)
 }
 DirectX::XMMATRIX LineList::GetWorldMatrix(void)
 {
-	return m_localMatrix;
+	return m_worldMatrix;
 }
 
 void LineList::SetColor(float r, float g, float b, float a)

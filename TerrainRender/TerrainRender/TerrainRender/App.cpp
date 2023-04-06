@@ -53,6 +53,7 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 	{
 		this->_keyboard.ClearCharBuffer();
 		this->_keyboard.ClearKeyBuffer();
+		this->_keyboard.ClearKeyStates();
 		return 0;
 	}
 

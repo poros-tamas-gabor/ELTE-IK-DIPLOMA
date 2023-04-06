@@ -44,6 +44,14 @@ bool Keyboard::CharBufferIsEmpty() const
 {
 	return this->_charBuffer.empty();
 }
+
+void Keyboard::ClearKeyStates()
+{
+	for (int i = 0; i < 256u; i++)
+	{
+		this->_keyStates[i] = false;
+	}
+}
 void Keyboard::ClearKeyBuffer()
 {
 	this->_keyBuffer = std::queue<KeyboardEvent>();

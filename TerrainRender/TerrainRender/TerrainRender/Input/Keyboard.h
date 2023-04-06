@@ -28,6 +28,7 @@ public:
 	bool KeyBufferIsEmpty() const;
 	bool CharBufferIsEmpty() const;
 
+	void ClearKeyStates();
 	void ClearKeyBuffer();
 	void ClearCharBuffer();
 

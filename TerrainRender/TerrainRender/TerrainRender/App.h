@@ -40,6 +40,7 @@ public:
 	bool Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight);
 	void Run();
 	void Shutdown();
+	void Resize(UINT screenWidth, UINT screenHeight);
 	Mouse						_mouse;
 	Keyboard					_keyboard;
 

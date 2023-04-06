@@ -34,10 +34,13 @@ private:
 	char						_videoCardDescription[128];
 
 	bool GetAdapterData(float screenWidth, float screenHeight, unsigned int& numerator, unsigned int& denominator);
+	bool InitalizeAttributes(unsigned screenWidth, unsigned screenHeight);
+	bool ReinitalizeAttributes(unsigned screenWidth, unsigned screenHeight);
 public:
 	D3DView();
 	~D3DView();
 	bool Initalize(HWND hwnd, float screenWidth, float screenHeight, bool fullscreen, bool vsync);
+	bool Resize(unsigned screenWidth, unsigned screenHeight);
 	void Shutdown();
 
 	void BeginScene(float, float, float, float);

@@ -58,6 +58,7 @@ public:
 	TerrainModel(const TerrainModel&) = delete;
 	~TerrainModel();
 	bool	Initalize(HWND hwnd, IDataAccess* persistence, ID3D11Device* device, int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView = (DirectX::XM_PI / 4.0f)) override;
+	void	Resize(unsigned screenWidth, unsigned screenHeight) override;
 	void	Shutdown() override;
 	bool	Render(ID3D11DeviceContext* deviceContext) override;
 

@@ -17,6 +17,13 @@ bool TerrainView::Initalize(HWND hwnd, float screenWidth, float screenHeight, bo
 
 	return true;
 }
+bool TerrainView::Resize(unsigned screenWidth, unsigned screenHeight)
+{
+	bool result;
+	result  = m_d3dView.Resize(screenWidth, screenHeight);
+	return result;
+}
+
 void TerrainView::Shutdown() 
 {
 	this->m_d3dView.Shutdown();

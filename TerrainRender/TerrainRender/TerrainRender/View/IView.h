@@ -12,6 +12,7 @@ public:
 	virtual void HandleIModelState(const std::vector<IRenderableState>&) = 0;
 	virtual void HandleIModelState(const FlythroughState&) = 0;
 	virtual void HandleIModelState(const Explore3DState&) = 0;
+	//virtual void Resize(unsigned screenWidth, unsigned screenHeight) = 0;
 };
 
 typedef std::shared_ptr<IView> IViewPtr;

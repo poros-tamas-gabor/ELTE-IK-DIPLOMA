@@ -67,9 +67,20 @@ void Camera::AdjustRotationRad(float deltaX, float deltaY, float deltaZ)
 
 void Camera::Initialize(int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView)
 {
-	float screenAspect = (float)screenWidth / (float)screenHeight;
-	this->SetProjectionValues(fieldOfView, screenAspect, screenNear, screenDepth);
+	m_isInitialized = true;
+	float aspectRatio = (float)screenWidth / (float)screenHeight;
+	this->SetProjectionValues(fieldOfView, aspectRatio, screenNear, screenDepth);
 }
+
+void Camera::Resize(int screenWidth, int screenHeight)
+{
+	if (m_isInitialized)
+	{
+		this->m_aspectRatio = (float)screenWidth / (float)screenHeight;
+		this->_projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(m_fovRadian, m_aspectRatio, m_nearScreen, m_farScreen);
+	}
+}
+
 
 void Camera::SetProjectionValues(float fovRadian, float aspectRatio, float nearScreen, float farScreen)
 {

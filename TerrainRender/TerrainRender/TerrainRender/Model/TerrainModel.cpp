@@ -51,6 +51,11 @@ bool TerrainModel::Initalize(HWND hwnd, IDataAccess* persistence, ID3D11Device* 
 	return true;
 }
 
+void TerrainModel::Resize(unsigned screenWidth, unsigned screenHeight)
+{
+	this->m_camera.Resize(screenWidth, screenHeight);
+}
+
 void TerrainModel::Shutdown()
 {
 	m_vertexShaderMesh.Shutdown();

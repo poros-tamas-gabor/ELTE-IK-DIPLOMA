@@ -129,13 +129,8 @@ bool D3DView::Initalize(HWND hwnd, float screenWidth, float screenHeight, bool f
 	try {
 		HRESULT result;
 		D3D_FEATURE_LEVEL featureLevel;
-		ID3D11Texture2D* backBufferPtr;
-		D3D11_TEXTURE2D_DESC depthBufferDesc;
 		DXGI_SWAP_CHAIN_DESC swapChainDesc;
-		D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
-		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
-		D3D11_RASTERIZER_DESC rasterDesc;
-		D3D11_VIEWPORT viewport;
+
 
 		// Store the vsync setting.
 		this->_vsync = vsync;
@@ -196,6 +191,31 @@ bool D3DView::Initalize(HWND hwnd, float screenWidth, float screenHeight, bool f
 
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create the swap chain, Direct3D device, and Direct3D device context");
 
+		return InitalizeAttributes(screenWidth, screenHeight);
+		
+	}
+
+	catch (COMException& exception)
+	{
+		ErrorHandler::Log(exception);
+		return false;
+	}
+}
+
+bool  D3DView::InitalizeAttributes(unsigned screenWidth, unsigned screenHeight)
+{
+	HRESULT result;
+	D3D_FEATURE_LEVEL featureLevel;
+	ID3D11Texture2D* backBufferPtr;
+	D3D11_TEXTURE2D_DESC depthBufferDesc;
+	DXGI_SWAP_CHAIN_DESC swapChainDesc;
+	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
+	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
+	D3D11_RASTERIZER_DESC rasterDesc;
+	D3D11_VIEWPORT viewport;
+
+	try
+	{
 		// Get the pointer to the back buffer.
 		result = this->_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr);
 
@@ -263,15 +283,15 @@ bool D3DView::Initalize(HWND hwnd, float screenWidth, float screenHeight, bool f
 
 		// Set the depth stencil state.
 		this->_deviceContext->OMSetDepthStencilState(this->_depthStencilState, 1);
-		
+
 		// Initialize the depth stencil view.
 		ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
-		
+
 		// Set up the depth stencil view description.
 		depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 		depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 		depthStencilViewDesc.Texture2D.MipSlice = 0;
-		
+
 		//Create the depth stencil view.
 		result = this->_device->CreateDepthStencilView(this->_depthStencilBuffer, &depthStencilViewDesc, &this->_depthStencilView);
 
@@ -314,15 +334,60 @@ bool D3DView::Initalize(HWND hwnd, float screenWidth, float screenHeight, bool f
 		//
 		// Create the viewport.
 		this->_deviceContext->RSSetViewports(1, &viewport);
+		return true;
 	}
-
 	catch (COMException& exception)
 	{
 		ErrorHandler::Log(exception);
 		return false;
 	}
-	return true;
+}
 
+bool D3DView::Resize(unsigned screenWidth, unsigned screenHeight)
+{
+	try {
+		if (this->_swapChain)
+		{
+			//https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/d3d10-graphics-programming-guide-dxgi#handling-window-resizing
+			HRESULT result;
+			D3D_FEATURE_LEVEL featureLevel;
+			ID3D11Texture2D* backBufferPtr;
+			D3D11_TEXTURE2D_DESC depthBufferDesc;
+			DXGI_SWAP_CHAIN_DESC swapChainDesc;
+			D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
+			D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
+			D3D11_RASTERIZER_DESC rasterDesc;
+			D3D11_VIEWPORT viewport;
+
+			_deviceContext->OMSetRenderTargets(0, 0, 0);
+			// Release all outstanding references to the swap chain's buffers.
+			if(_renderTargetView)
+				_renderTargetView->Release();
+			if(_depthStencilBuffer)
+				_depthStencilBuffer->Release();
+			if (_depthStencilState)
+				_depthStencilState->Release();
+			if(_depthStencilBuffer)
+				_depthStencilBuffer->Release();
+			if(_depthStencilView)
+				_depthStencilView->Release();
+			if(_rasterState)
+				_rasterState->Release();
+			// Preserve the existing buffer count and format.
+			// Automatically choose the width and height to match the client rect for HWNDs.
+			result = _swapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+			// Perform error handling here!
+			THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to resize swapchain");
+
+			return InitalizeAttributes(screenWidth, screenHeight);
+
+		}
+	}
+	catch (COMException& exception)
+	{
+		ErrorHandler::Log(exception);
+		return false;
+	}
 }
 void D3DView::Shutdown() {
 

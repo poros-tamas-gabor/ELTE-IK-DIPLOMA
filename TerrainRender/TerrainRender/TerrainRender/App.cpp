@@ -55,6 +55,17 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 		this->_keyboard.ClearKeyBuffer();
 		return 0;
 	}
+
+	case WM_SIZE:
+	{
+		UINT width = LOWORD(lparam);
+		UINT height = HIWORD(lparam);
+		Resize(width, height);
+
+
+
+		return 0;
+	}
 	// Check if a key has been pressed on the keyboard.
 	case WM_KEYDOWN:
 	{
@@ -326,7 +337,6 @@ void App::Update()
 void App::RenderFrame()
 {
 	this->m_terrainView->RenderFrame();
-
 }
 void App::Run()
 {
@@ -350,7 +360,10 @@ void App::Shutdown()
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
 	this->_renderWindow.Shutdown();
+}
 
-
-
+void App::Resize(UINT screenWidth, UINT screenHeight)
+{
+	m_terrainView->Resize(screenWidth, screenHeight);
+	m_terrainModel->Resize(screenWidth, screenHeight);
 }

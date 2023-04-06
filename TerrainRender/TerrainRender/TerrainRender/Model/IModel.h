@@ -16,6 +16,7 @@ public:
 	virtual ~IModel() = default;
 
 	virtual bool	Initalize(HWND hwnd, IDataAccess* persistence, ID3D11Device* device, int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView) = 0;
+	virtual void	Resize(unsigned screenWidth, unsigned screenHeight) = 0;
 	virtual void	Shutdown() = 0;
 	virtual bool	Render(ID3D11DeviceContext* deviceContext) = 0;
 

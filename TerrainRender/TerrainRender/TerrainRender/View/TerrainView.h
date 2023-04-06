@@ -30,6 +30,7 @@ public:
 	TerrainView(const TerrainView&) = delete;
 	~TerrainView();
 	bool Initalize(HWND hwnd, float screenWidth, float screenHeight, bool fullscreen = false, bool vsync = true);
+	bool Resize(unsigned screenWidth, unsigned screenHeight);
 	void Shutdown();
 	bool RenderFrame();
 	//void Update(const ModelEvent::Event& event) override;

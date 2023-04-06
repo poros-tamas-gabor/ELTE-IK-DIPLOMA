@@ -165,7 +165,7 @@ void GuiView::IRenderablePopUp(unsigned int terrainId, IRenderableTransformation
         }
         
         ImGui::SeparatorText("Scale");
-        if (ImGui::SliderFloat("slider S", &t.scaling, 0, 100))
+        if (ImGui::SliderFloat("slider S", &t.scaling, 0, 10))
         {
             m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_SCALE, &t.scaling, &terrainId);
         }
@@ -187,7 +187,7 @@ void GuiView::IRenderablePopUp(unsigned int terrainId, IRenderableTransformation
         }
 
         ImGui::SeparatorText("Translation");
-        if (ImGui::DragFloat3("slider T", t.tranlation))
+        if (ImGui::DragFloat3("slider T", t.tranlation,0.1))
         {
             m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_TRANSLATION, t.tranlation, &terrainId);
         }
@@ -274,13 +274,12 @@ void GuiView::GeneralTab()
     if (ImGui::CollapsingHeader("Trajectory"))
     {
         static int item_current_idx = 0; // Here we store our selection data as an index.
-        if (ImGui::BeginListBox(""))
-        {
+    
             std::vector<std::string> terrainIds;
             terrainIds.push_back("Polyline " + std::to_string(m_flythroughState.trajectoryPolyLine.id));
             for (int n = 0; n < terrainIds.size(); n++)
             {
-                ImGui::PushID(n);
+                ImGui::PushID(terrainIds.at(n).c_str());
                 const bool is_selected = (item_current_idx == n);
                 if (ImGui::Selectable(terrainIds.at(n).c_str(), is_selected))
                 {
@@ -299,8 +298,6 @@ void GuiView::GeneralTab()
                 IRenderablePopUp(terrainId,m_TrajectoryTransformation);
                 ImGui::PopID();
             }
-            ImGui::EndListBox();
-        }
     }
 }
 void GuiView::FlythroughTab()

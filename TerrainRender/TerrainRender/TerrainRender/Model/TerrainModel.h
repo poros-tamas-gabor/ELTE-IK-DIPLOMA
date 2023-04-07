@@ -7,7 +7,7 @@
 #include "VertexShaderPolyLine.h"
 #include "PixelShaderPolyLine.h"
 #include "Camera.h"
-#include "Position.h"
+#include "CameraPositioner.h"
 #include "SunPosition.h"
 #include "IRenderable.h"
 #include "Light.h"
@@ -26,20 +26,17 @@
 class TerrainModel : public IModel
 {
 private:
-
-	Explore3DState								m_explore3DState;
-	double										m_lat = 47.497913;
-	double										m_longitude = 19.040236;
+	LLACoordinate								m_llacoordinate = { 47.497913 , 19.040236 };
 
 	VertexShaderMesh							m_vertexShaderMesh;
 	PixelShaderMesh								m_pixelShaderMesh;
 	VertexShaderPolyLine						m_vertexShaderPolyLine;
 	PixelShaderPolyLine							m_pixelShaderPolyLine;
 
-	Position									m_position;
 	CompositeRenderable<VertexMesh>				m_meshes;
 	CompositeRenderable<VertexPolyLine>			m_polylines;
 	Light										m_light;
+	CameraPositioner							m_cameraPositioner;
 	CameraTrajectory							m_cameraTrajectory;
 
 	ID3D11Device*								m_device;
@@ -64,6 +61,7 @@ public:
 
 	bool	LoadTerrain(const wchar_t* filepath) override;
 	bool	LoadCameraTrajectory(const wchar_t* filepath) override;
+	bool	LoadParameters(const wchar_t* filepath) override;
 	bool	LoadTerrainProject(const std::vector<std::wstring>& files) override;
 
 	bool	IsTrajectoryInitialized(void) const override;
@@ -79,7 +77,7 @@ public:
 private:
 	std::vector <IRenderableState>	CollectTerrainMeshState(void);
 	FlythroughState					CollectFlythroughState(void);
-	void							CollectExplore3DState(void);
+	Explore3DState					CollectExplore3DState(void);
 	void							AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int gridZ);
 };
 typedef std::shared_ptr<TerrainModel> TerrainModelPtr;

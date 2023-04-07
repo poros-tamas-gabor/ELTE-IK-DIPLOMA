@@ -14,6 +14,7 @@ public:
 	virtual bool LoadTerrain(const wchar_t*) = 0;
     virtual bool LoadCameraTrajectory(const wchar_t*, std::vector<CameraPose>&) = 0;
     virtual const std::vector<Facet>& GetFacets(void) = 0;
+    virtual bool LoadParameterFile(const wchar_t*, ParameterFile& params) = 0;
 };
 
 class BinaryFileDataAccessAsync : public IDataAccess {
@@ -36,5 +37,6 @@ public:
     ~BinaryFileDataAccessAsync() = default;
     bool LoadTerrain(const wchar_t* filename) override;
     bool LoadCameraTrajectory(const wchar_t*, std::vector<CameraPose>& cameraPoses) override;
+    bool LoadParameterFile(const wchar_t*, ParameterFile& params) override;
 };
 #endif // ! PERSISTENCE_H

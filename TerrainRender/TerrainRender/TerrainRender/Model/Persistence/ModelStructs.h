@@ -5,7 +5,7 @@
 #include <DirectXMath.h>
 #include <string>
 #include <vector>
-
+#include <map>
 
 inline void XMFLOAT3toCArray(float array[], DirectX::XMFLOAT3 floats)
 {
@@ -45,9 +45,9 @@ struct ModelTime
 	int sec;
 };
 
-struct ModelLocation
+struct LLACoordinate
 {
-	double lat;
+	double latitude;
 	double longitude;
 };
 
@@ -148,6 +148,29 @@ struct Explore3DState
 	DirectX::XMFLOAT3	currentCameraPosition		= { 0,0,0 };
 	DirectX::XMFLOAT3	currentCameraRotation		= { 0,0,0 };
 	SunPositionState	currentSunPosition;
+};
+
+struct ResizedWindowState
+{
+	unsigned screenWidth;
+	unsigned screenHeight;
+};
+
+struct ParameterFile {
+
+	LLACoordinate origo;
+	struct Terrain {
+		Vector3D translation;
+		Vector3D rotation;
+		std::map<std::string, Vector4D>  colors;
+	} terrain;
+	struct Trajectory {
+		Vector3D translation;
+		Vector3D rotation;
+	} trajectory;
+	struct Camera {
+		float intrinsicMat[3][3];
+	} camera;
 };
 
 

@@ -8,6 +8,7 @@
 GuiController::GuiController()
 {
 	m_handledMsgs.push_back(IDC_BUTTON_FIlE_TERRAIN);
+	m_handledMsgs.push_back(IDC_BUTTON_FIlE_PARAMETERS);
 	m_handledMsgs.push_back(IDC_BUTTON_FIlE_CAMERA_TRAJECTORY);
 	m_handledMsgs.push_back(IDC_BUTTON_FIlE_CAMERA_PROPERTIES);
 	m_handledMsgs.push_back(IDC_SLIDER_CAMERA_SPEED);
@@ -169,6 +170,14 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 		this->m_terrainModel->LoadTerrainProject(files);
 		break;
 	}
+	case IDC_BUTTON_FIlE_PARAMETERS:
+	{
+		wchar_t filePath[260];
+		this->OpenFileDialog(filePath, 260);
+		this->m_terrainModel->LoadParameters(filePath);
+		break;
+	}
+
 
 	case IDC_SLIDER_CAMERA_SPEED:
 	{

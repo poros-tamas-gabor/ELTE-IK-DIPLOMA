@@ -176,7 +176,7 @@
     <ClCompile Include="Model\PolygonMesh.cpp" />
     <ClCompile Include="Model\PixelShaderMesh.cpp" />
     <ClCompile Include="Model\PolyLine.cpp" />
-    <ClCompile Include="Model\Position.cpp" />
+    <ClCompile Include="Model\CameraPositioner.cpp" />
     <ClCompile Include="Model\RenderableCreator.cpp" />
     <ClCompile Include="Model\SunPosition.cpp" />
     <ClCompile Include="Model\TerrainModel.cpp" />
@@ -232,13 +232,15 @@
     <ClInclude Include="Model\PixelShaderMesh.h" />
     <ClInclude Include="Model\PolyLine.h" />
     <ClInclude Include="Model\RenderableCreator.h" />
-    <ClInclude Include="Model\Position.h" />
+    <ClInclude Include="Model\CameraPositioner.h" />
     <ClInclude Include="Model\IRenderableCreator.h" />
     <ClInclude Include="Model\SunPosition.h" />
     <ClInclude Include="Model\TerrainModel.h" />
     <ClInclude Include="Model\CameraTrajectory.h" />
     <ClInclude Include="Model\VertexShaderMesh.h" />
     <ClInclude Include="Model\VertexShaderPolyLine.h" />
+    <ClInclude Include="nlohmann\json.hpp" />
+    <ClInclude Include="nlohmann\json_fwd.hpp" />
     <ClInclude Include="RenderWindow.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="StringConverter.h" />

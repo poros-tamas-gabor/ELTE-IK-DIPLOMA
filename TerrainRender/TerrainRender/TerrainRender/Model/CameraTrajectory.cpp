@@ -122,4 +122,19 @@ IRenderableState CameraTrajectory::GetTrajectoryPolyLineState() const
 	return m_polyLine->GetState();
 }
 
+void CameraTrajectory::Rotate(Vector3D rotations)
+{
+	if (IsInitialized())
+	{
+		m_polyLine->Rotate(rotations.x, rotations.y, rotations.z);
+	}
+}
+void CameraTrajectory::Move(Vector3D   translationVector)
+{
+	if (IsInitialized())
+	{
+		m_polyLine->Translate(translationVector.x, translationVector.y, translationVector.z);
+	}
+}
+
 

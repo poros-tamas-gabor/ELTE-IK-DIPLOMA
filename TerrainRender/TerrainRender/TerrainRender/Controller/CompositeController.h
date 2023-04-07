@@ -9,7 +9,7 @@ class CompositeController : public IController
 private:
 	MessageSystem				m_messageSystem;
 	std::vector<IControllerPtr>	m_controllers;
-	IModelPtr				m_terrainModel;
+	IModelPtr					m_terrainModel;
 	Mouse*						m_mouse;
 	Keyboard*					m_keyboard;
 	bool						m_isActive;

@@ -191,6 +191,18 @@ public:
 		}
 	}
 
+	void SetColorComponent(std::wstring componentName, float r, float g, float b, float a)
+	{
+		for (IRendarablePtr<V> renderable : m_renderables)
+		{
+			if (renderable->GetName().find(componentName) != std::wstring::npos)
+			{
+				renderable->SetColor(r, g, b, a);
+			}
+
+		}
+	}
+
 	void SetIsSeen(bool m_isSeen) override 
 	{
 		m_isSeen = m_isSeen;

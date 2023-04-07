@@ -22,6 +22,7 @@ public:
 
 	virtual bool	LoadTerrain(const wchar_t* filepath) = 0;
 	virtual bool	LoadCameraTrajectory(const wchar_t* filepath) = 0;
+	virtual bool	LoadParameters(const wchar_t* filepath) = 0;
 	virtual bool	LoadTerrainProject(const std::vector<std::wstring>& files) = 0;
  
 	virtual bool	IsTrajectoryInitialized(void) const = 0;

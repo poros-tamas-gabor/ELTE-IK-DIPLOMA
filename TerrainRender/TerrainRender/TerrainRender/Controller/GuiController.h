@@ -6,7 +6,7 @@
 class GuiController : public IController
 {
 private:
-	IModelPtr			m_terrainModel;
+	IModelPtr					m_terrainModel;
 	std::vector<unsigned>		m_handledMsgs;
 	MessageSystem*				m_messageSystem;
 	bool						m_isActive;

@@ -1,26 +1,26 @@
 {
 	"origo": {
-		"longitude": 324.3,
-		"latitude": 35.345
+		"longitude": 19.040236,
+		"latitude": 47.497913
 	},
 	"terrain": {
-		"translation": [1, 2, 3],
-		"rotation": [4, 5, 6],
+		"translation": [100, 0, 0],
+		"rotation": [0, 1.5, 0],
 		"color": {
-			"_buildings": [10, 10, 10],
-			"_plants": [11, 11, 11],
-			"_ground": [11, 11, 11]
+			"_buildings": [1, 1, 1, 1],
+			"_plants": [0, 1, 0, 1],
+			"_ground": [1, 0, 0, 1]
 		}
 	},
 	"trajectory": {
-		"translation": [1, 2, 3],
-		"rotation": [4, 5, 6]
+		"translation": [0, 0, 0],
+		"rotation": [0, 0, 0]
 	},
 	"camera": {
-		"intrinsicParams": [
-			[1, 2, 3],
-			[3, 4, 5],
-			[6, 7, 8]
+		"intrinsicMatrix": [
+			[600, 0, 600],
+			[0, 600, 350],
+			[0, 0, 1]
 		]
 	}
 }

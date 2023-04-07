@@ -135,6 +135,11 @@ void GuiView::MenuBar()
                 this->m_terrainController->HandleMessage(IDC_BUTTON_FIlE_CAMERA_TRAJECTORY, NULL, NULL);
             }
 
+            if (ImGui::MenuItem("Open Parameter File"))
+            {
+                this->m_terrainController->HandleMessage(IDC_BUTTON_FIlE_PARAMETERS, NULL, NULL);
+            }
+
             ImGui::EndMenu();
         }
         ImGui::EndMenuBar();

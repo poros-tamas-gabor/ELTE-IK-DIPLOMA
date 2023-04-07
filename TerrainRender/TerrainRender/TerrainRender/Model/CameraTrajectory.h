@@ -33,9 +33,12 @@ public:
 	void Reset();
 	void Shutdown();
 
-	EpochTime	GetCurrentEpochTime(void) const;
-	unsigned	GetCurrentFrameNum(void) const;
-	unsigned	GetNumberOfFrame(void) const;
+	void Rotate(Vector3D rotations);
+	void Move(Vector3D   translationVector);
+
+	EpochTime		GetCurrentEpochTime(void) const;
+	unsigned		GetCurrentFrameNum(void) const;
+	unsigned		GetNumberOfFrame(void) const;
 	void			SetCurrentFrame(unsigned frameNum);
 	IRenderableState GetTrajectoryPolyLineState() const;
 

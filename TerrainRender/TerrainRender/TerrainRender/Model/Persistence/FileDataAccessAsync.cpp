@@ -12,6 +12,7 @@
 
 #include <memory>
 #include "../../ErrorHandler.h"
+#include "../../nlohmann/json.hpp"
 int BinaryFileDataAccessAsync::GetNumThreads(int numOfFacets)
 {
     int maxNumThreads = std::thread::hardware_concurrency();
@@ -173,18 +174,18 @@ bool BinaryFileDataAccessAsync::CreateCameraPose(CameraPose& cameraPose, const s
     return true;
 }
 
-bool BinaryFileDataAccessAsync::LoadCameraTrajectory(const wchar_t* filename, std::vector<CameraPose>& cameraPoses)
+bool BinaryFileDataAccessAsync::LoadCameraTrajectory(const wchar_t* filepath, std::vector<CameraPose>& cameraPoses)
 {
-    std::ifstream            input;
+    std::ifstream            file;
     std::string              line;
     std::string              word;
     std::vector<std::string> headers;
     CameraPose               cameraPose;
 
-    input.open(filename, std::ifstream::in);
+    file.open(filepath, std::ifstream::in);
 
-    if (!input.is_open())
-        return false;
+    std::wstring errormsg = L"Failed to open " + std::wstring(filepath);
+    THROW_TREXCEPTION_IF_FAILED(file.is_open(), errormsg);
 
     cameraPoses.clear();
 
@@ -193,7 +194,7 @@ bool BinaryFileDataAccessAsync::LoadCameraTrajectory(const wchar_t* filename, st
     {
         bool isCorrect = true;
         // read first line
-        std::getline(input, line);
+        std::getline(file, line);
 
         //read the headers
         std::istringstream lineStream(line);
@@ -213,7 +214,7 @@ bool BinaryFileDataAccessAsync::LoadCameraTrajectory(const wchar_t* filename, st
             THROW_TREXCEPTION(L"nsec missing");
         }
 
-        while ((std::getline(input, line)) && isCorrect) {
+        while ((std::getline(file, line)) && isCorrect) {
             cameraPose = CameraPose();
             isCorrect = CreateCameraPose(cameraPose, line, headers);
             if (isCorrect) {
@@ -224,9 +225,121 @@ bool BinaryFileDataAccessAsync::LoadCameraTrajectory(const wchar_t* filename, st
             cameraPoses.clear();
         }
 
-        input.close();
+        file.close();
 
         return isCorrect;
+    }
+    catch (TRException& e)
+    {
+        ErrorHandler::Log(e);
+    }
+    catch (std::exception& e)
+    {
+        ErrorHandler::Log(e);
+    }
+    catch (...)
+    {
+        ErrorHandler::Log("Unknown exception");
+    }
+    return false;
+
+}
+
+void from_json(const nlohmann::json& json, LLACoordinate& data)
+{
+    data.latitude = json.at("latitude").get<double>();
+    data.longitude = json.at("longitude").get<double>();
+}
+
+Vector3D to_Vector3D(const std::vector<float>& stdvec)
+{
+    Vector3D vec;
+    THROW_TREXCEPTION_IF_FAILED( (stdvec.size() == 3) , L"Failed to load Vector3D");
+    vec.x = stdvec.at(0);
+    vec.y = stdvec.at(1);
+    vec.z = stdvec.at(2);
+    return vec;
+}
+
+Vector4D to_Vector4D(const std::vector<float>& stdvec)
+{
+    Vector4D vec;
+    THROW_TREXCEPTION_IF_FAILED( (stdvec.size() == 4) , L"Failed to load Vector4D");
+    vec.x = stdvec.at(0);
+    vec.y = stdvec.at(1);
+    vec.z = stdvec.at(2);
+    vec.w = stdvec.at(3);
+    return vec;
+}
+
+void from_json(const nlohmann::json& json, ParameterFile::Terrain& data)
+{
+    std::vector<float> tmp = json.at("translation").get<std::vector<float>>();
+    data.translation = to_Vector3D(tmp);
+    tmp = json.at("rotation").get<std::vector<float>>();
+    data.rotation = to_Vector3D(tmp);
+    
+    for (auto it = json.at("color").begin(); it != json.at("color").end(); ++it) {
+        std::string color_name = it.key();
+        std::vector<float> color_values = it.value();
+        Vector4D vec = to_Vector4D(color_values);
+        data.colors.insert(std::pair<std::string, Vector4D>(color_name, vec));
+    }
+}
+
+void from_json(const nlohmann::json& json, ParameterFile::Trajectory& data)
+{
+    std::vector<float> tmp = json.at("translation").get<std::vector<float>>();
+    data.translation = to_Vector3D(tmp);
+    tmp = json.at("rotation").get<std::vector<float>>();
+    data.rotation = to_Vector3D(tmp);
+}
+
+void from_json(const nlohmann::json& json, ParameterFile::Camera& data)
+{
+    std::vector < std::vector<float>> mat =  json.at("intrinsicMatrix").get<std::vector<std::vector<float>>>();
+
+    THROW_TREXCEPTION_IF_FAILED( (mat.size() == 3), L"Failed to load intrinsic Matrix");
+
+    int i = 0;
+    for (const std::vector<float>& row : mat)
+    {
+        THROW_TREXCEPTION_IF_FAILED( (row.size() == 3), L"Failed to load intrinsic Matrix");
+        int j = 0;
+        for (float f : row)
+        {
+            data.intrinsicMat[i][j] = f;
+            j++;
+        }
+        i++;
+    }
+}
+
+void from_json(const nlohmann::json& j, ParameterFile& p) {
+    p.origo = j.at("origo").get<LLACoordinate>();
+    p.terrain = j.at("terrain").get<ParameterFile::Terrain>();
+    p.trajectory = j.at("trajectory").get<ParameterFile::Trajectory>();
+    p.camera = j.at("camera").get<ParameterFile::Camera>();
+}
+
+bool BinaryFileDataAccessAsync::LoadParameterFile(const wchar_t* filepath, ParameterFile& params)
+{
+    try
+    {
+        nlohmann::json jsonFile;
+        std::ifstream file(filepath);
+
+        std::wstring errormsg = L"Failed to open " + std::wstring(filepath);
+        THROW_TREXCEPTION_IF_FAILED(file.is_open(), errormsg);
+
+        jsonFile = nlohmann::json::parse(file);
+        params = jsonFile.get<ParameterFile>();
+
+        return true;
+    }
+    catch (nlohmann::json::parse_error& e)
+    {
+        ErrorHandler::Log(e.what());
     }
     catch (TRException& e)
     {

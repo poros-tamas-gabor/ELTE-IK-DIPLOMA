@@ -61,10 +61,9 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 	{
 		UINT width = LOWORD(lparam);
 		UINT height = HIWORD(lparam);
-		Resize(width, height);
-
-
-
+		unsigned params[2] = {width, height};
+		this->m_terrainController->HandleMessage(WM_SIZE, NULL, params);
+		//Resize(width, height);
 		return 0;
 	}
 	// Check if a key has been pressed on the keyboard.

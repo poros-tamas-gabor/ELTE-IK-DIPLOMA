@@ -78,6 +78,7 @@ void ControllerFlythrough::HandleMessage(unsigned int message, float* fparam, un
 		{
 			this->m_terrainModel->Flythrough(IDM_CAMERA_TRAJECTORY_FRAME, NULL, uparam);
 		}
+		break;
 	}
 	case IDC_TIME_ELAPSED:
 	{

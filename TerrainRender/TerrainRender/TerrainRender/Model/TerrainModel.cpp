@@ -331,7 +331,7 @@ FlythroughState	TerrainModel::CollectFlythroughState(void)
 	state.currentCameraRotation			= m_camera.GetRotationF3();
 	state.currentSunPosition.azimuth	= m_light.GetAzimuth();
 	state.currentSunPosition.elevation	= m_light.GetElevation();
-	state.trajectoryPolyLine			= m_cameraTrajectory.GetTrajectoryPolyLineState();
+	state.trajectoryPolyLine.push_back(m_cameraTrajectory.GetTrajectoryPolyLineState());
 	
 	return state;
 }

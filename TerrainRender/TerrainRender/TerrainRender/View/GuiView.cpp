@@ -141,15 +141,15 @@ void GuiView::MenuBar()
     }
 }
 
-std::vector<std::string> GuiView::CollectTerrainIDs(void)
+std::vector<std::string> GuiView::CollectTerrainIDNames(void)
 {
-    std::vector<std::string> ids;
+    std::vector<std::string> names;
     for (const IRenderableState& info : m_TerrainsState)
     {
-        std::string id = "Mesh id:" + std::to_string(info.id);
-        ids.push_back(id);
+        std::string id = "Mesh: " + StringConverter::WideToString(info.name) + " id: " + std::to_string(info.id);
+        names.push_back(id);
     }
-    return ids;
+    return names;
 
 }
 
@@ -211,7 +211,7 @@ void GuiView::TerrainListBox()
     static int item_current_idx = 0; // Here we store our selection data as an index.
     if (ImGui::BeginListBox(""))
     {
-        std::vector<std::string> terrainIds = CollectTerrainIDs();
+        std::vector<std::string> terrainIds = CollectTerrainIDNames();
         for (int n = 0; n < terrainIds.size(); n++)
         {
             ImGui::PushID(n);
@@ -273,15 +273,22 @@ void GuiView::GeneralTab()
     }
     if (ImGui::CollapsingHeader("Trajectory"))
     {
+        if (ImGui::Button("Clear Trajectory"))
+        {
+            m_terrainController->HandleMessage(IDC_BUTTON_CLEAR_TRAJECTORY, NULL, NULL);
+        }
         static int item_current_idx = 0; // Here we store our selection data as an index.
     
-            std::vector<std::string> terrainIds;
-            terrainIds.push_back("Polyline " + std::to_string(m_flythroughState.trajectoryPolyLine.id));
-            for (int n = 0; n < terrainIds.size(); n++)
+            std::vector<std::string> polyLineId;
+            for (IRenderableState state : m_flythroughState.trajectoryPolyLine)
             {
-                ImGui::PushID(terrainIds.at(n).c_str());
+                polyLineId.push_back("polyline: " + StringConverter::WideToString(state.name));
+            }
+            for (int n = 0; n < polyLineId.size(); n++)
+            {
+                ImGui::PushID(polyLineId.at(n).c_str());
                 const bool is_selected = (item_current_idx == n);
-                if (ImGui::Selectable(terrainIds.at(n).c_str(), is_selected))
+                if (ImGui::Selectable(polyLineId.at(n).c_str(), is_selected))
                 {
                     item_current_idx = n;
                     ImGui::OpenPopup("Terrain");
@@ -292,10 +299,10 @@ void GuiView::GeneralTab()
                     ImGui::SetItemDefaultFocus();
                 }
 
-                unsigned int terrainId = m_flythroughState.trajectoryPolyLine.id;
+                unsigned int polylineId = m_flythroughState.trajectoryPolyLine.at(n).id;
 
 
-                IRenderablePopUp(terrainId,m_TrajectoryTransformation);
+                IRenderablePopUp(polylineId,m_TrajectoryTransformation.at(n));
                 ImGui::PopID();
             }
     }
@@ -460,6 +467,12 @@ void GuiView::HandleIModelState(const std::vector<IRenderableState>& states)
             //TODO lehet hogy itt initializalni kell 
             IRenderableTransformation tranformation;
             tranformation.id = state.id;
+            XMFLOAT3toCArray(tranformation.rotation, state.rotation);
+            XMFLOAT3toCArray(tranformation.tranlation, state.translation);
+            tranformation.scaling = state.scale.x;
+            XMFLOAT4toCArray(tranformation.color, state.color);
+            tranformation.m_isSeen = state.m_isSeen;
+
             m_TerrainTrasnformations.push_back(tranformation);
         }
     }
@@ -468,6 +481,30 @@ void GuiView::HandleIModelState(const std::vector<IRenderableState>& states)
 void GuiView::HandleIModelState(const FlythroughState& state)
 {
     m_flythroughState = state;
+
+    if (state.trajectoryPolyLine.empty())
+    {
+        m_TrajectoryTransformation.clear();
+    }
+
+    for (const IRenderableState& state : state.trajectoryPolyLine)
+    {
+        auto it = std::find_if(m_TrajectoryTransformation.begin(), m_TrajectoryTransformation.end(), [state](IRenderableTransformation t) {return t.id == state.id; });
+        //not contains
+        if (it == m_TrajectoryTransformation.end())
+        {
+            //TODO lehet hogy itt initializalni kell 
+            IRenderableTransformation tranformation;
+            tranformation.id = state.id;
+            XMFLOAT3toCArray(tranformation.rotation, state.rotation);
+            XMFLOAT3toCArray(tranformation.tranlation, state.translation);
+            tranformation.scaling = state.scale.x;
+            XMFLOAT4toCArray(tranformation.color, state.color);
+            tranformation.m_isSeen = state.m_isSeen;
+
+            m_TrajectoryTransformation.push_back(tranformation);
+        }
+    }
     m_TrajectoryTransformation;
 }
 

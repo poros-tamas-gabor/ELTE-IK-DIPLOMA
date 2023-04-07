@@ -27,7 +27,7 @@ private:
 	IControllerPtr							m_terrainController;
 	//ModelStates:
 	std::vector<IRenderableTransformation>	m_TerrainTrasnformations;
-	IRenderableTransformation				m_TrajectoryTransformation;
+	std::vector<IRenderableTransformation>	m_TrajectoryTransformation;
 	std::vector<IRenderableState>			m_TerrainsState;
 	FlythroughState							m_flythroughState;
 	Explore3DState							m_explore3dState;
@@ -48,6 +48,6 @@ public:
 	void HandleIModelState(const std::vector<IRenderableState>&) override;
 	void HandleIModelState(const FlythroughState&) override;
 	void HandleIModelState(const Explore3DState&) override;
-	std::vector<std::string> CollectTerrainIDs(void);
+	std::vector<std::string> CollectTerrainIDNames(void);
 	void Shutdown();
 };

@@ -7,6 +7,21 @@
 #include <vector>
 
 
+inline void XMFLOAT3toCArray(float array[], DirectX::XMFLOAT3 floats)
+{
+	array[0] = floats.x;
+	array[1] = floats.y;
+	array[2] = floats.z;
+}
+
+inline void XMFLOAT4toCArray(float array[], DirectX::XMFLOAT4 floats)
+{
+	array[0] = floats.x;
+	array[1] = floats.y;
+	array[2] = floats.z;
+	array[3] = floats.w;
+}
+
 struct VertexMesh
 {
 	DirectX::XMFLOAT3 position;
@@ -107,6 +122,7 @@ struct IRenderableState
 	DirectX::XMFLOAT3	rotation	= {0,0,0};
 	DirectX::XMFLOAT3	scale		= { 0,0,0 };
 	DirectX::XMFLOAT3	translation = { 0,0,0 };
+	DirectX::XMFLOAT4	color		= { 0,0,0,0 };
 };
 
 struct SunPositionState
@@ -123,7 +139,7 @@ struct FlythroughState
 	DirectX::XMFLOAT3	currentCameraPosition		= { 0,0,0 };
 	DirectX::XMFLOAT3	currentCameraRotation		= { 0,0,0 };
 	SunPositionState	currentSunPosition;
-	IRenderableState	trajectoryPolyLine;
+	std::vector<IRenderableState>	trajectoryPolyLine;
 };
 
 struct Explore3DState

@@ -1,0 +1,26 @@
+{
+	"origo": {
+		"longitude": 324.3,
+		"latitude": 35.345
+	},
+	"terrain": {
+		"translation": [1, 2, 3],
+		"rotation": [4, 5, 6],
+		"color": {
+			"_buildings": [10, 10, 10],
+			"_plants": [11, 11, 11],
+			"_ground": [11, 11, 11]
+		}
+	},
+	"trajectory": {
+		"translation": [1, 2, 3],
+		"rotation": [4, 5, 6]
+	},
+	"camera": {
+		"intrinsicParams": [
+			[1, 2, 3],
+			[3, 4, 5],
+			[6, 7, 8]
+		]
+	}
+}

@@ -11,7 +11,7 @@ Controller3DExplore::Controller3DExplore()
 
 }
 
-void Controller3DExplore::SetMessageSystem(MessageSystem* messageSystem)
+void Controller3DExplore::SetMessageSystem(ControllerMessageSystemPtr messageSystem)
 {
 	m_messageSystem = messageSystem;
 }
@@ -94,15 +94,16 @@ void Controller3DExplore::HandleMessage(unsigned int message, float* fparam, uns
 	}
 
 }
+
 void Controller3DExplore::SetTerrainModel(IModelPtr pModel)
 {
 	this->m_terrainModel = pModel;
 }
-void Controller3DExplore::SetMouse(Mouse* mouse)
+void Controller3DExplore::SetMouse(MousePtr mouse)
 {
 	this->m_mouse = mouse;
 }
-void Controller3DExplore::SetKeyboard(Keyboard* keyboard)
+void Controller3DExplore::SetKeyboard(KeyboardPtr keyboard)
 {
 	this->m_keyboard = keyboard;
 }
@@ -112,13 +113,9 @@ bool Controller3DExplore::IsActive() const
 	return this->m_isActive;
 }
 
-
-
-
-
-bool Controller3DExplore::Initialize(IModelPtr pModel, Mouse* mouse, Keyboard* keyboard)
+bool Controller3DExplore::Initialize(IModelPtr pModel, MousePtr mouse, KeyboardPtr keyboard)
 {
-	if (pModel.get() == nullptr || mouse == nullptr || keyboard == nullptr)
+	if (pModel.get() == nullptr || mouse.get() == nullptr || keyboard.get() == nullptr)
 	{
 		return false;
 	}

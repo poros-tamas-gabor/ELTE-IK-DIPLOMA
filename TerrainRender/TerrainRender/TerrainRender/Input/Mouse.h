@@ -3,7 +3,8 @@
 #include <queue>
 #include "MouseEvent.h"
 #include <mutex>
-//Singleton
+#include <memory>
+
 class Mouse 
 {
 private:
@@ -42,8 +43,7 @@ public:
 
 	bool EventBufferIsEmpty() const;
 	MouseEvent ReadEvent();
-
-
-
 };
+
+typedef std::shared_ptr<Mouse> MousePtr;
 #endif

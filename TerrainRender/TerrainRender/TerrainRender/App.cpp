@@ -13,7 +13,6 @@
 #include "Controller/Controller3DExplore.h"
 #include "Controller/ControllerFlythrough.h"
 
-
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 App::App()
@@ -34,7 +33,8 @@ App::App()
 	this->m_terrainController = std::make_shared<CompositeController>();
 	this->m_terrainModel = std::make_shared<TerrainModel>();
 	this->m_terrainView = std::make_shared<TerrainView>();
-	srand(time(nullptr));
+	this->m_keyboard = std::make_shared<Keyboard>();
+	this->m_mouse = std::make_shared<Mouse>();
 }
 App::~App() {};
 
@@ -51,9 +51,9 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 		// clear keystate when window loses focus to prevent input getting "stuck"
 	case WM_KILLFOCUS:
 	{
-		this->_keyboard.ClearCharBuffer();
-		this->_keyboard.ClearKeyBuffer();
-		this->_keyboard.ClearKeyStates();
+		this->m_keyboard->ClearCharBuffer();
+		this->m_keyboard->ClearKeyBuffer();
+		this->m_keyboard->ClearKeyStates();
 		return 0;
 	}
 
@@ -61,8 +61,6 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 	{
 		UINT width = LOWORD(lparam);
 		UINT height = HIWORD(lparam);
-		//unsigned params[2] = {width, height};
-		//this->m_terrainController->HandleMessage(WM_SIZE, NULL, params);
 		Resize(width, height);
 		return 0;
 	}
@@ -76,9 +74,9 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 		unsigned char keycode = static_cast<unsigned char>(wparam);
 
 		// If a key is pressed send it to the input object so it can record that state.
-		if (!(lparam & 0x40000000) || this->_keyboard.IsAutoRepeatEnabled())
+		if (!(lparam & 0x40000000) || this->m_keyboard->IsAutoRepeatEnabled())
 		{
-			this->_keyboard.OnKeyPressed((keycode));
+			this->m_keyboard->OnKeyPressed((keycode));
 		}
 		return 0;
 	}
@@ -93,7 +91,7 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 		unsigned char keycode = static_cast<unsigned char>(wparam);
 
 		// If a key is released then send it to the input object so it can unset the state for that key.
-		this->_keyboard.OnKeyReleased((keycode));
+		this->m_keyboard->OnKeyReleased((keycode));
 		return 0;
 	}
 	case WM_CHAR:
@@ -103,7 +101,7 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 			return 0;
 		}
 		unsigned char ch = static_cast<unsigned char>(wparam);
-		this->_keyboard.OnChar((ch));
+		this->m_keyboard->OnChar((ch));
 		return 0;
 	}
 
@@ -116,7 +114,7 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 		}
 		int x = LOWORD(lparam);
 		int y = HIWORD(lparam);
-		this->_mouse.OnMouseMove(x, y);
+		this->m_mouse->OnMouseMove(x, y);
 		return 0;
 	}
 	case WM_LBUTTONDOWN:
@@ -127,7 +125,7 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 		}
 		int x = LOWORD(lparam);
 		int y = HIWORD(lparam);
-		this->_mouse.OnLeftPressed(x, y);
+		this->m_mouse->OnLeftPressed(x, y);
 		return 0;
 	}
 	case WM_RBUTTONDOWN:
@@ -138,7 +136,7 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 		}
 		int x = LOWORD(lparam);
 		int y = HIWORD(lparam);
-		this->_mouse.OnRightPressed(x, y);
+		this->m_mouse->OnRightPressed(x, y);
 		return 0;
 	}
 	case WM_MBUTTONDOWN:
@@ -149,7 +147,7 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 		}
 		int x = LOWORD(lparam);
 		int y = HIWORD(lparam);
-		this->_mouse.OnMiddlePressed(x, y);
+		this->m_mouse->OnMiddlePressed(x, y);
 		return 0;
 	}
 	case WM_LBUTTONUP:
@@ -160,7 +158,7 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 		}
 		int x = LOWORD(lparam);
 		int y = HIWORD(lparam);
-		this->_mouse.OnLeftReleased(x, y);
+		this->m_mouse->OnLeftReleased(x, y);
 		return 0;
 	}
 	case WM_RBUTTONUP:
@@ -171,7 +169,7 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 		}
 		int x = LOWORD(lparam);
 		int y = HIWORD(lparam);
-		this->_mouse.OnRightReleased(x, y);
+		this->m_mouse->OnRightReleased(x, y);
 		return 0;
 	}
 	case WM_MBUTTONUP:
@@ -182,7 +180,7 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 		}
 		int x = LOWORD(lparam);
 		int y = HIWORD(lparam);
-		this->_mouse.OnMiddleReleased(x, y);
+		this->m_mouse->OnMiddleReleased(x, y);
 		return 0;
 	}
 	case WM_MOUSEWHEEL:
@@ -195,11 +193,11 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 		int y = HIWORD(lparam);
 		if (GET_WHEEL_DELTA_WPARAM(wparam) > 0)
 		{
-			this->_mouse.OnWheelUp(x, y);
+			this->m_mouse->OnWheelUp(x, y);
 		}
 		else if (GET_WHEEL_DELTA_WPARAM(wparam) < 0)
 		{
-			this->_mouse.OnWheelDown(x, y);
+			this->m_mouse->OnWheelDown(x, y);
 		}
 		return 0;
 	}
@@ -238,13 +236,13 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 
 						int absoluteX = int((raw->data.mouse.lLastX / 65535.0f) * width);
 						int absoluteY = int((raw->data.mouse.lLastY / 65535.0f) * height);
-						this->_mouse.OnMouseMoveRawAbsolute(absoluteX, absoluteY);
+						this->m_mouse->OnMouseMoveRawAbsolute(absoluteX, absoluteY);
 					}
 					else if (raw->data.mouse.lLastX != 0 || raw->data.mouse.lLastY != 0)
 					{
 						int relativeX = raw->data.mouse.lLastX;
 						int relativeY = raw->data.mouse.lLastY;
-						this->_mouse.OnMouseMoveRawRelative(relativeX, relativeY);
+						this->m_mouse->OnMouseMoveRawRelative(relativeX, relativeY);
 					}
 				}
 			}
@@ -279,57 +277,55 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 	if (this->m_dataAccess == nullptr)
 		return false;
 
-	result = _renderWindow.Initialize(this, screenWidth, screenHeight);
+	result = m_renderWindow.Initialize(this, screenWidth, screenHeight);
 	if (!result)
 		return false;
 
-	ImGui_ImplWin32_Init(this->_renderWindow.GetHWND());
+	ImGui_ImplWin32_Init(this->m_renderWindow.GetHWND());
 
-	result = this->m_terrainController->Initialize(this->m_terrainModel, &this->_mouse, &this->_keyboard);
+	result = this->m_terrainController->Initialize(this->m_terrainModel, this->m_mouse, this->m_keyboard);
 	if (!result)
 		return false;
 
-	//TODO : ne itt legyen
+	//Init cotnrollers
 	{
-		IControllerPtr c = std::make_shared<Controller3DExplore>();
+		IControllerPtr explorec = std::make_shared<Controller3DExplore>();
 
-		c->Initialize(m_terrainModel, &this->_mouse, &this->_keyboard);
-		this->m_terrainController->AddController(c);
+		explorec->Initialize(this->m_terrainModel, this->m_mouse, this->m_keyboard);
+		this->m_terrainController->AddController(explorec);
 
 		IControllerPtr guic = std::make_shared<GuiController>();
 
-		guic->Initialize(this->m_terrainModel, &this->_mouse, &this->_keyboard);
+		guic->Initialize(this->m_terrainModel,  this->m_mouse, this->m_keyboard);
 		this->m_terrainController->AddController(guic);
 
-		IControllerPtr fly = std::make_shared<ControllerFlythrough>();
+		IControllerPtr flyc = std::make_shared<ControllerFlythrough>();
 
-		fly->Initialize(this->m_terrainModel, &this->_mouse, &this->_keyboard);
-		this->m_terrainController->AddController(fly);
-
-
+		flyc->Initialize(this->m_terrainModel, this->m_mouse, this->m_keyboard);
+		this->m_terrainController->AddController(flyc);
 	}
 
-	result = this->m_terrainView->Initalize(_renderWindow.GetHWND(), (float)screenWidth, (float)screenHeight);
+	result = this->m_terrainView->Initalize(m_renderWindow.GetHWND(), (float)screenWidth, (float)screenHeight);
 	if (!result)
 		return false;
 
 	this->m_terrainModel->m_modelMessageSystem.Subscribe(m_terrainView);
 
-	result = this->m_terrainModel->Initalize(_renderWindow.GetHWND(), m_dataAccess, m_terrainView->GetDevice(), screenWidth, screenHeight, 1, 500);
+	result = this->m_terrainModel->Initalize(m_renderWindow.GetHWND(), m_dataAccess, m_terrainView->GetDevice(), screenWidth, screenHeight, 1, 500);
 
-	_timer.Start();
+	m_timer.Start();
 	return true;
 }
 
 bool App::ProcessMessages()
 {
-	return this->_renderWindow.ProcessMessages();
+	return this->m_renderWindow.ProcessMessages();
 }
 
 void App::Update()
 {
-	float dt = (float)this->_timer.GetMilisecondsElapsed();
-	this->_timer.Restart();
+	float dt = (float)this->m_timer.GetMilisecondsElapsed();
+	this->m_timer.Restart();
 	this->m_terrainController->HandleMessage(IDC_TIME_ELAPSED, &dt, NULL);
 }
 
@@ -359,7 +355,7 @@ void App::Shutdown()
 
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
-	this->_renderWindow.Shutdown();
+	this->m_renderWindow.Shutdown();
 }
 
 void App::Resize(UINT screenWidth, UINT screenHeight)

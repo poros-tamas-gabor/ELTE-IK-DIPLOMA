@@ -45,6 +45,7 @@
 // -------------------------------------
 //TODO: GOOD NAME FOR TJIS
 #define IDC_TIME_ELAPSED						1000
+#define IDC_WINDOW_SIZE							1001
 
 // File
 #define IDC_BUTTON_FIlE_TERRAIN					2000

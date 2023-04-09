@@ -1,21 +1,24 @@
 #ifndef CONTROLLER_3D_EXPLORE_H
 #define CONTROLLER_3D_EXPLORE_H
 
+#include "IController.h"
+#include "MessageSystem.h"
+#include "../Model/IModel.h"
+#include "../View/IView.h"
 #include "../Input/Mouse.h"
 #include "../Input/Keyboard.h"
-#include "IController.h"
 
 class TerrainModel;
 class Controller3DExplore : public IController
 {
 private:
 	IModelPtr				m_terrainModel;
-	Mouse*					m_mouse;
-	Keyboard*				m_keyboard;
+	MousePtr				m_mouse;
+	KeyboardPtr				m_keyboard;
 	std::vector<unsigned>	m_handledMsgs;
-	MessageSystem*			m_messageSystem;
+	ControllerMessageSystemPtr			m_messageSystem;
 
-	bool					m_isActive;
+	bool					m_isActive = true;
 
 
 public:
@@ -25,17 +28,17 @@ public:
 	virtual bool CanHandle(unsigned int message) const override;
 	virtual void HandleMessage(unsigned int message, float* fparam, unsigned* uparam) override;
 	virtual void SetTerrainModel(IModelPtr pModel) override;
-	virtual void SetMouse(Mouse* mouse) override;
-	virtual void SetKeyboard(Keyboard* keyboard) override;
+	virtual void SetMouse(MousePtr mouse) override;
+	virtual void SetKeyboard(KeyboardPtr keyboard) override;
 
-	virtual bool Initialize(IModelPtr pModel, Mouse* mouse, Keyboard* keyboard) override;
+	virtual bool Initialize(IModelPtr pModel, MousePtr mouse, KeyboardPtr keyboard) override;
 	virtual bool IsActive() const  override;
 	virtual void Shutdown() override;
 
 private:
 
 	void ControlMouse(const MouseEvent& e) const;
-	void SetMessageSystem(MessageSystem* messageSystem);
+	void SetMessageSystem(ControllerMessageSystemPtr messageSystem);
 
 };
 

@@ -1,31 +1,34 @@
 #include "CompositeController.h"
 #include <algorithm>
-CompositeController::CompositeController() : m_messageSystem(m_controllers), m_isActive(true)
+CompositeController::CompositeController() : m_isActive(true)
 {
+	m_messageSystem = std::make_shared<ControllerMessageSystem>(m_controllers);
 	m_terrainModel = NULL;
 	m_mouse = NULL;
 	m_keyboard = NULL;
 }
 
 
-void CompositeController::SetMessageSystem(MessageSystem*) {}
+void CompositeController::SetMessageSystem(ControllerMessageSystemPtr) {}
+
+
 
 void CompositeController::SetTerrainModel(IModelPtr pModel)
 {
 	this->m_terrainModel = pModel;
 }
-void CompositeController::SetMouse(Mouse* mouse)
+void CompositeController::SetMouse(MousePtr mouse)
 {
 	this->m_mouse = mouse;
 }
-void CompositeController::SetKeyboard(Keyboard* keyboard)
+void CompositeController::SetKeyboard(KeyboardPtr keyboard)
 {
 	this->m_keyboard = keyboard;
 }
 
-bool CompositeController::Initialize(IModelPtr pModel, Mouse* mouse, Keyboard* keyboard)
+bool CompositeController::Initialize(IModelPtr pModel, MousePtr mouse, KeyboardPtr keyboard)
 {
-	if (pModel == nullptr || mouse == nullptr || keyboard == nullptr)
+	if (pModel.get() == nullptr || mouse.get() == nullptr || keyboard.get() == nullptr )
 	{
 		return false;
 	}
@@ -47,7 +50,7 @@ bool CompositeController::CanHandle(unsigned int message) const
 
 void CompositeController::HandleMessage(unsigned int message, float* fparam, unsigned* uparam)
 {
-	m_messageSystem.Publish(message, fparam, uparam);
+	m_messageSystem->Publish(message, fparam, uparam);
 }
 
 void CompositeController::Shutdown()
@@ -65,7 +68,7 @@ bool CompositeController::IsActive() const
 
 void CompositeController::AddController(IControllerPtr controller)
 {
-	controller->SetMessageSystem(&m_messageSystem);
+	controller->SetMessageSystem(m_messageSystem);
 	this->m_controllers.push_back(controller);
 }
 void CompositeController::RemoveController(IControllerPtr controller)

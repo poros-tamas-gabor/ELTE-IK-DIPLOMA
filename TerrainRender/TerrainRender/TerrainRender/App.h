@@ -19,9 +19,9 @@ class App
 {
 private:
 
-	RenderWindow				_renderWindow;
+	RenderWindow				m_renderWindow;
 	
-	Timer						_timer;
+	Timer						m_timer;
 	TerrainModelPtr				m_terrainModel;
 	TerrainViewPtr				m_terrainView;
 	CompositeControllerPtr		m_terrainController;
@@ -41,8 +41,8 @@ public:
 	void Run();
 	void Shutdown();
 	void Resize(UINT screenWidth, UINT screenHeight);
-	Mouse						_mouse;
-	Keyboard					_keyboard;
+	MousePtr						m_mouse;
+	KeyboardPtr						m_keyboard;
 
 	LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
 

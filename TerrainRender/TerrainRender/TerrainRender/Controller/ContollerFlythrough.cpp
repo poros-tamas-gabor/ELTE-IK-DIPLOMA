@@ -16,7 +16,7 @@ ControllerFlythrough::ControllerFlythrough()
 
 }
 
-void ControllerFlythrough::SetMessageSystem(MessageSystem* messageSystem)
+void ControllerFlythrough::SetMessageSystem(ControllerMessageSystemPtr messageSystem)
 {
 	m_messageSystem = messageSystem;
 }
@@ -121,15 +121,17 @@ void ControllerFlythrough::HandleMessage(unsigned int message, float* fparam, un
 	}
 
 }
+
+
 void ControllerFlythrough::SetTerrainModel(IModelPtr pModel)
 {
 	this->m_terrainModel = pModel;
 }
-void ControllerFlythrough::SetMouse(Mouse* mouse)
+void ControllerFlythrough::SetMouse(MousePtr mouse)
 {
 	this->m_mouse = mouse;
 }
-void ControllerFlythrough::SetKeyboard(Keyboard* keyboard)
+void ControllerFlythrough::SetKeyboard(KeyboardPtr keyboard)
 {
 	this->m_keyboard = keyboard;
 }
@@ -140,12 +142,9 @@ bool ControllerFlythrough::IsActive() const
 	return this->m_isActive;
 }
 
-
-
-
-bool ControllerFlythrough::Initialize(IModelPtr pModel, Mouse* mouse, Keyboard* keyboard)
+bool ControllerFlythrough::Initialize(IModelPtr pModel,  MousePtr mouse, KeyboardPtr keyboard)
 {
-	if (pModel == nullptr || mouse == nullptr || keyboard == nullptr)
+	if (pModel.get() == nullptr || mouse.get() == nullptr || keyboard.get() == nullptr )
 	{
 		return false;
 	}

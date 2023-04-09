@@ -4,6 +4,7 @@
 #include "KeyboardEvent.h"
 #include <mutex>
 #include <queue>
+#include <memory>
 class Keyboard
 {
 private:
@@ -42,4 +43,6 @@ public:
 
 	bool IsAutoRepeatEnabled() const;
 };
+
+typedef std::shared_ptr<Keyboard> KeyboardPtr;
 #endif

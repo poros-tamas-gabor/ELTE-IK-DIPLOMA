@@ -297,16 +297,16 @@ void from_json(const nlohmann::json& json, ParameterFile::Trajectory& data)
 
 void from_json(const nlohmann::json& json, ParameterFile::Camera& data)
 {
-    std::vector < std::vector<float>> mat =  json.at("intrinsicMatrix").get<std::vector<std::vector<float>>>();
+    std::vector < std::vector<unsigned>> mat =  json.at("intrinsicMatrix").get<std::vector<std::vector<unsigned>>>();
 
     THROW_TREXCEPTION_IF_FAILED( (mat.size() == 3), L"Failed to load intrinsic Matrix");
 
     int i = 0;
-    for (const std::vector<float>& row : mat)
+    for (const std::vector<unsigned>& row : mat)
     {
         THROW_TREXCEPTION_IF_FAILED( (row.size() == 3), L"Failed to load intrinsic Matrix");
         int j = 0;
-        for (float f : row)
+        for (unsigned f : row)
         {
             data.intrinsicMat[i][j] = f;
             j++;

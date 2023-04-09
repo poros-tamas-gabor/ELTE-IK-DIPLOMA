@@ -42,6 +42,7 @@ public:
 	void HandleIModelState(const std::vector<IRenderableState>&) override;
 	void HandleIModelState(const FlythroughState&) override;
 	void HandleIModelState(const Explore3DState&) override;
+	bool Resize(unsigned screenWidth, unsigned screenHeight) override { return false; };
 private:
 	void MenuBar();
 	void GeneralTab();

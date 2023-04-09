@@ -1,12 +1,18 @@
 #ifndef ICONTROLLER_H
 #define ICONTROLLER_H
 
-#include "../Input/Mouse.h"
-#include "../Input/Keyboard.h"
-#include "../Model/IModel.h"
+
 #include <memory>
 
-class MessageSystem;
+class ControllerMessageSystem;
+typedef std::shared_ptr<ControllerMessageSystem> ControllerMessageSystemPtr;
+class IModel;
+typedef std::shared_ptr<IModel> IModelPtr;
+class Mouse;
+typedef std::shared_ptr<Mouse> MousePtr;
+class Keyboard;
+typedef std::shared_ptr<Keyboard> KeyboardPtr;
+
 class IController {
 public:
     virtual ~IController() {}
@@ -15,16 +21,16 @@ public:
     virtual void HandleMessage(unsigned int message, float* fparam, unsigned* uparam) = 0;
 
     virtual void SetTerrainModel(IModelPtr pModel) = 0;
-    virtual void SetMouse(Mouse* mouse) = 0;
-    virtual void SetKeyboard(Keyboard* keyboard) = 0;
+    virtual void SetMouse(MousePtr mouse) = 0;
+    virtual void SetKeyboard(KeyboardPtr keyboard) = 0;
 
-    virtual bool Initialize(IModelPtr pModel, Mouse* mouse, Keyboard* keyboard) = 0;
+    virtual bool Initialize(IModelPtr pModel, MousePtr mouse, KeyboardPtr keyboard) = 0;
 
     virtual void Shutdown() = 0;
     virtual bool IsActive() const = 0 ;
-    virtual void SetMessageSystem(MessageSystem* messageSystem) = 0;
+    virtual void SetMessageSystem(ControllerMessageSystemPtr messageSystem) = 0;
 };
-typedef std::shared_ptr<IController> IControllerPtr;
+typedef class std::shared_ptr<IController> IControllerPtr;
 
 
 

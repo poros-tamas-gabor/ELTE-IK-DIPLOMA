@@ -40,7 +40,7 @@ GuiController::GuiController()
 }
 GuiController::~GuiController() {}
 
-void GuiController::SetMessageSystem(MessageSystem* messageSystem)
+void GuiController::SetMessageSystem(ControllerMessageSystemPtr messageSystem)
 {
 	m_messageSystem = messageSystem;
 }
@@ -291,20 +291,26 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 
 	}
 }
+
+
 void GuiController::SetTerrainModel(IModelPtr pModel)
 {
 	this->m_terrainModel = pModel;
 }
-void GuiController::SetMouse(Mouse* mouse) {}
+void GuiController::SetMouse(MousePtr mouse) {}
 
-void GuiController::SetKeyboard(Keyboard* keyboard) {}
+void GuiController::SetKeyboard(KeyboardPtr keyboard) {}
 
 
-bool GuiController::Initialize(IModelPtr pModel, Mouse* mouse, Keyboard* keyboard)
+bool  GuiController::Initialize(IModelPtr pModel, MousePtr mouse, KeyboardPtr keyboard)
 {
-	if (pModel == nullptr)
+	if (pModel.get() == nullptr || mouse.get() == nullptr || keyboard.get() == nullptr)
+	{
 		return false;
-	SetTerrainModel(pModel);
+	}
+	this->SetTerrainModel(pModel);
+	this->SetMouse(mouse);
+	this->SetKeyboard(keyboard);
 	return true;
 }
 void GuiController::Shutdown() {}

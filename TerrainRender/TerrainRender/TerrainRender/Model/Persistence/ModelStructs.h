@@ -171,7 +171,7 @@ struct ParameterFile {
 		Vector3D rotation;
 	} trajectory;
 	struct Camera {
-		float intrinsicMat[3][3];
+		unsigned intrinsicMat[3][3];
 	} camera;
 };
 

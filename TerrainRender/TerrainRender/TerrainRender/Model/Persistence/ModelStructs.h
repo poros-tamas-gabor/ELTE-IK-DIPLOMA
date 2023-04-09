@@ -170,9 +170,6 @@ struct ParameterFile {
 		Vector3D translation;
 		Vector3D rotation;
 	} trajectory;
-	struct Camera {
-		unsigned intrinsicMat[3][3];
-	} camera;
 };
 
 

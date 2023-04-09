@@ -257,12 +257,6 @@ bool	TerrainModel::LoadParameters(const wchar_t* filepath)
 			m_meshes.SetColorComponent(componentName, r, g, b, a);
 		}
 		PublishModelState();
-
-		//unsigned width = 2 * params.camera.intrinsicMat[0][2];
-		//unsigned height = 2 * params.camera.intrinsicMat[1][2];
-		//
-		//float fov = 2 * atan2(params.camera.intrinsicMat[1][2], params.camera.intrinsicMat[1][1]);
-		//m_camera.SetFieldOfView(fov);
 	}
 	return false;
 }

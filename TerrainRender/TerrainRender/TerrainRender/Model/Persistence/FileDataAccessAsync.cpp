@@ -295,31 +295,10 @@ void from_json(const nlohmann::json& json, ParameterFile::Trajectory& data)
     data.rotation = to_Vector3D(tmp);
 }
 
-void from_json(const nlohmann::json& json, ParameterFile::Camera& data)
-{
-    std::vector < std::vector<unsigned>> mat =  json.at("intrinsicMatrix").get<std::vector<std::vector<unsigned>>>();
-
-    THROW_TREXCEPTION_IF_FAILED( (mat.size() == 3), L"Failed to load intrinsic Matrix");
-
-    int i = 0;
-    for (const std::vector<unsigned>& row : mat)
-    {
-        THROW_TREXCEPTION_IF_FAILED( (row.size() == 3), L"Failed to load intrinsic Matrix");
-        int j = 0;
-        for (unsigned f : row)
-        {
-            data.intrinsicMat[i][j] = f;
-            j++;
-        }
-        i++;
-    }
-}
-
 void from_json(const nlohmann::json& j, ParameterFile& p) {
     p.origo = j.at("origo").get<LLACoordinate>();
     p.terrain = j.at("terrain").get<ParameterFile::Terrain>();
     p.trajectory = j.at("trajectory").get<ParameterFile::Trajectory>();
-    p.camera = j.at("camera").get<ParameterFile::Camera>();
 }
 
 bool BinaryFileDataAccessAsync::LoadParameterFile(const wchar_t* filepath, ParameterFile& params)

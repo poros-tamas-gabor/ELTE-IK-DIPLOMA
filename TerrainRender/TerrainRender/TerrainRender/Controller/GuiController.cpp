@@ -10,7 +10,6 @@ GuiController::GuiController()
 	m_handledMsgs.push_back(IDC_BUTTON_FIlE_TERRAIN);
 	m_handledMsgs.push_back(IDC_BUTTON_FIlE_PARAMETERS);
 	m_handledMsgs.push_back(IDC_BUTTON_FIlE_CAMERA_TRAJECTORY);
-	m_handledMsgs.push_back(IDC_BUTTON_FIlE_CAMERA_PROPERTIES);
 	m_handledMsgs.push_back(IDC_SLIDER_CAMERA_SPEED);
 	m_handledMsgs.push_back(IDC_SLIDER_CAMERA_ROTATION_SPEED);
 	m_handledMsgs.push_back(IDC_BUTTON_CAMERA_RESET);
@@ -34,6 +33,7 @@ GuiController::GuiController()
 	m_handledMsgs.push_back(IDC_SLIDER_IRENDERABLE_TRANSLATION);
 	m_handledMsgs.push_back(IDC_SLIDER_IRENDERABLE_COLOR);
 	m_handledMsgs.push_back(IDC_BUTTON_CLEAR_MESHES);
+	m_handledMsgs.push_back(IDC_BUTTON_CLEAR_TRAJECTORY);
 	m_handledMsgs.push_back(IDC_CHECKBOX_IRENDERABLE_ISSEEN);
 
 	m_handledMsgs.push_back(IDC_SLIDER_FLYTHROUGH_FRAME);
@@ -141,21 +141,16 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 	{
 		wchar_t filePath[260];
 		this->OpenFileDialog(filePath, 260);
-		this->m_terrainModel->LoadTerrain(filePath);
+		if(!std::wstring(filePath).empty())
+			this->m_terrainModel->LoadTerrain(filePath);
 		break;
 	}
 	case IDC_BUTTON_FIlE_CAMERA_TRAJECTORY:
 	{
 		wchar_t filePath[260];
 		this->OpenFileDialog(filePath, 260);
-		this->m_terrainModel->LoadCameraTrajectory(filePath);
-		break;
-	}
-	case IDC_BUTTON_FIlE_CAMERA_PROPERTIES:
-	{
-		wchar_t filePath[260];
-		this->OpenFileDialog(filePath, 260);
-		//this->m_terrainModel->LoadTerrain(filePath);
+		if (!std::wstring(filePath).empty())
+			this->m_terrainModel->LoadCameraTrajectory(filePath);
 		break;
 	}
 	case IDC_BUTTON_FIlE_TERRAIN_PROJECT:
@@ -174,7 +169,8 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 	{
 		wchar_t filePath[260];
 		this->OpenFileDialog(filePath, 260);
-		this->m_terrainModel->LoadParameters(filePath);
+		if (!std::wstring(filePath).empty())
+			this->m_terrainModel->LoadParameters(filePath);
 		break;
 	}
 
@@ -285,6 +281,11 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 	case IDC_BUTTON_CLEAR_MESHES:
 	{
 		this->m_terrainModel->ClearTerrain();
+		break;
+	}
+	case IDC_BUTTON_CLEAR_TRAJECTORY:
+	{
+		this->m_terrainModel->ClearCameraTrajectory();
 		break;
 	}
 

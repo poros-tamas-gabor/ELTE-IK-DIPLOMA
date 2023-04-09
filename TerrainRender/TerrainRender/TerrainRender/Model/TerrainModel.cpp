@@ -267,6 +267,7 @@ bool	TerrainModel::LoadCameraTrajectory(const wchar_t* filepath)
 	bool result = m_persistence->LoadCameraTrajectory(filepath, cameraPoses);
 	if (result)
 	{
+		ClearCameraTrajectory();
 		std::vector<VertexPolyLine> vertices;
 		for (const CameraPose& camerapose : cameraPoses)
 		{
@@ -413,12 +414,18 @@ std::vector<IRenderableState> TerrainModel::CollectTerrainMeshState() const
 void TerrainModel::ClearTerrain(void)
 {
 	this->m_meshes.ClearRenderables();
-	this->m_modelMessageSystem.PublishModelState(CollectTerrainMeshState());
+	PublishModelState();
 }
 
 void TerrainModel::ClearCameraTrajectory(void)
 {
-
+	if (this->m_cameraTrajectory.GetPolyLine() != nullptr)
+	{
+		m_polylines.Remove(this->m_cameraTrajectory.GetPolyLine());
+		this->m_cameraTrajectory.GetPolyLine()->Shutdown();
+	}
+	this->m_cameraTrajectory.Clear();
+	PublishModelState();
 }
 
 void TerrainModel::PublishModelState(void) const

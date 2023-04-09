@@ -7,11 +7,7 @@ bool CameraTrajectory::Initialize(const std::vector<CameraPose>& cameraPoses, IR
 	{
 		return false;
 	}
-	this->m_elapsedmsecs.clear();
-	this->m_positions.clear();
-	this->m_polyLine = NULL;
-	this->m_rotations.clear();
-	this->m_elapsedmsec = 0;
+	Clear();
 
 	this->m_camera = camera;
 	this->m_start = cameraPoses.at(0).epochtime;
@@ -33,6 +29,23 @@ bool CameraTrajectory::IsInitialized() const
 }
 void CameraTrajectory::Shutdown()
 {}
+
+void CameraTrajectory::Clear()
+{
+	this->m_elapsedmsecs.clear();
+	this->m_positions.clear();
+	this->m_rotations.clear();
+	this->m_elapsedmsec = 0;
+	m_currentFrameNum = 0;
+	this->m_polyLine = NULL;
+}
+
+IRendarablePtr<VertexPolyLine> CameraTrajectory::GetPolyLine() const
+{
+	return m_polyLine;
+}
+
+
 
 void CameraTrajectory::Reset()
 {

@@ -32,6 +32,7 @@ public:
 	void UpdateCamera(double elapsedmsecs);
 	void Reset();
 	void Shutdown();
+	void Clear();
 
 	void Rotate(Vector3D rotations);
 	void Move(Vector3D   translationVector);
@@ -41,6 +42,7 @@ public:
 	unsigned		GetNumberOfFrame(void) const;
 	void			SetCurrentFrame(unsigned frameNum);
 	IRenderableState GetTrajectoryPolyLineState() const;
+	IRendarablePtr<VertexPolyLine> GetPolyLine() const;
 
 private:
 	Vector3D TransformPosition(const Vector3D&) const;

@@ -13,10 +13,10 @@ private:
 
 public:
 	ModelMessageSystem() = default;
-	void PublishModelState(const std::vector<IRenderableState>&);
-	void PublishModelState(const FlythroughState&);
-	void PublishModelState(const Explore3DState&);
-	void PublishModelState(const ResizedWindowState&);
+	void PublishModelState(const std::vector<IRenderableState>&) const;
+	void PublishModelState(const FlythroughState&) const;
+	void PublishModelState(const Explore3DState&) const;
+	void PublishModelState(const ResizedWindowState&) const;
 	bool Subscribe(IViewPtr view);
 	bool Subscribe(IControllerPtr view);
 	bool Unsubscribe(IViewPtr view);

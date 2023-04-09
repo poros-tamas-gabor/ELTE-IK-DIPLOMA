@@ -156,7 +156,7 @@ public:
 		return IRenderableState();
 	}
 
-	void CollectIRenderableState(std::vector<IRenderableState>& vector)
+	void CollectIRenderableState(std::vector<IRenderableState>& vector) const
 	{
 		for (IRendarablePtr<V> renderable : m_renderables)
 		{

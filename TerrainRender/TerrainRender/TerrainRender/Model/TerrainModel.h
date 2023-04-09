@@ -66,18 +66,22 @@ public:
 
 	bool	IsTrajectoryInitialized(void) const override;
 
-	void	Flythrough(unsigned message, float* elapsedMillisec, unsigned* frameNum) override;
-	void	MoveCamera(unsigned message, float timeElapsed) override;
-	void	RotateCamera(unsigned message, float pitch, float yaw) override;
+	void	HandleFlythroughMode(unsigned message, float* elapsedMillisec, unsigned* frameNum) override;
+	void	HandleExplore3DMode(unsigned message, float* fparams) override;
+
 	void	ResetCamera(void) override;
 	void	UpdateCameraProperties(unsigned message, float data) override;
 	void    TransformIRenderable(unsigned message, unsigned id, float parameters[]) override;
 	void	ClearTerrain(void) override;
 	void	ClearCameraTrajectory(void) override;
 private:
-	std::vector <IRenderableState>	CollectTerrainMeshState(void);
-	FlythroughState					CollectFlythroughState(void);
-	Explore3DState					CollectExplore3DState(void);
+
+	void	MoveCamera(unsigned message, float timeElapsed);
+	void	RotateCamera(unsigned message, float pitch, float yaw);
+	std::vector <IRenderableState>	CollectTerrainMeshState(void) const;
+	FlythroughState					CollectFlythroughState(void) const;
+	Explore3DState					CollectExplore3DState(void) const;
+	void							PublishModelState(void) const;
 	void							AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int gridZ);
 };
 typedef std::shared_ptr<TerrainModel> TerrainModelPtr;

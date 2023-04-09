@@ -312,6 +312,90 @@ void GuiView::GeneralTab()
             }
     }
 }
+
+template <class T>
+void PrintStatus(const T& state)
+{
+    ImGui::Spacing();
+    ImGui::SeparatorText("Position");
+    if (ImGui::BeginTable("Position", 3))
+    {
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex(0);
+        ImGui::Text("%.4f", state.currentCameraPosition.x);
+        ImGui::TableSetColumnIndex(1);
+        ImGui::Text("%.4f", state.currentCameraPosition.y);
+        ImGui::TableSetColumnIndex(2);
+        ImGui::Text("%.4f", state.currentCameraPosition.z);
+        ImGui::EndTable();
+    }
+
+    ImGui::Spacing();
+    ImGui::SeparatorText("Rotation (radian) [pitch, yaw, roll]");
+    if (ImGui::BeginTable("Rotation", 3))
+    {
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex(0);
+        ImGui::Text("%.4f", state.currentCameraRotation.x);
+        ImGui::TableSetColumnIndex(1);
+        ImGui::Text("%.4f", state.currentCameraRotation.y);
+        ImGui::TableSetColumnIndex(2);
+        ImGui::Text("%.4f", state.currentCameraRotation.z);
+        ImGui::EndTable();
+    }
+
+    ImGui::SeparatorText("Origo LLA coords");
+    {
+        if (ImGui::BeginTable("Origo LLA", 2))
+        {
+            ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0);
+            ImGui::Text("latitude");
+            ImGui::TableSetColumnIndex(1);
+            ImGui::Text("longitude");
+            ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0);
+            ImGui::Text("%.4f", state.origo.latitude);
+            ImGui::TableSetColumnIndex(1);
+            ImGui::Text("%.4f", state.origo.longitude);
+            ImGui::EndTable();
+        }
+    }
+    ImGui::SeparatorText("Date and time");
+    {
+        std::time_t time(state.currentEpochTime.getSeconds());
+        std::tm tm;
+        gmtime_s(&tm, &time);
+        char buffer[80];
+        std::strftime(buffer, 80, "%Y-%m-%d %H:%M:%S", &tm);
+        ImGui::Text("UTC: %s", buffer);
+        ImGui::Text("Unix time: %d", state.currentEpochTime.getSeconds());
+
+    }
+    ImGui::SeparatorText("Sun Position");
+    {
+        if (ImGui::BeginTable("Sun Position", 2))
+        {
+            ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0);
+            ImGui::Text("azimuth");
+            ImGui::TableSetColumnIndex(1);
+            ImGui::Text("elevation");
+            ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0);
+            ImGui::Text("%.4f", state.currentSunPosition.azimuth);
+            ImGui::TableSetColumnIndex(1);
+            ImGui::Text("%.4f", state.currentSunPosition.elevation);
+            ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0);
+            ImGui::Text("%.4f", state.currentSunPosition.azimuth / PI * 180.0);
+            ImGui::TableSetColumnIndex(1);
+            ImGui::Text("%.4f", state.currentSunPosition.elevation / PI * 180.0);
+            ImGui::EndTable();
+        }
+    }
+}
+
 void GuiView::FlythroughTab()
 {
     ImGui::SeparatorText("Buttons");
@@ -349,40 +433,7 @@ void GuiView::FlythroughTab()
         this->m_terrainController->HandleMessage(IDCC_SET_FRAME_FLYTHROUGH, NULL, (unsigned*)(&m_frame));
     }
 
-    ImGui::Spacing();
-    ImGui::SeparatorText("Position");
-    if (ImGui::BeginTable("Position", 3))
-    {
-        ImGui::TableNextRow();
-        ImGui::TableSetColumnIndex(0);
-        ImGui::Text("%.4f", m_flythroughState.currentCameraPosition.x);
-        ImGui::TableSetColumnIndex(1);
-        ImGui::Text("%.4f", m_flythroughState.currentCameraPosition.y);
-        ImGui::TableSetColumnIndex(2);
-        ImGui::Text("%.4f", m_flythroughState.currentCameraPosition.z);
-        ImGui::EndTable();
-    }
-
-    ImGui::Spacing();
-    ImGui::SeparatorText("Rotation (radian) [pitch, yaw, roll]");
-    if (ImGui::BeginTable("Rotation", 3))
-    {
-        ImGui::TableNextRow();
-        ImGui::TableSetColumnIndex(0);
-        ImGui::Text("%.4f", m_flythroughState.currentCameraRotation.x);
-        ImGui::TableSetColumnIndex(1);
-        ImGui::Text("%.4f", m_flythroughState.currentCameraRotation.y);
-        ImGui::TableSetColumnIndex(2);
-        ImGui::Text("%.4f", m_flythroughState.currentCameraRotation.z);
-        ImGui::EndTable();
-    }
-    ImGui::SeparatorText("Date and time");
-    std::time_t time(m_flythroughState.currentEpochTime.getSeconds());
-    std::tm tm;
-    gmtime_s(&tm, &time);
-    char buffer[80];
-    std::strftime(buffer, 80, "%Y-%m-%d %H:%M:%S", &tm);
-    ImGui::Text("UTC: %s", buffer);
+    PrintStatus<FlythroughState>(m_flythroughState);
 }
 void GuiView::Explore3DTab()
 {
@@ -398,41 +449,7 @@ void GuiView::Explore3DTab()
         this->m_terrainController->HandleMessage(IDC_SLIDER_CAMERA_ROTATION_SPEED, &cameraRotationSpeed, NULL);
     }
 
-    ImGui::Spacing();
-    ImGui::SeparatorText("Position");
-    if (ImGui::BeginTable("Position", 3))
-    {
-        ImGui::TableNextRow();
-        ImGui::TableSetColumnIndex(0);
-        ImGui::Text("%.4f", m_explore3dState.currentCameraPosition.x);
-        ImGui::TableSetColumnIndex(1);
-        ImGui::Text("%.4f", m_explore3dState.currentCameraPosition.y);
-        ImGui::TableSetColumnIndex(2);
-        ImGui::Text("%.4f", m_explore3dState.currentCameraPosition.z);
-        ImGui::EndTable();
-    }
-
-    ImGui::Spacing();
-    ImGui::SeparatorText("Rotation (radian) [pitch, yaw, roll]");
-    if (ImGui::BeginTable("Rotation", 3))
-    {
-        ImGui::TableNextRow();
-        ImGui::TableSetColumnIndex(0);
-        ImGui::Text("%.4f", m_explore3dState.currentCameraRotation.x);
-        ImGui::TableSetColumnIndex(1);
-        ImGui::Text("%.4f", m_explore3dState.currentCameraRotation.y);
-        ImGui::TableSetColumnIndex(2);
-        ImGui::Text("%.4f", m_explore3dState.currentCameraRotation.z);
-        ImGui::EndTable();
-    }
-    ImGui::SeparatorText("Date and time");
-    std::time_t time(m_explore3dState.currentEpochTime.getSeconds());
-    std::tm tm;
-    gmtime_s(&tm, &time);
-    char buffer[80];
-    std::strftime(buffer, 80, "%Y-%m-%d %H:%M:%S", &tm);
-    ImGui::Text("UTC: %s", buffer);
-
+    PrintStatus<Explore3DState>(m_explore3dState);
 }
 void GuiView::BeginFrame()
 {
@@ -480,6 +497,12 @@ void GuiView::HandleIModelState(const std::vector<IRenderableState>& states)
 
             m_TerrainTrasnformations.push_back(tranformation);
         }
+        else
+        {
+            XMFLOAT4toCArray(it->color, state.color);
+            XMFLOAT3toCArray(it->rotation, state.rotation);
+            XMFLOAT3toCArray(it->tranlation, state.translation);
+        }
     }
 }
 
@@ -508,6 +531,12 @@ void GuiView::HandleIModelState(const FlythroughState& state)
             tranformation.m_isSeen = state.m_isSeen;
 
             m_TrajectoryTransformation.push_back(tranformation);
+        }
+        else
+        {
+            XMFLOAT4toCArray(it->color, state.color);
+            XMFLOAT3toCArray(it->rotation, state.rotation);
+            XMFLOAT3toCArray(it->tranlation, state.translation);
         }
     }
     m_TrajectoryTransformation;

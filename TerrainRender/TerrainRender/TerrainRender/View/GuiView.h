@@ -38,6 +38,11 @@ public:
 	void BeginFrame();
 	void EndFrame();
 	void ShowSettingWindow();
+	void Shutdown();
+	void HandleIModelState(const std::vector<IRenderableState>&) override;
+	void HandleIModelState(const FlythroughState&) override;
+	void HandleIModelState(const Explore3DState&) override;
+private:
 	void MenuBar();
 	void GeneralTab();
 	void FlythroughTab();
@@ -45,9 +50,5 @@ public:
 	void TerrainListBox();
 	void IRenderablePopUp(unsigned int, IRenderableTransformation& t);
 
-	void HandleIModelState(const std::vector<IRenderableState>&) override;
-	void HandleIModelState(const FlythroughState&) override;
-	void HandleIModelState(const Explore3DState&) override;
 	std::vector<std::string> CollectTerrainIDNames(void);
-	void Shutdown();
 };

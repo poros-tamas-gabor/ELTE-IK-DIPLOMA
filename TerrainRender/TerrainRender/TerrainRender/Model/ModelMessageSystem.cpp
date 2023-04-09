@@ -1,20 +1,20 @@
 #include "ModelMessageSystem.h"
 
-void ModelMessageSystem::PublishModelState(const std::vector<IRenderableState>& IRenderableinfo)
+void ModelMessageSystem::PublishModelState(const std::vector<IRenderableState>& IRenderableinfo) const
 {
 	for (IViewPtr view : m_subscriber)
 	{
 		view->HandleIModelState(IRenderableinfo);
 	}
 }
-void ModelMessageSystem::PublishModelState(const FlythroughState& state)
+void ModelMessageSystem::PublishModelState(const FlythroughState& state) const
 {
 	for (IViewPtr view : m_subscriber)
 	{
 		view->HandleIModelState(state);
 	}
 }
-void ModelMessageSystem::PublishModelState(const Explore3DState& state)
+void ModelMessageSystem::PublishModelState(const Explore3DState& state) const
 {
 	for (IViewPtr view : m_subscriber)
 	{
@@ -22,7 +22,7 @@ void ModelMessageSystem::PublishModelState(const Explore3DState& state)
 	}
 }
 
-void ModelMessageSystem::PublishModelState(const ResizedWindowState& state)
+void ModelMessageSystem::PublishModelState(const ResizedWindowState& state) const
 {
 	for (IControllerPtr controller : m_controllers)
 	{

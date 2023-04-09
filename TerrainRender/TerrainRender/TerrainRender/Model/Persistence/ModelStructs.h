@@ -139,6 +139,7 @@ struct FlythroughState
 	DirectX::XMFLOAT3	currentCameraPosition		= { 0,0,0 };
 	DirectX::XMFLOAT3	currentCameraRotation		= { 0,0,0 };
 	SunPositionState	currentSunPosition;
+	LLACoordinate		origo;
 	std::vector<IRenderableState>	trajectoryPolyLine;
 };
 
@@ -147,6 +148,7 @@ struct Explore3DState
 	EpochTime			currentEpochTime			= { 0,0 };
 	DirectX::XMFLOAT3	currentCameraPosition		= { 0,0,0 };
 	DirectX::XMFLOAT3	currentCameraRotation		= { 0,0,0 };
+	LLACoordinate		origo;
 	SunPositionState	currentSunPosition;
 };
 

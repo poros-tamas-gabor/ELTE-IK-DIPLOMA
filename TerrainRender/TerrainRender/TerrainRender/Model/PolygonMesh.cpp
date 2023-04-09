@@ -192,6 +192,7 @@ IRenderableState PolygonMesh::GetState(void) const
 	state.rotation		= this->m_rotation;
 	state.scale			= this->m_scaling;
 	state.translation	= this->m_translation;
+	state.color			= this->m_color;
 
 	return state;
 }

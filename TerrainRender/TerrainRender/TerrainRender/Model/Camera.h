@@ -44,15 +44,15 @@ public:
 
 	void SetLookAtPos(const DirectX::XMFLOAT3& lookAt);
 
-	DirectX::XMVECTOR GetPositionVec(void);
-	DirectX::XMVECTOR GetRotationVec(void);
-	DirectX::XMFLOAT3 GetPositionF3(void);
-	DirectX::XMFLOAT3 GetRotationF3(void);
+	DirectX::XMVECTOR GetPositionVec(void) const;
+	DirectX::XMVECTOR GetRotationVec(void) const;
+	DirectX::XMFLOAT3 GetPositionF3(void) const;
+	DirectX::XMFLOAT3 GetRotationF3(void) const;
 
 	void Render();
-	DirectX::XMMATRIX GetViewMatrix(void);
-	DirectX::XMMATRIX GetProjectionMatrix(void);
-	DirectX::XMMATRIX GetRotationMatrix(void);
+	DirectX::XMMATRIX GetViewMatrix(void) const;
+	DirectX::XMMATRIX GetProjectionMatrix(void) const;
+	DirectX::XMMATRIX GetRotationMatrix(void) const;
 
 
 };

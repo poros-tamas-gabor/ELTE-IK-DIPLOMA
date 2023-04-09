@@ -61,9 +61,9 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 	{
 		UINT width = LOWORD(lparam);
 		UINT height = HIWORD(lparam);
-		unsigned params[2] = {width, height};
-		this->m_terrainController->HandleMessage(WM_SIZE, NULL, params);
-		//Resize(width, height);
+		//unsigned params[2] = {width, height};
+		//this->m_terrainController->HandleMessage(WM_SIZE, NULL, params);
+		Resize(width, height);
 		return 0;
 	}
 	// Check if a key has been pressed on the keyboard.
@@ -313,9 +313,9 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 	if (!result)
 		return false;
 
-	result = this->m_terrainModel->Initalize(_renderWindow.GetHWND(), m_dataAccess, m_terrainView->GetDevice(), screenWidth, screenHeight, 1, 500);
-
 	this->m_terrainModel->m_modelMessageSystem.Subscribe(m_terrainView);
+
+	result = this->m_terrainModel->Initalize(_renderWindow.GetHWND(), m_dataAccess, m_terrainView->GetDevice(), screenWidth, screenHeight, 1, 500);
 
 	_timer.Start();
 	return true;

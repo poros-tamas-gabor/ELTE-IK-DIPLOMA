@@ -42,7 +42,7 @@ void ControllerFlythrough::HandleMessage(unsigned int message, float* fparam, un
 	{
 		this->m_isActive = true;
 		this->m_isRunning = false;
-		this->m_terrainModel->Flythrough(IDM_CAMERA_TRAJECTORY_START, NULL, NULL);
+		this->m_terrainModel->HandleFlythroughMode(IDM_CAMERA_TRAJECTORY_START, NULL, NULL);
 		break;
 	}
 
@@ -60,7 +60,7 @@ void ControllerFlythrough::HandleMessage(unsigned int message, float* fparam, un
 	case IDCC_STOP_FLYTHROUGH:
 	{
 		this->m_isRunning = false;
-		this->m_terrainModel->Flythrough(IDM_CAMERA_TRAJECTORY_STOP, NULL, NULL);
+		this->m_terrainModel->HandleFlythroughMode(IDM_CAMERA_TRAJECTORY_STOP, NULL, NULL);
 		break;
 	}
 
@@ -76,7 +76,7 @@ void ControllerFlythrough::HandleMessage(unsigned int message, float* fparam, un
 	{
 		if (uparam != nullptr)
 		{
-			this->m_terrainModel->Flythrough(IDM_CAMERA_TRAJECTORY_FRAME, NULL, uparam);
+			this->m_terrainModel->HandleFlythroughMode(IDM_CAMERA_TRAJECTORY_SET_FRAME, NULL, uparam);
 		}
 		break;
 	}
@@ -99,7 +99,7 @@ void ControllerFlythrough::HandleMessage(unsigned int message, float* fparam, un
 			if (m_isActive && m_isRunning)
 			{
 				TimeEllapsed *= m_speed;
-				this->m_terrainModel->Flythrough(IDM_CAMERA_TRAJECTORY_NEXT_FRAME, &TimeEllapsed, NULL);
+				this->m_terrainModel->HandleFlythroughMode(IDM_CAMERA_TRAJECTORY_NEXT_FRAME, &TimeEllapsed, NULL);
 
 			}
 
@@ -110,7 +110,7 @@ void ControllerFlythrough::HandleMessage(unsigned int message, float* fparam, un
 
 			if (m_keyboard->KeyIsPressed(VK_ESCAPE))
 			{
-				this->m_terrainModel->Flythrough(IDM_CAMERA_TRAJECTORY_STOP, NULL, NULL);
+				this->m_terrainModel->HandleFlythroughMode(IDM_CAMERA_TRAJECTORY_STOP, NULL, NULL);
 				m_isRunning = false;
 			}
 		}

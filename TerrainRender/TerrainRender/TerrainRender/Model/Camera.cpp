@@ -28,24 +28,24 @@ void Camera::SetRotationRad(float x, float y, float z)
 	this->_rotationZ = z;
 }
 
-DirectX::XMFLOAT3 Camera::GetPositionF3(void)
+DirectX::XMFLOAT3 Camera::GetPositionF3(void) const
 {
 	DirectX::XMFLOAT3 position = { this->_positionX, this->_positionY, this->_positionZ };
 	return position;
 }
-DirectX::XMFLOAT3 Camera::GetRotationF3(void)
+DirectX::XMFLOAT3 Camera::GetRotationF3(void) const
 {
 	DirectX::XMFLOAT3 rotation = { this->_rotationX, this->_rotationY, this->_rotationZ };
 	return rotation;
 }
 
-DirectX::XMVECTOR Camera::GetPositionVec(void)
+DirectX::XMVECTOR Camera::GetPositionVec(void) const
 {
 	DirectX::XMFLOAT3 position = { this->_positionX, this->_positionY, this->_positionZ };
 	DirectX::XMVECTOR positionVector = DirectX::XMLoadFloat3(&position);
 	return positionVector;
 }
-DirectX::XMVECTOR Camera::GetRotationVec(void)
+DirectX::XMVECTOR Camera::GetRotationVec(void) const
 {
 	DirectX::XMFLOAT3 rotation = { this->_rotationX, this->_rotationY, this->_rotationZ };
 	DirectX::XMVECTOR rotationVector = DirectX::XMLoadFloat3(&rotation);
@@ -159,17 +159,17 @@ void Camera::Render()
 	this->_viewMatrix = DirectX::XMMatrixLookAtLH(positonVector, lookatVector, upVector);
 
 }
-DirectX::XMMATRIX Camera::GetViewMatrix(void)
+DirectX::XMMATRIX Camera::GetViewMatrix(void) const
 {
 	return this->_viewMatrix;
 }
 
-DirectX::XMMATRIX Camera::GetProjectionMatrix(void)
+DirectX::XMMATRIX Camera::GetProjectionMatrix(void) const
 {
 	return this->_projectionMatrix;
 }
 
-DirectX::XMMATRIX Camera::GetRotationMatrix(void)
+DirectX::XMMATRIX Camera::GetRotationMatrix(void) const
 {
 	return this->_rotationMatrix;
 }

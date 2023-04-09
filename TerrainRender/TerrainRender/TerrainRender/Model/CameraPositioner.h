@@ -3,6 +3,7 @@
 
 #include <DirectXMath.h>
 #include "Persistence/ModelStructs.h"
+#include <ctime>
 
 class Camera;
 class CameraPositioner
@@ -29,7 +30,7 @@ private:
 
 	float m_speed = 0.005f;
 	float m_rotationSpeed = 0.001f;
-	EpochTime	m_currentEpochTime = EpochTime(1664534690, 0);
+	EpochTime	m_currentEpochTime = EpochTime(std::time(NULL), 0);
 
 	void MoveTemplate(const DirectX::XMVECTOR& default_vector, DirectX::XMVECTOR& currentVector, float dt);
 public:

@@ -1,5 +1,5 @@
 #include "Light.h"
-
+#include "../sunPos/SunPos.h"
 
 void Light::SetAmbientColor(const DirectX::XMFLOAT4& ambientColor)
 {
@@ -16,12 +16,16 @@ void Light::SetInverseDirection(const DirectX::XMFLOAT4& direction)
 
 void Light::UpdateSunPosition(std::time_t currentEpochTime, double lat, double longitude)
 {
-	SunPosition sunposition;
-	sunposition.SetTimeLocation(currentEpochTime, lat, longitude);
-	sunposition.CalculateSunPosition();
-	double azimuth = sunposition.GetAzimuth();
-	double elevation = sunposition.GetElevation();
-	SetInverseDirectionBySunPosition(azimuth, elevation);
+	struct tm buf;
+	gmtime_s(&buf, &currentEpochTime);
+	cTime time = { buf.tm_year + 1900, buf.tm_mon + 1, buf.tm_mday, buf.tm_hour, buf.tm_min };
+	cSunCoordinates sunCoords;
+	sunpos(time, { longitude, lat }, &sunCoords);
+
+	m_azimuth = sunCoords.dAzimuth /180.0 * pi;
+	m_elevation = pi / 2 - (sunCoords.dZenithAngle / 180.0 * pi);
+
+	SetInverseDirectionBySunPosition(m_azimuth, m_elevation);
 }
 
 void Light::SetInverseDirectionBySunPosition(double azimuth, double elevation)

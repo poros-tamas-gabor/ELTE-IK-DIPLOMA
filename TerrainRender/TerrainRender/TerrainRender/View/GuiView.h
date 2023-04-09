@@ -14,6 +14,8 @@
 class GuiView : public IView
 {
 private:
+
+	enum RenderableTypes { Terrain, TrajectoryPolyline };
 	struct IRenderableTransformation
 	{
 		unsigned	id;
@@ -49,7 +51,7 @@ private:
 	void FlythroughTab();
 	void Explore3DTab();
 	void TerrainListBox();
-	void IRenderablePopUp(unsigned int, IRenderableTransformation& t);
+	void IRenderablePopUp(unsigned int, RenderableTypes, IRenderableTransformation& t);
 
 	std::vector<std::string> CollectTerrainIDNames(void);
 };

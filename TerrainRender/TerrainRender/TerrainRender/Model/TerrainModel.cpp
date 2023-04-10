@@ -184,72 +184,39 @@ void TerrainModel::RotateCamera(unsigned message, float pitch, float yaw)
 	}
 }
 
-//bool TerrainModel::LoadTerrain(const wchar_t* filepath)
-//{
-//	VertexMesh*				pVertices;
-//	UINT					vertexCount;
-//	std::vector<VertexMesh> vertices;
-//
-//
-//	bool bresult = m_persistence->LoadTerrain(filepath);
-//	if (bresult)
-//	{
-//		const std::vector<Facet>& facets = m_persistence->GetFacets();
-//		for (const Facet& facet : facets)
-//		{
-//			for (int i = 0; i < 3; i++)
-//			{
-//			    VertexMesh vertex;
-//			    vertex.normal = { (float)facet.normal[0], (float)facet.normal[2],(float)facet.normal[1] };
-//			    vertex.position = { (float)facet.position[2-i][0], (float)facet.position[2-i][2], (float)facet.position[2-i][1] };
-//				vertex.color = { 1.0f, 0.5f, 0.5f, 1.0f };
-//			
-//			    vertices.push_back(vertex);
-//			}
-//		}
-//
-//		pVertices = &vertices.at(0);
-//		vertexCount = vertices.size();
-//		PolygonMeshCreator creator;
-//		this->m_meshes.Add(pVertices, vertexCount, creator, filepath);
-//
-//		PublishModelState();
-//	}
-//	return bresult;
-//}
-
 bool TerrainModel::LoadTerrain(const wchar_t* filepath)
 {
-	VertexMesh*								pVertices;
+	VertexMesh* pVertices;
 	UINT									vertexCount;
 	UINT									indexCount;
-	std::vector<VertexMesh>					vertices;
+	std::vector<VertexMesh>					verticesMesh;
 	std::vector<unsigned long>				indices;
-	unsigned long*							pIndices;
+	unsigned long* pIndices;
 
 
-	bool bresult = m_persistence->LoadTerrain(filepath);
+	bool bresult = m_persistence->LoadTerrainSolid(filepath);
 	if (bresult)
 	{
-		const std::vector<Facet>& facets = m_persistence->GetFacets();
-		unsigned index = 0;
-		for (const Facet& facet : facets)
+		const std::vector<StlVertex>& vertices = m_persistence->GetSolidVertices();
+		const std::vector<FacetIndices>& facetIndices = m_persistence->GetSolidIndices();
+		for (const FacetIndices& facet : facetIndices)
 		{
-			for (int i = 0; i < 3; i++)
+			for (int i = 2; i <= 0; i--)
 			{
-			    VertexMesh vertex;
-			    vertex.normal = { (float)facet.normal[0], (float)facet.normal[2],(float)facet.normal[1] };
-			    vertex.position = { (float)facet.position[2-i][0], (float)facet.position[2-i][2], (float)facet.position[2-i][1] };
-				vertex.color = { 1.0f, 0.5f, 0.5f, 1.0f };
-			
-			    vertices.push_back(vertex);
+				const size_t& index = facet.corner[i];
+				const StlVertex& vertex = vertices.at(index);
+				VertexMesh vertexMesh;
+				vertexMesh.normal = { (float)vertex.normal.x, (float)vertex.normal.z,(float)vertex.normal.y };
+				vertexMesh.position = { (float)vertex.pos.x, (float)vertex.pos.z, (float)vertex.pos.y };
+				vertexMesh.color = { 1.0f, 0.5f, 0.5f, 1.0f };
+
+				verticesMesh.push_back(vertexMesh);
 				indices.push_back(index);
-				index++;
 			}
 		}
 
-		pVertices = &vertices.at(0);
-		vertexCount = vertices.size();
+		pVertices = &verticesMesh.at(0);
+		vertexCount = verticesMesh.size();
 		pIndices = &indices.at(0);
 		indexCount = indices.size();
 
@@ -260,6 +227,49 @@ bool TerrainModel::LoadTerrain(const wchar_t* filepath)
 	}
 	return bresult;
 }
+
+//bool TerrainModel::LoadTerrain(const wchar_t* filepath)
+//{
+//	VertexMesh*								pVertices;
+//	UINT									vertexCount;
+//	UINT									indexCount;
+//	std::vector<VertexMesh>					vertices;
+//	std::vector<unsigned long>				indices;
+//	unsigned long*							pIndices;
+//
+//
+//	bool bresult = m_persistence->LoadTerrain(filepath);
+//	if (bresult)
+//	{
+//		const std::vector<Facet>& facets = m_persistence->GetFacets();
+//		unsigned index = 0;
+//		for (const Facet& facet : facets)
+//		{
+//			for (int i = 0; i < 3; i++)
+//			{
+//			    VertexMesh vertex;
+//			    vertex.normal = { (float)facet.normal[0], (float)facet.normal[2],(float)facet.normal[1] };
+//			    vertex.position = { (float)facet.position[2-i][0], (float)facet.position[2-i][2], (float)facet.position[2-i][1] };
+//				vertex.color = { 1.0f, 0.5f, 0.5f, 1.0f };
+//			
+//			    vertices.push_back(vertex);
+//				indices.push_back(index);
+//				index++;
+//			}
+//		}
+//
+//		pVertices = &vertices.at(0);
+//		vertexCount = vertices.size();
+//		pIndices = &indices.at(0);
+//		indexCount = indices.size();
+//
+//		PolygonMeshCreator creator;
+//		this->m_meshes.Add(pVertices, pIndices, vertexCount, indexCount, creator, filepath);
+//
+//		PublishModelState();
+//	}
+//	return bresult;
+//}
 
 bool	TerrainModel::LoadTerrainProject(const std::vector<std::wstring>& files)
 {

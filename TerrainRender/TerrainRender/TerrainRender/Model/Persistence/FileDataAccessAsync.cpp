@@ -217,7 +217,6 @@ bool BinaryFileDataAccessAsync::ReadFileSolid(const std::wstring& filepath)
 bool BinaryFileDataAccessAsync::LoadTerrainSolid(const wchar_t* filename)
 {
     std::time_t now = std::time(NULL);
-    m_faces.clear();
     bool success = false;
 
     try

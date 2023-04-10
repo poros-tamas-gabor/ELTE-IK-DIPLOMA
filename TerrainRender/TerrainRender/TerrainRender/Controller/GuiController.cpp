@@ -7,7 +7,8 @@
 
 GuiController::GuiController()
 {
-	m_handledMsgs.push_back(IDC_BUTTON_FIlE_TERRAIN);
+	m_handledMsgs.push_back(IDC_BUTTON_FIlE_TERRAIN_SHARP);
+	m_handledMsgs.push_back(IDC_BUTTON_FIlE_TERRAIN_SOFT);
 	m_handledMsgs.push_back(IDC_BUTTON_FIlE_PARAMETERS);
 	m_handledMsgs.push_back(IDC_BUTTON_FIlE_CAMERA_TRAJECTORY);
 	m_handledMsgs.push_back(IDC_SLIDER_CAMERA_SPEED);
@@ -137,12 +138,20 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 {
 	switch (message)
 	{
-	case IDC_BUTTON_FIlE_TERRAIN:
+	case IDC_BUTTON_FIlE_TERRAIN_SHARP:
 	{
 		wchar_t filePath[260];
 		this->OpenFileDialog(filePath, 260);
 		if(!std::wstring(filePath).empty())
-			this->m_terrainModel->LoadTerrain(filePath);
+			this->m_terrainModel->LoadTerrainSharpEdges(filePath);
+		break;
+	}
+	case IDC_BUTTON_FIlE_TERRAIN_SOFT:
+	{
+		wchar_t filePath[260];
+		this->OpenFileDialog(filePath, 260);
+		if (!std::wstring(filePath).empty())
+			this->m_terrainModel->LoadTerrainSoftEdges(filePath);
 		break;
 	}
 	case IDC_BUTTON_FIlE_CAMERA_TRAJECTORY:
@@ -162,7 +171,7 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 		{
 			OutputDebugStringW(file.c_str());
 		}
-		this->m_terrainModel->LoadTerrainProject(files);
+		this->m_terrainModel->LoadTerrainSharpEdges_Project(files);
 		break;
 	}
 	case IDC_BUTTON_FIlE_PARAMETERS:

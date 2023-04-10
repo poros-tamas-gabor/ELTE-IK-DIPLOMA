@@ -20,10 +20,12 @@ public:
 	virtual void	Shutdown() = 0;
 	virtual bool	Render(ID3D11DeviceContext* deviceContext) = 0;
 
-	virtual bool	LoadTerrain(const wchar_t* filepath) = 0;
+	virtual bool	LoadTerrainSharpEdges(const wchar_t* filepath) = 0;
+	virtual bool	LoadTerrainSoftEdges(const wchar_t* filepath) = 0;
 	virtual bool	LoadCameraTrajectory(const wchar_t* filepath) = 0;
 	virtual bool	LoadParameters(const wchar_t* filepath) = 0;
-	virtual bool	LoadTerrainProject(const std::vector<std::wstring>& files) = 0;
+	virtual bool	LoadTerrainSharpEdges_Project(const std::vector<std::wstring>& files) = 0;
+	virtual bool	LoadTerrainSoftEdges_Project(const std::vector<std::wstring>& files) = 0;
  
 	virtual bool	IsTrajectoryInitialized(void) const = 0;
 

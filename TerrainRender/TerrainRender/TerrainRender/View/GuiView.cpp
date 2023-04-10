@@ -120,9 +120,14 @@ void GuiView::MenuBar()
     {
         if (ImGui::BeginMenu("File"))
         {
-            if (ImGui::MenuItem("Open Terrain File"))
+            if (ImGui::MenuItem("Open Terrain File (Sharp Edges)"))
             {
-                this->m_terrainController->HandleMessage(IDC_BUTTON_FIlE_TERRAIN, NULL, NULL);
+                this->m_terrainController->HandleMessage(IDC_BUTTON_FIlE_TERRAIN_SHARP, NULL, NULL);
+            }
+
+            if (ImGui::MenuItem("Open Terrain File (Soft Edges)"))
+            {
+                this->m_terrainController->HandleMessage(IDC_BUTTON_FIlE_TERRAIN_SOFT, NULL, NULL);
             }
 
             if (ImGui::MenuItem("Open Terrain Project"))

@@ -18,11 +18,11 @@ private:
 	int m_begin;
 	int m_numOfFacets;
 	//std::mutex& m_mutex;
-	std::vector<Facet>* m_facets;
+	std::vector<stlFacet>* m_facets;
 	
 
 public:
-	ReadSTLChunk(const std::wstring& filepath, int beginInBytes, int numOfFacets, std::vector<Facet>* facets);
+	ReadSTLChunk(const std::wstring& filepath, int beginInBytes, int numOfFacets, std::vector<stlFacet>* facets);
 	void ReadChunk();
 	virtual void operator()() override;
 };

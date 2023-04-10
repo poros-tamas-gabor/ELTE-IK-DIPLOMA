@@ -2,7 +2,7 @@
 #define LIGHT_H
 
 #include <DirectXMath.h>
-#include "SunPosition.h"
+#include <ctime>
 
 class Light
 {

@@ -8,7 +8,6 @@
 #include "PixelShaderPolyLine.h"
 #include "Camera.h"
 #include "CameraPositioner.h"
-#include "SunPosition.h"
 #include "IRenderable.h"
 #include "Light.h"
 #include <d3d11.h>
@@ -59,10 +58,12 @@ public:
 	void	Shutdown() override;
 	bool	Render(ID3D11DeviceContext* deviceContext) override;
 
-	bool	LoadTerrain(const wchar_t* filepath) override;
+	bool	LoadTerrainSharpEdges(const wchar_t* filepath) override;
+	bool	LoadTerrainSoftEdges(const wchar_t* filepath) override;
 	bool	LoadCameraTrajectory(const wchar_t* filepath) override;
 	bool	LoadParameters(const wchar_t* filepath) override;
-	bool	LoadTerrainProject(const std::vector<std::wstring>& files) override;
+	bool	LoadTerrainSharpEdges_Project(const std::vector<std::wstring>& files) override;
+	bool	LoadTerrainSoftEdges_Project(const std::vector<std::wstring>& files) override;
 
 	bool	IsTrajectoryInitialized(void) const override;
 

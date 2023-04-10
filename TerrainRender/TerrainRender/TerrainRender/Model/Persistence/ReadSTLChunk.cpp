@@ -2,7 +2,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include "../../ErrorHandler.h"
-ReadSTLChunk::ReadSTLChunk(const std::wstring& filepath, int begin, int numOfFacets, std::vector<Facet>* facets) :
+ReadSTLChunk::ReadSTLChunk(const std::wstring& filepath, int begin, int numOfFacets, std::vector<stlFacet>* facets) :
     m_filepath(filepath), m_begin(begin), m_numOfFacets(numOfFacets), m_facets(facets) {}
 
 
@@ -23,7 +23,7 @@ void ReadSTLChunk::ReadChunk()
         // Read the file data into the buffer
         for (unsigned i = 0; i < m_numOfFacets; i++)
         {
-            Facet f;
+            stlFacet f;
             file.read(reinterpret_cast<char*>(f.normal), 12);
             for (unsigned j = 0; j < 3; j++)
             {

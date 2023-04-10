@@ -184,7 +184,7 @@ void TerrainModel::RotateCamera(unsigned message, float pitch, float yaw)
 	}
 }
 
-bool TerrainModel::LoadTerrain(const wchar_t* filepath)
+bool TerrainModel::LoadTerrainSoftEdges(const wchar_t* filepath)
 {
 	VertexMesh* pVertices;
 	UINT									vertexCount;
@@ -194,18 +194,16 @@ bool TerrainModel::LoadTerrain(const wchar_t* filepath)
 	unsigned long* pIndices;
 
 
-	bool bresult = m_persistence->LoadTerrainSolid(filepath);
+	bool bresult = m_persistence->LoadTerrainSoftEdges(filepath);
 	if (bresult)
 	{
 		const std::vector<StlVertex>& vertices = m_persistence->GetSolidVertices();
-		const std::vector<FacetIndices>& facetIndices = m_persistence->GetSolidIndices();
-		for (const FacetIndices& facet : facetIndices)
+		const std::vector<FacetCornerIndices>& facetIndices = m_persistence->GetSolidIndices();
+		for (const FacetCornerIndices& facet : facetIndices)
 		{
 			for (int i = 0; i < 3; i++)
 			{
 				const size_t& index = facet.corner[2-i];
-//				const StlVertex& vertex = vertices.at(index);
-
 				indices.push_back(index);
 			}
 		}
@@ -215,7 +213,6 @@ bool TerrainModel::LoadTerrain(const wchar_t* filepath)
 				vertexMesh.normal = { (float)v.normal.x, (float)v.normal.z,(float)v.normal.y };
 				vertexMesh.position = { (float)v.pos.x, (float)v.pos.z, (float)v.pos.y };
 				vertexMesh.color = { 1.0f, 0.5f, 0.5f, 1.0f };
-
 				verticesMesh.push_back(vertexMesh);
 		}
 
@@ -232,7 +229,7 @@ bool TerrainModel::LoadTerrain(const wchar_t* filepath)
 	return bresult;
 }
 
-/*bool TerrainModel::LoadTerrain(const wchar_t* filepath)
+bool TerrainModel::LoadTerrainSharpEdges(const wchar_t* filepath)
 {
 	VertexMesh*								pVertices;
 	UINT									vertexCount;
@@ -242,12 +239,12 @@ bool TerrainModel::LoadTerrain(const wchar_t* filepath)
 	unsigned long*							pIndices;
 
 
-	bool bresult = m_persistence->LoadTerrain(filepath);
+	bool bresult = m_persistence->LoadTerrainSharpEdges(filepath);
 	if (bresult)
 	{
-		const std::vector<Facet>& facets = m_persistence->GetFacets();
+		const std::vector<stlFacet>& facets = m_persistence->GetFacets();
 		unsigned index = 0;
-		for (const Facet& facet : facets)
+		for (const stlFacet& facet : facets)
 		{
 			for (int i = 0; i < 3; i++)
 			{
@@ -273,13 +270,23 @@ bool TerrainModel::LoadTerrain(const wchar_t* filepath)
 		PublishModelState();
 	}
 	return bresult;
-}*/
+}
 
-bool	TerrainModel::LoadTerrainProject(const std::vector<std::wstring>& files)
+bool	TerrainModel::LoadTerrainSharpEdges_Project(const std::vector<std::wstring>& files)
 {
 	for (const std::wstring& filepath : files)
 	{
-		this->LoadTerrain(filepath.c_str());
+		this->LoadTerrainSharpEdges(filepath.c_str());
+	}
+	return true;
+
+}
+
+bool	TerrainModel::LoadTerrainSoftEdges_Project(const std::vector<std::wstring>& files)
+{
+	for (const std::wstring& filepath : files)
+	{
+		this->LoadTerrainSoftEdges(filepath.c_str());
 	}
 	return true;
 

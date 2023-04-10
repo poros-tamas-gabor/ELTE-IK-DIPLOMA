@@ -1,5 +1,6 @@
 #include "Light.h"
 #include "../sunPos/SunPos.h"
+#include <ctime>
 
 void Light::SetAmbientColor(const DirectX::XMFLOAT4& ambientColor)
 {

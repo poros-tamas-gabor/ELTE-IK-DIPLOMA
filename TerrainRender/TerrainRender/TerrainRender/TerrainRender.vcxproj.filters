@@ -126,12 +126,6 @@
     <ClCompile Include="Model\Light.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Position.cpp">
-      <Filter>Source Files\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\SunPosition.cpp">
-      <Filter>Source Files\Model</Filter>
-    </ClCompile>
     <ClCompile Include="Model\TerrainModel.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
@@ -207,6 +201,12 @@
     <ClCompile Include="Model\VertexShaderPolyLine.cpp">
       <Filter>Source Files\Model\Shader</Filter>
     </ClCompile>
+    <ClCompile Include="Model\CameraPositioner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sunPos\SunPos.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -264,12 +264,6 @@
       <Filter>Header Files\Model</Filter>
     </ClInclude>
     <ClInclude Include="Model\Light.h">
-      <Filter>Header Files\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Position.h">
-      <Filter>Header Files\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\SunPosition.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
     <ClInclude Include="Model\TerrainModel.h">
@@ -382,6 +376,18 @@
     </ClInclude>
     <ClInclude Include="ImGui\imgui.h">
       <Filter>Resource Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\CameraPositioner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\json.hpp">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\json_fwd.hpp">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sunPos\SunPos.h">
+      <Filter>Resource Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

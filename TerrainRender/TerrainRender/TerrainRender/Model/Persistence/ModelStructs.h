@@ -40,16 +40,6 @@ struct VertexPolyLine
 	DirectX::XMFLOAT4 color;
 };
 
-struct ModelTime
-{
-	int year;
-	int month;
-	int day;
-	int hour;
-	int min;
-	int sec;
-};
-
 struct LLACoordinate
 {
 	double latitude;
@@ -112,13 +102,15 @@ struct Vector4D
 	float x, y, z, w;
 };
 
-struct FacetIndices
+
+// For soft edges
+struct FacetCornerIndices
 {
 	size_t corner[3];
 };
 
 
-struct VertexNormals
+struct NormalsInSamePositions
 {
 	//Vector3D meanNormal;
 	std::vector<Vector3D> normals;
@@ -127,7 +119,7 @@ struct VertexNormals
 	Vector3D sumNormals()
 	{
 		Vector3D sol = { 0, 0, 0 };
-		for (Vector3D v : normals)
+		for (const Vector3D& v : normals)
 		{
 			sol = sol + v;
 			sol.normalize();
@@ -167,7 +159,7 @@ struct VertexHTindex
 	}
 };
 
-struct Facet
+struct stlFacet
 {
 	float normal[3];
 	float position[3][3];
@@ -178,7 +170,7 @@ struct stlFile
 {
 	uint8_t     header[80];
 	uint32_t    numOfTriangles;
-	std::vector<Facet> facets;
+	std::vector<stlFacet> facets;
 };
 
 struct IRenderableState

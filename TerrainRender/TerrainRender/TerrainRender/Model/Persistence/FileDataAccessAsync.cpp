@@ -59,7 +59,7 @@ bool BinaryFileDataAccessAsync::ReadFile(const std::wstring& filepath)
 
         std::vector<std::thread> threads;
         std::vector<ICallablePtr> processes;
-        std::vector<std::vector<Facet>> facetVectors(numThreads);
+        std::vector<std::vector<stlFacet>> facetVectors(numThreads);
 
         for (int i = 0; i < numThreads; i++)
         {
@@ -107,7 +107,7 @@ const std::vector<StlVertex>& BinaryFileDataAccessAsync::GetSolidVertices()
 {
     return this->m_vertices;
 }
-const std::vector<FacetIndices>& BinaryFileDataAccessAsync::GetSolidIndices()
+const std::vector<FacetCornerIndices>& BinaryFileDataAccessAsync::GetSolidIndices()
 {
     return this->m_facets;
 }
@@ -140,7 +140,7 @@ bool BinaryFileDataAccessAsync::ReadFileSolid(const std::wstring& filepath)
         THROW_TREXCEPTION_IF_FAILED(file.is_open(), errormsg);
 
 
-        ht.clear();
+        std::unordered_map<VertexHTindex, NormalsInSamePositions, VertexHTindex::Hash> ht;
         m_vertices.clear();
         m_facets.clear();
 
@@ -148,7 +148,7 @@ bool BinaryFileDataAccessAsync::ReadFileSolid(const std::wstring& filepath)
         for (unsigned i = 0; i < numOfFacets; i++)
         {
             float n[3];
-            FacetIndices facet;
+            FacetCornerIndices facet;
             file.read(reinterpret_cast<char*>(n), 12);
             Vector3D normal = { n[0], n[1], n[2] };
             normal.normalize();
@@ -175,11 +175,11 @@ bool BinaryFileDataAccessAsync::ReadFileSolid(const std::wstring& filepath)
                     //last pushed element index
                     facet.corner[j] = m_vertices.size() - 1;
 
-                    VertexNormals vn;
+                    NormalsInSamePositions vn;
                     vn.vertIndex = m_vertices.size() - 1;
                     vn.normals.clear();
                     vn.normals.push_back(normal);
-                    ht.insert(std::pair<VertexHTindex, VertexNormals>(vertexHashIndex, vn));
+                    ht.insert(std::pair<VertexHTindex, NormalsInSamePositions>(vertexHashIndex, vn));
                 }
             }
             m_facets.push_back(facet);
@@ -216,7 +216,7 @@ bool BinaryFileDataAccessAsync::ReadFileSolid(const std::wstring& filepath)
     return false;
 }
 
-bool BinaryFileDataAccessAsync::LoadTerrainSolid(const wchar_t* filename)
+bool BinaryFileDataAccessAsync::LoadTerrainSoftEdges(const wchar_t* filename)
 {
     std::time_t now = std::time(NULL);
     bool success = false;
@@ -249,7 +249,7 @@ bool BinaryFileDataAccessAsync::LoadTerrainSolid(const wchar_t* filename)
     return false;
 }
 
-bool BinaryFileDataAccessAsync::LoadTerrain(const wchar_t* filename)
+bool BinaryFileDataAccessAsync::LoadTerrainSharpEdges(const wchar_t* filename)
 {
     std::time_t now = std::time(NULL);
     m_faces.clear();
@@ -284,7 +284,7 @@ bool BinaryFileDataAccessAsync::LoadTerrain(const wchar_t* filename)
     return false;
 }
 
-const std::vector<Facet>& BinaryFileDataAccessAsync::GetFacets(void)
+const std::vector<stlFacet>& BinaryFileDataAccessAsync::GetFacets(void)
 {
     return m_faces;
 }

@@ -30,16 +30,19 @@ public:
 
 class BinaryFileDataAccessAsync : public IDataAccess {
 
-    friend class ReadSTLChunk;
+    friend class ReadSTLChunkSharp;
 
 private:
     const int minChunkSize = 50000;
     std::vector<stlFacet> m_faces;
     std::vector<StlVertex> m_vertices;
-    std::vector<FacetCornerIndices> m_facets;
+    std::vector<FacetCornerIndices> m_indices;
+    std::mutex m_mutex_hashtable;
+    std::mutex m_mutex_indices;
+    std::mutex m_mutex_vertices;
 
 private:
-    bool ReadFile(const std::wstring& filepath);
+    bool ReadFileSharpEdges(const std::wstring& filepath);
     bool ReadFileSolid(const std::wstring& filepath);
     int  GetNumThreads(int fileSize);
     bool CreateCameraPose(CameraPose& cameraPose, const std::string& line, const std::vector<std::string>& headers);

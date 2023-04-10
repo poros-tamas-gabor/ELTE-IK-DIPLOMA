@@ -25,7 +25,7 @@ int BinaryFileDataAccessAsync::GetNumThreads(int numOfFacets)
     return numThreads;
 }
 
-bool BinaryFileDataAccessAsync::ReadFile(const std::wstring& filepath)
+bool BinaryFileDataAccessAsync::ReadFileSharpEdges(const std::wstring& filepath)
 {
     try
     {
@@ -70,7 +70,7 @@ bool BinaryFileDataAccessAsync::ReadFile(const std::wstring& filepath)
             else
                 currentNumOfFacets = numOfFacets - i * numOfFacetInChunk;
 
-            processes.emplace_back(std::make_shared<ReadSTLChunk>(filepath, beginInBytes, currentNumOfFacets, &facetVectors.at(i)));
+            processes.emplace_back(std::make_shared<ReadSTLChunkSharp>(filepath, beginInBytes, currentNumOfFacets, &facetVectors.at(i)));
             threads.emplace_back(std::thread(std::ref(*processes.at(i))));
         }
 
@@ -95,13 +95,7 @@ bool BinaryFileDataAccessAsync::ReadFile(const std::wstring& filepath)
     }
     return false;
 }
-std::string to_string_with_precision(const float a_value, const int n = 6)
-{
-    std::ostringstream out;
-    out.precision(n);
-    out << std::fixed << a_value;
-    return std::move(out).str();
-}
+
 
 const std::vector<StlVertex>& BinaryFileDataAccessAsync::GetSolidVertices()
 {
@@ -109,7 +103,7 @@ const std::vector<StlVertex>& BinaryFileDataAccessAsync::GetSolidVertices()
 }
 const std::vector<FacetCornerIndices>& BinaryFileDataAccessAsync::GetSolidIndices()
 {
-    return this->m_facets;
+    return this->m_indices;
 }
 bool BinaryFileDataAccessAsync::ReadFileSolid(const std::wstring& filepath)
 {
@@ -119,6 +113,7 @@ bool BinaryFileDataAccessAsync::ReadFileSolid(const std::wstring& filepath)
         std::wstring errormsg = L"Failed to open " + std::wstring(filepath);
         THROW_TREXCEPTION_IF_FAILED(file.is_open(), errormsg);
 
+        m_faces.clear();
 
         // Get the size of the file
         file.seekg(0, std::ios::end);
@@ -132,62 +127,39 @@ bool BinaryFileDataAccessAsync::ReadFileSolid(const std::wstring& filepath)
         errormsg = L"Invalid binary STL file" + std::wstring(filepath);
         THROW_TREXCEPTION_IF_FAILED((fileSize == 84 + 50 * num_triangles), errormsg);
 
+        file.close();
 
         // Get the number of facets in the file
         unsigned numOfFacets = (fileSize - 84) / 50;
 
-        errormsg = L"Failed to open " + std::wstring(filepath);
-        THROW_TREXCEPTION_IF_FAILED(file.is_open(), errormsg);
+        // Calculate how many threads are needed
+        int numThreads = GetNumThreads(numOfFacets);
+        // Calculate how many facets are in a chunk
+        int numOfFacetInChunk = numOfFacets / numThreads;
 
-
+        std::vector<std::thread> threads;
+        std::vector<ICallablePtr> callables;
         std::unordered_map<VertexHTindex, NormalsInSamePositions, VertexHTindex::Hash> ht;
         m_vertices.clear();
-        m_facets.clear();
+        m_indices.clear();
 
-        // Read the file data into the buffer
-        for (unsigned i = 0; i < numOfFacets; i++)
+        for (int i = 0; i < numThreads; i++)
         {
-            float n[3];
-            FacetCornerIndices facet;
-            file.read(reinterpret_cast<char*>(n), 12);
-            Vector3D normal = { n[0], n[1], n[2] };
-            normal.normalize();
+            unsigned currentNumOfFacets;
+            unsigned beginInBytes = 84 + 50 * numOfFacetInChunk * i;
+            if (i < numThreads - 1)
+                currentNumOfFacets = numOfFacetInChunk;
+            else
+                currentNumOfFacets = numOfFacets - i * numOfFacetInChunk;
 
-            for (unsigned j = 0; j < 3; j++)
-            {
-                float c[3];
-                file.read(reinterpret_cast<char*>(c), 12);
-                VertexHTindex vertexHashIndex = { to_string_with_precision(c[0]), to_string_with_precision(c[1]), to_string_with_precision(c[2]) };
-
-                //find in hash table vertexPosstr
-               auto it = ht.find(vertexHashIndex);
-               //if found
-               if (it != ht.end())
-               {
-                   it->second.normals.push_back(normal);
-                   facet.corner[j] = it->second.vertIndex;
-               }
-               else
-               {
-                    StlVertex vertex;
-                    vertex.pos = { c[0], c[1], c[2] };
-                    m_vertices.push_back(vertex);
-                    //last pushed element index
-                    facet.corner[j] = m_vertices.size() - 1;
-
-                    NormalsInSamePositions vn;
-                    vn.vertIndex = m_vertices.size() - 1;
-                    vn.normals.clear();
-                    vn.normals.push_back(normal);
-                    ht.insert(std::pair<VertexHTindex, NormalsInSamePositions>(vertexHashIndex, vn));
-                }
-            }
-            m_facets.push_back(facet);
-            file.seekg(2, std::ios_base::cur);
-
+            callables.emplace_back(std::make_shared<ReadSTLChunkSoft>(filepath, beginInBytes, currentNumOfFacets, m_vertices, m_indices, ht, m_mutex_vertices, m_mutex_indices, m_mutex_hashtable));
+            threads.emplace_back(std::thread(std::ref(*callables.at(i))));
         }
-        // Clean up
-        file.close();
+        for (int i = 0; i < numThreads; i++)
+        {
+            if (threads.at(i).joinable())
+                threads.at(i).join();
+        }
 
         int i = 0;
         for (StlVertex& v : m_vertices)
@@ -201,7 +173,6 @@ bool BinaryFileDataAccessAsync::ReadFileSolid(const std::wstring& filepath)
             }
             i++;
         }
-
 
         return true;
     }
@@ -259,7 +230,7 @@ bool BinaryFileDataAccessAsync::LoadTerrainSharpEdges(const wchar_t* filename)
     try
     {
 
-     success = this->ReadFile(filename);
+     success = this->ReadFileSharpEdges(filename);
 
     std::time_t end = std::time(NULL);
     std::wstring str = L"Loading time : in sec: ";

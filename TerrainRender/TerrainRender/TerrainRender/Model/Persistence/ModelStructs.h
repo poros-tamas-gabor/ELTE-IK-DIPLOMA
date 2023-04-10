@@ -11,7 +11,16 @@
 #include <unordered_map>
 #include <vector>
 #include <math.h>
+#include <sstream>
 
+
+inline std::string to_string_with_precision(const float a_value, const int n = 6)
+{
+	std::ostringstream out;
+	out.precision(n);
+	out << std::fixed << a_value;
+	return std::move(out).str();
+}
 inline void XMFLOAT3toCArray(float array[], DirectX::XMFLOAT3 floats)
 {
 	array[0] = floats.x;

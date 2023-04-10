@@ -45,8 +45,8 @@ bool TerrainModel::Initalize(HWND hwnd, IDataAccess* persistence, ID3D11Device* 
 	this->m_camera.Initialize(screenWidth, screenHeight, screenNear, screenDepth, fieldOfView);
 	this->m_cameraPositioner.Initialize(&this->m_camera);
 
-	this->m_meshes.Initialize(device, &m_vertexShaderMesh, &m_pixelShaderMesh, NULL, NULL);
-	this->m_polylines.Initialize(device, &m_vertexShaderPolyLine, &m_pixelShaderPolyLine, NULL, NULL);
+	this->m_meshes.Initialize(device, &m_vertexShaderMesh, &m_pixelShaderMesh, NULL, NULL, NULL, NULL);
+	this->m_polylines.Initialize(device, &m_vertexShaderPolyLine, &m_pixelShaderPolyLine, NULL, NULL, NULL, NULL);
 	this->m_light.UpdateSunPosition(m_cameraPositioner.GetCurrentEpochTime().getSeconds(), m_llacoordinate.latitude, m_llacoordinate.longitude);
 	PublishModelState();
 	this->AddGrid(2000, { 1.0f, 1.0f, 1.0f, 1.0f }, 200, 200);
@@ -184,17 +184,55 @@ void TerrainModel::RotateCamera(unsigned message, float pitch, float yaw)
 	}
 }
 
+//bool TerrainModel::LoadTerrain(const wchar_t* filepath)
+//{
+//	VertexMesh*				pVertices;
+//	UINT					vertexCount;
+//	std::vector<VertexMesh> vertices;
+//
+//
+//	bool bresult = m_persistence->LoadTerrain(filepath);
+//	if (bresult)
+//	{
+//		const std::vector<Facet>& facets = m_persistence->GetFacets();
+//		for (const Facet& facet : facets)
+//		{
+//			for (int i = 0; i < 3; i++)
+//			{
+//			    VertexMesh vertex;
+//			    vertex.normal = { (float)facet.normal[0], (float)facet.normal[2],(float)facet.normal[1] };
+//			    vertex.position = { (float)facet.position[2-i][0], (float)facet.position[2-i][2], (float)facet.position[2-i][1] };
+//				vertex.color = { 1.0f, 0.5f, 0.5f, 1.0f };
+//			
+//			    vertices.push_back(vertex);
+//			}
+//		}
+//
+//		pVertices = &vertices.at(0);
+//		vertexCount = vertices.size();
+//		PolygonMeshCreator creator;
+//		this->m_meshes.Add(pVertices, vertexCount, creator, filepath);
+//
+//		PublishModelState();
+//	}
+//	return bresult;
+//}
+
 bool TerrainModel::LoadTerrain(const wchar_t* filepath)
 {
-	VertexMesh*				pVertices;
-	UINT					vertexCount;
-	std::vector<VertexMesh> vertices;
+	VertexMesh*								pVertices;
+	UINT									vertexCount;
+	UINT									indexCount;
+	std::vector<VertexMesh>					vertices;
+	std::vector<unsigned long>				indices;
+	unsigned long*							pIndices;
 
 
 	bool bresult = m_persistence->LoadTerrain(filepath);
 	if (bresult)
 	{
 		const std::vector<Facet>& facets = m_persistence->GetFacets();
+		unsigned index = 0;
 		for (const Facet& facet : facets)
 		{
 			for (int i = 0; i < 3; i++)
@@ -205,18 +243,22 @@ bool TerrainModel::LoadTerrain(const wchar_t* filepath)
 				vertex.color = { 1.0f, 0.5f, 0.5f, 1.0f };
 			
 			    vertices.push_back(vertex);
+				indices.push_back(index);
+				index++;
 			}
 		}
 
 		pVertices = &vertices.at(0);
 		vertexCount = vertices.size();
+		pIndices = &indices.at(0);
+		indexCount = indices.size();
+
 		PolygonMeshCreator creator;
-		this->m_meshes.Add(pVertices, vertexCount, creator, filepath);
+		this->m_meshes.Add(pVertices, pIndices, vertexCount, indexCount, creator, filepath);
 
 		PublishModelState();
 	}
 	return bresult;
-
 }
 
 bool	TerrainModel::LoadTerrainProject(const std::vector<std::wstring>& files)
@@ -277,7 +319,8 @@ bool	TerrainModel::LoadCameraTrajectory(const wchar_t* filepath)
 			vertices.push_back(vertex);
 		}
 		PolyLineCreator creator;
-		m_polylines.Add(&vertices.at(0), vertices.size(), creator, filepath);
+		
+		m_polylines.Add(&vertices.at(0), NULL, vertices.size(), NULL, creator, filepath);
 		IRendarablePtr<VertexPolyLine> polyline = m_polylines.GetLastAddedComponent();
 		m_cameraTrajectory.Initialize(cameraPoses, polyline, &m_camera);
 		PublishModelState();
@@ -473,7 +516,7 @@ void TerrainModel::AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int g
 	VertexPolyLine* pVertex = &vertices[0];
 	unsigned verteCount = vertices.size();
 	LineListCreator	lineListCreator;
-	this->m_polylines.Add(pVertex, verteCount, lineListCreator, L"Grid");
+	this->m_polylines.Add(pVertex, NULL, verteCount,NULL, lineListCreator, L"Grid");
 }
 
 

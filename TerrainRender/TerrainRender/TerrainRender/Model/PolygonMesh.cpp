@@ -2,7 +2,8 @@
 #include	"../ErrorHandler.h"
 #include	<memory>
 
-bool PolygonMesh::Initialize(ID3D11Device* device, IVertexShader* vertexShader, IPixelShader* pixelShader, VertexMesh* vertices, UINT indexCount)
+
+bool PolygonMesh::Initialize(ID3D11Device* device, IVertexShader* vertexShader, IPixelShader* pixelShader, VertexMesh* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount)
 {
 	if (device == nullptr || vertexShader == nullptr || pixelShader == nullptr)
 		return false;
@@ -11,7 +12,7 @@ bool PolygonMesh::Initialize(ID3D11Device* device, IVertexShader* vertexShader, 
 	this->m_vertexShader	= vertexShader;
 
 	bool bresult;
-	bresult = this->InitializeBuffers(device, vertices, indexCount);
+	bresult = this->InitializeBuffers(device, vertices, indices, vertexCount, indexCount);
 
 	this->ResetTransformation();
 	if (!bresult)
@@ -60,9 +61,8 @@ int PolygonMesh::GetVertexCount() const
 
 }
 
-bool PolygonMesh::InitializeBuffers(ID3D11Device* device, VertexMesh* vertices, UINT indexCount)
+bool PolygonMesh::InitializeBuffers(ID3D11Device* device, VertexMesh* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount)
 {
-	std::unique_ptr<unsigned long[]>		indices;
 	D3D11_BUFFER_DESC						vertexBufferDesc, indexBufferDesc;
 	HRESULT									result;
 	D3D11_SUBRESOURCE_DATA					vertexData, indexData;
@@ -70,18 +70,8 @@ bool PolygonMesh::InitializeBuffers(ID3D11Device* device, VertexMesh* vertices, 
 	try {
 		// Set the number of vertices in the vertex array.
 		// Set the number of indices in the index array.
-		this->_indexCount = this->_vertexCount = indexCount;
-
-		//Allocate memory for the array of vertices and indices
-		indices = std::make_unique<unsigned long[]>(this->_vertexCount);
-
-		for (unsigned int i = 0; i < indexCount; i++)
-		{
-			//vertices[i].color = { 1.0f, 0.0f, 0.0f, 1.0f };
-			//vertices[i].normal = { v.normal.x , v.normal.y, v.normal.z };
-			//vertices[i].position = { v.position.x/100,v.position.y/100,v.position.z/100};
-			indices[i] = i;
-		}
+		this->_indexCount = indexCount;
+		this->_vertexCount = vertexCount;
 
 		// Set up the description of the static vertex buffer.
 		ZeroMemory(&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
@@ -112,7 +102,7 @@ bool PolygonMesh::InitializeBuffers(ID3D11Device* device, VertexMesh* vertices, 
 		indexBufferDesc.StructureByteStride = 0;
 
 		// Give the subresource structure a pointer to the index data.
-		indexData.pSysMem = indices.get();
+		indexData.pSysMem = indices;
 		indexData.SysMemPitch = 0;
 		indexData.SysMemSlicePitch = 0;
 

@@ -95,7 +95,158 @@ bool BinaryFileDataAccessAsync::ReadFile(const std::wstring& filepath)
     }
     return false;
 }
+std::string to_string_with_precision(const float a_value, const int n = 6)
+{
+    std::ostringstream out;
+    out.precision(n);
+    out << std::fixed << a_value;
+    return std::move(out).str();
+}
 
+const std::vector<StlVertex>& BinaryFileDataAccessAsync::GetSolidVertices()
+{
+    return this->m_vertices;
+}
+const std::vector<FacetIndices>& BinaryFileDataAccessAsync::GetSolidIndices()
+{
+    return this->m_facets;
+}
+bool BinaryFileDataAccessAsync::ReadFileSolid(const std::wstring& filepath)
+{
+    try
+    {
+        std::ifstream file(filepath, std::ios::binary); // Open file and seek to end
+        std::wstring errormsg = L"Failed to open " + std::wstring(filepath);
+        THROW_TREXCEPTION_IF_FAILED(file.is_open(), errormsg);
+
+
+        // Get the size of the file
+        file.seekg(0, std::ios::end);
+        int fileSize = file.tellg();
+        file.seekg(0, std::ios::beg);
+
+        // Read the number of triangles
+        int num_triangles;
+        file.seekg(80, std::ios_base::beg);
+        file.read(reinterpret_cast<char*>(&num_triangles), sizeof(num_triangles));
+        errormsg = L"Invalid binary STL file" + std::wstring(filepath);
+        THROW_TREXCEPTION_IF_FAILED((fileSize == 84 + 50 * num_triangles), errormsg);
+
+
+        // Get the number of facets in the file
+        unsigned numOfFacets = (fileSize - 84) / 50;
+
+        errormsg = L"Failed to open " + std::wstring(filepath);
+        THROW_TREXCEPTION_IF_FAILED(file.is_open(), errormsg);
+
+        std::unordered_map<VertexHTindex, VertexNormals, VertexHTindex::Hash> ht;
+        m_vertices.clear();
+        m_facets.clear();
+
+        // Read the file data into the buffer
+        for (unsigned i = 0; i < numOfFacets; i++)
+        {
+            float n[3];
+            FacetIndices facet;
+            file.read(reinterpret_cast<char*>(n), 12);
+            file.read(reinterpret_cast<char*>(n), 12);
+            file.read(reinterpret_cast<char*>(n), 12);
+            Vector3D normal = { n[0], n[1], n[2] };
+            normal.normalize();
+
+            for (unsigned j = 0; j < 3; j++)
+            {
+                float c[3];
+                file.read(reinterpret_cast<char*>(c), 12);
+                VertexHTindex vertexHashIndex = { to_string_with_precision(c[0]), to_string_with_precision(c[1]), to_string_with_precision(c[2]) };
+
+                //find in hash table vertexPosstr
+                auto it = ht.find(vertexHashIndex);
+                //if found
+                if (it != ht.end())
+                {
+                    it->second.normals.push_back(normal);
+                }
+                else
+                {
+                    StlVertex vertex;
+                    vertex.pos = { c[0], c[1], c[2] };
+                    m_vertices.push_back(vertex);
+                    //last pushed element index
+                    facet.corner[j] = m_vertices.size() - 1;
+                    VertexNormals vn;
+                    vn.vertIndex = m_vertices.size() - 1;
+                    vn.normals.push_back(normal);
+                    ht.insert(std::pair<VertexHTindex, VertexNormals>(vertexHashIndex, vn));
+                }
+            }
+            m_facets.push_back(facet);
+            file.seekg(2, std::ios_base::cur);
+
+        }
+        // Clean up
+        file.close();
+
+        int i = 0;
+        for (StlVertex v : m_vertices)
+        {
+            VertexHTindex vertexHashIndex = { to_string_with_precision(v.pos.x), to_string_with_precision(v.pos.y), to_string_with_precision(v.pos.z) };
+            //find in hash table vertexPosstr
+            auto it = ht.find(vertexHashIndex);
+            if (it != ht.end())
+            {
+                v.normal = it->second.sumNormals();
+            }
+            i++;
+        }
+
+
+        return true;
+    }
+    catch (TRException& e)
+    {
+        ErrorHandler::Log(e);
+    }
+    catch (std::exception& e)
+    {
+        ErrorHandler::Log(e);
+    }
+    return false;
+}
+
+bool BinaryFileDataAccessAsync::LoadTerrainSolid(const wchar_t* filename)
+{
+    std::time_t now = std::time(NULL);
+    m_faces.clear();
+    bool success = false;
+
+    try
+    {
+
+        success = this->ReadFile(filename);
+
+        std::time_t end = std::time(NULL);
+        std::wstring str = L"Loading time : in sec: ";
+        str += std::to_wstring(end - now);
+        str += L"\n";
+        OutputDebugString(str.c_str());
+        return success;
+    }
+
+    catch (TRException& e)
+    {
+        ErrorHandler::Log(e);
+    }
+    catch (std::exception& e)
+    {
+        ErrorHandler::Log(e);
+    }
+    catch (...)
+    {
+        ErrorHandler::Log("Unknown exception");
+    }
+    return false;
+}
 
 bool BinaryFileDataAccessAsync::LoadTerrain(const wchar_t* filename)
 {

@@ -35,7 +35,8 @@ private:
 public:
 
 	virtual ~CompositeRenderable() = default;
-	bool Initialize(ID3D11Device* device, IVertexShader* vertexShader, IPixelShader* pixelShader, V* vertices, UINT indexCount) override
+
+	bool Initialize(ID3D11Device* device, IVertexShader* vertexShader, IPixelShader* pixelShader, V* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount) override
 	{
 		if (device == nullptr || vertexShader == nullptr || pixelShader == nullptr)
 		{
@@ -65,7 +66,8 @@ public:
 			renderable->Render(deviceContext, worldMat, viewMat, projectionMat, light);
 		}
 	}
-	bool Add(V* vertices, UINT indexCount, const IRenderableCreator<V>& renderableCreator, const std::wstring& renderableName)
+	
+	bool Add(V* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount, const IRenderableCreator<V>& renderableCreator, const std::wstring& renderableName)
 	{
 		IRendarablePtr<V> renderable = renderableCreator.CreateRenderable();
 		if (!renderable)
@@ -73,7 +75,8 @@ public:
 			return false;
 		}
 		renderable->SetName(renderableName);
-		renderable->Initialize(this->m_device, m_vertexShader, m_pixelShader, vertices, indexCount);
+
+		renderable->Initialize(this->m_device, m_vertexShader, m_pixelShader, vertices, indices, vertexCount, indexCount);
 		return this->Add(renderable);
 	}
 

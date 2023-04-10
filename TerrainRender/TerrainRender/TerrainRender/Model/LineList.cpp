@@ -3,7 +3,8 @@
 #include	"../ErrorHandler.h"
 #include	<memory>
 
-bool LineList::Initialize(ID3D11Device* device, IVertexShader* vertexShader, IPixelShader* pixelShader, VertexPolyLine* vertices, UINT indexCount)
+
+bool LineList::Initialize(ID3D11Device* device, IVertexShader* vertexShader, IPixelShader* pixelShader, VertexPolyLine* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount)
 {
 	if (device == nullptr || vertexShader == nullptr || pixelShader == nullptr)
 		return false;
@@ -13,7 +14,7 @@ bool LineList::Initialize(ID3D11Device* device, IVertexShader* vertexShader, IPi
 	this->ResetTransformation();
 
 	bool bresult;
-	bresult = this->InitializeBuffers(device, vertices, indexCount);
+	bresult = this->InitializeBuffers(device, vertices, vertexCount);
 	if (!bresult)
 	{
 		return false;
@@ -50,7 +51,7 @@ int LineList::GetVertexCount() const
 
 }
 
-bool LineList::InitializeBuffers(ID3D11Device* device, VertexPolyLine* vertices, UINT indexCount)
+bool LineList::InitializeBuffers(ID3D11Device* device, VertexPolyLine* vertices, UINT vertexCount)
 {
 
 	D3D11_BUFFER_DESC						vertexBufferDesc;
@@ -59,7 +60,7 @@ bool LineList::InitializeBuffers(ID3D11Device* device, VertexPolyLine* vertices,
 
 	// Set the number of vertices in the vertex array.
 	// Set the number of indices in the index array.
-	this->_vertexCount = indexCount;
+	this->_vertexCount = vertexCount;
 
 	try
 	{

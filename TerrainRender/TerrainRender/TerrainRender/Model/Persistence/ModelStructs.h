@@ -6,6 +6,11 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <set>
+#include <tuple>
+#include <unordered_map>
+#include <vector>
+#include <math.h>
 
 inline void XMFLOAT3toCArray(float array[], DirectX::XMFLOAT3 floats)
 {
@@ -84,6 +89,17 @@ public:
 	{
 		return { this->x - other.x, this->y - other.y, this->z - other.z };
 	}
+	
+	void normalize()
+	{
+		double length = std::sqrt(x * x + y * y + z * z);
+		if (length > 0)
+		{
+			x /= length;
+			y /= length;
+			z /= length;
+		}
+	}
 };
 
 inline Vector3D operator*(double factor, const Vector3D& other)
@@ -96,15 +112,66 @@ struct Vector4D
 	float x, y, z, w;
 };
 
+struct FacetIndices
+{
+	size_t corner[3];
+};
 
+
+struct VertexNormals
+{
+	//Vector3D meanNormal;
+	std::vector<Vector3D> normals;
+	size_t vertIndex;
+
+	Vector3D sumNormals()
+	{
+		Vector3D sol = { 0, 0, 0 };
+		for (Vector3D v : normals)
+		{
+			sol = sol + v;
+			sol.normalize();
+		}
+		return sol;
+	}
+};
+struct StlVertex
+{
+	Vector3D normal;
+	Vector3D pos;
+};
+
+
+struct VertexHTindex
+{
+	struct Hash
+	{
+		// jacked up derivation of bernstiens string hasher
+		std::size_t operator()(VertexHTindex const& key) const
+		{
+			std::size_t hash = 5381u;
+			for (auto c : key.s1)
+				hash = (hash << 5) + hash + c;
+			for (auto c : key.s2)
+				hash = (hash << 5) + hash + c;
+			for (auto c : key.s3)
+				hash = (hash << 5) + hash + c;
+			return hash;
+		}
+	};
+	std::string s1, s2, s3;
+	// equivalence determination.
+	bool operator==(VertexHTindex const& key) const
+	{
+		return std::tie(s1, s2, s3) == std::tie(key.s1, key.s2, key.s3);
+	}
+};
 
 struct Facet
 {
 	float normal[3];
 	float position[3][3];
 };
-
-enum STLLineType { BEGIN, FACET, LOOP, VERTEX, ENDLOOP, ENDFACET, END };
 
 
 struct stlFile

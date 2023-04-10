@@ -34,7 +34,7 @@ public:
 	PolygonMesh& operator=(const PolygonMesh&) = delete;
 
 
-	bool Initialize(ID3D11Device* device, IVertexShader*, IPixelShader*, VertexMesh* vertices, UINT indexCount) override;
+	bool Initialize(ID3D11Device* device, IVertexShader* vertexShader, IPixelShader* pixelShader, VertexMesh* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount) override;
 	void Shutdown() override;
 	void Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat,const Light& light) override;
  
@@ -54,7 +54,8 @@ public:
 	IRenderableState	GetState(void) const override;
 
 private:
-	bool InitializeBuffers(ID3D11Device*, VertexMesh* vertices, UINT indexCount);
+	
+	bool InitializeBuffers(ID3D11Device* device, VertexMesh* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount);
 	void ShutdownBuffers();
 	void RenderBuffers(ID3D11DeviceContext*);
 	void CalculateLocalMatrix(void);

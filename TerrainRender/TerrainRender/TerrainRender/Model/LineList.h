@@ -26,7 +26,7 @@ public:
 	LineList& operator=(const LineList&) = delete;
 
 
-	virtual bool Initialize(ID3D11Device* device, IVertexShader*, IPixelShader*, VertexPolyLine* vertices, UINT indexCount) override;
+	virtual bool Initialize(ID3D11Device* device, IVertexShader* vertexShader, IPixelShader* pixelShader, VertexPolyLine* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount) override;
 	void Shutdown() override;
 	void Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light& light) override;
  

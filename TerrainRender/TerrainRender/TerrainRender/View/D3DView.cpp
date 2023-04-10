@@ -305,7 +305,7 @@ bool  D3DView::InitalizeAttributes(unsigned screenWidth, unsigned screenHeight)
 		ZeroMemory(&rasterDesc, sizeof(D3D11_RASTERIZER_DESC));
 
 		rasterDesc.AntialiasedLineEnable = false;
-		rasterDesc.CullMode = D3D11_CULL_NONE;//D3D11_CULL_BACK;
+		rasterDesc.CullMode = D3D11_CULL_BACK;//D3D11_CULL_NONE;//D3D11_CULL_BACK;
 		rasterDesc.DepthBias = 0;
 		rasterDesc.DepthBiasClamp = 0.0f;
 		rasterDesc.DepthClipEnable = true;

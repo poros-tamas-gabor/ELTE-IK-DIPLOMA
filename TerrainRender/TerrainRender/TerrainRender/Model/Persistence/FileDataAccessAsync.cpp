@@ -139,7 +139,8 @@ bool BinaryFileDataAccessAsync::ReadFileSolid(const std::wstring& filepath)
         errormsg = L"Failed to open " + std::wstring(filepath);
         THROW_TREXCEPTION_IF_FAILED(file.is_open(), errormsg);
 
-        std::unordered_map<VertexHTindex, VertexNormals, VertexHTindex::Hash> ht;
+
+        ht.clear();
         m_vertices.clear();
         m_facets.clear();
 
@@ -159,22 +160,24 @@ bool BinaryFileDataAccessAsync::ReadFileSolid(const std::wstring& filepath)
                 VertexHTindex vertexHashIndex = { to_string_with_precision(c[0]), to_string_with_precision(c[1]), to_string_with_precision(c[2]) };
 
                 //find in hash table vertexPosstr
-                auto it = ht.find(vertexHashIndex);
-                //if found
-                if (it != ht.end())
-                {
-                    it->second.normals.push_back(normal);
-                    facet.corner[j] = it->second.vertIndex;
-                }
-                else
-                {
+               auto it = ht.find(vertexHashIndex);
+               //if found
+               if (it != ht.end())
+               {
+                   it->second.normals.push_back(normal);
+                   facet.corner[j] = it->second.vertIndex;
+               }
+               else
+               {
                     StlVertex vertex;
                     vertex.pos = { c[0], c[1], c[2] };
                     m_vertices.push_back(vertex);
                     //last pushed element index
                     facet.corner[j] = m_vertices.size() - 1;
+
                     VertexNormals vn;
                     vn.vertIndex = m_vertices.size() - 1;
+                    vn.normals.clear();
                     vn.normals.push_back(normal);
                     ht.insert(std::pair<VertexHTindex, VertexNormals>(vertexHashIndex, vn));
                 }

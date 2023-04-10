@@ -38,7 +38,7 @@ void PolygonMesh::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX w
 			THROW_TREXCEPTION(L"Failed to render vertex shader");
 
 		this->RenderBuffers(deviceContext);
-		bresult = this->m_pixelShader->Render(deviceContext, this->GetVertexCount(), light);
+		bresult = this->m_pixelShader->Render(deviceContext, this->GetIndexCount(), light);
 		if(!bresult)
 			THROW_TREXCEPTION(L"Failed to render pixel shader");
 		}
@@ -53,7 +53,7 @@ void PolygonMesh::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX w
 
 int PolygonMesh::GetIndexCount() const
 {
-	return 0;
+	return this->_indexCount;
 }
 int PolygonMesh::GetVertexCount() const
 {

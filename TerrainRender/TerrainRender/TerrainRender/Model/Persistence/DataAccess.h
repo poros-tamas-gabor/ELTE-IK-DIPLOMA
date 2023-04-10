@@ -28,7 +28,7 @@ class BinaryFileDataAccessAsync : public IDataAccess {
 private:
     const int minChunkSize = 50000;
     std::vector<Facet> m_faces;
-
+    std::unordered_map<VertexHTindex, VertexNormals, VertexHTindex::Hash> ht;
     std::vector<StlVertex> m_vertices;
     std::vector<FacetIndices> m_facets;
 private:

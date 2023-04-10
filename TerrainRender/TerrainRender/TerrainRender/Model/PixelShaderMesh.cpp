@@ -106,10 +106,10 @@ bool PixelShaderMesh::Render(ID3D11DeviceContext* deviceContext, int vertexCount
 	this->RenderShader(deviceContext, vertexCount);
 	return result;
 }
-void PixelShaderMesh::RenderShader(ID3D11DeviceContext* deviceContext, int vertexCount) {
+void PixelShaderMesh::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount) {
 
 	deviceContext->PSSetShader(this->m_pixelShader, NULL, 0);
-	deviceContext->Draw(vertexCount, 0);
+	deviceContext->DrawIndexed(indexCount, 0, 0);
 }
 
 bool PixelShaderMesh::SetShadeParameters(ID3D11DeviceContext* deviceContext, const Light& light)

@@ -12,10 +12,12 @@
 class PolygonMesh : public IRenderable<VertexMesh>
 {
 private:
-	ID3D11Buffer*	m_vertexBuffer;
+	ID3D11Buffer* m_vertexBuffer;
+	ID3D11Buffer* m_indexBuffer;
 	unsigned int	_vertexCount;
-	IPixelShader*	m_pixelShader;
-	IVertexShader*	m_vertexShader;
+	unsigned int	_indexCount;
+	IPixelShader* m_pixelShader;
+	IVertexShader* m_vertexShader;
 
 	std::wstring		m_name;
 	DirectX::XMFLOAT3	m_rotation;

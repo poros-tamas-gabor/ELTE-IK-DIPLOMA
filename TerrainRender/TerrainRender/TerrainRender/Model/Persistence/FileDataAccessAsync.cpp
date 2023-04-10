@@ -149,8 +149,6 @@ bool BinaryFileDataAccessAsync::ReadFileSolid(const std::wstring& filepath)
             float n[3];
             FacetIndices facet;
             file.read(reinterpret_cast<char*>(n), 12);
-            file.read(reinterpret_cast<char*>(n), 12);
-            file.read(reinterpret_cast<char*>(n), 12);
             Vector3D normal = { n[0], n[1], n[2] };
             normal.normalize();
 
@@ -166,6 +164,7 @@ bool BinaryFileDataAccessAsync::ReadFileSolid(const std::wstring& filepath)
                 if (it != ht.end())
                 {
                     it->second.normals.push_back(normal);
+                    facet.corner[j] = it->second.vertIndex;
                 }
                 else
                 {
@@ -188,7 +187,7 @@ bool BinaryFileDataAccessAsync::ReadFileSolid(const std::wstring& filepath)
         file.close();
 
         int i = 0;
-        for (StlVertex v : m_vertices)
+        for (StlVertex& v : m_vertices)
         {
             VertexHTindex vertexHashIndex = { to_string_with_precision(v.pos.x), to_string_with_precision(v.pos.y), to_string_with_precision(v.pos.z) };
             //find in hash table vertexPosstr
@@ -222,7 +221,7 @@ bool BinaryFileDataAccessAsync::LoadTerrainSolid(const wchar_t* filename)
     try
     {
 
-        success = this->ReadFile(filename);
+        success = this->ReadFileSolid(filename);
 
         std::time_t end = std::time(NULL);
         std::wstring str = L"Loading time : in sec: ";

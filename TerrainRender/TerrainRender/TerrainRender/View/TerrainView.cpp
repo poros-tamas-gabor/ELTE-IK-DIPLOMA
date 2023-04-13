@@ -41,6 +41,11 @@ bool TerrainView::RenderFrame()
 	return true; 
 }
 
+bool TerrainView::CaptureScreen()
+{
+	this->m_d3dView.CaptureScreen();
+	return true;
+}
 bool TerrainView::Render()
 {
 	bool bresult;

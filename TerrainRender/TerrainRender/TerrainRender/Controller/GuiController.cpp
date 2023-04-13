@@ -255,7 +255,10 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 		break;
 	}
 	case IDC_BUTTON_FLYTHROUGH_RECORD: 
-	{break; }
+	{
+		this->m_terrainView->CaptureScreen();
+		break;
+	}
 	case IDC_SLIDER_FLYTHROUGH_SPEED: 
 	{
 		this->m_messageSystem->Publish(IDCC_SPEED_FLYTHROUGH, fparam, uparam);
@@ -302,7 +305,10 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 	}
 }
 
-
+void GuiController::SetTerrainView(IViewPtr pView)
+{
+	this->m_terrainView = pView;
+}
 void GuiController::SetTerrainModel(IModelPtr pModel)
 {
 	this->m_terrainModel = pModel;
@@ -312,7 +318,7 @@ void GuiController::SetMouse(MousePtr mouse) {}
 void GuiController::SetKeyboard(KeyboardPtr keyboard) {}
 
 
-bool  GuiController::Initialize(IModelPtr pModel, MousePtr mouse, KeyboardPtr keyboard)
+bool  GuiController::Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse, KeyboardPtr keyboard)
 {
 	if (pModel.get() == nullptr || mouse.get() == nullptr || keyboard.get() == nullptr)
 	{
@@ -321,6 +327,7 @@ bool  GuiController::Initialize(IModelPtr pModel, MousePtr mouse, KeyboardPtr ke
 	this->SetTerrainModel(pModel);
 	this->SetMouse(mouse);
 	this->SetKeyboard(keyboard);
+	this->SetTerrainView(pView);
 	return true;
 }
 void GuiController::Shutdown() {}

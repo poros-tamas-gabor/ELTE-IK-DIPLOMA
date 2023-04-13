@@ -45,6 +45,7 @@ public:
 	void HandleIModelState(const FlythroughState&) override;
 	void HandleIModelState(const Explore3DState&) override;
 	bool Resize(unsigned screenWidth, unsigned screenHeight) override { return false; };
+	bool CaptureScreen() override { return true; }
 private:
 	void MenuBar();
 	void GeneralTab();

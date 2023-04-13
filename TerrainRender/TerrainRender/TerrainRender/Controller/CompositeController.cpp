@@ -12,7 +12,10 @@ CompositeController::CompositeController() : m_isActive(true)
 void CompositeController::SetMessageSystem(ControllerMessageSystemPtr) {}
 
 
-
+void CompositeController::SetTerrainView(IViewPtr pView)
+{
+	this->m_terrainView = pView;
+}
 void CompositeController::SetTerrainModel(IModelPtr pModel)
 {
 	this->m_terrainModel = pModel;
@@ -26,13 +29,14 @@ void CompositeController::SetKeyboard(KeyboardPtr keyboard)
 	this->m_keyboard = keyboard;
 }
 
-bool CompositeController::Initialize(IModelPtr pModel, MousePtr mouse, KeyboardPtr keyboard)
+bool CompositeController::Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse, KeyboardPtr keyboard)
 {
 	if (pModel.get() == nullptr || mouse.get() == nullptr || keyboard.get() == nullptr )
 	{
 		return false;
 	}
 	this->SetTerrainModel(pModel);
+	this->SetTerrainView(pView);
 	this->SetMouse(mouse);
 	this->SetKeyboard(keyboard);
 	return true;

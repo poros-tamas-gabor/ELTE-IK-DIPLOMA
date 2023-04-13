@@ -283,7 +283,7 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 
 	ImGui_ImplWin32_Init(this->m_renderWindow.GetHWND());
 
-	result = this->m_terrainController->Initialize(this->m_terrainModel, this->m_mouse, this->m_keyboard);
+	result = this->m_terrainController->Initialize(this->m_terrainModel, this->m_terrainView, this->m_mouse, this->m_keyboard);
 	if (!result)
 		return false;
 
@@ -291,17 +291,17 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 	{
 		IControllerPtr explorec = std::make_shared<Controller3DExplore>();
 
-		explorec->Initialize(this->m_terrainModel, this->m_mouse, this->m_keyboard);
+		explorec->Initialize(this->m_terrainModel, this->m_terrainView, this->m_mouse, this->m_keyboard);
 		this->m_terrainController->AddController(explorec);
 
 		IControllerPtr guic = std::make_shared<GuiController>();
 
-		guic->Initialize(this->m_terrainModel,  this->m_mouse, this->m_keyboard);
+		guic->Initialize(this->m_terrainModel, this->m_terrainView, this->m_mouse, this->m_keyboard);
 		this->m_terrainController->AddController(guic);
 
 		IControllerPtr flyc = std::make_shared<ControllerFlythrough>();
 
-		flyc->Initialize(this->m_terrainModel, this->m_mouse, this->m_keyboard);
+		flyc->Initialize(this->m_terrainModel, this->m_terrainView, this->m_mouse, this->m_keyboard);
 		this->m_terrainController->AddController(flyc);
 	}
 

@@ -12,6 +12,7 @@
 #include <vector>
 #include <math.h>
 #include <sstream>
+#include <array>
 
 
 inline std::string to_string_with_precision(const float a_value, const int n = 6)
@@ -20,6 +21,11 @@ inline std::string to_string_with_precision(const float a_value, const int n = 6
 	out.precision(n);
 	out << std::fixed << a_value;
 	return std::move(out).str();
+}
+
+inline float to_float_with_precision(const float value, const int n = 6)
+{
+	return std::roundf(value * std::pow(10, n)) / std::pow(10, n);
 }
 inline void XMFLOAT3toCArray(float array[], DirectX::XMFLOAT3 floats)
 {
@@ -142,29 +148,34 @@ struct StlVertex
 	Vector3D pos;
 };
 
+// taken from http://stackoverflow.com/questions/6899392/generic-hash-function-for-all-stl-containers
+template <class T>
+inline void hash_combine(std::size_t& seed, const T& v)
+{
+	std::hash<T> hasher;
+	seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+}
 
 struct VertexHTindex
 {
+	std::array<float, 3> positions;
+
 	struct Hash
 	{
-		// jacked up derivation of bernstiens string hasher
 		std::size_t operator()(VertexHTindex const& key) const
 		{
-			std::size_t hash = 5381u;
-			for (auto c : key.s1)
-				hash = (hash << 5) + hash + c;
-			for (auto c : key.s2)
-				hash = (hash << 5) + hash + c;
-			for (auto c : key.s3)
-				hash = (hash << 5) + hash + c;
-			return hash;
+			size_t h = std::hash<float>()(key.positions[0]);
+			hash_combine(h, key.positions[1]);
+			hash_combine(h, key.positions[2]);
+			return h;
 		}
 	};
-	std::string s1, s2, s3;
+	
+
 	// equivalence determination.
 	bool operator==(VertexHTindex const& key) const
 	{
-		return std::tie(s1, s2, s3) == std::tie(key.s1, key.s2, key.s3);
+		return positions == key.positions;
 	}
 };
 

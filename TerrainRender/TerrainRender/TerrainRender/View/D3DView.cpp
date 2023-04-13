@@ -1,5 +1,8 @@
 #include "D3DView.h"
 #include "../ErrorHandler.h"
+#include "ScreenGrab.h"
+#include <wrl.h>
+#include <wincodec.h> // Optional
 
 
 D3DView::D3DView() : 
@@ -131,7 +134,7 @@ bool D3DView::Initalize(HWND hwnd, float screenWidth, float screenHeight, bool f
 		D3D_FEATURE_LEVEL featureLevel;
 		DXGI_SWAP_CHAIN_DESC swapChainDesc;
 
-
+		this->_hwnd = hwnd;
 		// Store the vsync setting.
 		this->_vsync = vsync;
 
@@ -466,4 +469,34 @@ ID3D11Device* D3DView::GetDevice()
 ID3D11DeviceContext* D3DView::GetDeviceContext()
 {
 	return this->_deviceContext;
+}
+
+void D3DView::CaptureScreen()
+{
+	try {
+#if (_WIN32_WINNT >= 0x0A00 /*_WIN32_WINNT_WIN10*/)
+		Microsoft::WRL::Wrappers::RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);
+		THROW_COM_EXCEPTION_IF_FAILED(initialize, L"Error to grab");
+		// error
+#else
+		HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+		THROW_COM_EXCEPTION_IF_FAILED(hr, L"Error to grab");
+#endif
+
+		ID3D11Texture2D* backBuffer;
+		HRESULT hr = _swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D),
+			reinterpret_cast<LPVOID*>(&backBuffer));
+		if (SUCCEEDED(hr))
+		{
+
+			hr = DirectX::SaveWICTextureToFile(_deviceContext, backBuffer,
+				GUID_ContainerFormatJpeg, L"SCREENSHOT.JPG");
+		}
+		THROW_COM_EXCEPTION_IF_FAILED(initialize, L"Error to grab");
+	}
+	catch (COMException& exception)
+	{
+		ErrorHandler::Log(exception);
+	}
+
 }

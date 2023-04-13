@@ -122,6 +122,7 @@ void ControllerFlythrough::HandleMessage(unsigned int message, float* fparam, un
 
 }
 
+void ControllerFlythrough::SetTerrainView(IViewPtr pView) {}
 
 void ControllerFlythrough::SetTerrainModel(IModelPtr pModel)
 {
@@ -142,7 +143,7 @@ bool ControllerFlythrough::IsActive() const
 	return this->m_isActive;
 }
 
-bool ControllerFlythrough::Initialize(IModelPtr pModel,  MousePtr mouse, KeyboardPtr keyboard)
+bool ControllerFlythrough::Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse, KeyboardPtr keyboard)
 {
 	if (pModel.get() == nullptr || mouse.get() == nullptr || keyboard.get() == nullptr )
 	{

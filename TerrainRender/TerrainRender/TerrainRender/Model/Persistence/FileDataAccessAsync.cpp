@@ -164,7 +164,7 @@ bool BinaryFileDataAccessAsync::ReadFileSolid(const std::wstring& filepath)
         int i = 0;
         for (StlVertex& v : m_vertices)
         {
-            VertexHTindex vertexHashIndex = { to_string_with_precision(v.pos.x), to_string_with_precision(v.pos.y), to_string_with_precision(v.pos.z) };
+            VertexHTindex vertexHashIndex = { to_float_with_precision(v.pos.x), to_float_with_precision(v.pos.y), to_float_with_precision(v.pos.z) };
             //find in hash table vertexPosstr
             auto it = ht.find(vertexHashIndex);
             if (it != ht.end())

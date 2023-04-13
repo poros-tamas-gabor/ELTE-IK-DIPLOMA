@@ -82,7 +82,8 @@ void ReadSTLChunkSoft::ReadChunk()
             {
                 float c[3];
                 file.read(reinterpret_cast<char*>(c), 12);
-                VertexHTindex vertexHashIndex = { to_string_with_precision(c[0]), to_string_with_precision(c[1]), to_string_with_precision(c[2]) };
+                VertexHTindex vertexHashIndex = { to_float_with_precision(c[0]), to_float_with_precision(c[1]), to_float_with_precision(c[2]) };
+             
             
                 //find in hash table vertexPosstr
                 std::unique_lock<std::mutex> lock_hashtable(m_mutex_hashtable);

@@ -11,6 +11,7 @@ class GuiController : public IController
 {
 private:
 	IModelPtr					m_terrainModel;
+	IViewPtr					m_terrainView;
 	std::vector<unsigned>		m_handledMsgs;
 	ControllerMessageSystemPtr				m_messageSystem;
 	bool						m_isActive;
@@ -24,8 +25,10 @@ public:
 	virtual void SetTerrainModel(IModelPtr pModel) override;
 	virtual void SetMouse(MousePtr mouse) override;
 	virtual void SetKeyboard(KeyboardPtr keyboard) override;
+	virtual void SetTerrainView(IViewPtr pView) override;
 
-	virtual bool Initialize(IModelPtr pModel, MousePtr mouse, KeyboardPtr keyboard) override;
+
+	virtual bool Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse, KeyboardPtr keyboard) override;
 	virtual bool IsActive() const  override;
 	virtual void Shutdown() override;
 

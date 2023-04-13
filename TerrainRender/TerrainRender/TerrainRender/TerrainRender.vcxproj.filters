@@ -156,9 +156,6 @@
     <ClCompile Include="StringConverter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Persistence\ReadSTLChunk.cpp">
-      <Filter>Header Files\Model\Persistence\Async</Filter>
-    </ClCompile>
     <ClCompile Include="Model\ModelMessageSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -206,6 +203,9 @@
     </ClCompile>
     <ClCompile Include="sunPos\SunPos.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Persistence\ReadSTLChunk.cpp">
+      <Filter>Source Files\Model\Persistence</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -403,5 +403,8 @@
     <FxCompile Include="Model\vertexShaderPolyLine.hlsl">
       <Filter>Source Files\Model\Shader</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

@@ -7,6 +7,7 @@
 
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "runtimeobject.lib")
 
 
 #include <dxgi.h>
@@ -28,6 +29,7 @@ private:
 	ID3D11DepthStencilView*		_depthStencilView;
 	ID3D11DepthStencilState*	_depthStencilState;
 	ID3D11RasterizerState*		_rasterState;
+	HWND						_hwnd;
 
 	bool						_vsync = true;
 	int							_videoCardMemory;
@@ -42,6 +44,7 @@ public:
 	bool Initalize(HWND hwnd, float screenWidth, float screenHeight, bool fullscreen, bool vsync);
 	bool Resize(unsigned screenWidth, unsigned screenHeight);
 	void Shutdown();
+	void CaptureScreen();
 
 	void BeginScene(float, float, float, float);
 	void EndScene();

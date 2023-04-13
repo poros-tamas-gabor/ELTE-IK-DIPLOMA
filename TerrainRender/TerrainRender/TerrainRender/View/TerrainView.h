@@ -33,6 +33,7 @@ public:
 	bool Resize(unsigned screenWidth, unsigned screenHeight);
 	void Shutdown();
 	bool RenderFrame();
+	bool CaptureScreen() override;
 	//void Update(const ModelEvent::Event& event) override;
 	//void ExecuteControl(eventType eventType, const void* data);
 

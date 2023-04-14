@@ -364,18 +364,37 @@ bool D3DView::Resize(unsigned screenWidth, unsigned screenHeight)
 
 			_deviceContext->OMSetRenderTargets(0, 0, 0);
 			// Release all outstanding references to the swap chain's buffers.
-			if(_renderTargetView)
+			if (_renderTargetView)
+			{
 				_renderTargetView->Release();
-			if(_depthStencilBuffer)
+				_renderTargetView = nullptr;
+			}
+			if (_depthStencilBuffer)
+			{
 				_depthStencilBuffer->Release();
+				_depthStencilBuffer = nullptr;
+			}
+
 			if (_depthStencilState)
+			{
 				_depthStencilState->Release();
-			if(_depthStencilBuffer)
+				_depthStencilState = nullptr;
+			}
+			if (_depthStencilBuffer)
+			{
 				_depthStencilBuffer->Release();
-			if(_depthStencilView)
+				_depthStencilBuffer = nullptr;
+			}
+			if (_depthStencilView)
+			{
 				_depthStencilView->Release();
-			if(_rasterState)
+				_depthStencilView = nullptr;
+			}
+			if (_rasterState)
+			{
 				_rasterState->Release();
+				_rasterState = nullptr;
+			}
 			// Preserve the existing buffer count and format.
 			// Automatically choose the width and height to match the client rect for HWNDs.
 			result = _swapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);

@@ -13,6 +13,7 @@
 #include <dxgi.h>
 #include <d3dcommon.h>
 #include <d3d11.h>
+#include <wrl/client.h>
 
 
 
@@ -20,15 +21,16 @@
 class D3DView
 {
 private:
-	IDXGISwapChain*				_swapChain;
-	ID3D11Device*				_device;
-	ID3D11DeviceContext*		_deviceContext;
-	ID3D11RenderTargetView*		_renderTargetView;
+	Microsoft::WRL::ComPtr<IDXGISwapChain>				_swapChain;
+	Microsoft::WRL::ComPtr<ID3D11Device>				_device;
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext>			_deviceContext;
+	Microsoft::WRL::ComPtr<ID3D11RenderTargetView>		_renderTargetView;
 
-	ID3D11Texture2D*			_depthStencilBuffer;
-	ID3D11DepthStencilView*		_depthStencilView;
-	ID3D11DepthStencilState*	_depthStencilState;
-	ID3D11RasterizerState*		_rasterState;
+	Microsoft::WRL::ComPtr<ID3D11Texture2D>				_depthStencilBuffer;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView>		_depthStencilView;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState>		_depthStencilState;
+	Microsoft::WRL::ComPtr<ID3D11RasterizerState>		_rasterState;
+
 	HWND						_hwnd;
 
 	bool						_vsync = true;
@@ -38,6 +40,7 @@ private:
 	bool GetAdapterData(float screenWidth, float screenHeight, unsigned int& numerator, unsigned int& denominator);
 	bool InitalizeAttributes(unsigned screenWidth, unsigned screenHeight);
 	bool ReinitalizeAttributes(unsigned screenWidth, unsigned screenHeight);
+	HRESULT ReleaseBackBuffer();
 public:
 	D3DView();
 	~D3DView();
@@ -50,7 +53,7 @@ public:
 	void EndScene();
 
 
-	ID3D11Device*			GetDevice();
-	ID3D11DeviceContext*	GetDeviceContext();
+	Microsoft::WRL::ComPtr<ID3D11Device>		GetDevice();
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext>	GetDeviceContext();
 };
 #endif

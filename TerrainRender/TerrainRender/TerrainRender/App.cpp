@@ -59,11 +59,16 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 
 	case WM_SIZE:
 	{
+		if (wparam == SIZE_MINIMIZED)
+		{
+			return 0;
+		}
 		UINT width = LOWORD(lparam);
 		UINT height = HIWORD(lparam);
 		Resize(width, height);
 		return 0;
 	}
+
 	// Check if a key has been pressed on the keyboard.
 	case WM_KEYDOWN:
 	{
@@ -311,7 +316,7 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 
 	this->m_terrainModel->m_modelMessageSystem.Subscribe(m_terrainView);
 
-	result = this->m_terrainModel->Initalize(m_renderWindow.GetHWND(), m_dataAccess, m_terrainView->GetDevice(), screenWidth, screenHeight, 1, 500);
+	result = this->m_terrainModel->Initalize(m_renderWindow.GetHWND(), m_dataAccess, m_terrainView->GetDevice().Get(), screenWidth, screenHeight, 1, 500);
 
 	m_timer.Start();
 	return true;

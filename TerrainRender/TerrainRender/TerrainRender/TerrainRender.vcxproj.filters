@@ -111,15 +111,6 @@
     <ClCompile Include="View\TerrainView.cpp">
       <Filter>Source Files\View</Filter>
     </ClCompile>
-    <ClCompile Include="Controller\Controller3DExplore.cpp">
-      <Filter>Header Files\Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="Controller\GuiController.cpp">
-      <Filter>Header Files\Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="Controller\CompositeController.cpp">
-      <Filter>Header Files\Controller</Filter>
-    </ClCompile>
     <ClCompile Include="Model\Camera.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
@@ -146,12 +137,6 @@
     </ClCompile>
     <ClCompile Include="Model\PolyLine.cpp">
       <Filter>Source Files\Model\Renderable</Filter>
-    </ClCompile>
-    <ClCompile Include="Controller\MessageSystem.cpp">
-      <Filter>Header Files\Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="Controller\ContollerFlythrough.cpp">
-      <Filter>Header Files\Controller</Filter>
     </ClCompile>
     <ClCompile Include="StringConverter.cpp">
       <Filter>Source Files</Filter>
@@ -206,6 +191,21 @@
     </ClCompile>
     <ClCompile Include="Model\Persistence\ReadSTLChunk.cpp">
       <Filter>Source Files\Model\Persistence</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller\CompositeController.cpp">
+      <Filter>Source Files\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller\ContollerFlythrough.cpp">
+      <Filter>Source Files\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller\Controller3DExplore.cpp">
+      <Filter>Source Files\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller\GuiController.cpp">
+      <Filter>Source Files\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller\MessageSystem.cpp">
+      <Filter>Source Files\Controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

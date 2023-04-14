@@ -13,7 +13,7 @@ bool TerrainView::Initalize(HWND hwnd, float screenWidth, float screenHeight, bo
 		return false;
 	}
 
-	this->m_guiView.Initalize(this->m_d3dView.GetDevice(), this->m_d3dView.GetDeviceContext(),this->m_terrainController);
+	this->m_guiView.Initalize(this->m_d3dView.GetDevice().Get(), this->m_d3dView.GetDeviceContext().Get(), this->m_terrainController);
 
 	return true;
 }
@@ -52,7 +52,7 @@ bool TerrainView::Render()
 	this->m_d3dView.BeginScene(0.5f, 0.2f, 0.3f, 1.0f);
 	this->m_guiView.BeginFrame();
 
-	this->m_terrainModel->Render(m_d3dView.GetDeviceContext());
+	this->m_terrainModel->Render(m_d3dView.GetDeviceContext().Get());
 
 	this->m_guiView.ShowSettingWindow();
 	
@@ -69,11 +69,11 @@ bool TerrainView::Render()
 //}
 
 
-ID3D11Device* TerrainView::GetDevice()
+Microsoft::WRL::ComPtr<ID3D11Device> TerrainView::GetDevice()
 {
 	return this->m_d3dView.GetDevice();
 }
-ID3D11DeviceContext* TerrainView::GetDeviceContext()
+Microsoft::WRL::ComPtr<ID3D11DeviceContext> TerrainView::GetDeviceContext()
 {
 	return this->m_d3dView.GetDeviceContext();
 }

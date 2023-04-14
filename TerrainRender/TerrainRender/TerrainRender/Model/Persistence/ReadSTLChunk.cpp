@@ -55,10 +55,11 @@ ReadSTLChunkSoft::ReadSTLChunkSoft(const std::wstring& filepath, int beginInByte
     IndicesVecPtr indices,
     HashTable_Soft& ht,
     std::mutex& mutex_hashtable,
-    size_t& nextID) 
+    size_t& nextID,
+    Map_Ind_NormalsPtr map_normals)
     :
     m_filepath(filepath), m_begin(beginInBytes), m_numOfFacets(numOfFacets),
-    m_indices(indices), m_ht(ht), m_mutex_hashtable(mutex_hashtable), m_nextID(nextID) {}
+    m_indices(indices), m_ht(ht), m_mutex_hashtable(mutex_hashtable), m_nextID(nextID), m_map_normals(map_normals) {}
 void ReadSTLChunkSoft::ReadChunk()
 {
     try
@@ -91,27 +92,41 @@ void ReadSTLChunkSoft::ReadChunk()
                 //if found
                 if (it != m_ht.end())
                 {
-                    it->second.normals.push_back(normal);
-                    facet.corner[j] = it->second.vertIndex;
+                    size_t vertexIndex = it->second;
+                    lock_hashtable.unlock();
+
+                    facet.corner[j] = vertexIndex;
+                    
+                    if (m_map_normals->find(vertexIndex) != m_map_normals->end())
+                    {
+                        m_map_normals->at(vertexIndex).normals.push_back(normal);
+                    }
                 }
                 else
                 {
                     size_t vertexIndex = m_nextID++;
-                    NormalsInSamePositions vn;
-                    vn.vertIndex = vertexIndex;
-                    vn.normals.clear();
-                    vn.normals.push_back(normal);
-                    m_ht.insert(std::pair<HTindex_Soft, NormalsInSamePositions>(vertexHashIndex, vn));
+                    m_ht.insert(std::pair<HTindex_Soft, size_t>(vertexHashIndex, vertexIndex));
+                    lock_hashtable.unlock();
 
                     facet.corner[j] = vertexIndex;
+
+                    NormalsInSamePositions vn;
+                    vn.normals.push_back(normal);
+
+                    m_map_normals->insert(std::pair<size_t, NormalsInSamePositions>(vertexIndex, vn));
                 }
-                lock_hashtable.unlock();
+                
             }
             m_indices->push_back(facet);
             file.seekg(2, std::ios_base::cur);
         }
         // Clean up
         file.close();
+
+        for (auto& pair : *m_map_normals.get())
+        {
+            pair.second.sumNormals();
+        }
     }
     catch (TRException& e)
     {

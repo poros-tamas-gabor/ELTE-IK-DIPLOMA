@@ -99,7 +99,7 @@ public:
 	Vector3D(double x, double y, double z) : x(x), y(y), z(z) {}
 	Vector3D(void) : x(0), y(0), z(0) {}
 
-	void normalize()
+	Vector3D& normalize()
 	{
 		double length = std::sqrt(x * x + y * y + z * z);
 		if (length > 0)
@@ -108,6 +108,7 @@ public:
 			y /= length;
 			z /= length;
 		}
+		return *this;
 	}
 };
 
@@ -134,11 +135,10 @@ typedef std::shared_ptr<IndicesVec> IndicesVecPtr;
 
 struct NormalsInSamePositions
 {
-	//Vector3D meanNormal;
+	Vector3D meanNormal;
 	std::vector<Vector3D> normals;
-	size_t vertIndex;
 
-	Vector3D sumNormals()
+	void sumNormals()
 	{
 		Vector3D sol = { 0, 0, 0 };
 		for (const Vector3D& v : normals)
@@ -146,9 +146,12 @@ struct NormalsInSamePositions
 			sol = sol + v;
 			sol.normalize();
 		}
-		return sol;
+		meanNormal = sol;
 	}
 };
+
+typedef std::map<size_t, NormalsInSamePositions> Map_Ind_Normals;
+typedef std::shared_ptr<Map_Ind_Normals> Map_Ind_NormalsPtr;
 struct StlVertex
 {
 	Vector3D pos;
@@ -186,7 +189,7 @@ struct HTindex_Soft
 	}
 };
 
-typedef std::unordered_map<HTindex_Soft, NormalsInSamePositions, HTindex_Soft::Hash> HashTable_Soft;
+typedef std::unordered_map<HTindex_Soft, size_t, HTindex_Soft::Hash> HashTable_Soft;
 
 struct stlFacet
 {

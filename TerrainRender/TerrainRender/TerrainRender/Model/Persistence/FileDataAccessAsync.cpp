@@ -109,6 +109,7 @@ bool BinaryFileDataAccessAsync::ReadFileSoftEdges(const std::wstring& filepath)
 {
     try
     {
+        std::time_t now = std::time(NULL);
         std::ifstream file(filepath, std::ios::binary); // Open file and seek to end
         std::wstring errormsg = L"Failed to open " + std::wstring(filepath);
         THROW_TREXCEPTION_IF_FAILED(file.is_open(), errormsg);
@@ -140,6 +141,7 @@ bool BinaryFileDataAccessAsync::ReadFileSoftEdges(const std::wstring& filepath)
         std::vector<std::thread> threads;
         std::vector<ICallablePtr> callables;
         std::vector<IndicesVecPtr> indicesVectors;
+        std::vector<Map_Ind_NormalsPtr> mapVectors;
         HashTable_Soft ht;
 
 
@@ -157,7 +159,10 @@ bool BinaryFileDataAccessAsync::ReadFileSoftEdges(const std::wstring& filepath)
             IndicesVecPtr indicesVecPtr = std::make_shared<IndicesVec>();
             indicesVectors.push_back(indicesVecPtr);
 
-            callables.emplace_back(std::make_shared<ReadSTLChunkSoft>(filepath, beginInBytes, currentNumOfFacets, indicesVecPtr, ht, m_mutex_hashtable, nextID));
+            Map_Ind_NormalsPtr mapPtr = std::make_shared<Map_Ind_Normals>();
+            mapVectors.push_back(mapPtr);
+
+            callables.emplace_back(std::make_shared<ReadSTLChunkSoft>(filepath, beginInBytes, currentNumOfFacets, indicesVecPtr, ht, m_mutex_hashtable, nextID, mapPtr));
             threads.emplace_back(std::thread(std::ref(*callables.at(i))));
         }
         for (int i = 0; i < numThreads; i++)
@@ -165,6 +170,13 @@ bool BinaryFileDataAccessAsync::ReadFileSoftEdges(const std::wstring& filepath)
             if (threads.at(i).joinable())
                 threads.at(i).join();
         }
+
+        std::time_t end = std::time(NULL);
+        std::wstring str = L"Join time : in sec: ";
+        str += std::to_wstring(end - now);
+        str += L"\n";
+        OutputDebugStringW(str.c_str());
+
 
         m_vertices.clear();
         m_indices.clear();
@@ -174,13 +186,32 @@ bool BinaryFileDataAccessAsync::ReadFileSoftEdges(const std::wstring& filepath)
             m_indices.insert(m_indices.begin(), indicesVec->begin(), indicesVec->end());
         }
 
+        std::vector<Vector3D> normals(ht.size());
+
+        for (Map_Ind_NormalsPtr map : mapVectors)
+        {
+            for (auto& pair : *map.get())
+            {
+                const size_t& index = pair.first;
+                normals[index] = (normals[index] + pair.second.meanNormal).normalize();
+            }
+
+        }
+
+
         m_vertices.resize(ht.size());
 
         for (auto it : ht)
         {
-            size_t index = it.second.vertIndex;
-            m_vertices[index] = { it.first.positions, it.second.sumNormals() };
+            size_t index = it.second;
+            m_vertices[index] = { it.first.positions, normals.at(index)};
         }
+
+        end = std::time(NULL);
+         str = L"Loading time : in sec: ";
+        str += std::to_wstring(end - now);
+        str += L"\n";
+        OutputDebugStringW(str.c_str());
 
 
         return true;
@@ -198,7 +229,7 @@ bool BinaryFileDataAccessAsync::ReadFileSoftEdges(const std::wstring& filepath)
 
 bool BinaryFileDataAccessAsync::LoadTerrainSoftEdges(const wchar_t* filename)
 {
-    std::time_t now = std::time(NULL);
+
     bool success = false;
 
     try
@@ -206,11 +237,7 @@ bool BinaryFileDataAccessAsync::LoadTerrainSoftEdges(const wchar_t* filename)
 
         success = this->ReadFileSoftEdges(filename);
 
-        std::time_t end = std::time(NULL);
-        std::wstring str = L"Loading time : in sec: ";
-        str += std::to_wstring(end - now);
-        str += L"\n";
-        OutputDebugString(str.c_str());
+
         return success;
     }
 

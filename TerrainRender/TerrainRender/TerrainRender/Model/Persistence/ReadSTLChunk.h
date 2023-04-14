@@ -40,13 +40,15 @@ private:
 	HashTable_Soft& m_ht;
 	std::mutex& m_mutex_hashtable;
 	size_t& m_nextID;
+	Map_Ind_NormalsPtr m_map_normals;
 
 public:
 	ReadSTLChunkSoft(const std::wstring& filepath, int beginInBytes, int numOfFacets, 
 		IndicesVecPtr indices,
 		HashTable_Soft& ht,
 		std::mutex& mutex_hashtable,
-		size_t& nextID
+		size_t& nextID,
+		Map_Ind_NormalsPtr m_map_normals
 		);
 	void ReadChunk();
 	virtual void operator()() override;

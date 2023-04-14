@@ -37,7 +37,7 @@ private:
     std::vector<stlFacet> m_faces;
     std::vector<StlVertex> m_vertices;
     std::vector<CornerIndices> m_indices;
-    std::mutex m_mutex_hashtable;
+    std::shared_mutex m_mutex_hashtable;
     std::mutex m_mutex_indices;
     std::mutex m_mutex_vertices;
 

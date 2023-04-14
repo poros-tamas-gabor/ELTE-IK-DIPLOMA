@@ -5,6 +5,7 @@
 #include <string>
 #include "ModelStructs.h"
 #include <mutex>
+#include <shared_mutex>
 #include <vector>
 #include <fstream>
 #include <sstream>
@@ -38,7 +39,7 @@ private:
 	int m_numOfFacets;
 	IndicesVecPtr m_indices;
 	HashTable_Soft& m_ht;
-	std::mutex& m_mutex_hashtable;
+	std::shared_mutex& m_mutex_hashtable;
 	size_t& m_nextID;
 	Map_Ind_NormalsPtr m_map_normals;
 
@@ -46,7 +47,7 @@ public:
 	ReadSTLChunkSoft(const std::wstring& filepath, int beginInBytes, int numOfFacets, 
 		IndicesVecPtr indices,
 		HashTable_Soft& ht,
-		std::mutex& mutex_hashtable,
+		std::shared_mutex& mutex_hashtable,
 		size_t& nextID,
 		Map_Ind_NormalsPtr m_map_normals
 		);

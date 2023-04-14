@@ -54,7 +54,7 @@ void ReadSTLChunkSharp::ReadChunk()
 ReadSTLChunkSoft::ReadSTLChunkSoft(const std::wstring& filepath, int beginInBytes, int numOfFacets,
     IndicesVecPtr indices,
     HashTable_Soft& ht,
-    std::mutex& mutex_hashtable,
+    std::shared_mutex& mutex_hashtable,
     size_t& nextID,
     Map_Ind_NormalsPtr map_normals)
     :
@@ -87,7 +87,7 @@ void ReadSTLChunkSoft::ReadChunk()
              
             
                 //find in hash table vertexPosstr
-                std::unique_lock<std::mutex> lock_hashtable(m_mutex_hashtable);
+                std::shared_lock<std::shared_mutex> lock_hashtable(m_mutex_hashtable);
                 auto it = m_ht.find(vertexHashIndex);
                 //if found
                 if (it != m_ht.end())
@@ -104,9 +104,11 @@ void ReadSTLChunkSoft::ReadChunk()
                 }
                 else
                 {
+                    lock_hashtable.unlock();
+                    std::unique_lock<std::shared_mutex> lock_ht(m_mutex_hashtable);
                     size_t vertexIndex = m_nextID++;
                     m_ht.insert(std::pair<HTindex_Soft, size_t>(vertexHashIndex, vertexIndex));
-                    lock_hashtable.unlock();
+                    lock_ht.unlock();
 
                     facet.corner[j] = vertexIndex;
 

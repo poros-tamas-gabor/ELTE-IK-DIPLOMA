@@ -86,6 +86,11 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 		return 0;
 	}
 
+	case WM_COMMAND:
+	{
+		this->m_terrainController->HandleMessage(LOWORD(wparam), NULL, NULL);
+		return 0;
+	}
 	// Check if a key has been released on the keyboard.
 	case WM_KEYUP:
 	{

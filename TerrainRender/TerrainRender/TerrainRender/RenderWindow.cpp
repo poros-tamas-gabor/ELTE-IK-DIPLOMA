@@ -1,6 +1,7 @@
 #include "RenderWindow.h"
 #include "ErrorHandler.h"
 #include "App.h"
+#include "resource.h"
 
 static LRESULT CALLBACK MessageHandlerSetup(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
@@ -9,6 +10,7 @@ static LRESULT CALLBACK MessageHandlerSetup(HWND hwnd, UINT umessage, WPARAM wpa
 		// Check if the window is being destroyed.
 	case WM_NCCREATE:
 	{
+		AddMenus(hwnd);
 		const CREATESTRUCTW* const pCreate = reinterpret_cast<CREATESTRUCTW*>(lparam);
 		App* pApp = reinterpret_cast<App*>(pCreate->lpCreateParams);
 		if (pApp == nullptr) //Sanity check
@@ -59,7 +61,7 @@ bool RenderWindow::Initialize(App* pApp, int screenWidth, int screenHeight)
 	posX = posY = 100;
 	// calculate the size of the client area
 	wr = { 0, 0, screenWidth, screenHeight };    // set the size, but not the position
-	AdjustWindowRect(&wr, _widnowStyle, FALSE);    // adjust the size
+	AdjustWindowRect(&wr, _widnowStyle, TRUE);    // adjust the size
 
 	this->_width = wr.right - wr.left;
 	this->_height = wr.bottom - wr.top;
@@ -150,4 +152,32 @@ void RenderWindow::RegisterWindowClass()
 
 	// Register the window class.
 	RegisterClassEx(&wc);
+}
+
+static void AddMenus(HWND hwnd) {
+
+	HMENU hMenubar;
+	HMENU hMenuFile;
+	HMENU hMenuHelp;
+
+	hMenubar = CreateMenu();
+	hMenuFile = CreateMenu();
+	hMenuHelp = CreateMenu();
+
+	AppendMenuW(hMenuFile, MF_STRING, IDMENU_FIlE_TERRAIN_SHARP, L"&Open Terrain(Sharp edges)");
+	AppendMenuW(hMenuFile, MF_STRING, IDMENU_FIlE_TERRAIN_PROJECT_SHARP, L"&Open Terrain Project(Sharp edges)");
+	AppendMenuW(hMenuFile, MF_SEPARATOR, 0, NULL);
+
+	AppendMenuW(hMenuFile, MF_STRING, IDMENU_FIlE_TERRAIN_SOFT, L"&Open Terrain(Soft edges)");
+	AppendMenuW(hMenuFile, MF_STRING, IDMENU_FIlE_TERRAIN_PROJECT_SOFT, L"&Open Terrain Project(Soft edges)");
+	AppendMenuW(hMenuFile, MF_SEPARATOR, 0, NULL);
+	AppendMenuW(hMenuFile, MF_STRING, IDMENU_FIlE_CAMERA_TRAJECTORY, L"&Open Trajectory");
+	AppendMenuW(hMenuFile, MF_SEPARATOR, 0, NULL);
+	AppendMenuW(hMenuFile, MF_STRING, IDMENU_FIlE_PARAMETERS, L"&Open configure file");
+
+
+	AppendMenuW(hMenubar, MF_POPUP, (UINT_PTR)hMenuFile, L"&File");
+
+	AppendMenuW(hMenubar, MF_STRING, IDMENU_HELP, L"&Help");
+	SetMenu(hwnd, hMenubar);
 }

@@ -30,6 +30,7 @@ private:
 
 
 };
+static void AddMenus(HWND hwnd);
 static LRESULT CALLBACK MessageHandlerSetup (HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
 static LRESULT CALLBACK MessageHandlerRedirect (HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
 

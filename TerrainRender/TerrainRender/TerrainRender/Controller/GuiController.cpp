@@ -7,17 +7,19 @@
 
 GuiController::GuiController()
 {
-	m_handledMsgs.push_back(IDC_BUTTON_FIlE_TERRAIN_SHARP);
-	m_handledMsgs.push_back(IDC_BUTTON_FIlE_TERRAIN_SOFT);
-	m_handledMsgs.push_back(IDC_BUTTON_FIlE_PARAMETERS);
-	m_handledMsgs.push_back(IDC_BUTTON_FIlE_CAMERA_TRAJECTORY);
+	m_handledMsgs.push_back(IDMENU_FIlE_TERRAIN_SHARP);
+	m_handledMsgs.push_back(IDMENU_FIlE_TERRAIN_PROJECT_SHARP);
+	m_handledMsgs.push_back(IDMENU_FIlE_TERRAIN_SOFT);
+	m_handledMsgs.push_back(IDMENU_FIlE_TERRAIN_PROJECT_SOFT);
+	m_handledMsgs.push_back(IDMENU_FIlE_CAMERA_TRAJECTORY);
+	m_handledMsgs.push_back(IDMENU_FIlE_PARAMETERS);
+
 	m_handledMsgs.push_back(IDC_SLIDER_CAMERA_SPEED);
 	m_handledMsgs.push_back(IDC_SLIDER_CAMERA_ROTATION_SPEED);
 	m_handledMsgs.push_back(IDC_BUTTON_CAMERA_RESET);
 	m_handledMsgs.push_back(IDC_SLIDER_PROJECTION_FIELD_OF_VIEW);
 	m_handledMsgs.push_back(IDC_SLIDER_PROJECTION_NEAR_SCREEN);
 	m_handledMsgs.push_back(IDC_SLIDER_PROJECTION_FAR_SCREEN);
-
 
 	m_handledMsgs.push_back(IDC_BUTTON_FLYTHROUGH_MODE);
 	m_handledMsgs.push_back(IDC_BUTTON_3DEXPLORE_MODE);
@@ -27,7 +29,6 @@ GuiController::GuiController()
 	m_handledMsgs.push_back(IDC_BUTTON_FLYTHROUGH_STOP);
 	m_handledMsgs.push_back(IDC_BUTTON_FLYTHROUGH_RECORD);
 	m_handledMsgs.push_back(IDC_SLIDER_FLYTHROUGH_SPEED);
-	m_handledMsgs.push_back(IDC_BUTTON_FIlE_TERRAIN_PROJECT);
 
 	m_handledMsgs.push_back(IDC_SLIDER_IRENDERABLE_SCALE);
 	m_handledMsgs.push_back(IDC_SLIDER_IRENDERABLE_ROTATION);
@@ -138,7 +139,7 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 {
 	switch (message)
 	{
-	case IDC_BUTTON_FIlE_TERRAIN_SHARP:
+	case IDMENU_FIlE_TERRAIN_SHARP:
 	{
 		wchar_t filePath[260];
 		this->OpenFileDialog(filePath, 260);
@@ -146,7 +147,7 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 			this->m_terrainModel->LoadTerrainSharpEdges(filePath);
 		break;
 	}
-	case IDC_BUTTON_FIlE_TERRAIN_SOFT:
+	case IDMENU_FIlE_TERRAIN_SOFT:
 	{
 		wchar_t filePath[260];
 		this->OpenFileDialog(filePath, 260);
@@ -154,7 +155,7 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 			this->m_terrainModel->LoadTerrainSoftEdges(filePath);
 		break;
 	}
-	case IDC_BUTTON_FIlE_CAMERA_TRAJECTORY:
+	case IDMENU_FIlE_CAMERA_TRAJECTORY:
 	{
 		wchar_t filePath[260];
 		this->OpenFileDialog(filePath, 260);
@@ -162,7 +163,7 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 			this->m_terrainModel->LoadCameraTrajectory(filePath);
 		break;
 	}
-	case IDC_BUTTON_FIlE_TERRAIN_PROJECT:
+	case IDMENU_FIlE_TERRAIN_PROJECT_SHARP:
 	{
 		std::vector<std::wstring> files;
 		this->OpenFileDialogMultipleSelection(files);
@@ -174,7 +175,20 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 		this->m_terrainModel->LoadTerrainSharpEdges_Project(files);
 		break;
 	}
-	case IDC_BUTTON_FIlE_PARAMETERS:
+
+	case IDMENU_FIlE_TERRAIN_PROJECT_SOFT:
+	{
+		std::vector<std::wstring> files;
+		this->OpenFileDialogMultipleSelection(files);
+
+		for (auto& file : files)
+		{
+			OutputDebugStringW(file.c_str());
+		}
+		this->m_terrainModel->LoadTerrainSoftEdges_Project(files);
+		break;
+	}
+	case IDMENU_FIlE_PARAMETERS:
 	{
 		wchar_t filePath[260];
 		this->OpenFileDialog(filePath, 260);

@@ -94,7 +94,11 @@ public:
 	{
 		return { this->x - other.x, this->y - other.y, this->z - other.z };
 	}
-	
+
+	Vector3D (const std::array<float, 3> array) : x(array.at(0)), y(array.at(1)), z(array.at(2)) {}
+	Vector3D(double x, double y, double z) : x(x), y(y), z(z) {}
+	Vector3D(void) : x(0), y(0), z(0) {}
+
 	void normalize()
 	{
 		double length = std::sqrt(x * x + y * y + z * z);
@@ -119,10 +123,13 @@ struct Vector4D
 
 
 // For soft edges
-struct FacetCornerIndices
+struct CornerIndices
 {
 	size_t corner[3];
 };
+
+typedef std::vector<CornerIndices> IndicesVec;
+typedef std::shared_ptr<IndicesVec> IndicesVecPtr;
 
 
 struct NormalsInSamePositions
@@ -144,8 +151,8 @@ struct NormalsInSamePositions
 };
 struct StlVertex
 {
-	Vector3D normal;
 	Vector3D pos;
+	Vector3D normal;
 };
 
 // taken from http://stackoverflow.com/questions/6899392/generic-hash-function-for-all-stl-containers
@@ -156,13 +163,13 @@ inline void hash_combine(std::size_t& seed, const T& v)
 	seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 }
 
-struct VertexHTindex
+struct HTindex_Soft
 {
 	std::array<float, 3> positions;
 
 	struct Hash
 	{
-		std::size_t operator()(VertexHTindex const& key) const
+		std::size_t operator()(HTindex_Soft const& key) const
 		{
 			size_t h = std::hash<float>()(key.positions[0]);
 			hash_combine(h, key.positions[1]);
@@ -173,11 +180,13 @@ struct VertexHTindex
 	
 
 	// equivalence determination.
-	bool operator==(VertexHTindex const& key) const
+	bool operator==(HTindex_Soft const& key) const
 	{
 		return positions == key.positions;
 	}
 };
+
+typedef std::unordered_map<HTindex_Soft, NormalsInSamePositions, HTindex_Soft::Hash> HashTable_Soft;
 
 struct stlFacet
 {
@@ -185,13 +194,6 @@ struct stlFacet
 	float position[3][3];
 };
 
-
-struct stlFile
-{
-	uint8_t     header[80];
-	uint32_t    numOfTriangles;
-	std::vector<stlFacet> facets;
-};
 
 struct IRenderableState
 {

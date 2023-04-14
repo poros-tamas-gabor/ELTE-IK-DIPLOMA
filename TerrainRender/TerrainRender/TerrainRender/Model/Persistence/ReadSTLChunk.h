@@ -36,21 +36,17 @@ private:
 	const std::wstring& m_filepath;
 	int m_begin;
 	int m_numOfFacets;
-	std::vector<StlVertex>& m_vertices;
-	std::vector<FacetCornerIndices>& m_indices;
-	std::unordered_map<VertexHTindex, NormalsInSamePositions, VertexHTindex::Hash>& m_ht;
-	std::mutex& m_mutex_vertices;
-	std::mutex& m_mutex_indices;
+	IndicesVecPtr m_indices;
+	HashTable_Soft& m_ht;
 	std::mutex& m_mutex_hashtable;
+	size_t& m_nextID;
 
 public:
 	ReadSTLChunkSoft(const std::wstring& filepath, int beginInBytes, int numOfFacets, 
-		std::vector<StlVertex>& vertices,
-		std::vector<FacetCornerIndices>& indices,
-		std::unordered_map<VertexHTindex, NormalsInSamePositions, VertexHTindex::Hash>& ht,
-		std::mutex& mutex_vertices,
-		std::mutex& mutex_indices,
-		std::mutex& mutex_hashtable
+		IndicesVecPtr indices,
+		HashTable_Soft& ht,
+		std::mutex& mutex_hashtable,
+		size_t& nextID
 		);
 	void ReadChunk();
 	virtual void operator()() override;

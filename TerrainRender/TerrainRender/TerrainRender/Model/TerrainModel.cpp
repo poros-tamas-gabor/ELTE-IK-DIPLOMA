@@ -197,9 +197,9 @@ bool TerrainModel::LoadTerrainSoftEdges(const wchar_t* filepath)
 	bool bresult = m_persistence->LoadTerrainSoftEdges(filepath);
 	if (bresult)
 	{
-		const std::vector<StlVertex>& vertices = m_persistence->GetSolidVertices();
-		const std::vector<FacetCornerIndices>& facetIndices = m_persistence->GetSolidIndices();
-		for (const FacetCornerIndices& facet : facetIndices)
+		const std::vector<StlVertex>& vertices = m_persistence->GetVertices_Soft();
+		const std::vector<CornerIndices>& facetIndices = m_persistence->GetIndices_Soft();
+		for (const CornerIndices& facet : facetIndices)
 		{
 			for (int i = 0; i < 3; i++)
 			{

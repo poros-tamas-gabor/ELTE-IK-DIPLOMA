@@ -23,9 +23,9 @@ public:
 
 	virtual bool LoadTerrainSoftEdges(const wchar_t*) = 0;
     //Use After LoadTerrainSoftEdges
-    virtual const std::vector<StlVertex>& GetSolidVertices() = 0;
+    virtual const std::vector<StlVertex>& GetVertices_Soft() = 0;
     //Use After LoadTerrainSoftEdges
-    virtual const std::vector<FacetCornerIndices>& GetSolidIndices() = 0;
+    virtual const std::vector<CornerIndices>& GetIndices_Soft() = 0;
 };
 
 class BinaryFileDataAccessAsync : public IDataAccess {
@@ -36,14 +36,14 @@ private:
     const int minChunkSize = 50000;
     std::vector<stlFacet> m_faces;
     std::vector<StlVertex> m_vertices;
-    std::vector<FacetCornerIndices> m_indices;
+    std::vector<CornerIndices> m_indices;
     std::mutex m_mutex_hashtable;
     std::mutex m_mutex_indices;
     std::mutex m_mutex_vertices;
 
 private:
     bool ReadFileSharpEdges(const std::wstring& filepath);
-    bool ReadFileSolid(const std::wstring& filepath);
+    bool ReadFileSoftEdges(const std::wstring& filepath);
     int  GetNumThreads(int fileSize);
     bool CreateCameraPose(CameraPose& cameraPose, const std::string& line, const std::vector<std::string>& headers);
 
@@ -59,7 +59,7 @@ public:
     bool LoadParameterFile(const wchar_t*, ParameterFile& params) override;
     
     const std::vector<stlFacet>& GetFacets(void);
-    const std::vector<StlVertex>& GetSolidVertices() override;
-    const std::vector<FacetCornerIndices>& GetSolidIndices() override;
+    const std::vector<StlVertex>& GetVertices_Soft() override;
+    const std::vector<CornerIndices>& GetIndices_Soft() override;
 };
 #endif // ! PERSISTENCE_H

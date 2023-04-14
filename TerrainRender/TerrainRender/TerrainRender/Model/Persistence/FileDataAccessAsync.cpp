@@ -97,15 +97,15 @@ bool BinaryFileDataAccessAsync::ReadFileSharpEdges(const std::wstring& filepath)
 }
 
 
-const std::vector<StlVertex>& BinaryFileDataAccessAsync::GetSolidVertices()
+const std::vector<StlVertex>& BinaryFileDataAccessAsync::GetVertices_Soft()
 {
     return this->m_vertices;
 }
-const std::vector<FacetCornerIndices>& BinaryFileDataAccessAsync::GetSolidIndices()
+const std::vector<CornerIndices>& BinaryFileDataAccessAsync::GetIndices_Soft()
 {
     return this->m_indices;
 }
-bool BinaryFileDataAccessAsync::ReadFileSolid(const std::wstring& filepath)
+bool BinaryFileDataAccessAsync::ReadFileSoftEdges(const std::wstring& filepath)
 {
     try
     {
@@ -139,9 +139,11 @@ bool BinaryFileDataAccessAsync::ReadFileSolid(const std::wstring& filepath)
 
         std::vector<std::thread> threads;
         std::vector<ICallablePtr> callables;
-        std::unordered_map<VertexHTindex, NormalsInSamePositions, VertexHTindex::Hash> ht;
-        m_vertices.clear();
-        m_indices.clear();
+        std::vector<IndicesVecPtr> indicesVectors;
+        HashTable_Soft ht;
+
+
+        size_t nextID = 0;
 
         for (int i = 0; i < numThreads; i++)
         {
@@ -152,7 +154,10 @@ bool BinaryFileDataAccessAsync::ReadFileSolid(const std::wstring& filepath)
             else
                 currentNumOfFacets = numOfFacets - i * numOfFacetInChunk;
 
-            callables.emplace_back(std::make_shared<ReadSTLChunkSoft>(filepath, beginInBytes, currentNumOfFacets, m_vertices, m_indices, ht, m_mutex_vertices, m_mutex_indices, m_mutex_hashtable));
+            IndicesVecPtr indicesVecPtr = std::make_shared<IndicesVec>();
+            indicesVectors.push_back(indicesVecPtr);
+
+            callables.emplace_back(std::make_shared<ReadSTLChunkSoft>(filepath, beginInBytes, currentNumOfFacets, indicesVecPtr, ht, m_mutex_hashtable, nextID));
             threads.emplace_back(std::thread(std::ref(*callables.at(i))));
         }
         for (int i = 0; i < numThreads; i++)
@@ -161,18 +166,22 @@ bool BinaryFileDataAccessAsync::ReadFileSolid(const std::wstring& filepath)
                 threads.at(i).join();
         }
 
-        int i = 0;
-        for (StlVertex& v : m_vertices)
+        m_vertices.clear();
+        m_indices.clear();
+
+        for (IndicesVecPtr indicesVec : indicesVectors)
         {
-            VertexHTindex vertexHashIndex = { to_float_with_precision(v.pos.x), to_float_with_precision(v.pos.y), to_float_with_precision(v.pos.z) };
-            //find in hash table vertexPosstr
-            auto it = ht.find(vertexHashIndex);
-            if (it != ht.end())
-            {
-                v.normal = it->second.sumNormals();
-            }
-            i++;
+            m_indices.insert(m_indices.begin(), indicesVec->begin(), indicesVec->end());
         }
+
+        m_vertices.resize(ht.size());
+
+        for (auto it : ht)
+        {
+            size_t index = it.second.vertIndex;
+            m_vertices[index] = { it.first.positions, it.second.sumNormals() };
+        }
+
 
         return true;
     }
@@ -195,7 +204,7 @@ bool BinaryFileDataAccessAsync::LoadTerrainSoftEdges(const wchar_t* filename)
     try
     {
 
-        success = this->ReadFileSolid(filename);
+        success = this->ReadFileSoftEdges(filename);
 
         std::time_t end = std::time(NULL);
         std::wstring str = L"Loading time : in sec: ";
@@ -376,11 +385,8 @@ void from_json(const nlohmann::json& json, LLACoordinate& data)
 
 Vector3D to_Vector3D(const std::vector<float>& stdvec)
 {
-    Vector3D vec;
     THROW_TREXCEPTION_IF_FAILED( (stdvec.size() == 3) , L"Failed to load Vector3D");
-    vec.x = stdvec.at(0);
-    vec.y = stdvec.at(1);
-    vec.z = stdvec.at(2);
+    Vector3D vec = { stdvec.at(0) , stdvec.at(1) ,stdvec.at(2) };
     return vec;
 }
 

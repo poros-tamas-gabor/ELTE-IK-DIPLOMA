@@ -69,9 +69,8 @@ void GuiView::ShowSettingWindow()
 {
     static bool show_setting_window = true;
     ImGui::PushItemWidth(ImGui::GetFontSize() * -15);
-    ImGui::Begin("Setting Window", &show_setting_window, ImGuiWindowFlags_MenuBar ); 
+    ImGui::Begin("Setting Window", &show_setting_window, 0 ); 
     
-    MenuBar();
     static bool isFlythroughOn = false;
     bool isTrajectoryLoaded = m_flythroughState.IsTrajectoryInitialized;
     if (ToggleButton("Mode", &isFlythroughOn, isTrajectoryLoaded))
@@ -82,8 +81,6 @@ void GuiView::ShowSettingWindow()
             this->m_terrainController->HandleMessage(IDC_BUTTON_3DEXPLORE_MODE, NULL, NULL);
     }
 
-
-    ImGui::Text("isFlyModeon: %d", isFlythroughOn);
     if (ImGui::BeginTabBar("TabBar"))
     {
         if (ImGui::BeginTabItem("General"))
@@ -114,42 +111,6 @@ void GuiView::ShowSettingWindow()
 }
 
 
-void GuiView::MenuBar()
-{
-    if (ImGui::BeginMenuBar())
-    {
-        if (ImGui::BeginMenu("File"))
-        {
-            if (ImGui::MenuItem("Open Terrain File (Sharp Edges)"))
-            {
-                this->m_terrainController->HandleMessage(IDC_BUTTON_FIlE_TERRAIN_SHARP, NULL, NULL);
-            }
-
-            if (ImGui::MenuItem("Open Terrain File (Soft Edges)"))
-            {
-                this->m_terrainController->HandleMessage(IDC_BUTTON_FIlE_TERRAIN_SOFT, NULL, NULL);
-            }
-
-            if (ImGui::MenuItem("Open Terrain Project"))
-            {
-                this->m_terrainController->HandleMessage(IDC_BUTTON_FIlE_TERRAIN_PROJECT, NULL, NULL);
-            }
-
-            if (ImGui::MenuItem("Open Camera Trajectory"))
-            {
-                this->m_terrainController->HandleMessage(IDC_BUTTON_FIlE_CAMERA_TRAJECTORY, NULL, NULL);
-            }
-
-            if (ImGui::MenuItem("Open Parameter File"))
-            {
-                this->m_terrainController->HandleMessage(IDC_BUTTON_FIlE_PARAMETERS, NULL, NULL);
-            }
-
-            ImGui::EndMenu();
-        }
-        ImGui::EndMenuBar();
-    }
-}
 
 std::vector<std::string> GuiView::CollectTerrainIDNames(void)
 {

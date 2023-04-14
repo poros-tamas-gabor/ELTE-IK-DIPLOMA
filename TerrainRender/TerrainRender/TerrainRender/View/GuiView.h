@@ -47,7 +47,6 @@ public:
 	bool Resize(unsigned screenWidth, unsigned screenHeight) override { return false; };
 	bool CaptureScreen() override { return true; }
 private:
-	void MenuBar();
 	void GeneralTab();
 	void FlythroughTab();
 	void Explore3DTab();

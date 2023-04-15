@@ -18,44 +18,48 @@ int BinaryFileDataAccessAsync::GetNumThreads(int numOfFacets)
     int maxNumThreads = std::thread::hardware_concurrency();
     int numThreads;
     
-    numThreads = numOfFacets / minChunkSize;
+    numThreads = numOfFacets / MIN_NUM_OF_FACETS_IN_CHUNK;
     numThreads = max(1, numThreads);
     numThreads = min(maxNumThreads, numThreads);
 
     return numThreads;
 }
 
+unsigned BinaryFileDataAccessAsync::GetNumTriangles_stlBin(const std::wstring& filepath)
+{
+;
+    std::ifstream file(filepath, std::ios::binary); // Open file and seek to end
+    std::wstring errormsg = L"Failed to open " + std::wstring(filepath);
+    THROW_TREXCEPTION_IF_FAILED(file.is_open(), errormsg);
+
+
+    // Get the size of the file
+    file.seekg(0, std::ios::end);
+    int fileSize = file.tellg();
+    file.seekg(0, std::ios::beg);
+
+    // Read the number of triangles
+    unsigned numTriangles;
+    file.seekg(STL_BIN_HEADER_SIZE, std::ios_base::beg);
+    file.read(reinterpret_cast<char*>(&numTriangles), sizeof(numTriangles));
+    errormsg = L"Invalid binary STL file" + std::wstring(filepath);
+    THROW_TREXCEPTION_IF_FAILED((fileSize == STL_BIN_HEADER_SIZE + STL_BIN_NUM_OF_TRIANGLE_SIZE + STL_BIN_TRIANGLE_SIZE * numTriangles), errormsg);
+
+    file.close();
+
+    return numTriangles;
+}
+
 bool BinaryFileDataAccessAsync::ReadFileSharpEdges(const std::wstring& filepath)
 {
     try
     {
-        std::ifstream file(filepath, std::ios::binary); // Open file and seek to end
-        std::wstring errormsg = L"Failed to open " + std::wstring(filepath);
-        THROW_TREXCEPTION_IF_FAILED(file.is_open(), errormsg);
-
-        m_faces.clear();
-
-        // Get the size of the file
-        file.seekg(0, std::ios::end);
-        int fileSize = file.tellg();
-        file.seekg(0, std::ios::beg);
-
-        // Read the number of triangles
-        int num_triangles;
-        file.seekg(80, std::ios_base::beg);
-        file.read(reinterpret_cast<char*>(&num_triangles), sizeof(num_triangles));
-        errormsg = L"Invalid binary STL file" + std::wstring(filepath);
-        THROW_TREXCEPTION_IF_FAILED((fileSize == 84 + 50 * num_triangles), errormsg);
-
-        file.close();
-
-        // Get the number of facets in the file
-        unsigned numOfFacets = (fileSize - 84) / 50;
+        unsigned numTriangles = GetNumTriangles_stlBin(filepath);
 
         // Calculate how many threads are needed
-        int numThreads = GetNumThreads(numOfFacets);
+        int numThreads = GetNumThreads(numTriangles);
         // Calculate how many facets are in a chunk
-        int numOfFacetInChunk = numOfFacets / numThreads;
+        int numFacetInChunk = numTriangles / numThreads;
 
         std::vector<std::thread> threads;
         std::vector<ICallablePtr> processes;
@@ -64,15 +68,17 @@ bool BinaryFileDataAccessAsync::ReadFileSharpEdges(const std::wstring& filepath)
         for (int i = 0; i < numThreads; i++)
         {
             unsigned currentNumOfFacets;
-            unsigned beginInBytes = 84 + 50 * numOfFacetInChunk * i;
+            unsigned beginInBytes = STL_BIN_HEADER_SIZE + STL_BIN_NUM_OF_TRIANGLE_SIZE + STL_BIN_TRIANGLE_SIZE * numFacetInChunk * i;
             if (i < numThreads - 1)
-                currentNumOfFacets = numOfFacetInChunk;
+                currentNumOfFacets = numFacetInChunk;
             else
-                currentNumOfFacets = numOfFacets - i * numOfFacetInChunk;
+                currentNumOfFacets = numTriangles - i * numFacetInChunk;
 
             processes.emplace_back(std::make_shared<ReadSTLChunkSharp>(filepath, beginInBytes, currentNumOfFacets, &facetVectors.at(i)));
             threads.emplace_back(std::thread(std::ref(*processes.at(i))));
         }
+
+        m_facets.clear();
 
         for (int i = 0; i < numThreads; i++)
         {
@@ -81,7 +87,7 @@ bool BinaryFileDataAccessAsync::ReadFileSharpEdges(const std::wstring& filepath)
         }
         for (int i = 0; i < numThreads; i++)
         {
-            m_faces.insert(m_faces.end(), facetVectors.at(i).begin(), facetVectors.at(i).end());
+            m_facets.insert(m_facets.end(), facetVectors.at(i).begin(), facetVectors.at(i).end());
         }
         return true;
     }
@@ -109,52 +115,29 @@ bool BinaryFileDataAccessAsync::ReadFileSoftEdges(const std::wstring& filepath)
 {
     try
     {
-        std::time_t now = std::time(NULL);
-        std::ifstream file(filepath, std::ios::binary); // Open file and seek to end
-        std::wstring errormsg = L"Failed to open " + std::wstring(filepath);
-        THROW_TREXCEPTION_IF_FAILED(file.is_open(), errormsg);
-
-        m_faces.clear();
-
-        // Get the size of the file
-        file.seekg(0, std::ios::end);
-        int fileSize = file.tellg();
-        file.seekg(0, std::ios::beg);
-
-        // Read the number of triangles
-        int num_triangles;
-        file.seekg(80, std::ios_base::beg);
-        file.read(reinterpret_cast<char*>(&num_triangles), sizeof(num_triangles));
-        errormsg = L"Invalid binary STL file" + std::wstring(filepath);
-        THROW_TREXCEPTION_IF_FAILED((fileSize == 84 + 50 * num_triangles), errormsg);
-
-        file.close();
-
-        // Get the number of facets in the file
-        unsigned numOfFacets = (fileSize - 84) / 50;
+        unsigned numTriangles = GetNumTriangles_stlBin(filepath);
 
         // Calculate how many threads are needed
-        int numThreads = GetNumThreads(numOfFacets);
+        int numThreads = GetNumThreads(numTriangles);
         // Calculate how many facets are in a chunk
-        int numOfFacetInChunk = numOfFacets / numThreads;
+        int numOfFacetInChunk = numTriangles / numThreads;
 
         std::vector<std::thread> threads;
         std::vector<ICallablePtr> callables;
         std::vector<IndicesVecPtr> indicesVectors;
-        std::vector<Map_Ind_NormalsPtr> mapVectors;
+        std::vector<Map_Ind_NormalsPtr> mapVectors;    
         HashTable_Soft ht;
-
 
         size_t nextID = 0;
 
         for (int i = 0; i < numThreads; i++)
         {
             unsigned currentNumOfFacets;
-            unsigned beginInBytes = 84 + 50 * numOfFacetInChunk * i;
+            unsigned beginInBytes = STL_BIN_HEADER_SIZE + STL_BIN_NUM_OF_TRIANGLE_SIZE + STL_BIN_TRIANGLE_SIZE * numOfFacetInChunk * i;
             if (i < numThreads - 1)
                 currentNumOfFacets = numOfFacetInChunk;
             else
-                currentNumOfFacets = numOfFacets - i * numOfFacetInChunk;
+                currentNumOfFacets = numTriangles - i * numOfFacetInChunk;
 
             IndicesVecPtr indicesVecPtr = std::make_shared<IndicesVec>();
             indicesVectors.push_back(indicesVecPtr);
@@ -171,47 +154,45 @@ bool BinaryFileDataAccessAsync::ReadFileSoftEdges(const std::wstring& filepath)
                 threads.at(i).join();
         }
 
-        std::time_t end = std::time(NULL);
-        std::wstring str = L"Join time : in sec: ";
-        str += std::to_wstring(end - now);
-        str += L"\n";
-        OutputDebugStringW(str.c_str());
-
-
         m_vertices.clear();
         m_indices.clear();
 
+        //Collect Indices
         for (IndicesVecPtr indicesVec : indicesVectors)
         {
             m_indices.insert(m_indices.begin(), indicesVec->begin(), indicesVec->end());
         }
 
-        std::vector<Vector3D> normals(ht.size());
+        size_t vectorSize = min(nextID, ht.size());
 
+        std::vector<Vector3D> normals(vectorSize);
+
+        //Collect and Calculate vertex normal vectors
         for (Map_Ind_NormalsPtr map : mapVectors)
         {
             for (auto& pair : *map.get())
             {
                 const size_t& index = pair.first;
-                normals[index] = (normals[index] + pair.second.meanNormal).normalize();
+
+                if (index < vectorSize)
+                {
+                    normals[index] = (normals[index] + pair.second.meanNormal).normalize();
+                }
             }
 
         }
 
+        m_vertices.resize(vectorSize);
 
-        m_vertices.resize(ht.size());
-
-        for (auto it : ht)
+        //Collect Vertices
+        for (const auto& it : ht)
         {
             size_t index = it.second;
-            m_vertices[index] = { it.first.positions, normals.at(index)};
+            if (index < vectorSize)
+            {
+              m_vertices[index] = { it.first.positions, normals.at(index)};
+            }
         }
-
-        end = std::time(NULL);
-         str = L"Loading time : in sec: ";
-        str += std::to_wstring(end - now);
-        str += L"\n";
-        OutputDebugStringW(str.c_str());
 
 
         return true;
@@ -259,7 +240,7 @@ bool BinaryFileDataAccessAsync::LoadTerrainSoftEdges(const wchar_t* filename)
 bool BinaryFileDataAccessAsync::LoadTerrainSharpEdges(const wchar_t* filename)
 {
     std::time_t now = std::time(NULL);
-    m_faces.clear();
+    m_facets.clear();
     bool success = false;
 
 
@@ -293,7 +274,7 @@ bool BinaryFileDataAccessAsync::LoadTerrainSharpEdges(const wchar_t* filename)
 
 const std::vector<stlFacet>& BinaryFileDataAccessAsync::GetFacets(void)
 {
-    return m_faces;
+    return m_facets;
 }
 bool BinaryFileDataAccessAsync::CreateCameraPose(CameraPose& cameraPose, const std::string& line, const std::vector<std::string>& headers)
 {

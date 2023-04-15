@@ -235,11 +235,6 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 		{
 			this->m_messageSystem->Publish(IDCC_ACTIVATE_FLYTHROUGH, NULL, NULL);
 		}
-		else
-		{
-			throw 666;
-
-		}
 		break;
 	}
 	case IDC_BUTTON_3DEXPLORE_MODE:

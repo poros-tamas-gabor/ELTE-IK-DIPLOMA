@@ -87,13 +87,13 @@ void ReadSTLChunkSoft::ReadChunk()
              
             
                 //find in hash table vertexPosstr
-                std::shared_lock<std::shared_mutex> lock_hashtable(m_mutex_hashtable);
+                std::shared_lock<std::shared_mutex> shared_lock_ht(m_mutex_hashtable);
                 auto it = m_ht.find(vertexHashIndex);
                 //if found
                 if (it != m_ht.end())
                 {
                     size_t vertexIndex = it->second;
-                    lock_hashtable.unlock();
+                    shared_lock_ht.unlock();
 
                     facet.corner[j] = vertexIndex;
                     
@@ -104,18 +104,38 @@ void ReadSTLChunkSoft::ReadChunk()
                 }
                 else
                 {
-                    lock_hashtable.unlock();
-                    std::unique_lock<std::shared_mutex> lock_ht(m_mutex_hashtable);
-                    size_t vertexIndex = m_nextID++;
-                    m_ht.insert(std::pair<HTindex_Soft, size_t>(vertexHashIndex, vertexIndex));
-                    lock_ht.unlock();
+                    shared_lock_ht.unlock();
+                    std::unique_lock<std::shared_mutex> unique_lock_ht(m_mutex_hashtable);
 
-                    facet.corner[j] = vertexIndex;
+                    it = m_ht.find(vertexHashIndex);
+                    if (it != m_ht.end())
+                    {
+                        size_t vertexIndex = it->second;
+                        unique_lock_ht.unlock();
+                        facet.corner[j] = vertexIndex;
 
-                    NormalsInSamePositions vn;
-                    vn.normals.push_back(normal);
+                        if (m_map_normals->find(vertexIndex) != m_map_normals->end())
+                        {
+                            m_map_normals->at(vertexIndex).normals.push_back(normal);
+                        }
+                    }
+                    else
+                    {
+                        size_t vertexIndex = m_nextID++;
+                        m_ht.insert(std::pair<HTindex_Soft, size_t>(vertexHashIndex, vertexIndex));
 
-                    m_map_normals->insert(std::pair<size_t, NormalsInSamePositions>(vertexIndex, vn));
+                        unique_lock_ht.unlock();
+
+
+                        facet.corner[j] = vertexIndex;
+
+                        NormalsInSamePositions vn;
+                        vn.normals.push_back(normal);
+
+                        m_map_normals->insert(std::pair<size_t, NormalsInSamePositions>(vertexIndex, vn));
+                    }
+
+
                 }
                 
             }

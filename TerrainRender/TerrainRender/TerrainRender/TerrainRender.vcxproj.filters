@@ -248,18 +248,6 @@
     <ClInclude Include="Controller\GuiController.h">
       <Filter>Header Files\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="View\IView.h">
-      <Filter>Source Files\View</Filter>
-    </ClInclude>
-    <ClInclude Include="View\GuiView.h">
-      <Filter>Source Files\View</Filter>
-    </ClInclude>
-    <ClInclude Include="View\TerrainView.h">
-      <Filter>Source Files\View</Filter>
-    </ClInclude>
-    <ClInclude Include="View\D3DView.h">
-      <Filter>Source Files\View</Filter>
-    </ClInclude>
     <ClInclude Include="Model\Camera.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
@@ -388,6 +376,18 @@
     </ClInclude>
     <ClInclude Include="sunPos\SunPos.h">
       <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="View\D3DView.h">
+      <Filter>Header Files\View</Filter>
+    </ClInclude>
+    <ClInclude Include="View\GuiView.h">
+      <Filter>Header Files\View</Filter>
+    </ClInclude>
+    <ClInclude Include="View\IView.h">
+      <Filter>Header Files\View</Filter>
+    </ClInclude>
+    <ClInclude Include="View\TerrainView.h">
+      <Filter>Header Files\View</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -60,6 +60,25 @@ ReadSTLChunkSoft::ReadSTLChunkSoft(const std::wstring& filepath, int beginInByte
     :
     m_filepath(filepath), m_begin(beginInBytes), m_numOfFacets(numOfFacets),
     m_indices(indices), m_ht(ht), m_mutex_hashtable(mutex_hashtable), m_nextID(nextID), m_map_normals(map_normals) {}
+
+
+Vector3D GetNormal(const std::array<Vector3D, 3>& vertices, unsigned index)
+{
+    unsigned i = (index + 1) % 3;
+    unsigned ip1 = (index + 2) % 3;
+
+    Vector3D a_i = vertices.at(i) - vertices.at(index);
+    Vector3D a_ip1 = vertices.at(ip1) - vertices.at(index);
+
+    Vector3D product = a_i.crossProduct(a_ip1);
+
+    float factor = a_i.squareLength() * a_ip1.squareLength();
+
+    Vector3D normal = product * factor;
+
+    return normal.normalize();
+
+}
 void ReadSTLChunkSoft::ReadChunk()
 {
     try
@@ -73,19 +92,23 @@ void ReadSTLChunkSoft::ReadChunk()
         // Read the file data into the buffer
         for (unsigned i = 0; i < m_numOfFacets; i++)
         {
-            float n[3];
-            CornerIndices facet;
-            file.read(reinterpret_cast<char*>(n), 12);
-            Vector3D normal = { n[0], n[1], n[2] };
-            normal.normalize();
-            
+            CornerIndices           facet;
+            std::array<Vector3D, 3> vertices;
+
+            file.seekg(12, std::ios_base::cur);
+
             for (unsigned j = 0; j < 3; j++)
             {
                 float c[3];
                 file.read(reinterpret_cast<char*>(c), 12);
-                HTindex_Soft vertexHashIndex = { to_float_with_precision(c[0]), to_float_with_precision(c[1]), to_float_with_precision(c[2]) };
-             
-            
+                vertices.at(j) = { c[0], c[1], c[2] };
+            }
+
+            for (unsigned j = 0; j < 3; j++)
+            {
+                Vector3D normal = GetNormal(vertices, j);
+                HTindex_Soft vertexHashIndex = { to_float_with_precision(vertices.at(j).x), to_float_with_precision(vertices.at(j).y), to_float_with_precision(vertices.at(j).z) };
+              
                 //find in hash table vertexPosstr
                 std::shared_lock<std::shared_mutex> shared_lock_ht(m_mutex_hashtable);
                 auto it = m_ht.find(vertexHashIndex);
@@ -134,10 +157,7 @@ void ReadSTLChunkSoft::ReadChunk()
 
                         m_map_normals->insert(std::pair<size_t, NormalsInSamePositions>(vertexIndex, vn));
                     }
-
-
-                }
-                
+                }     
             }
             m_indices->push_back(facet);
             file.seekg(2, std::ios_base::cur);

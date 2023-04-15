@@ -77,11 +77,11 @@ struct CameraPose {
 struct Vector3D
 {
 public:
-	double x;
-	double y;
-	double z;
+	float x;
+	float y;
+	float z;
 
-	Vector3D operator*(double factor) const
+	Vector3D operator*(float factor) const
 	{
 		return { this->x * factor, this->y * factor, this->z * factor};
 	}
@@ -96,14 +96,26 @@ public:
 	}
 
 	Vector3D (const std::array<float, 3> array) : x(array.at(0)), y(array.at(1)), z(array.at(2)) {}
-	Vector3D(double x, double y, double z) : x(x), y(y), z(z) {}
+	Vector3D(float x, float y, float z) : x(x), y(y), z(z) {}
 	Vector3D(void) : x(0), y(0), z(0) {}
+
+	Vector3D crossProduct(const Vector3D& other) const {
+		float cx = y * other.z - z * other.y;
+		float cy = z * other.x - x * other.z;
+		float cz = x * other.y - y * other.x;
+		return Vector3D(cx, cy, cz);
+	}
+
+	float squareLength() const {
+		return x * x + y * y + z * z;
+	}
 
 	Vector3D& normalize()
 	{
-		double length = std::sqrt(x * x + y * y + z * z);
-		if (length > 0)
+		float sqaureLength = this->squareLength();
+		if (sqaureLength > 0)
 		{
+			float length = std::sqrt(sqaureLength);
 			x /= length;
 			y /= length;
 			z /= length;

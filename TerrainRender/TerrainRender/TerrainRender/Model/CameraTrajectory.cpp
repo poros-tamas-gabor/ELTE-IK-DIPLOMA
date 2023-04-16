@@ -49,9 +49,16 @@ IRendarablePtr<VertexPolyLine> CameraTrajectory::GetPolyLine() const
 
 void CameraTrajectory::Reset()
 {
+	Vector3D currentCameraRotation = m_rotations.at(0);
+	Vector3D currentCameraPosition = m_positions.at(0); 
+	
+	currentCameraPosition = TransformPosition(currentCameraPosition);
+	currentCameraRotation = TransformRotation(currentCameraRotation);
+
+
 	this->m_elapsedmsec = 0;
-	this->m_camera->SetPosition(m_positions.at(0).x, m_positions.at(0).y, m_positions.at(0).z);
-	this->m_camera->SetRotationRad(m_rotations.at(0).x, m_rotations.at(0).y, m_rotations.at(0).z);
+	this->m_camera->SetPosition(currentCameraPosition.x, currentCameraPosition.y, currentCameraPosition.z);
+	this->m_camera->SetRotationRad(currentCameraRotation.x, currentCameraRotation.y, currentCameraRotation.z);
 
 }
 

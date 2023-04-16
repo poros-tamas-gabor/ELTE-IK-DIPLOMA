@@ -39,6 +39,8 @@ GuiController::GuiController()
 	m_handledMsgs.push_back(IDC_CHECKBOX_IRENDERABLE_ISSEEN);
 
 	m_handledMsgs.push_back(IDC_SLIDER_FLYTHROUGH_FRAME);
+	m_handledMsgs.push_back(IDC_INPUT_3DE_UNIXTIME);
+	m_handledMsgs.push_back(IDC_INPUT_FLYTHROUGH_UNIXTIME);
 }
 GuiController::~GuiController() {}
 
@@ -313,6 +315,17 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 	{
 		this->m_terrainModel->ClearCameraTrajectory();
 		this->m_messageSystem->Publish(IDCC_ACTIVATE_3DEXPLORE, NULL, NULL);
+		break;
+	}
+
+	case IDC_INPUT_3DE_UNIXTIME:
+	{
+		this->m_terrainModel->SetUnixTime(IDM_E3D_UNIX_TIME, uparam);
+		break;
+	}
+	case IDC_INPUT_FLYTHROUGH_UNIXTIME:
+	{
+		this->m_terrainModel->SetUnixTime(IDM_FLYTHROUGH_UNIX_TIME, uparam);
 		break;
 	}
 

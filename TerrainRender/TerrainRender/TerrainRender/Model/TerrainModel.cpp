@@ -453,6 +453,7 @@ FlythroughState	TerrainModel::CollectFlythroughState(void) const
 		state.numberOfFrame					= m_cameraTrajectory.GetNumberOfFrame();
 		state.IsTrajectoryInitialized		= this->IsTrajectoryInitialized();
 		state.currentEpochTime				= m_cameraTrajectory.GetCurrentEpochTime();
+		state.startEpochTime				= m_cameraTrajectory.GetStartEpochTime();
 		state.currentCameraPosition			= m_camera.GetPositionF3();
 		state.currentCameraRotation			= m_camera.GetRotationF3();
 		state.currentSunPosition.azimuth	= m_light.GetAzimuth();
@@ -511,6 +512,21 @@ void TerrainModel::PublishModelState(void) const
 	this->m_modelMessageSystem.PublishModelState(CollectFlythroughState());
 	this->m_modelMessageSystem.PublishModelState(CollectExplore3DState());
 	this->m_modelMessageSystem.PublishModelState(CollectCameraState());
+}
+
+void TerrainModel::SetUnixTime(unsigned message, unsigned* uparam)
+{
+	switch (message)
+	{
+	case IDM_E3D_UNIX_TIME:
+		this->m_cameraPositioner.SetCurrentEpochTime({ *uparam,0 });
+		break;
+	case IDM_FLYTHROUGH_UNIX_TIME:
+		this->m_cameraTrajectory.SetStartEpochTime({ *uparam,0 });
+	default:
+		break;
+	}
+	PublishModelState();
 }
 
 void TerrainModel::AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int gridZ)

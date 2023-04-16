@@ -37,7 +37,9 @@ public:
 	void Rotate(Vector3D rotations);
 	void Move(Vector3D   translationVector);
 
+	void			SetStartEpochTime(EpochTime);
 	EpochTime		GetCurrentEpochTime(void) const;
+	EpochTime		GetStartEpochTime(void) const;
 	unsigned		GetCurrentFrameNum(void) const;
 	unsigned		GetNumberOfFrame(void) const;
 	void			SetCurrentFrame(unsigned frameNum);

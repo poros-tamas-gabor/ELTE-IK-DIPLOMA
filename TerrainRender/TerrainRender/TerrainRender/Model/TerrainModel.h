@@ -70,6 +70,7 @@ public:
 	void	HandleFlythroughMode(unsigned message, float* elapsedMillisec, unsigned* frameNum) override;
 	void	HandleExplore3DMode(unsigned message, float* fparams) override;
 
+	void	SetUnixTime(unsigned message, unsigned* uparam) override;
 	void	ResetCamera(void) override;
 	void	UpdateCameraProperties(unsigned message, float data) override;
 	void    TransformIRenderable(unsigned message, unsigned id, float parameters[]) override;

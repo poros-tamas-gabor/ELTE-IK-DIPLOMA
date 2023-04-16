@@ -402,6 +402,17 @@ void GuiView::FlythroughTab()
     {
         this->m_terrainController->HandleMessage(IDCC_SET_FRAME_FLYTHROUGH, NULL, (unsigned*)(&m_frame));
     }
+    std::string unixtimestr = std::to_string(m_flythroughState.startEpochTime.getSeconds());
+    char ut[11];
+    strcpy_s<11>(ut, unixtimestr.c_str());
+    if (ImGui::InputText("UnixTime_FT", ut, 11))
+    {
+        unsigned newUnix = std::atol(ut);
+        if (newUnix > 0)
+        {
+            this->m_terrainController->HandleMessage(IDC_INPUT_FLYTHROUGH_UNIXTIME, NULL, &newUnix);
+        }
+    }
 
     PrintStatus<FlythroughState>(m_flythroughState);
 }
@@ -417,6 +428,18 @@ void GuiView::Explore3DTab()
     if (ImGui::SliderFloat("rotation speed", &cameraRotationSpeed, 0.0001, 0.002, "%.4f"))
     {
         this->m_terrainController->HandleMessage(IDC_SLIDER_CAMERA_ROTATION_SPEED, &cameraRotationSpeed, NULL);
+    }
+
+    std::string unixtimestr = std::to_string(m_explore3dState.currentEpochTime.getSeconds());
+    char ut[11];
+    strcpy_s<11>(ut, unixtimestr.c_str());
+    if (ImGui::InputText("UnixTime_E3D",ut, 11))
+    {
+        unsigned newUnix = std::atol(ut);
+        if (newUnix > 0)
+        {
+            this->m_terrainController->HandleMessage(IDC_INPUT_3DE_UNIXTIME, NULL, &newUnix);
+        }
     }
 
     PrintStatus<Explore3DState>(m_explore3dState);

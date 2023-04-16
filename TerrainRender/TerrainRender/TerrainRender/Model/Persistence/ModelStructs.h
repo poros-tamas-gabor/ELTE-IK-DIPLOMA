@@ -232,6 +232,7 @@ struct FlythroughState
 	unsigned			currentFrame				= 0;
 	unsigned			numberOfFrame				= 0;
 	EpochTime			currentEpochTime			= { 0,0 };
+	EpochTime			startEpochTime			= { 0,0 };
 	DirectX::XMFLOAT3	currentCameraPosition		= { 0,0,0 };
 	DirectX::XMFLOAT3	currentCameraRotation		= { 0,0,0 };
 	SunPositionState	currentSunPosition;

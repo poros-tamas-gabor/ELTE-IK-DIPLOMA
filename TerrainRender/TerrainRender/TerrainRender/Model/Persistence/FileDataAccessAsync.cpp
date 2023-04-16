@@ -13,6 +13,7 @@
 #include <memory>
 #include "../../ErrorHandler.h"
 #include "../../nlohmann/json.hpp"
+#include <CommCtrl.h>
 int BinaryFileDataAccessAsync::GetNumThreads(int numOfFacets)
 {
     int maxNumThreads = std::thread::hardware_concurrency();
@@ -130,6 +131,8 @@ bool BinaryFileDataAccessAsync::ReadFileSoftEdges(const std::wstring& filepath)
 
         size_t nextID = 0;
 
+        PostMessage(m_hwnd, PBM_SETRANGE, 0, MAKELPARAM(0, numThreads));
+
         for (int i = 0; i < numThreads; i++)
         {
             unsigned currentNumOfFacets;
@@ -151,7 +154,11 @@ bool BinaryFileDataAccessAsync::ReadFileSoftEdges(const std::wstring& filepath)
         for (int i = 0; i < numThreads; i++)
         {
             if (threads.at(i).joinable())
+            {
                 threads.at(i).join();
+                PostMessage(m_hwnd, PBM_SETSTEP, (WPARAM)1, 0);
+
+            }
         }
 
         m_vertices.clear();
@@ -471,4 +478,9 @@ bool BinaryFileDataAccessAsync::LoadParameterFile(const wchar_t* filepath, Param
     }
     return false;
 
+}
+
+void BinaryFileDataAccessAsync::SetHWND(HWND hwnd)
+{
+    this->m_hwnd = hwnd;
 }

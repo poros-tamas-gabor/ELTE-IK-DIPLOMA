@@ -150,6 +150,7 @@
     <ClCompile Include="Controller\ContollerFlythrough.cpp" />
     <ClCompile Include="Controller\GuiController.cpp" />
     <ClCompile Include="Controller\MessageSystem.cpp" />
+    <ClCompile Include="Controller\Tasks.cpp" />
     <ClCompile Include="ErrorHandler.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imguistyleserializer.cpp" />
@@ -181,6 +182,7 @@
     <ClCompile Include="Model\TerrainModel.cpp" />
     <ClCompile Include="Model\VertexShaderMesh.cpp" />
     <ClCompile Include="Model\VertexShaderPolyLine.cpp" />
+    <ClCompile Include="ProgressBar.cpp" />
     <ClCompile Include="RenderWindow.cpp" />
     <ClCompile Include="StringConverter.cpp" />
     <ClCompile Include="sunPos\SunPos.cpp" />
@@ -198,6 +200,7 @@
     <ClInclude Include="Controller\GuiController.h" />
     <ClInclude Include="Controller\IController.h" />
     <ClInclude Include="Controller\MessageSystem.h" />
+    <ClInclude Include="Controller\Tasks.h" />
     <ClInclude Include="ErrorHandler.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
@@ -240,6 +243,7 @@
     <ClInclude Include="Model\VertexShaderPolyLine.h" />
     <ClInclude Include="nlohmann\json.hpp" />
     <ClInclude Include="nlohmann\json_fwd.hpp" />
+    <ClInclude Include="ProgressBar.h" />
     <ClInclude Include="RenderWindow.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="StringConverter.h" />

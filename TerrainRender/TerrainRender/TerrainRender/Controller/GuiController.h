@@ -7,14 +7,17 @@
 #include "../View/IView.h"
 #include "../Input/Mouse.h"
 #include "../Input/Keyboard.h"
+#include <windef.h>
+
 class GuiController : public IController
 {
 private:
 	IModelPtr					m_terrainModel;
 	IViewPtr					m_terrainView;
 	std::vector<unsigned>		m_handledMsgs;
-	ControllerMessageSystemPtr				m_messageSystem;
+	ControllerMessageSystemPtr	m_messageSystem;
 	bool						m_isActive;
+	HWND						m_hwnd;
 
 public:
 	GuiController();
@@ -27,6 +30,8 @@ public:
 	virtual void SetKeyboard(KeyboardPtr keyboard) override;
 	virtual void SetTerrainView(IViewPtr pView) override;
 
+	void SetHWND(HWND m_hwnd);
+
 
 	virtual bool Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse, KeyboardPtr keyboard) override;
 	virtual bool IsActive() const  override;
@@ -38,6 +43,8 @@ private:
 
 	void SetMessageSystem(ControllerMessageSystemPtr messageSystem);
 };
+
+typedef std::shared_ptr<GuiController> GuiControllerPtr;
 
 
 

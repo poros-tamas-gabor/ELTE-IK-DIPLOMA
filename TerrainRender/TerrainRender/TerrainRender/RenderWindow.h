@@ -23,6 +23,7 @@ public:
 	bool Initialize(App* app, int width, int height);
 	bool ProcessMessages();
 	HWND GetHWND() const;
+	HINSTANCE	GetHinstance(void) const;
 	void Shutdown();
 
 private:

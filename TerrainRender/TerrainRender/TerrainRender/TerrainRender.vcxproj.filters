@@ -207,6 +207,12 @@
     <ClCompile Include="Controller\MessageSystem.cpp">
       <Filter>Source Files\Controller</Filter>
     </ClCompile>
+    <ClCompile Include="Controller\Tasks.cpp">
+      <Filter>Source Files\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="ProgressBar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -388,6 +394,12 @@
     </ClInclude>
     <ClInclude Include="View\TerrainView.h">
       <Filter>Header Files\View</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\Tasks.h">
+      <Filter>Header Files\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="ProgressBar.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

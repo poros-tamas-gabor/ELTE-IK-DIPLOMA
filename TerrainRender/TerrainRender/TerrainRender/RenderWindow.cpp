@@ -117,6 +117,10 @@ bool RenderWindow::ProcessMessages()
 
 }
 
+HINSTANCE	RenderWindow::GetHinstance(void) const
+{
+	return this->_hInstance;
+}
 HWND RenderWindow::GetHWND() const
 {
 	return this->_hwnd;

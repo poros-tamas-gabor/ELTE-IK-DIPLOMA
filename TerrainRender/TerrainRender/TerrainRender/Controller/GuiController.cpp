@@ -4,6 +4,9 @@
 #include "../resource.h"
 #include "MessageSystem.h"
 #include <commdlg.h>
+#include "Tasks.h"
+#include <memory>
+#include <CommCtrl.h>
 
 GuiController::GuiController()
 {
@@ -151,8 +154,21 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 	{
 		wchar_t filePath[260];
 		this->OpenFileDialog(filePath, 260);
-		if (!std::wstring(filePath).empty())
-			this->m_terrainModel->LoadTerrainSoftEdges(filePath);
+		std::wstring filepathwstr(filePath);
+
+		if (!filepathwstr.empty())
+		{
+			ICallablePtr task = std::make_shared<Task_LoadTerrainSoft>(filepathwstr,this->m_terrainModel);
+			std::thread worker(std::ref(*task));
+
+			PostMessage(m_hwnd, WM_INITDIALOG, 0, 0);
+
+			if (worker.joinable())
+			{
+				PostMessage(m_hwnd, WM_USER, 0, 0);
+				worker.join();
+			}
+		}
 		break;
 	}
 	case IDMENU_FIlE_CAMERA_TRAJECTORY:
@@ -183,9 +199,10 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 
 		for (auto& file : files)
 		{
-			OutputDebugStringW(file.c_str());
+			//ICallablePtr task = std::make_shared<Task_LoadTerrainSoft>()
+			//OutputDebugStringW(file.c_str());
 		}
-		this->m_terrainModel->LoadTerrainSoftEdges_Project(files);
+		//this->m_terrainModel->LoadTerrainSoftEdges_Project(files);
 		break;
 	}
 	case IDMENU_FIlE_PARAMETERS:
@@ -340,3 +357,8 @@ bool  GuiController::Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse
 	return true;
 }
 void GuiController::Shutdown() {}
+
+void GuiController::SetHWND(HWND hwnd)
+{
+	m_hwnd = hwnd;
+}

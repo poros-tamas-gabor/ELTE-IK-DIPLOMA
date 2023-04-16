@@ -5,7 +5,8 @@
 #include <sstream>
 #include <mutex>
 #include "ReadSTLChunk.h"
-
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 
 class IDataAccess
 {
@@ -21,6 +22,7 @@ public:
     virtual bool LoadCameraTrajectory(const wchar_t*, std::vector<CameraPose>&) = 0;
     virtual bool LoadParameterFile(const wchar_t*, ParameterFile& params) = 0;
 
+    virtual void SetHWND(HWND hwnd) = 0;
 	virtual bool LoadTerrainSoftEdges(const wchar_t*) = 0;
     //Use After LoadTerrainSoftEdges
     virtual const std::vector<StlVertex>& GetVertices_Soft() = 0;
@@ -41,6 +43,7 @@ private:
     std::vector<StlVertex> m_vertices;
     std::vector<CornerIndices> m_indices;
     std::shared_mutex m_mutex_hashtable;
+    HWND m_hwnd;
 
 private:
     unsigned GetNumTriangles_stlBin(const std::wstring& filepath);
@@ -60,6 +63,7 @@ public:
     bool LoadCameraTrajectory(const wchar_t*, std::vector<CameraPose>& cameraPoses) override;
     bool LoadParameterFile(const wchar_t*, ParameterFile& params) override;
     
+    void SetHWND(HWND hwnd) override;
     const std::vector<stlFacet>& GetFacets(void);
     const std::vector<StlVertex>& GetVertices_Soft() override;
     const std::vector<CornerIndices>& GetIndices_Soft() override;

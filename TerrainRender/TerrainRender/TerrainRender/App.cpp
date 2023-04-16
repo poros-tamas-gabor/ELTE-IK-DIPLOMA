@@ -7,11 +7,15 @@
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_dx11.h"
 #include "resource.h"
-
-//TODO: DELETE
 #include "Controller/GuiController.h"
 #include "Controller/Controller3DExplore.h"
 #include "Controller/ControllerFlythrough.h"
+
+//For progress bar
+#include <CommCtrl.h>
+#pragma comment(lib, "comctl32.lib") // link to Common Controls library
+#pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -47,8 +51,35 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 	switch (umessage)
 	{
 
-		//Keyboard Messages
-		// clear keystate when window loses focus to prevent input getting "stuck"
+
+	case PBM_SETRANGE:
+	{
+		SendMessage(m_prograssBar.GetHWND(), PBM_SETRANGE, wparam, lparam);
+		return 0;
+	}
+	case PBM_SETSTEP:
+	{
+		SendMessage(m_prograssBar.GetHWND(), PBM_SETSTEP, (WPARAM)1, 0);
+		return 0;
+	}
+
+	case PBM_STEPIT:
+	{
+		SendMessage(m_prograssBar.GetHWND(), PBM_STEPIT, 0, 0);
+		return 0;
+	}
+
+	case WM_INITDIALOG:
+		SendMessage(m_prograssBar.GetHWND(), PBM_SETMARQUEE, (WPARAM)TRUE, (LPARAM)0);
+		return 0;
+
+	case WM_USER:
+		// Work is done, close the dialog
+		SendMessage(m_prograssBar.GetHWND(), PBM_SETMARQUEE, (WPARAM)FALSE, (LPARAM)0);
+		return 0;
+
+	//Keyboard Messages
+	// clear keystate when window loses focus to prevent input getting "stuck"
 	case WM_KILLFOCUS:
 	{
 		this->m_keyboard->ClearCharBuffer();
@@ -273,6 +304,12 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 }
 bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 {
+	//TODO FOR loading Bar
+	INITCOMMONCONTROLSEX icex;
+	icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
+	icex.dwICC = ICC_PROGRESS_CLASS;
+	InitCommonControlsEx(&icex);
+
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -287,12 +324,16 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 	if (this->m_dataAccess == nullptr)
 		return false;
 
+
 	result = m_renderWindow.Initialize(this, screenWidth, screenHeight);
 	if (!result)
 		return false;
 
 	ImGui_ImplWin32_Init(this->m_renderWindow.GetHWND());
 
+	result = m_prograssBar.Initialize(m_renderWindow.GetHinstance(), m_renderWindow.GetHWND());
+	if (!result)
+		return false;
 	result = this->m_terrainController->Initialize(this->m_terrainModel, this->m_terrainView, this->m_mouse, this->m_keyboard);
 	if (!result)
 		return false;
@@ -304,9 +345,10 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 		explorec->Initialize(this->m_terrainModel, this->m_terrainView, this->m_mouse, this->m_keyboard);
 		this->m_terrainController->AddController(explorec);
 
-		IControllerPtr guic = std::make_shared<GuiController>();
+		GuiControllerPtr guic = std::make_shared<GuiController>();
 
 		guic->Initialize(this->m_terrainModel, this->m_terrainView, this->m_mouse, this->m_keyboard);
+		guic->SetHWND(m_renderWindow.GetHWND());
 		this->m_terrainController->AddController(guic);
 
 		IControllerPtr flyc = std::make_shared<ControllerFlythrough>();
@@ -320,6 +362,8 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 		return false;
 
 	this->m_terrainModel->m_modelMessageSystem.Subscribe(m_terrainView);
+
+	m_dataAccess->SetHWND(m_renderWindow.GetHWND());
 
 	result = this->m_terrainModel->Initalize(m_renderWindow.GetHWND(), m_dataAccess, m_terrainView->GetDevice().Get(), screenWidth, screenHeight, 1, 500);
 

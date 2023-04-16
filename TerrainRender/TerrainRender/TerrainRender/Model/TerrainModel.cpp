@@ -7,7 +7,7 @@ TerrainModel::TerrainModel() = default;
 TerrainModel::~TerrainModel() = default;
 
 
-bool TerrainModel::Initalize(HWND hwnd, IDataAccess* persistence, ID3D11Device* device, int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView)
+bool TerrainModel::Initalize(HWND hwnd, IDataAccessPtr persistence, Microsoft::WRL::ComPtr<ID3D11Device> device, int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView)
 {
 	bool bresult;
 
@@ -18,25 +18,30 @@ bool TerrainModel::Initalize(HWND hwnd, IDataAccess* persistence, ID3D11Device* 
 
 	this->m_device = device;
 
-	bresult = this->m_vertexShaderMesh.Initialize(device, hwnd);
+	m_vertexShaderMesh = std::make_shared<VertexShaderMesh>();
+	m_pixelShaderMesh = std::make_shared<PixelShaderMesh>();
+	m_vertexShaderPolyLine = std::make_shared<VertexShaderPolyLine>();
+	m_pixelShaderPolyLine = std::make_shared<PixelShaderPolyLine>();
+
+	bresult = this->m_vertexShaderMesh->Initialize(device, hwnd);
 	if (!bresult)
 	{
 		return false;
 	}
 
-	bresult = this->m_vertexShaderPolyLine.Initialize(device, hwnd);
+	bresult = this->m_vertexShaderPolyLine->Initialize(device, hwnd);
 	if (!bresult)
 	{
 		return false;
 	}
 
-	bresult = this->m_pixelShaderMesh.Initialize(device, hwnd);
+	bresult = this->m_pixelShaderMesh->Initialize(device, hwnd);
 	if (!bresult)
 	{
 		return false;
 	}
 
-	bresult = this->m_pixelShaderPolyLine.Initialize(device, hwnd);
+	bresult = this->m_pixelShaderPolyLine->Initialize(device, hwnd);
 	if (!bresult)
 	{
 		return false;
@@ -45,8 +50,8 @@ bool TerrainModel::Initalize(HWND hwnd, IDataAccess* persistence, ID3D11Device* 
 	this->m_camera.Initialize(screenWidth, screenHeight, screenNear, screenDepth, fieldOfView);
 	this->m_cameraPositioner.Initialize(&this->m_camera);
 
-	this->m_meshes.Initialize(device, &m_vertexShaderMesh, &m_pixelShaderMesh, NULL, NULL, NULL, NULL);
-	this->m_polylines.Initialize(device, &m_vertexShaderPolyLine, &m_pixelShaderPolyLine, NULL, NULL, NULL, NULL);
+	this->m_meshes.Initialize(device, m_vertexShaderMesh, m_pixelShaderMesh, NULL, NULL, NULL, NULL);
+	this->m_polylines.Initialize(device, m_vertexShaderPolyLine, m_pixelShaderPolyLine, NULL, NULL, NULL, NULL);
 	this->m_light.UpdateSunPosition(m_cameraPositioner.GetCurrentEpochTime().getSeconds(), m_llacoordinate.latitude, m_llacoordinate.longitude);
 	PublishModelState();
 	this->AddGrid(2000, { 1.0f, 1.0f, 1.0f, 1.0f }, 200, 200);
@@ -61,15 +66,15 @@ void TerrainModel::Resize(unsigned screenWidth, unsigned screenHeight)
 
 void TerrainModel::Shutdown()
 {
-	m_vertexShaderMesh.Shutdown();
-	m_pixelShaderMesh.Shutdown();
-	m_pixelShaderPolyLine.Shutdown();
-	m_vertexShaderPolyLine.Shutdown();
+	m_vertexShaderMesh->Shutdown();
+	m_pixelShaderMesh->Shutdown();
+	m_pixelShaderPolyLine->Shutdown();
+	m_vertexShaderPolyLine->Shutdown();
 	m_meshes.Shutdown();
 	m_polylines.Shutdown();
 }
 
-bool TerrainModel::Render(ID3D11DeviceContext* deviceContext)
+bool TerrainModel::Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext)
 {
 	this->m_camera.Render();
 

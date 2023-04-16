@@ -10,6 +10,8 @@
 #include "../ImGui/imgui_impl_win32.h"
 #include "../Controller/IController.h"
 #include "IView.h"
+#include <wrl/client.h>
+
 
 class GuiView : public IView
 {
@@ -35,7 +37,7 @@ private:
 	Explore3DState							m_explore3dState;
 	int										m_frame;
 public:
-	bool Initalize(ID3D11Device* _device, ID3D11DeviceContext* _deviceContext, IControllerPtr controller);
+	bool Initalize(Microsoft::WRL::ComPtr<ID3D11Device> _device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> _deviceContext, IControllerPtr controller);
 
 	void BeginFrame();
 	void EndFrame();

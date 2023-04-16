@@ -45,8 +45,8 @@ public:
 	void HandleIModelState(const FlythroughState&) override;
 	void HandleIModelState(const Explore3DState&) override;
 
-	Microsoft::WRL::ComPtr < ID3D11Device> GetDevice();
-	Microsoft::WRL::ComPtr < ID3D11DeviceContext> GetDeviceContext();
+	Microsoft::WRL::ComPtr<ID3D11Device> GetDevice();
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> GetDeviceContext();
 
 
 };

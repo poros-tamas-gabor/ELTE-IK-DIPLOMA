@@ -25,7 +25,7 @@ private:
 	TerrainModelPtr				m_terrainModel;
 	TerrainViewPtr				m_terrainView;
 	CompositeControllerPtr		m_terrainController;
-	IDataAccess*				m_dataAccess;
+	IDataAccessPtr				m_dataAccess;
 
 
 	void Update();

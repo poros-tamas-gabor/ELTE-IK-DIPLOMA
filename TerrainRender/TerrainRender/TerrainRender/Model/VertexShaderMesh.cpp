@@ -3,7 +3,7 @@
 
 VertexShaderMesh::VertexShaderMesh() : m_vertexShader(nullptr), m_layout(nullptr), m_matrixBuffer(nullptr) {}
 
-bool VertexShaderMesh::Initialize(ID3D11Device* device, HWND hwnd)
+bool VertexShaderMesh::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, HWND hwnd)
 {
 	bool result;
 
@@ -41,7 +41,7 @@ void VertexShaderMesh::ShutdownShader()
 	}
 }
 
-bool VertexShaderMesh::InitializeShader(ID3D11Device* device, HWND hwnd, const WCHAR* vsFilename)
+bool VertexShaderMesh::InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device> device, HWND hwnd, const WCHAR* vsFilename)
 {
 	HRESULT						result;
 	ID3D10Blob*					errorMessage = nullptr;
@@ -132,13 +132,13 @@ bool VertexShaderMesh::InitializeShader(ID3D11Device* device, HWND hwnd, const W
 
 }
 
-void VertexShaderMesh::RenderShader(ID3D11DeviceContext* deviceContext)
+void VertexShaderMesh::RenderShader(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext)
 {
-	deviceContext->IASetInputLayout(this->m_layout);
+	deviceContext->IASetInputLayout(this->m_layout.Get());
 
-	deviceContext->VSSetShader(this->m_vertexShader, NULL, 0);
+	deviceContext->VSSetShader(this->m_vertexShader.Get(), NULL, 0);
 }
-bool VertexShaderMesh::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 color)
+bool VertexShaderMesh::Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 color)
 {
 	bool bresult;
 	bresult = this->SetShadeParameters(deviceContext, worldMat, viewMat, projectionMat, color);
@@ -150,7 +150,7 @@ bool VertexShaderMesh::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMAT
 	return true;
 }
 
-bool VertexShaderMesh::SetShadeParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 color)
+bool VertexShaderMesh::SetShadeParameters(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 color)
 {
 	HRESULT						result;
 	D3D11_MAPPED_SUBRESOURCE	mappedResource;
@@ -164,7 +164,7 @@ bool VertexShaderMesh::SetShadeParameters(ID3D11DeviceContext* deviceContext, Di
 		projectionMat = DirectX::XMMatrixTranspose(projectionMat);
 
 		// Lock the constant buffer so it can be written to.
-		result = deviceContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+		result = deviceContext->Map(m_matrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to lock the constant buffer");
 
@@ -178,13 +178,13 @@ bool VertexShaderMesh::SetShadeParameters(ID3D11DeviceContext* deviceContext, Di
 		matrixDataPtr->color = color;
 
 		// Unlock the constant buffer.
-		deviceContext->Unmap(m_matrixBuffer, 0);
+		deviceContext->Unmap(m_matrixBuffer.Get(), 0);
 
 		// Set the position of the constant buffer in the vertex shader.
 		bufferNumber = 0;
 
 		// Finanly set the constant buffer in the vertex shader with the updated values.
-		deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
+		deviceContext->VSSetConstantBuffers(bufferNumber, 1, m_matrixBuffer.GetAddressOf());
 
 		mappedResource = { 0 };
 	}
@@ -198,11 +198,11 @@ bool VertexShaderMesh::SetShadeParameters(ID3D11DeviceContext* deviceContext, Di
 	return true;
 }
 
-ID3D11VertexShader* VertexShaderMesh::GetVertexShader(void)
+Microsoft::WRL::ComPtr<ID3D11VertexShader> VertexShaderMesh::GetVertexShader(void)
 {
 	return this->m_vertexShader;
 }
-ID3D11InputLayout* VertexShaderMesh::GetInputLayout(void)
+Microsoft::WRL::ComPtr<ID3D11InputLayout> VertexShaderMesh::GetInputLayout(void)
 {
 	return this->m_layout;
 }

@@ -27,10 +27,10 @@ class TerrainModel : public IModel
 private:
 	LLACoordinate								m_llacoordinate = { 47.497913 , 19.040236 };
 
-	VertexShaderMesh							m_vertexShaderMesh;
-	PixelShaderMesh								m_pixelShaderMesh;
-	VertexShaderPolyLine						m_vertexShaderPolyLine;
-	PixelShaderPolyLine							m_pixelShaderPolyLine;
+	VertexShaderMeshPtr							m_vertexShaderMesh;
+	PixelShaderMeshPtr							m_pixelShaderMesh;
+	VertexShaderPolyLinePtr						m_vertexShaderPolyLine;
+	PixelShaderPolyLinePtr						m_pixelShaderPolyLine;
 
 	CompositeRenderable<VertexMesh>				m_meshes;
 	CompositeRenderable<VertexPolyLine>			m_polylines;
@@ -38,9 +38,9 @@ private:
 	CameraPositioner							m_cameraPositioner;
 	CameraTrajectory							m_cameraTrajectory;
 
-	ID3D11Device*								m_device;
-	ID3D11DeviceContext*						m_deviceContext;
-	IDataAccess*								m_persistence;
+	Microsoft::WRL::ComPtr<ID3D11Device>								m_device;
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext>						m_deviceContext;
+	IDataAccessPtr								m_persistence;
 
 public:
 	Camera										m_camera;
@@ -53,10 +53,10 @@ public:
 	TerrainModel();
 	TerrainModel(const TerrainModel&) = delete;
 	~TerrainModel();
-	bool	Initalize(HWND hwnd, IDataAccess* persistence, ID3D11Device* device, int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView = (DirectX::XM_PI / 4.0f)) override;
+	bool	Initalize(HWND hwnd, IDataAccessPtr persistence, Microsoft::WRL::ComPtr<ID3D11Device> device, int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView = (DirectX::XM_PI / 4.0f)) override;
 	void	Resize(unsigned screenWidth, unsigned screenHeight) override;
 	void	Shutdown() override;
-	bool	Render(ID3D11DeviceContext* deviceContext) override;
+	bool	Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext) override;
 
 	bool	LoadTerrainSharpEdges(const wchar_t* filepath) override;
 	bool	LoadTerrainSoftEdges(const wchar_t* filepath) override;

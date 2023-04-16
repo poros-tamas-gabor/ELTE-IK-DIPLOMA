@@ -3,7 +3,7 @@
 
 PixelShaderMesh::PixelShaderMesh() : m_pixelShader(nullptr), m_lightBuffer(nullptr) {}
 
-bool PixelShaderMesh::Initialize(ID3D11Device* device, HWND hwnd)
+bool PixelShaderMesh::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, HWND hwnd)
 {
 	bool result;
 
@@ -36,7 +36,7 @@ void PixelShaderMesh::ShutdownShader()
 	}
 }
 
-bool PixelShaderMesh::InitializeShader(ID3D11Device* device, HWND hwnd, const WCHAR* psFilename)
+bool PixelShaderMesh::InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device> device, HWND hwnd, const WCHAR* psFilename)
 {
 	HRESULT						result;
 	ID3D10Blob*					errorMessage = nullptr;
@@ -60,7 +60,7 @@ bool PixelShaderMesh::InitializeShader(ID3D11Device* device, HWND hwnd, const WC
 		}
 
 		// Create the pixel shader from the buffer.
-		result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &this->m_pixelShader);
+		result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, this->m_pixelShader.ReleaseAndGetAddressOf());
 
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create the pixel shader from the buffer");
 
@@ -78,7 +78,7 @@ bool PixelShaderMesh::InitializeShader(ID3D11Device* device, HWND hwnd, const WC
 		lightBufferDesc.StructureByteStride = 0;
 		
 		// Create the constant buffer pointer so we can access the pixel shader constant buffer from within this class.
-		result = device->CreateBuffer(&lightBufferDesc, NULL, &m_lightBuffer);
+		result = device->CreateBuffer(&lightBufferDesc, NULL, m_lightBuffer.ReleaseAndGetAddressOf());
 		
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create constant buffer for light");
 	}
@@ -94,25 +94,25 @@ bool PixelShaderMesh::InitializeShader(ID3D11Device* device, HWND hwnd, const WC
 
 }
 
-ID3D11PixelShader* PixelShaderMesh::GetPixelShader(void)
+Microsoft::WRL::ComPtr<ID3D11PixelShader> PixelShaderMesh::GetPixelShader(void)
 {
 	return this->m_pixelShader;
 }
 
-bool PixelShaderMesh::Render(ID3D11DeviceContext* deviceContext, int vertexCount, const Light& light)
+bool PixelShaderMesh::Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, int vertexCount, const Light& light)
 {
 	bool result = true;
 	result = this->SetShadeParameters(deviceContext, light);
 	this->RenderShader(deviceContext, vertexCount);
 	return result;
 }
-void PixelShaderMesh::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount) {
+void PixelShaderMesh::RenderShader(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, int indexCount) {
 
-	deviceContext->PSSetShader(this->m_pixelShader, NULL, 0);
+	deviceContext->PSSetShader(this->m_pixelShader.Get(), NULL, 0);
 	deviceContext->DrawIndexed(indexCount, 0, 0);
 }
 
-bool PixelShaderMesh::SetShadeParameters(ID3D11DeviceContext* deviceContext, const Light& light)
+bool PixelShaderMesh::SetShadeParameters(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, const Light& light)
 {
 	HRESULT						result;
 	D3D11_MAPPED_SUBRESOURCE	mappedResource;
@@ -125,7 +125,7 @@ bool PixelShaderMesh::SetShadeParameters(ID3D11DeviceContext* deviceContext, con
 
 		mappedResource = { 0 };
 		// Lock the constant buffer so it can be written to.
-		result = deviceContext->Map(m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+		result = deviceContext->Map(m_lightBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to lock the constant buffer");
 
@@ -135,9 +135,9 @@ bool PixelShaderMesh::SetShadeParameters(ID3D11DeviceContext* deviceContext, con
 		lightDataPtr->diffuseColor = light.GetDiffuseColor();
 		lightDataPtr->inverseLightDirection = light.GetInverseDirection();
 		// Unlock the constant buffer.
-		deviceContext->Unmap(this->m_lightBuffer, 0);
+		deviceContext->Unmap(this->m_lightBuffer.Get(), 0);
 		// Finanly set the constant buffer in the pixel shader with the updated values.
-		deviceContext->PSSetConstantBuffers(bufferNumber, 1, &m_lightBuffer);
+		deviceContext->PSSetConstantBuffers(bufferNumber, 1, m_lightBuffer.GetAddressOf());
 	}
 	catch (const COMException& exception)
 	{

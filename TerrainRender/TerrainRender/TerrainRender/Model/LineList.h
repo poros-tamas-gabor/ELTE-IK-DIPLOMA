@@ -5,10 +5,10 @@
 class LineList : public IRenderable<VertexPolyLine>
 {
 protected:
-	ID3D11Buffer*		m_vertexBuffer;
+	Microsoft::WRL::ComPtr<ID3D11Buffer>		m_vertexBuffer;
 	unsigned int		_vertexCount;
-	IPixelShader*		m_pixelShader;
-	IVertexShader*		m_vertexShader;
+	IPixelShaderPtr		m_pixelShader;
+	IVertexShaderPtr		m_vertexShader;
 
 	std::wstring		m_name;
 	DirectX::XMFLOAT3	m_rotation;
@@ -26,9 +26,9 @@ public:
 	LineList& operator=(const LineList&) = delete;
 
 
-	virtual bool Initialize(ID3D11Device* device, IVertexShader* vertexShader, IPixelShader* pixelShader, VertexPolyLine* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount) override;
+	virtual bool Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, IVertexShaderPtr vertexShader, IPixelShaderPtr pixelShader, VertexPolyLine* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount) override;
 	void Shutdown() override;
-	void Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light& light) override;
+	void Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light& light) override;
  
 	int GetIndexCount() const;
 	int GetVertexCount() const;
@@ -46,9 +46,9 @@ public:
 	IRenderableState	GetState(void) const override;
 
 protected:
-	bool InitializeBuffers(ID3D11Device*, VertexPolyLine* vertices, UINT indexCount);
+	bool InitializeBuffers(Microsoft::WRL::ComPtr<ID3D11Device>, VertexPolyLine* vertices, UINT indexCount);
 	void ShutdownBuffers();
-	virtual void RenderBuffers(ID3D11DeviceContext*);
+	virtual void RenderBuffers(Microsoft::WRL::ComPtr<ID3D11DeviceContext>);
 	void CalculateLocalMatrix(void);
 
 };

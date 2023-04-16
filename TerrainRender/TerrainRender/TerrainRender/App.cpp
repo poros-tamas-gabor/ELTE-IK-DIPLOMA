@@ -7,6 +7,7 @@
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_dx11.h"
 #include "resource.h"
+#include <wrl/client.h>
 
 //TODO: DELETE
 #include "Controller/GuiController.h"
@@ -35,6 +36,7 @@ App::App()
 	this->m_terrainView = std::make_shared<TerrainView>();
 	this->m_keyboard = std::make_shared<Keyboard>();
 	this->m_mouse = std::make_shared<Mouse>();
+	this->m_dataAccess = std::make_shared<BinaryFileDataAccessAsync>();
 }
 App::~App() {};
 
@@ -283,10 +285,6 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 
 	bool result;
 
-	this->m_dataAccess = new BinaryFileDataAccessAsync;
-	if (this->m_dataAccess == nullptr)
-		return false;
-
 	result = m_renderWindow.Initialize(this, screenWidth, screenHeight);
 	if (!result)
 		return false;
@@ -321,7 +319,7 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 
 	this->m_terrainModel->m_modelMessageSystem.Subscribe(m_terrainView);
 
-	result = this->m_terrainModel->Initalize(m_renderWindow.GetHWND(), m_dataAccess, m_terrainView->GetDevice().Get(), screenWidth, screenHeight, 1, 500);
+	result = this->m_terrainModel->Initalize(m_renderWindow.GetHWND(), m_dataAccess, m_terrainView->GetDevice(), screenWidth, screenHeight, 1, 500);
 
 	m_timer.Start();
 	return true;
@@ -355,10 +353,7 @@ void App::Run()
 void App::Shutdown()
 {
 	// Shutdown the window.
-	if (this->m_dataAccess)
-	{
-		delete this->m_dataAccess;
-	}
+
 	this->m_terrainController->Shutdown();
 	this->m_terrainModel->Shutdown();
 	this->m_terrainView->Shutdown();

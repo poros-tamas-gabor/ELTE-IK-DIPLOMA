@@ -5,20 +5,19 @@
 #include <memory>
 #include <vector>
 #include <string>
-
-class	IDataAccess;
-class  ID3D11Device;
-class  ID3D11DeviceContext;
+#include <wrl/client.h>
+#include "Persistence/DataAccess.h"
+#include <d3d11.h>
 class IModel
 {
 public:
 
 	virtual ~IModel() = default;
 
-	virtual bool	Initalize(HWND hwnd, IDataAccess* persistence, ID3D11Device* device, int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView) = 0;
+	virtual bool	Initalize(HWND hwnd, IDataAccessPtr persistence, Microsoft::WRL::ComPtr<ID3D11Device> device, int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView) = 0;
 	virtual void	Resize(unsigned screenWidth, unsigned screenHeight) = 0;
 	virtual void	Shutdown() = 0;
-	virtual bool	Render(ID3D11DeviceContext* deviceContext) = 0;
+	virtual bool	Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext) = 0;
 
 	virtual bool	LoadTerrainSharpEdges(const wchar_t* filepath) = 0;
 	virtual bool	LoadTerrainSoftEdges(const wchar_t* filepath) = 0;

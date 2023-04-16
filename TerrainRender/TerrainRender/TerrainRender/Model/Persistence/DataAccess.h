@@ -4,6 +4,7 @@
 #include <vector>
 #include <sstream>
 #include <mutex>
+#include <memory>
 #include "ReadSTLChunk.h"
 
 
@@ -27,6 +28,8 @@ public:
     //Use After LoadTerrainSoftEdges
     virtual const std::vector<CornerIndices>& GetIndices_Soft() = 0;
 };
+
+typedef std::shared_ptr<IDataAccess> IDataAccessPtr;
 
 class BinaryFileDataAccessAsync : public IDataAccess {
 

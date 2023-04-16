@@ -8,6 +8,7 @@
 #include "Persistence/ModelStructs.h"
 #include <string>
 #include <memory>
+#include <wrl/client.h>
 
 //The order of transformation matrices applied is fixed: scaling, then rotation, then translation.
 
@@ -28,9 +29,9 @@ class IRenderable : public IRenderableBase
 public:
 	IRenderable()			= default;
 	virtual ~IRenderable()	= default;
-	virtual bool Initialize(ID3D11Device* device, IVertexShader*, IPixelShader*, V* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount ) = 0;
+	virtual bool Initialize(Microsoft::WRL::ComPtr <ID3D11Device> device, IVertexShaderPtr, IPixelShaderPtr, V* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount ) = 0;
 	virtual void Shutdown() = 0;
-	virtual void Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat,const Light& light) = 0;
+	virtual void Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext>, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat,const Light& light) = 0;
 
 	virtual void SetName(const std::wstring& name) = 0;
 	virtual void Rotate(float pitch, float yaw, float roll) = 0;

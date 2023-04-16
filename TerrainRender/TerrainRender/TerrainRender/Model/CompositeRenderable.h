@@ -12,12 +12,12 @@ template <class V>
 class CompositeRenderable : public IRenderable<V>
 {
 private:
-	std::wstring						m_name;
-	std::vector<IRendarablePtr<V>>		m_renderables;
-	IVertexShader*						m_vertexShader = NULL;
-	IPixelShader*						m_pixelShader = NULL;
-	ID3D11Device*						m_device = NULL;
-	bool								m_isSeen = true;
+	std::wstring							m_name;
+	std::vector<IRendarablePtr<V>>			m_renderables;
+	IVertexShaderPtr						m_vertexShader = NULL;
+	IPixelShaderPtr							m_pixelShader = NULL;
+	Microsoft::WRL::ComPtr<ID3D11Device>	m_device = NULL;
+	bool									m_isSeen = true;
 
 private:
 	bool Add(IRendarablePtr<V> renderable)
@@ -36,7 +36,7 @@ public:
 
 	virtual ~CompositeRenderable() = default;
 
-	bool Initialize(ID3D11Device* device, IVertexShader* vertexShader, IPixelShader* pixelShader, V* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount) override
+	bool Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, IVertexShaderPtr vertexShader, IPixelShaderPtr pixelShader, V* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount) override
 	{
 		if (device == nullptr || vertexShader == nullptr || pixelShader == nullptr)
 		{
@@ -59,7 +59,7 @@ public:
 			}
 		}
 	}
-	void Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light& light) override
+	void Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light& light) override
 	{
 		for (IRendarablePtr<V> renderable : m_renderables)
 		{
@@ -84,7 +84,7 @@ public:
 	{
 		if (std::find(this->m_renderables.begin(), this->m_renderables.end(), renderable) != this->m_renderables.end())
 		{
-			std::remove(this->m_renderables.begin(), this->m_renderables.end(), renderable);
+			this->m_renderables.erase(std::remove(this->m_renderables.begin(), this->m_renderables.end(), renderable));
 			return true;
 		}
 		return false;

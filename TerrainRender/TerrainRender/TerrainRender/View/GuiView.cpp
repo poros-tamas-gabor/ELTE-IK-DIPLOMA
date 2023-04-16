@@ -7,7 +7,6 @@
 #include <iomanip>
 #include <ctime>
 
-
 bool ToggleButton(const char* str_id, bool* isFlythroughOn, bool isActive)
 {
     ImVec4* colors = ImGui::GetStyle().Colors;
@@ -48,7 +47,7 @@ bool ToggleButton(const char* str_id, bool* isFlythroughOn, bool isActive)
 }
 
 const static float PI = 3.14159265358979323846;
-bool GuiView::Initalize(ID3D11Device* _device, ID3D11DeviceContext* _deviceContext, IControllerPtr controller)
+bool GuiView::Initalize(Microsoft::WRL::ComPtr<ID3D11Device> _device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> _deviceContext, IControllerPtr controller)
 {
     bool result;
 
@@ -61,7 +60,7 @@ bool GuiView::Initalize(ID3D11Device* _device, ID3D11DeviceContext* _deviceConte
     ImGui::ResetStyle(28);
 
     // Setup Platform/Renderer backends
-    result = ImGui_ImplDX11_Init(_device, _deviceContext);
+    result = ImGui_ImplDX11_Init(_device.Get(), _deviceContext.Get());
     return result;
 }
 

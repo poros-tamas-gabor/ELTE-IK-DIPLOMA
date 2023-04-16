@@ -37,7 +37,7 @@ void CameraTrajectory::Clear()
 	this->m_rotations.clear();
 	this->m_elapsedmsec = 0;
 	m_currentFrameNum = 0;
-	this->m_polyLine = NULL;
+	this->m_polyLine.reset();
 }
 
 IRendarablePtr<VertexPolyLine> CameraTrajectory::GetPolyLine() const

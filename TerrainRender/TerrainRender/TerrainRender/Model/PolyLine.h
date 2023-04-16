@@ -12,6 +12,6 @@ public:
 	PolyLine& operator=(const PolyLine&) = delete;
 
 protected:
-	virtual void RenderBuffers(ID3D11DeviceContext*) override;
+	virtual void RenderBuffers(Microsoft::WRL::ComPtr<ID3D11DeviceContext>) override;
 };
 #endif // !POLYLINE_H

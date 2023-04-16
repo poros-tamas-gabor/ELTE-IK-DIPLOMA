@@ -62,13 +62,6 @@ bool TerrainView::Render()
 	return true;
 }
 
-
-//void TerrainView::ExecuteControl(eventType eventType, const void* data)
-//{
-//	this->m_terrainController->Control(eventType, data);
-//}
-
-
 Microsoft::WRL::ComPtr<ID3D11Device> TerrainView::GetDevice()
 {
 	return this->m_d3dView.GetDevice();

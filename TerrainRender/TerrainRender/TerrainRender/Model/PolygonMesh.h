@@ -12,12 +12,12 @@
 class PolygonMesh : public IRenderable<VertexMesh>
 {
 private:
-	ID3D11Buffer* m_vertexBuffer;
-	ID3D11Buffer* m_indexBuffer;
+	Microsoft::WRL::ComPtr<ID3D11Buffer> m_vertexBuffer;
+	Microsoft::WRL::ComPtr<ID3D11Buffer> m_indexBuffer;
 	unsigned int	_vertexCount;
 	unsigned int	_indexCount;
-	IPixelShader* m_pixelShader;
-	IVertexShader* m_vertexShader;
+	IPixelShaderPtr m_pixelShader;
+	IVertexShaderPtr m_vertexShader;
 
 	std::wstring		m_name;
 	DirectX::XMFLOAT3	m_rotation;
@@ -34,9 +34,9 @@ public:
 	PolygonMesh& operator=(const PolygonMesh&) = delete;
 
 
-	bool Initialize(ID3D11Device* device, IVertexShader* vertexShader, IPixelShader* pixelShader, VertexMesh* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount) override;
+	bool Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, IVertexShaderPtr vertexShader, IPixelShaderPtr pixelShader, VertexMesh* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount) override;
 	void Shutdown() override;
-	void Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat,const Light& light) override;
+	void Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat,const Light& light) override;
  
 	int GetIndexCount() const;
 	int GetVertexCount() const;
@@ -55,9 +55,9 @@ public:
 
 private:
 	
-	bool InitializeBuffers(ID3D11Device* device, VertexMesh* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount);
+	bool InitializeBuffers(Microsoft::WRL::ComPtr<ID3D11Device> device, VertexMesh* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount);
 	void ShutdownBuffers();
-	void RenderBuffers(ID3D11DeviceContext*);
+	void RenderBuffers(Microsoft::WRL::ComPtr<ID3D11DeviceContext>);
 	void CalculateLocalMatrix(void);
 };
 

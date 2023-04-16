@@ -3,7 +3,7 @@
 
 VertexShaderPolyLine::VertexShaderPolyLine() : m_vertexShader(nullptr), m_layout(nullptr), m_matrixBuffer(nullptr) {}
 
-bool VertexShaderPolyLine::Initialize(ID3D11Device* device, HWND hwnd)
+bool VertexShaderPolyLine::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, HWND hwnd)
 {
 	bool result;
 
@@ -41,7 +41,7 @@ void VertexShaderPolyLine::ShutdownShader()
 	}
 }
 
-bool VertexShaderPolyLine::InitializeShader(ID3D11Device* device, HWND hwnd, const WCHAR* vsFilename)
+bool VertexShaderPolyLine::InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device> device, HWND hwnd, const WCHAR* vsFilename)
 {
 	HRESULT						result;
 	ID3D10Blob*					errorMessage = nullptr;
@@ -71,7 +71,7 @@ bool VertexShaderPolyLine::InitializeShader(ID3D11Device* device, HWND hwnd, con
 				throw COMException(result, L"Missing Shader File", __FILEW__, __FUNCTIONW__, __LINE__);
 		}
 		// Create the vertex shader from the buffer.
-		result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &this->m_vertexShader);
+		result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, this->m_vertexShader.ReleaseAndGetAddressOf());
 		
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create the vertex shader from the buffer");
 
@@ -96,7 +96,7 @@ bool VertexShaderPolyLine::InitializeShader(ID3D11Device* device, HWND hwnd, con
 		numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
 		// Create the vertex input layout.
-		result = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &m_layout);
+		result = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), m_layout.ReleaseAndGetAddressOf());
 
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create the vertex input layout");
 
@@ -112,7 +112,7 @@ bool VertexShaderPolyLine::InitializeShader(ID3D11Device* device, HWND hwnd, con
 		matrixBufferDesc.StructureByteStride = 0;
 
 		// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
-		result = device->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
+		result = device->CreateBuffer(&matrixBufferDesc, NULL, m_matrixBuffer.ReleaseAndGetAddressOf());
 
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create constant buffer");
 	}
@@ -126,13 +126,13 @@ bool VertexShaderPolyLine::InitializeShader(ID3D11Device* device, HWND hwnd, con
 
 }
 
-void VertexShaderPolyLine::RenderShader(ID3D11DeviceContext* deviceContext)
+void VertexShaderPolyLine::RenderShader(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext)
 {
-	deviceContext->IASetInputLayout(this->m_layout);
+	deviceContext->IASetInputLayout(this->m_layout.Get());
 
-	deviceContext->VSSetShader(this->m_vertexShader, NULL, 0);
+	deviceContext->VSSetShader(this->m_vertexShader.Get(), NULL, 0);
 }
-bool VertexShaderPolyLine::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 color)
+bool VertexShaderPolyLine::Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 color)
 {
 	bool bresult;
 	bresult = this->SetShadeParameters(deviceContext, worldMat, viewMat, projectionMat);
@@ -144,7 +144,7 @@ bool VertexShaderPolyLine::Render(ID3D11DeviceContext* deviceContext, DirectX::X
 	return true;
 }
 
-bool VertexShaderPolyLine::SetShadeParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat)
+bool VertexShaderPolyLine::SetShadeParameters(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat)
 {
 	HRESULT						result;
 	D3D11_MAPPED_SUBRESOURCE	mappedResource;
@@ -158,7 +158,7 @@ bool VertexShaderPolyLine::SetShadeParameters(ID3D11DeviceContext* deviceContext
 		projectionMat = DirectX::XMMatrixTranspose(projectionMat);
 
 		// Lock the constant buffer so it can be written to.
-		result = deviceContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+		result = deviceContext->Map(m_matrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to lock the constant buffer");
 
@@ -171,13 +171,13 @@ bool VertexShaderPolyLine::SetShadeParameters(ID3D11DeviceContext* deviceContext
 		matrixDataPtr->projectionMat = projectionMat;
 
 		// Unlock the constant buffer.
-		deviceContext->Unmap(m_matrixBuffer, 0);
+		deviceContext->Unmap(m_matrixBuffer.Get(), 0);
 
 		// Set the position of the constant buffer in the vertex shader.
 		bufferNumber = 0;
 
 		// Finanly set the constant buffer in the vertex shader with the updated values.
-		deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
+		deviceContext->VSSetConstantBuffers(bufferNumber, 1, m_matrixBuffer.GetAddressOf());
 
 		mappedResource = { 0 };
 	}
@@ -190,11 +190,11 @@ bool VertexShaderPolyLine::SetShadeParameters(ID3D11DeviceContext* deviceContext
 	return true;
 }
 
-ID3D11VertexShader* VertexShaderPolyLine::GetVertexShader(void)
+Microsoft::WRL::ComPtr<ID3D11VertexShader> VertexShaderPolyLine::GetVertexShader(void)
 {
 	return this->m_vertexShader;
 }
-ID3D11InputLayout* VertexShaderPolyLine::GetInputLayout(void)
+Microsoft::WRL::ComPtr<ID3D11InputLayout> VertexShaderPolyLine::GetInputLayout(void)
 {
 	return this->m_layout;
 }

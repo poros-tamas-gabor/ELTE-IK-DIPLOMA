@@ -6,6 +6,7 @@
 #include <DirectXMath.h>
 #include "Light.h"
 #include "IVertexShader.h"
+#include <memory>
 #pragma comment(lib, "D3DCompiler.lib")
 #pragma comment(lib, "d3d11.lib")
 
@@ -20,9 +21,9 @@ public:
 	};
 
 private:
-	ID3D11VertexShader* m_vertexShader;
-	ID3D11InputLayout*	m_layout;
-	ID3D11Buffer*		m_matrixBuffer;
+	Microsoft::WRL::ComPtr<ID3D11VertexShader>	m_vertexShader;
+	Microsoft::WRL::ComPtr<ID3D11InputLayout>	m_layout;
+	Microsoft::WRL::ComPtr<ID3D11Buffer>		m_matrixBuffer;
 
 public:
 	VertexShaderPolyLine();
@@ -30,18 +31,20 @@ public:
 	VertexShaderPolyLine& operator=(const VertexShaderPolyLine& other) = delete;
 
 
-	virtual bool Initialize(ID3D11Device*, HWND) override;
+	virtual bool Initialize(Microsoft::WRL::ComPtr<ID3D11Device>, HWND) override;
 	virtual void Shutdown() override;
-	virtual bool Render(ID3D11DeviceContext*, DirectX::XMMATRIX worldmat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 color) override;
+	virtual bool Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext>, DirectX::XMMATRIX worldmat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 color) override;
 
-	virtual ID3D11VertexShader* GetVertexShader(void) override;
-	virtual ID3D11InputLayout* GetInputLayout(void) override;
+	virtual Microsoft::WRL::ComPtr<ID3D11VertexShader> GetVertexShader(void) override;
+	virtual Microsoft::WRL::ComPtr<ID3D11InputLayout> GetInputLayout(void) override;
 
 private:
-	bool SetShadeParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldmat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat);
-	bool InitializeShader(ID3D11Device*, HWND, const WCHAR*);
+	bool SetShadeParameters(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, DirectX::XMMATRIX worldmat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat);
+	bool InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device>, HWND, const WCHAR*);
 	void ShutdownShader();
-	void RenderShader(ID3D11DeviceContext* deviceContext);
+	void RenderShader(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext);
 };
+
+typedef std::shared_ptr<VertexShaderPolyLine> VertexShaderPolyLinePtr;
 
 #endif // !VERTEX_SHADER_GRID_H

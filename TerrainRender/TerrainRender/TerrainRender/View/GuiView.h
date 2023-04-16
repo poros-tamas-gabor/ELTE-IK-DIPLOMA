@@ -35,6 +35,7 @@ private:
 	std::vector<IRenderableState>			m_TerrainsState;
 	FlythroughState							m_flythroughState;
 	Explore3DState							m_explore3dState;
+	CameraState								m_cameraState;
 	int										m_frame;
 public:
 	bool Initalize(Microsoft::WRL::ComPtr<ID3D11Device> _device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> _deviceContext, IControllerPtr controller);
@@ -46,6 +47,7 @@ public:
 	void HandleIModelState(const std::vector<IRenderableState>&) override;
 	void HandleIModelState(const FlythroughState&) override;
 	void HandleIModelState(const Explore3DState&) override;
+	void HandleIModelState(const CameraState&) override;
 	bool Resize(unsigned screenWidth, unsigned screenHeight) override { return false; };
 	bool CaptureScreen() override { return true; }
 private:

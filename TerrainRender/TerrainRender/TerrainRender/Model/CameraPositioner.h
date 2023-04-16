@@ -47,6 +47,9 @@ public:
 	void SetSpeed(float speed);
 	void SetRotationSpeed(float speed);
 
+	float GetSpeed() const;
+	float GetRotationSpeed() const;
+
 	EpochTime GetCurrentEpochTime(void) const;
 	void SetCurrentEpochTime(EpochTime);
 

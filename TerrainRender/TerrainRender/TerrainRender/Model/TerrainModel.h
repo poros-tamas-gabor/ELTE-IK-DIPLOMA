@@ -53,7 +53,7 @@ public:
 	TerrainModel();
 	TerrainModel(const TerrainModel&) = delete;
 	~TerrainModel();
-	bool	Initalize(HWND hwnd, IDataAccessPtr persistence, Microsoft::WRL::ComPtr<ID3D11Device> device, int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView = (DirectX::XM_PI / 4.0f)) override;
+	bool	Initalize(HWND hwnd, IDataAccessPtr persistence, Microsoft::WRL::ComPtr<ID3D11Device> device, int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView = (DirectX::XM_PI / 3.0)) override;
 	void	Resize(unsigned screenWidth, unsigned screenHeight) override;
 	void	Shutdown() override;
 	bool	Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext) override;
@@ -77,11 +77,12 @@ public:
 	void	ClearCameraTrajectory(void) override;
 private:
 
-	void	MoveCamera(unsigned message, float timeElapsed);
-	void	RotateCamera(unsigned message, float pitch, float yaw);
+	void							MoveCamera(unsigned message, float timeElapsed);
+	void							RotateCamera(unsigned message, float pitch, float yaw);
 	std::vector <IRenderableState>	CollectTerrainMeshState(void) const;
 	FlythroughState					CollectFlythroughState(void) const;
 	Explore3DState					CollectExplore3DState(void) const;
+	CameraState						CollectCameraState(void) const;
 	void							PublishModelState(void) const;
 	void							AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int gridZ);
 };

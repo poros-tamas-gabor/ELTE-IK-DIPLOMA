@@ -24,16 +24,16 @@ void PixelShaderMesh::Shutdown()
 
 void PixelShaderMesh::ShutdownShader()
 {
-	if (this->m_pixelShader)
-	{
-		this->m_pixelShader->Release();
-		this->m_pixelShader = nullptr;
-	}
-	if (this->m_lightBuffer)
-	{
-		this->m_lightBuffer->Release();
-		this->m_lightBuffer = nullptr;
-	}
+	//if (this->m_pixelShader)
+	//{
+	//	this->m_pixelShader->Release();
+	//	this->m_pixelShader = nullptr;
+	//}
+	//if (this->m_lightBuffer)
+	//{
+	//	this->m_lightBuffer->Release();
+	//	this->m_lightBuffer = nullptr;
+	//}
 }
 
 bool PixelShaderMesh::InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device> device, HWND hwnd, const WCHAR* psFilename)

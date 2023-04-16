@@ -24,21 +24,21 @@ void VertexShaderMesh::Shutdown()
 
 void VertexShaderMesh::ShutdownShader()
 {
-	if (this->m_vertexShader)
-	{
-		this->m_vertexShader->Release();
-		this->m_vertexShader = nullptr;
-	}
-	if (this->m_layout)
-	{
-		this->m_layout->Release();
-		this->m_layout = nullptr;
-	}
-	if (this->m_matrixBuffer)
-	{
-		this->m_matrixBuffer->Release();
-		this->m_matrixBuffer = nullptr;
-	}
+	//if (this->m_vertexShader)
+	//{
+	//	this->m_vertexShader->Release();
+	//	this->m_vertexShader = nullptr;
+	//}
+	//if (this->m_layout)
+	//{
+	//	this->m_layout->Release();
+	//	this->m_layout = nullptr;
+	//}
+	//if (this->m_matrixBuffer)
+	//{
+	//	this->m_matrixBuffer->Release();
+	//	this->m_matrixBuffer = nullptr;
+	//}
 }
 
 bool VertexShaderMesh::InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device> device, HWND hwnd, const WCHAR* vsFilename)

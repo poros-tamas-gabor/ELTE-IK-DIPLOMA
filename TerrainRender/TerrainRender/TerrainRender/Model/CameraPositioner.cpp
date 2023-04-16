@@ -26,6 +26,15 @@ void CameraPositioner::SetRotationSpeed(float speed)
 	this->m_rotationSpeed = speed;
 }
 
+float CameraPositioner::GetSpeed() const
+{
+	return this->m_speed;
+}
+float CameraPositioner::GetRotationSpeed() const
+{
+	return this->m_rotationSpeed;
+}
+
 void CameraPositioner::MoveForward(float dt)
 {
 	this->MoveTemplate(this->DEFAULT_FORWARD, this->m_current_forward, dt);

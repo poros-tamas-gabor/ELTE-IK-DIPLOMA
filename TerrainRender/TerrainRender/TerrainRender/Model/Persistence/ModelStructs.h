@@ -241,6 +241,8 @@ struct FlythroughState
 
 struct Explore3DState
 {
+	float				speed;
+	float				rotationSpeed;
 	EpochTime			currentEpochTime			= { 0,0 };
 	DirectX::XMFLOAT3	currentCameraPosition		= { 0,0,0 };
 	DirectX::XMFLOAT3	currentCameraRotation		= { 0,0,0 };
@@ -248,11 +250,11 @@ struct Explore3DState
 	SunPositionState	currentSunPosition;
 };
 
-struct ResizedWindowState
+struct CameraState
 {
-	unsigned screenWidth;
-	unsigned screenHeight;
+	float fieldOfView; float screenNear; float screenDepth;
 };
+
 
 struct ParameterFile {
 

@@ -54,6 +54,10 @@ public:
 	DirectX::XMMATRIX GetProjectionMatrix(void) const;
 	DirectX::XMMATRIX GetRotationMatrix(void) const;
 
+	float GetFOVrad(void) const;
+	float GetNearScreen(void) const;
+	float GetFarScreen(void) const;
+
 
 };
 #endif // !CAMERA_H

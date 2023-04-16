@@ -187,6 +187,7 @@ void TerrainModel::RotateCamera(unsigned message, float pitch, float yaw)
 		this->m_cameraPositioner.RotatePitchYaw(pitch, yaw);
 		break;
 	}
+	PublishModelState();
 }
 
 bool TerrainModel::LoadTerrainSoftEdges(const wchar_t* filepath)
@@ -440,6 +441,7 @@ void TerrainModel::UpdateCameraProperties(unsigned message, float data)
 	default:
 		break;
 	}
+	PublishModelState();
 }
 
 FlythroughState	TerrainModel::CollectFlythroughState(void) const
@@ -461,9 +463,15 @@ FlythroughState	TerrainModel::CollectFlythroughState(void) const
 	return state;
 }
 
+CameraState		TerrainModel::CollectCameraState(void) const
+{
+	return CameraState{ m_camera.GetFOVrad(), m_camera.GetNearScreen(), m_camera.GetFarScreen() };
+}
 Explore3DState TerrainModel::CollectExplore3DState(void) const
 {
 	Explore3DState state;
+	state.speed							= m_cameraPositioner.GetSpeed();
+	state.rotationSpeed					= m_cameraPositioner.GetRotationSpeed();
 	state.currentEpochTime				= m_cameraPositioner.GetCurrentEpochTime();
 	state.currentCameraPosition			= m_camera.GetPositionF3();
 	state.currentCameraRotation			= m_camera.GetRotationF3();
@@ -502,6 +510,7 @@ void TerrainModel::PublishModelState(void) const
 	this->m_modelMessageSystem.PublishModelState(CollectTerrainMeshState());
 	this->m_modelMessageSystem.PublishModelState(CollectFlythroughState());
 	this->m_modelMessageSystem.PublishModelState(CollectExplore3DState());
+	this->m_modelMessageSystem.PublishModelState(CollectCameraState());
 }
 
 void TerrainModel::AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int gridZ)

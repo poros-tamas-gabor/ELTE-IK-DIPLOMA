@@ -23,6 +23,14 @@ void ModelMessageSystem::PublishModelState(const Explore3DState& state) const
 	}
 }
 
+void ModelMessageSystem::PublishModelState(const CameraState& state) const
+{
+	for (IViewPtr view : m_subscriber)
+	{
+		view->HandleIModelState(state);
+	}
+}
+
 bool ModelMessageSystem::Subscribe(IViewPtr view)
 {
 	if (std::find(this->m_subscriber.begin(), this->m_subscriber.end(), view) != this->m_subscriber.end())

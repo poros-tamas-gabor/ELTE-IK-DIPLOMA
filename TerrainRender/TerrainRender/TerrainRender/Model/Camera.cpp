@@ -173,3 +173,16 @@ DirectX::XMMATRIX Camera::GetRotationMatrix(void) const
 {
 	return this->_rotationMatrix;
 }
+
+float Camera::GetFOVrad(void) const
+{
+	return this->m_fovRadian;
+}
+float Camera::GetNearScreen(void) const
+{
+	return this->m_nearScreen;
+}
+float Camera::GetFarScreen(void) const
+{
+	return this->m_farScreen;
+}

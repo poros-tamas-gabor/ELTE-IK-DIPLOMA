@@ -93,4 +93,7 @@ void TerrainView::HandleIModelState(const Explore3DState& state)
 {
 	this->m_guiView.HandleIModelState(state);
 }
-
+void TerrainView::HandleIModelState(const CameraState& state)
+{
+	this->m_guiView.HandleIModelState(state);
+}

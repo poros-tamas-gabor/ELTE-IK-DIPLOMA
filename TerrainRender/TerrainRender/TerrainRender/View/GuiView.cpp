@@ -215,17 +215,17 @@ void GuiView::GeneralTab()
 {
     if (ImGui::CollapsingHeader("Camera Properties"))
     {
-        static float fov = PI / 2;
-        if (ImGui::SliderFloat("Field of view", &fov, 1, /*0.01*/ PI, "%.3f"))
+        float fov = m_cameraState.fieldOfView;
+        if (ImGui::SliderFloat("Field of view", &fov, 0.5, /*0.01*/ PI, "%.3f"))
         {
             this->m_terrainController->HandleMessage(IDC_SLIDER_PROJECTION_FIELD_OF_VIEW, &fov, NULL);
         }
-        static float nearScreen = 1;
+        float nearScreen = m_cameraState.screenNear;
         if (ImGui::SliderFloat("NearScreen", &nearScreen, 0.5, /*0.01*/ 5, "%.3f"))
         {
             this->m_terrainController->HandleMessage(IDC_SLIDER_PROJECTION_NEAR_SCREEN, &nearScreen, NULL);
         }
-        static float farScreen = 1000;
+        float farScreen = m_cameraState.screenDepth;
         if (ImGui::SliderFloat("FarScreen", &farScreen, 10, /*0.01*/ 3000, "%.3f"))
         {
             this->m_terrainController->HandleMessage(IDC_SLIDER_PROJECTION_FAR_SCREEN, &farScreen, NULL);
@@ -408,13 +408,13 @@ void GuiView::FlythroughTab()
 void GuiView::Explore3DTab()
 {
     ImGui::SeparatorText("FPS camera properties");
-    static float cameraSpeed = 0.005f;
-    if (ImGui::SliderFloat("speed", &cameraSpeed, 0, /*0.01*/ 1, "%.3f"))
+    float cameraSpeed = m_explore3dState.speed;
+    if (ImGui::SliderFloat("speed", &cameraSpeed, 0, /*0.01*/ 0.8, "%.3f"))
     {
         this->m_terrainController->HandleMessage(IDC_SLIDER_CAMERA_SPEED, &cameraSpeed, NULL);
     }
-    static float cameraRotationSpeed = 0.001f;
-    if (ImGui::SliderFloat("rotation speed", &cameraRotationSpeed, 0, 0.002, "%.3f"))
+    float cameraRotationSpeed = m_explore3dState.rotationSpeed;
+    if (ImGui::SliderFloat("rotation speed", &cameraRotationSpeed, 0.0001, 0.002, "%.4f"))
     {
         this->m_terrainController->HandleMessage(IDC_SLIDER_CAMERA_ROTATION_SPEED, &cameraRotationSpeed, NULL);
     }
@@ -515,4 +515,8 @@ void GuiView::HandleIModelState(const FlythroughState& state)
 void GuiView::HandleIModelState(const Explore3DState& state)
 {
     m_explore3dState = state;
+}
+void GuiView::HandleIModelState(const CameraState& state)
+{
+    m_cameraState = state;
 }

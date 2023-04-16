@@ -15,6 +15,7 @@ public:
 	void PublishModelState(const std::vector<IRenderableState>&) const;
 	void PublishModelState(const FlythroughState&) const;
 	void PublishModelState(const Explore3DState&) const;
+	void PublishModelState(const CameraState&) const;
 	bool Subscribe(IViewPtr view);
 	bool Unsubscribe(IViewPtr view);
 

@@ -28,6 +28,7 @@ public:
     virtual void SetKeyboard(KeyboardPtr keyboard) = 0;
 
     virtual bool Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse, KeyboardPtr keyboard) = 0;
+    virtual bool IsFlythroughModeOn(void) const = 0;
 
     virtual void Shutdown() = 0;
     virtual bool IsActive() const = 0 ;

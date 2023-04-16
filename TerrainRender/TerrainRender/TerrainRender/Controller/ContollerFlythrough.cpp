@@ -142,6 +142,10 @@ bool ControllerFlythrough::IsActive() const
 {
 	return this->m_isActive;
 }
+bool ControllerFlythrough::IsFlythroughModeOn(void) const
+{
+	return this->m_isActive;
+}
 
 bool ControllerFlythrough::Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse, KeyboardPtr keyboard)
 {

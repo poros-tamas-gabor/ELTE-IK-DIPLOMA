@@ -112,6 +112,10 @@ bool Controller3DExplore::IsActive() const
 {
 	return this->m_isActive;
 }
+bool Controller3DExplore::IsFlythroughModeOn(void) const
+{
+	return !this->m_isActive;
+}
 
 bool Controller3DExplore::Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse, KeyboardPtr keyboard)
 {

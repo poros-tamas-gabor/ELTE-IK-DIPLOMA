@@ -70,7 +70,7 @@ void GuiView::ShowSettingWindow()
     ImGui::PushItemWidth(ImGui::GetFontSize() * -15);
     ImGui::Begin("Setting Window", &show_setting_window, 0 ); 
     
-    static bool isFlythroughOn = false;
+    bool isFlythroughOn = m_terrainController->IsFlythroughModeOn();
     bool isTrajectoryLoaded = m_flythroughState.IsTrajectoryInitialized;
     if (ToggleButton("Mode", &isFlythroughOn, isTrajectoryLoaded))
     {

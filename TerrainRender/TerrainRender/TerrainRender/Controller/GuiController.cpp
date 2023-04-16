@@ -58,6 +58,11 @@ bool GuiController::IsActive() const {
 	return m_isActive;
 }
 
+bool GuiController::IsFlythroughModeOn(void) const
+{
+	return false;
+}
+
 void GuiController::OpenFileDialog(wchar_t* filePath, unsigned buffer)
 {
 	//wchar_t filePath[260];      // buffer for file name
@@ -307,6 +312,7 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 	case IDC_BUTTON_CLEAR_TRAJECTORY:
 	{
 		this->m_terrainModel->ClearCameraTrajectory();
+		this->m_messageSystem->Publish(IDCC_ACTIVATE_3DEXPLORE, NULL, NULL);
 		break;
 	}
 

@@ -145,7 +145,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
-    <ClCompile Include="Controller\CompositeController.cpp" />
+    <ClCompile Include="Controller\ControllerRouter.cpp" />
     <ClCompile Include="Controller\Controller3DExplore.cpp" />
     <ClCompile Include="Controller\ContollerFlythrough.cpp" />
     <ClCompile Include="Controller\GuiController.cpp" />
@@ -192,7 +192,7 @@
   <ItemGroup>
     <ClInclude Include="App.h" />
     <ClInclude Include="COMException.h" />
-    <ClInclude Include="Controller\CompositeController.h" />
+    <ClInclude Include="Controller\ControllerRouter.h" />
     <ClInclude Include="Controller\Controller3DExplore.h" />
     <ClInclude Include="Controller\ControllerFlythrough.h" />
     <ClInclude Include="Controller\GuiController.h" />

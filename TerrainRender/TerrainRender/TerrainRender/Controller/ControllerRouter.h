@@ -1,5 +1,5 @@
-#ifndef COMPOSITE_CONTROLLER_H
-#define COMPOSITE_CONTROLLER_H
+#ifndef ROUTER_CONTROLLER_H
+#define ROUTER_CONTROLLER_H
 
 #include "IController.h"
 #include "MessageSystem.h"
@@ -8,7 +8,7 @@
 #include "../Input/Mouse.h"
 #include "../Input/Keyboard.h"
 #include <vector>
-class CompositeController : public IController
+class ControllerRouter : public IController
 {
 private:
 	ControllerMessageSystemPtr	m_messageSystem;
@@ -20,7 +20,7 @@ private:
 	bool						m_isActive;
 
 public:
-	CompositeController();
+	ControllerRouter();
 
 	virtual bool CanHandle(unsigned int message) const override;
 	virtual void HandleMessage(unsigned int message, float* fparam, unsigned* uparam) override;
@@ -28,6 +28,7 @@ public:
 	virtual void SetMouse(MousePtr mouse) override;
 	virtual void SetKeyboard(KeyboardPtr keyboard) override;
 	virtual void SetTerrainView(IViewPtr pView) override;
+	virtual bool IsFlythroughModeOn(void) const override;
 
 
 	virtual bool Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse, KeyboardPtr keyboard) override;
@@ -42,6 +43,6 @@ private:
 
 };
 
-typedef std::shared_ptr<CompositeController> CompositeControllerPtr;
+typedef std::shared_ptr<ControllerRouter> CompositeControllerPtr;
 
 #endif

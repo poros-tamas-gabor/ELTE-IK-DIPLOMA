@@ -30,6 +30,7 @@ public:
 
 	virtual bool Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse, KeyboardPtr keyboard) override;
 	virtual bool IsActive() const  override;
+	virtual bool IsFlythroughModeOn(void) const override;
 	virtual void Shutdown() override;
 
 private:

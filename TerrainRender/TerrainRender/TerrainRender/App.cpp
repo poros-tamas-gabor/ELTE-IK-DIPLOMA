@@ -31,7 +31,7 @@ App::App()
 		exit(-1);
 	}
 
-	this->m_terrainController = std::make_shared<CompositeController>();
+	this->m_terrainController = std::make_shared<ControllerRouter>();
 	this->m_terrainModel = std::make_shared<TerrainModel>();
 	this->m_terrainView = std::make_shared<TerrainView>();
 	this->m_keyboard = std::make_shared<Keyboard>();

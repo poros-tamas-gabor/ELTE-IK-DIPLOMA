@@ -15,7 +15,7 @@
 class IRenderableBase
 {
 private:
-	inline static unsigned	nextID = 0;
+	static unsigned			nextID;
 	unsigned				m_ID;
 public:
 	IRenderableBase() : m_ID(++nextID) {}

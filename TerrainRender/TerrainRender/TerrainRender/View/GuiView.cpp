@@ -398,7 +398,7 @@ void GuiView::FlythroughTab()
 
     m_frame = m_flythroughState.currentFrame;
     ImGui::Text("Frame: %d / %d", m_frame, m_flythroughState.numberOfFrame);
-    if (ImGui::SliderInt("Frames", &m_frame, 0, m_flythroughState.numberOfFrame))
+    if (ImGui::SliderInt("Frames", &m_frame, 0, max(0,m_flythroughState.numberOfFrame-1)))
     {
         this->m_terrainController->HandleMessage(IDCC_SET_FRAME_FLYTHROUGH, NULL, (unsigned*)(&m_frame));
     }

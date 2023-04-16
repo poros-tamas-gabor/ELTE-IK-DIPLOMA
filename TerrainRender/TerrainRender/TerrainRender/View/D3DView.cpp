@@ -31,7 +31,7 @@ bool D3DView::GetAdapterData(float screenWidth, float screenHeight, unsigned int
 	unsigned int numModes = 0;
 	DXGI_MODE_DESC* displayModeList;
 	DXGI_ADAPTER_DESC adapterDesc;
-	unsigned int stringLength;
+	size_t stringLength;
 
 	try
 	{

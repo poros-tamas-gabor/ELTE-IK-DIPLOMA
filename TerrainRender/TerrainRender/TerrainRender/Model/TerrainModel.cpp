@@ -218,7 +218,7 @@ bool TerrainModel::LoadTerrainSoftEdges(const wchar_t* filepath)
 				VertexMesh vertexMesh;
 				vertexMesh.normal = { (float)v.normal.x, (float)v.normal.z,(float)v.normal.y };
 				vertexMesh.position = { (float)v.pos.x, (float)v.pos.z, (float)v.pos.y };
-				vertexMesh.color = { 1.0f, 0.5f, 0.5f, 1.0f };
+				//vertexMesh.color = { 1.0f, 0.5f, 0.5f, 1.0f };
 				verticesMesh.push_back(vertexMesh);
 		}
 
@@ -257,7 +257,7 @@ bool TerrainModel::LoadTerrainSharpEdges(const wchar_t* filepath)
 			    VertexMesh vertex;
 			    vertex.normal = { (float)facet.normal[0], (float)facet.normal[2],(float)facet.normal[1] };
 			    vertex.position = { (float)facet.position[2-i][0], (float)facet.position[2-i][2], (float)facet.position[2-i][1] };
-				vertex.color = { 1.0f, 0.5f, 0.5f, 1.0f };
+				//vertex.color = { 1.0f, 0.5f, 0.5f, 1.0f };
 			
 			    vertices.push_back(vertex);
 				indices.push_back(index);

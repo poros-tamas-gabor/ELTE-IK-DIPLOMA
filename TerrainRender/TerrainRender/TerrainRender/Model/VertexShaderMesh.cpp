@@ -46,7 +46,7 @@ bool VertexShaderMesh::InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device> dev
 	HRESULT						result;
 	ID3D10Blob*					errorMessage = nullptr;
 	ID3D10Blob*					vertexShaderBuffer = nullptr;
-	D3D11_INPUT_ELEMENT_DESC	polygonLayout[3];
+	D3D11_INPUT_ELEMENT_DESC	polygonLayout[2];
 	unsigned int				numElements;
 	D3D11_BUFFER_DESC			matrixBufferDesc;
 
@@ -69,7 +69,7 @@ bool VertexShaderMesh::InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device> dev
 				throw COMException(result, L"Missing Shader File", __FILEW__, __FUNCTIONW__, __LINE__);
 		}
 		// Create the vertex shader from the buffer.
-		result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &this->m_vertexShader);
+		result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, this->m_vertexShader.ReleaseAndGetAddressOf());
 
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create the vertex shader from the buffer");
 
@@ -91,18 +91,18 @@ bool VertexShaderMesh::InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device> dev
 		polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 		polygonLayout[1].InstanceDataStepRate = 0;
 
-		polygonLayout[2].SemanticName = "COLOR";
-		polygonLayout[2].SemanticIndex = 0;
-		polygonLayout[2].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-		polygonLayout[2].InputSlot = 0;
-		polygonLayout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-		polygonLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-		polygonLayout[2].InstanceDataStepRate = 0;
+		//polygonLayout[2].SemanticName = "COLOR";
+		//polygonLayout[2].SemanticIndex = 0;
+		//polygonLayout[2].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		//polygonLayout[2].InputSlot = 0;
+		//polygonLayout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+		//polygonLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+		//polygonLayout[2].InstanceDataStepRate = 0;
 
 		numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
 		// Create the vertex input layout.
-		result = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &m_layout);
+		result = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), m_layout.ReleaseAndGetAddressOf());
 
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create the vertex input layout");
 

@@ -6,9 +6,8 @@
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
 
-ProgressBar::ProgressBar(bool& running, std::thread& worker) : _running(running), _worker(worker)
+ProgressBar::ProgressBar(std::atomic_bool& running) : _running(running)
 {
-
 
 	_hwnd = CreateWindowEx(0, WC_DIALOG, L"Proccessing...", WS_OVERLAPPEDWINDOW | WS_VISIBLE,
 		600,300, 280, 120, NULL, NULL, NULL, NULL);
@@ -30,20 +29,15 @@ void ProgressBar::Run()
 
 	PostMessage(_hwndPB, PBM_SETRANGE, 0, MAKELPARAM(0, 100));
 	PostMessage(_hwndPB, PBM_SETPOS, 0, 0);
+	PostMessage(_hwndPB, PBM_SETMARQUEE, (WPARAM)TRUE, (LPARAM)0);
 	while ( GetMessage(&msg, NULL, NULL, NULL))
 	{
 
 		if (!_running || msg.message == WM_CLOSE)
 		{
 			DestroyWindow(_hwnd);
+			PostMessage(_hwndPB, PBM_SETMARQUEE, (WPARAM)FALSE, (LPARAM)0);
 			return;
-		}
-
-		if (_worker.joinable())
-		{
-			_worker.join();
-			_running = false;
-			PostMessage(_hwnd, WM_CLOSE, 0, 0);
 		}
 	}
 }

@@ -161,37 +161,17 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 		if (!filepathwstr.empty())
 		{
 
-			bool loading(true);
-			ICallablePtr task = std::make_shared<Task_LoadTerrainSoft>(filepathwstr,this->m_terrainModel);
+			std::atomic_bool loading(true);
+			ICallablePtr task = std::make_shared<Task_LoadTerrainSoft>(filepathwstr,this->m_terrainModel, loading);
 			std::thread worker(std::ref(*task));
 
-			ProgressBar pb(loading, worker);
+			ProgressBar pb(loading);
 
-			pb.Run();
-			//HWND dialogWnd = CreateWindowEx(0, WC_DIALOG, L"Proccessing...", WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-			//	600, 300, 280, 120, NULL, NULL, NULL, NULL);
-			//HWND pBarWnd = CreateWindowEx(NULL, PROGRESS_CLASS, NULL, WS_CHILD | WS_VISIBLE | PBS_MARQUEE, 40, 20, 200, 20,
-			//	dialogWnd, (HMENU)1, NULL, NULL);
-			//
-			//MSG msg;
-
-			//PostMessage(pBarWnd, PBM_SETRANGE, 0, MAKELPARAM(0, 100));
-			//PostMessage(pBarWnd, PBM_SETPOS, 0, 0);
-			//while (GetMessage(&msg, NULL, NULL, NULL))
-			//{
-			//	if (!loading)
-			//	{
-			//		DestroyWindow(dialogWnd);
-			//	}
-			//
-			//	if (worker.joinable())
-			//	{
-			//		worker.join();
-			//		loading = false;
-			//	}
-			//}
-
-
+			if (worker.joinable())
+			{
+				pb.Run();
+				worker.join();
+			}
 		}
 		break;
 	}

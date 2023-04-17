@@ -6,6 +6,7 @@
 #include <string>
 #include "Model/Persistence/ICallable.h"
 #include <thread>
+#include <atomic>
 
 class ProgressBar
 {
@@ -15,15 +16,13 @@ private:
 	HINSTANCE			_hInstance = NULL; //Handle to application instance
 	int					_width = 0;
 	int					_height = 0;
-	bool&				_running;
-	std::thread&		_worker;
+	std::atomic_bool&				_running;
 
 
 public:
-	ProgressBar(bool& running, std::thread& process);
+	ProgressBar(std::atomic_bool& running);
 	void Run();
 	HWND GetHWND() const;
-	void Shutdown();
 
 };
 

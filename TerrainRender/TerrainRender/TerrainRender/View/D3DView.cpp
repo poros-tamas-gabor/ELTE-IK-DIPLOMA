@@ -537,8 +537,7 @@ void D3DView::CaptureScreen()
 		if (SUCCEEDED(hr))
 		{
 
-			hr = DirectX::SaveWICTextureToFile(_deviceContext.Get(), backBufferPtr.Get(),
-				GUID_ContainerFormatJpeg, L"SCREENSHOT.JPG");
+			hr = DirectX::SaveWICTextureToFile(_deviceContext.Get(), backBufferPtr.Get(), GUID_ContainerFormatJpeg, L"SCREENSHOT.JPG");
 		}
 		THROW_COM_EXCEPTION_IF_FAILED(initialize, L"Error to grab");
 	}

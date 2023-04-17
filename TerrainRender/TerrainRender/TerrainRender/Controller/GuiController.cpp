@@ -296,7 +296,7 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 	}
 	case IDC_SLIDER_FLYTHROUGH_FRAME:
 	{
-		this->m_messageSystem->Publish(IDCC_STOP_FLYTHROUGH, fparam, uparam);
+		this->m_messageSystem->Publish(IDCC_SET_FRAME_FLYTHROUGH, fparam, uparam);
 		break;
 	}
 	case IDC_BUTTON_FLYTHROUGH_RECORD: 

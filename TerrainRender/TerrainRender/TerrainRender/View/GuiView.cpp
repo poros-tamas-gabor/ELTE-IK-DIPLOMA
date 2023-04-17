@@ -64,6 +64,55 @@ bool GuiView::Initalize(Microsoft::WRL::ComPtr<ID3D11Device> _device, Microsoft:
     return result;
 }
 
+void GuiView::ShowWindows()
+{
+    ShowSettingWindow();
+    if (m_showHelpWindow)
+    {
+        ShowHelpWindow();
+    }
+}
+
+void GuiView::ShowHelpWindow()
+{
+
+    ImGui::Begin("Help", &m_showHelpWindow, 0);
+
+    if (ImGui::BeginTable("Controls", 2))
+    {
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex(0); ImGui::Text("W"); ImGui::TableSetColumnIndex(1); ImGui::Text("Move forward");
+
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex(0); ImGui::Text("S"); ImGui::TableSetColumnIndex(1); ImGui::Text("Move backward");
+
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex(0); ImGui::Text("A"); ImGui::TableSetColumnIndex(1); ImGui::Text("Move left");
+
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex(0); ImGui::Text("D"); ImGui::TableSetColumnIndex(1); ImGui::Text("Move right");
+
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex(0); ImGui::Text("C"); ImGui::TableSetColumnIndex(1); ImGui::Text("Move down");
+
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex(0); ImGui::Text("SPACE"); ImGui::TableSetColumnIndex(1); ImGui::Text("Move up");
+
+        ImGui::EndTable();
+    }
+
+    ImGui::Separator();
+    
+    ImGui::TextWrapped("Camera Rotation: To rotate the camera, press and hold the left mouse button and move the mouse.");
+    ImGui::End();
+}
+
+void GuiView::Help()
+{
+    m_showHelpWindow = true;
+}
+
+
 void GuiView::ShowSettingWindow()
 {
     static bool show_setting_window = true;

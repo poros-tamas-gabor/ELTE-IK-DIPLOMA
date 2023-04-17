@@ -13,6 +13,7 @@ GuiController::GuiController()
 	m_handledMsgs.push_back(IDMENU_FIlE_TERRAIN_PROJECT_SOFT);
 	m_handledMsgs.push_back(IDMENU_FIlE_CAMERA_TRAJECTORY);
 	m_handledMsgs.push_back(IDMENU_FIlE_PARAMETERS);
+	m_handledMsgs.push_back(IDMENU_HELP);
 
 	m_handledMsgs.push_back(IDC_SLIDER_CAMERA_SPEED);
 	m_handledMsgs.push_back(IDC_SLIDER_CAMERA_ROTATION_SPEED);
@@ -201,6 +202,12 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 		this->OpenFileDialog(filePath, 260);
 		if (!std::wstring(filePath).empty())
 			this->m_terrainModel->LoadParameters(filePath);
+		break;
+	}
+
+	case IDMENU_HELP:
+	{
+		this->m_terrainView->Help();
 		break;
 	}
 

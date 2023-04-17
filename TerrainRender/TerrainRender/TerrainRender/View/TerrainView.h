@@ -45,6 +45,7 @@ public:
 	void HandleIModelState(const FlythroughState&) override;
 	void HandleIModelState(const Explore3DState&) override;
 	void HandleIModelState(const CameraState&) override;
+	void Help() override;
 
 
 	Microsoft::WRL::ComPtr<ID3D11Device> GetDevice();

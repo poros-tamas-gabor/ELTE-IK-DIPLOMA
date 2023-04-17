@@ -21,7 +21,6 @@ class App
 private:
 
 	RenderWindow				m_renderWindow;
-	ProgressBar					m_prograssBar;
 	
 	Timer						m_timer;
 	TerrainModelPtr				m_terrainModel;

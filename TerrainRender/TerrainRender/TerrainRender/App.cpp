@@ -52,32 +52,6 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 	{
 
 
-	case PBM_SETRANGE:
-	{
-		SendMessage(m_prograssBar.GetHWND(), PBM_SETRANGE, wparam, lparam);
-		return 0;
-	}
-	case PBM_SETSTEP:
-	{
-		SendMessage(m_prograssBar.GetHWND(), PBM_SETSTEP, (WPARAM)1, 0);
-		return 0;
-	}
-
-	case PBM_STEPIT:
-	{
-		SendMessage(m_prograssBar.GetHWND(), PBM_STEPIT, 0, 0);
-		return 0;
-	}
-
-	case WM_INITDIALOG:
-		SendMessage(m_prograssBar.GetHWND(), PBM_SETMARQUEE, (WPARAM)TRUE, (LPARAM)0);
-		return 0;
-
-	case WM_USER:
-		// Work is done, close the dialog
-		SendMessage(m_prograssBar.GetHWND(), PBM_SETMARQUEE, (WPARAM)FALSE, (LPARAM)0);
-		return 0;
-
 	//Keyboard Messages
 	// clear keystate when window loses focus to prevent input getting "stuck"
 	case WM_KILLFOCUS:
@@ -331,9 +305,7 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 
 	ImGui_ImplWin32_Init(this->m_renderWindow.GetHWND());
 
-	result = m_prograssBar.Initialize(m_renderWindow.GetHinstance(), m_renderWindow.GetHWND());
-	if (!result)
-		return false;
+
 	result = this->m_terrainController->Initialize(this->m_terrainModel, this->m_terrainView, this->m_mouse, this->m_keyboard);
 	if (!result)
 		return false;

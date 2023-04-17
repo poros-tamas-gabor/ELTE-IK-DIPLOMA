@@ -2,57 +2,49 @@
 #include <CommCtrl.h>
 #include "ErrorHandler.h"
 #include "resource.h"
+#include <thread>
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
-bool ProgressBar::Initialize(HINSTANCE hintance, HWND parentHWND)
+
+ProgressBar::ProgressBar(bool& running, std::thread& worker) : _running(running), _worker(worker)
 {
-	//https://learn.microsoft.com/en-us/windows/win32/controls/create-progress-bar-controls
-	RECT rcClient;  // Client area of parent window.
-	int cyVScroll;  // Height of scroll bar arrow.
-	HANDLE hFile;   // Handle of file.
-	DWORD cb;       // Size of file and count of bytes read.
-	LPCH pch;       // Address of data read from file.
-	LPCH pchTmp;    // Temporary pointer.
-
-	_hwndParent = parentHWND;
-	_hInstance = hintance;
-	//InitCommonControls();
-
-	GetClientRect(_hwndParent, &rcClient);
-	cyVScroll = GetSystemMetrics(SM_CYVSCROLL);
 
 
-	_hwndPB = CreateWindowEx(0, PROGRESS_CLASS, (LPTSTR)NULL,
-		WS_CHILD | WS_VISIBLE,
-		(rcClient.right - 200) / 2, (rcClient.bottom - rcClient.top) / 2 - 5,
-		200, 20,
-		
-		
-		//rcClient.left,
-		//rcClient.bottom - cyVScroll,
-		//rcClient.right, cyVScroll,
-		_hwndParent, (HMENU)ID_PROGRESS_BAR, _hInstance, NULL);
+	_hwnd = CreateWindowEx(0, WC_DIALOG, L"Proccessing...", WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+		600,300, 280, 120, NULL, NULL, NULL, NULL);
 
+	_hwndPB = CreateWindowEx(NULL, PROGRESS_CLASS, NULL, WS_CHILD | WS_VISIBLE | PBS_MARQUEE, 40, 20, 200, 20,
+		_hwnd, (HMENU)1, NULL, NULL);
 
-
-	if (this->_hwndPB == nullptr)
-	{
-		ErrorHandler::Log(GetLastError(), L"CreateWindowEX Failed for loading bar" );
-		return false;
-	}
-	return true;
 }
+
 HWND ProgressBar::GetHWND() const
 {
 	return _hwndPB;
 }
 
 
-void ProgressBar::Shutdown()
+void ProgressBar::Run()
 {
-	if (this->_hwndPB != nullptr)
+	MSG msg;
+
+	PostMessage(_hwndPB, PBM_SETRANGE, 0, MAKELPARAM(0, 100));
+	PostMessage(_hwndPB, PBM_SETPOS, 0, 0);
+	while ( GetMessage(&msg, NULL, NULL, NULL))
 	{
-		DestroyWindow(this->_hwndPB);
+
+		if (!_running || msg.message == WM_CLOSE)
+		{
+			DestroyWindow(_hwnd);
+			return;
+		}
+
+		if (_worker.joinable())
+		{
+			_worker.join();
+			_running = false;
+			PostMessage(_hwnd, WM_CLOSE, 0, 0);
+		}
 	}
 }
 

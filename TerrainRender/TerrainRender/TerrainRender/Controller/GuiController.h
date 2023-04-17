@@ -7,6 +7,7 @@
 #include "../View/IView.h"
 #include "../Input/Mouse.h"
 #include "../Input/Keyboard.h"
+#include "../Model/Persistence/ICallable.h"
 class GuiController : public IController
 {
 private:
@@ -36,6 +37,8 @@ public:
 private:
 	void OpenFileDialog(wchar_t* filePath, unsigned buffer);
 	void OpenFileDialogMultipleSelection(std::vector<std::wstring>& files);
+	void StartWorkerThread(const ICallableCreator& creator, std::atomic_bool& running);
+
 
 	void SetMessageSystem(ControllerMessageSystemPtr messageSystem);
 };

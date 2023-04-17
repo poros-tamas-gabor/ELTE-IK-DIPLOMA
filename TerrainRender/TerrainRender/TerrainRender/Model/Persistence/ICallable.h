@@ -3,7 +3,6 @@
 #include <memory>
 #include <string>
 
-class BinaryFileDataAccessAsync;
 class ICallable
 {
 public:
@@ -13,5 +12,11 @@ public:
 
 typedef std::shared_ptr<ICallable> ICallablePtr;
 
+class ICallableCreator
+{
+public :
+	virtual ~ICallableCreator() = default;
+	virtual ICallablePtr Create(void) const = 0;
+};
 
 #endif

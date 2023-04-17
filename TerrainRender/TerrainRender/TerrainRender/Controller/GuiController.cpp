@@ -4,6 +4,8 @@
 #include "../resource.h"
 #include "MessageSystem.h"
 #include <commdlg.h>
+#include "../ProgressBar.h"
+#include "Tasks.h"
 
 GuiController::GuiController()
 {
@@ -139,10 +141,21 @@ void GuiController::OpenFileDialogMultipleSelection(std::vector<std::wstring>& f
 			files.push_back(directory + L"\\" + filename);
 		}
 	}
-
-
-
 }
+
+void GuiController::StartWorkerThread(const ICallableCreator& creator, std::atomic_bool& running)
+{
+	ICallablePtr process = creator.Create();
+	std::thread worker(std::ref(*process));
+	ProgressBar pb(running);
+	if (worker.joinable())
+	{
+		pb.Run();
+		worker.join();
+	}
+}
+
+
 void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned* uparam)
 {
 	switch (message)
@@ -151,16 +164,28 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 	{
 		wchar_t filePath[260];
 		this->OpenFileDialog(filePath, 260);
-		if(!std::wstring(filePath).empty())
-			this->m_terrainModel->LoadTerrainSharpEdges(filePath);
+		std::wstring filepathwstr(filePath);
+		if (!filepathwstr.empty())
+		{
+			std::atomic_bool running(true);
+			Creator_LoadTerrain_Sharp creator(filepathwstr, m_terrainModel, running);
+			StartWorkerThread(creator, running);
+
+		}
 		break;
 	}
 	case IDMENU_FIlE_TERRAIN_SOFT:
 	{
 		wchar_t filePath[260];
 		this->OpenFileDialog(filePath, 260);
-		if (!std::wstring(filePath).empty())
-			this->m_terrainModel->LoadTerrainSoftEdges(filePath);
+
+		std::wstring filepathwstr(filePath);
+		if (!filepathwstr.empty())
+		{
+			std::atomic_bool running(true);
+			Creator_LoadTerrain_Soft creator(filepathwstr, m_terrainModel, running);
+			StartWorkerThread(creator, running);
+		}
 		break;
 	}
 	case IDMENU_FIlE_CAMERA_TRAJECTORY:
@@ -176,11 +201,10 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 		std::vector<std::wstring> files;
 		this->OpenFileDialogMultipleSelection(files);
 
-		for (auto& file : files)
-		{
-			OutputDebugStringW(file.c_str());
-		}
-		this->m_terrainModel->LoadTerrainSharpEdges_Project(files);
+		std::atomic_bool running(true);
+		Creator_LoadProject_Sharp creator(files, m_terrainModel, running);
+		StartWorkerThread(creator, running);
+
 		break;
 	}
 
@@ -189,11 +213,9 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 		std::vector<std::wstring> files;
 		this->OpenFileDialogMultipleSelection(files);
 
-		for (auto& file : files)
-		{
-			OutputDebugStringW(file.c_str());
-		}
-		this->m_terrainModel->LoadTerrainSoftEdges_Project(files);
+		std::atomic_bool running(true);
+		Creator_LoadProject_Soft creator(files, m_terrainModel, running);
+		StartWorkerThread(creator, running);
 		break;
 	}
 	case IDMENU_FIlE_PARAMETERS:

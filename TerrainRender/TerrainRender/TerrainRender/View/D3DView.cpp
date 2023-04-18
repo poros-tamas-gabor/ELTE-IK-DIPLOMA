@@ -536,7 +536,7 @@ void D3DView::CaptureScreen(const std::wstring& directoryPath, unsigned frameNum
 
 		if (SUCCEEDED(hr))
 		{
-			std::wstring pictureName = directoryPath + L"screenShot" + std::to_wstring(frameNum) + L".JPG";
+			std::wstring pictureName = directoryPath + L"\\screenShot" + std::to_wstring(frameNum) + L".JPG";
 			hr = DirectX::SaveWICTextureToFile(_deviceContext.Get(), backBufferPtr.Get(), GUID_ContainerFormatJpeg, pictureName.c_str());
 		}
 		THROW_COM_EXCEPTION_IF_FAILED(initialize, L"Error to grab");

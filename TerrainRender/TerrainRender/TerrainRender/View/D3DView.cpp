@@ -518,7 +518,7 @@ Microsoft::WRL::ComPtr<ID3D11DeviceContext>	D3DView::GetDeviceContext()
 	return _deviceContext;
 }
 
-void D3DView::CaptureScreen()
+void D3DView::CaptureScreen(const std::wstring& directoryPath, unsigned frameNum)
 {
 	try {
 #if (_WIN32_WINNT >= 0x0A00 /*_WIN32_WINNT_WIN10*/)
@@ -536,8 +536,8 @@ void D3DView::CaptureScreen()
 
 		if (SUCCEEDED(hr))
 		{
-
-			hr = DirectX::SaveWICTextureToFile(_deviceContext.Get(), backBufferPtr.Get(), GUID_ContainerFormatJpeg, L"SCREENSHOT.JPG");
+			std::wstring pictureName = directoryPath + L"screenShot" + std::to_wstring(frameNum) + L".JPG";
+			hr = DirectX::SaveWICTextureToFile(_deviceContext.Get(), backBufferPtr.Get(), GUID_ContainerFormatJpeg, pictureName.c_str());
 		}
 		THROW_COM_EXCEPTION_IF_FAILED(initialize, L"Error to grab");
 	}

@@ -9,10 +9,12 @@ ControllerFlythrough::ControllerFlythrough()
 	m_handledMsgs.push_back(IDCC_ACTIVATE_FLYTHROUGH);
 	m_handledMsgs.push_back(IDCC_ACTIVATE_3DEXPLORE);
 	m_handledMsgs.push_back(IDCC_SPEED_FLYTHROUGH);
-	m_handledMsgs.push_back(IDCC_START_FLYTHROUGH);
+	m_handledMsgs.push_back(IDCC_PLAY_FLYTHROUGH);
 	m_handledMsgs.push_back(IDCC_PAUSE_FLYTHROUGH);
 	m_handledMsgs.push_back(IDCC_STOP_FLYTHROUGH);
 	m_handledMsgs.push_back(IDCC_SET_FRAME_FLYTHROUGH);
+	m_handledMsgs.push_back(IDCC_RECORD_FLYTHROUGH);
+	m_handledMsgs.push_back(IDCC_STOP_RECORD_FLYTHROUGH);
 
 }
 
@@ -42,11 +44,11 @@ void ControllerFlythrough::HandleMessage(unsigned int message, float* fparam, un
 	{
 		this->m_isActive = true;
 		this->m_isRunning = false;
-		this->m_terrainModel->HandleFlythroughMode(IDM_CAMERA_TRAJECTORY_START, NULL, NULL);
+		this->m_terrainModel->HandleFlythroughMode(IDM_TRAJECTORY_START_POS, NULL, NULL);
 		break;
 	}
 
-	case IDCC_START_FLYTHROUGH:
+	case IDCC_PLAY_FLYTHROUGH:
 	{
 		this->m_isRunning = true;
 		break;
@@ -60,9 +62,25 @@ void ControllerFlythrough::HandleMessage(unsigned int message, float* fparam, un
 	case IDCC_STOP_FLYTHROUGH:
 	{
 		this->m_isRunning = false;
-		this->m_terrainModel->HandleFlythroughMode(IDM_CAMERA_TRAJECTORY_STOP, NULL, NULL);
+		this->m_terrainModel->HandleFlythroughMode(IDM_TRAJECTORY_START_POS, NULL, NULL);
 		break;
 	}
+
+	case IDCC_RECORD_FLYTHROUGH:
+	{
+		this->m_isRunning = true;
+		this->m_isRecording = true;
+		m_recordedPrevFrameNum = 0;
+		break;
+	}
+
+	case IDCC_STOP_RECORD_FLYTHROUGH:
+	{
+		this->m_isRunning = false;
+		this->m_isRecording = false;
+		break;
+	}
+
 
 	case IDCC_SPEED_FLYTHROUGH:
 	{
@@ -98,8 +116,14 @@ void ControllerFlythrough::HandleMessage(unsigned int message, float* fparam, un
 
 			if (m_isActive && m_isRunning)
 			{
+				if (m_isRecording && (m_recordedPrevFrameNum == 0 || m_recordedPrevFrameNum != m_flythroughState.currentFrame))
+				{
+					m_recordedPrevFrameNum = m_flythroughState.currentFrame;
+					this->m_terrainView->CaptureScreen(m_flythroughState.currentFrame);
+				}
 				TimeEllapsed *= m_speed;
 				this->m_terrainModel->HandleFlythroughMode(IDM_CAMERA_TRAJECTORY_NEXT_FRAME, &TimeEllapsed, NULL);
+
 
 			}
 
@@ -122,7 +146,9 @@ void ControllerFlythrough::HandleMessage(unsigned int message, float* fparam, un
 
 }
 
-void ControllerFlythrough::SetTerrainView(IViewPtr pView) {}
+void ControllerFlythrough::SetTerrainView(IViewPtr pView) {
+	this->m_terrainView = pView;
+}
 
 void ControllerFlythrough::SetTerrainModel(IModelPtr pModel)
 {
@@ -156,8 +182,16 @@ bool ControllerFlythrough::Initialize(IModelPtr pModel, IViewPtr pView, MousePtr
 	this->SetTerrainModel(pModel);
 	this->SetMouse(mouse);
 	this->SetKeyboard(keyboard);
+	this->SetTerrainView(pView);
 	return true;
 }
 void ControllerFlythrough::Shutdown() {}
+
+void ControllerFlythrough::HandleIModelState(const std::vector<IRenderableState>&) {}
+void ControllerFlythrough::HandleIModelState(const FlythroughState& state) {
+	m_flythroughState = state;
+}
+void ControllerFlythrough::HandleIModelState(const Explore3DState&) {}
+void ControllerFlythrough::HandleIModelState(const CameraState&) {}
 
 

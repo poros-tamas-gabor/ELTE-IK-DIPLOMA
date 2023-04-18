@@ -11,14 +11,19 @@
 class ControllerFlythrough : public IController
 {
 private:
-	IModelPtr				m_terrainModel;
-	MousePtr				m_mouse;
-	KeyboardPtr				m_keyboard;
-	std::vector<unsigned>	m_handledMsgs;
+	IModelPtr							m_terrainModel;
+	IViewPtr							m_terrainView;
+	MousePtr							m_mouse;
+	KeyboardPtr							m_keyboard;
+	std::vector<unsigned>				m_handledMsgs;
 	ControllerMessageSystemPtr			m_messageSystem;
+	
+	FlythroughState						m_flythroughState;
+	size_t								m_recordedPrevFrameNum = 0;
 
 	bool					m_isActive = false;
 	bool					m_isRunning = false;
+	bool					m_isRecording = false;
 	float					m_speed = 1.0f;
 
 
@@ -33,11 +38,15 @@ public:
 	virtual void SetKeyboard(KeyboardPtr keyboard) override;
 	virtual void SetTerrainView(IViewPtr pView) override;
 
-
 	virtual bool Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse, KeyboardPtr keyboard) override;
 	virtual bool IsActive() const  override;
 	virtual bool IsFlythroughModeOn(void) const override;
 	virtual void Shutdown() override;
+
+	void HandleIModelState(const std::vector<IRenderableState>&) override;
+	void HandleIModelState(const FlythroughState&) override;
+	void HandleIModelState(const Explore3DState&) override;
+	void HandleIModelState(const CameraState&) override;
 
 private:
 

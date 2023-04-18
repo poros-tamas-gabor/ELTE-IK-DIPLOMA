@@ -14,6 +14,7 @@
 #include <d3dcommon.h>
 #include <d3d11.h>
 #include <wrl/client.h>
+#include <string>
 
 
 
@@ -47,7 +48,7 @@ public:
 	bool Initalize(HWND hwnd, float screenWidth, float screenHeight, bool fullscreen, bool vsync);
 	bool Resize(unsigned screenWidth, unsigned screenHeight);
 	void Shutdown();
-	void CaptureScreen();
+	void CaptureScreen(const std::wstring& directoryPath, unsigned frameNum);
 
 	void BeginScene(float, float, float, float);
 	void EndScene();

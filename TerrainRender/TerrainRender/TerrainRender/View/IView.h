@@ -4,17 +4,17 @@
 #include <memory>
 #include <vector>
 #include "../Model/Persistence/ModelStructs.h"
-class IView
+#include "../Model/IModelSubscriber.h"
+#include <string>
+
+class IView : public IModelSubscriber
 {
 
 public:
 	virtual ~IView() {}
 	virtual	bool Resize(unsigned screenWidth, unsigned screenHeight) = 0;
-	virtual	bool CaptureScreen() = 0;
-	virtual void HandleIModelState(const std::vector<IRenderableState>&) = 0;
-	virtual void HandleIModelState(const FlythroughState&) = 0;
-	virtual void HandleIModelState(const Explore3DState&) = 0;
-	virtual void HandleIModelState(const CameraState&) = 0;
+	virtual	bool CaptureScreen(unsigned frameNum) = 0;
+	virtual void SetOutputDirectory(const std::wstring& m_outputDirectoryPath) = 0;
 	virtual void Help() = 0;
 };
 

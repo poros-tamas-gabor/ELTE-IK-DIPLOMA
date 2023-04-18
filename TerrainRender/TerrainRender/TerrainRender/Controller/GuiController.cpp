@@ -15,6 +15,7 @@ GuiController::GuiController()
 	m_handledMsgs.push_back(IDMENU_FIlE_TERRAIN_PROJECT_SOFT);
 	m_handledMsgs.push_back(IDMENU_FIlE_CAMERA_TRAJECTORY);
 	m_handledMsgs.push_back(IDMENU_FIlE_PARAMETERS);
+	m_handledMsgs.push_back(IDMENU_FILE_OUTPUT_DIRECTORY);
 	m_handledMsgs.push_back(IDMENU_HELP);
 
 	m_handledMsgs.push_back(IDC_SLIDER_CAMERA_SPEED);
@@ -31,6 +32,7 @@ GuiController::GuiController()
 	m_handledMsgs.push_back(IDC_BUTTON_FLYTHROUGH_PAUSE);
 	m_handledMsgs.push_back(IDC_BUTTON_FLYTHROUGH_STOP);
 	m_handledMsgs.push_back(IDC_BUTTON_FLYTHROUGH_RECORD);
+	m_handledMsgs.push_back(IDC_BUTTON_FLYTHROUGH_STOP_RECORD);
 	m_handledMsgs.push_back(IDC_SLIDER_FLYTHROUGH_SPEED);
 
 	m_handledMsgs.push_back(IDC_SLIDER_IRENDERABLE_SCALE);
@@ -97,6 +99,40 @@ void GuiController::OpenFileDialog(wchar_t* filePath, unsigned buffer)
 	if (GetOpenFileName(&ofn) == TRUE)
 	{
 		OutputDebugStringW(filePath);
+	}
+}
+
+void GuiController::OpenFileDialogDirectory(std::wstring& directory)
+{
+	wchar_t filePath[260];      // buffer for file name
+	OPENFILENAME ofn;			// common dialog box structure
+	HWND hwnd = NULL;           // owner window
+	HANDLE hf;					// file handle
+
+	// Initialize OPENFILENAME
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = hwnd;
+	ofn.lpstrFile = filePath;
+	//
+	// Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
+	// use the contents of szFile to initialize itself.
+	//
+	ofn.lpstrFile[0] = '\0';
+	ofn.nMaxFile = sizeof(wchar_t) * 260;
+	ofn.lpstrFilter = L"All\0*.*\0Text\0*.TXT\0";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR | OFN_ALLOWMULTISELECT | OFN_EXPLORER;
+
+	// Display the Open dialog box. 
+	if (GetOpenFileName(&ofn) == TRUE)
+	{
+		wchar_t* str = ofn.lpstrFile;
+		directory = str;
+		return;
 	}
 }
 
@@ -233,6 +269,14 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 		break;
 	}
 
+	case IDMENU_FILE_OUTPUT_DIRECTORY:
+	{
+		std::wstring dir;
+		this->OpenFileDialogDirectory(dir);
+		this->m_terrainView->SetOutputDirectory(dir);
+		break;
+	}
+
 
 	case IDC_SLIDER_CAMERA_SPEED:
 	{
@@ -281,7 +325,7 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 	}
 	case IDC_BUTTON_FLYTHROUGH_START:
 	{
-		this->m_messageSystem->Publish(IDCC_START_FLYTHROUGH, NULL, NULL);
+		this->m_messageSystem->Publish(IDCC_PLAY_FLYTHROUGH, NULL, NULL);
 		break;
 	}
 	case IDC_BUTTON_FLYTHROUGH_PAUSE:
@@ -301,8 +345,12 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 	}
 	case IDC_BUTTON_FLYTHROUGH_RECORD: 
 	{
-		this->m_terrainView->CaptureScreen();
+		this->m_messageSystem->Publish(IDCC_RECORD_FLYTHROUGH, NULL, NULL);
 		break;
+	}
+	case IDC_BUTTON_FLYTHROUGH_STOP_RECORD:
+	{
+		this->m_messageSystem->Publish(IDCC_STOP_RECORD_FLYTHROUGH, NULL, NULL);
 	}
 	case IDC_SLIDER_FLYTHROUGH_SPEED: 
 	{
@@ -388,3 +436,8 @@ bool  GuiController::Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse
 	return true;
 }
 void GuiController::Shutdown() {}
+
+void GuiController::HandleIModelState(const std::vector<IRenderableState>&) {}
+void GuiController::HandleIModelState(const FlythroughState&) {}
+void GuiController::HandleIModelState(const Explore3DState&) {}
+void GuiController::HandleIModelState(const CameraState&) {}

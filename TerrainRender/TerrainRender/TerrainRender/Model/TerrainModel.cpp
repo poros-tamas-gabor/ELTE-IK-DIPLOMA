@@ -93,7 +93,7 @@ void TerrainModel::HandleFlythroughMode(unsigned message, float* elapsedMillisec
 	switch (message)
 	{
 		//TODO what happen when the trajectory ends
-	case IDM_CAMERA_TRAJECTORY_START:
+	case IDM_TRAJECTORY_START_POS:
 	case IDM_CAMERA_TRAJECTORY_STOP:
 	{
 		this->m_cameraTrajectory.Reset();

@@ -1,4 +1,5 @@
 #include "TerrainView.h"
+#include "../ErrorHandler.h"
 TerrainView::TerrainView()  {}
 TerrainView::~TerrainView() {}
 
@@ -41,10 +42,29 @@ bool TerrainView::RenderFrame()
 	return true; 
 }
 
-bool TerrainView::CaptureScreen()
+bool TerrainView::CaptureScreen(unsigned frameNum)
 {
-	this->m_d3dView.CaptureScreen();
-	return true;
+	try
+	{
+		THROW_TREXCEPTION_IF_FAILED(!m_outputDirectoryPath.empty(), L"Failed to capture screen because the output directory was not choose");
+		this->m_d3dView.CaptureScreen(m_outputDirectoryPath, frameNum);
+	}
+	catch (const TRException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const std::exception& e)
+	{
+		ErrorHandler::Log(e);
+	}
+
+	return false;
+}
+
+void TerrainView::SetOutputDirectory(const std::wstring& m_outputDirectoryPath)
+{
+	this->m_outputDirectoryPath = m_outputDirectoryPath;
+	this->m_guiView.SetOutputDirectory(m_outputDirectoryPath);
 }
 bool TerrainView::Render()
 {
@@ -76,7 +96,7 @@ void TerrainView::SetController(IControllerPtr terrainController)
 {
 	this->m_terrainController = terrainController;
 }
-void TerrainView::SetModel(TerrainModelPtr terrainModel)
+void TerrainView::SetModel(IModelPtr terrainModel)
 {
 	this->m_terrainModel = terrainModel;
 }

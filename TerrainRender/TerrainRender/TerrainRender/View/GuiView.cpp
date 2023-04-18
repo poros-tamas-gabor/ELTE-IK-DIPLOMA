@@ -6,7 +6,7 @@
 #include "../ImGui/imgui_internal.h"
 #include <iomanip>
 #include <ctime>
-
+#include "../ErrorHandler.h"
 bool ToggleButton(const char* str_id, bool* isFlythroughOn, bool isActive)
 {
     ImVec4* colors = ImGui::GetStyle().Colors;
@@ -417,6 +417,9 @@ void PrintStatus(const T& state)
 
 void GuiView::FlythroughTab()
 {
+    try
+    {
+
     ImGui::SeparatorText("Buttons");
     if (ImGui::Button("Play"))
     {
@@ -433,10 +436,26 @@ void GuiView::FlythroughTab()
         this->m_terrainController->HandleMessage(IDC_BUTTON_FLYTHROUGH_STOP, NULL, NULL);
     }
 
-    if (ImGui::Button("Record"))
+    static bool isRecording = false;
+
+    if (!isRecording)
     {
-        this->m_terrainController->HandleMessage(IDC_BUTTON_FLYTHROUGH_RECORD, NULL, NULL);
+        if (ImGui::Button("Record"))
+        {
+            THROW_TREXCEPTION_IF_FAILED(!m_outputDir.empty(), L"Failed to capture screen because the output directory was not choose");
+            this->m_terrainController->HandleMessage(IDC_BUTTON_FLYTHROUGH_RECORD, NULL, NULL);
+            isRecording = true;
+        }
     }
+    else
+    {
+        if (ImGui::Button("Stop Record"))
+        {
+            isRecording = false;
+            this->m_terrainController->HandleMessage(IDC_BUTTON_FLYTHROUGH_STOP_RECORD, NULL, NULL);
+        }
+    }
+
 
     ImGui::SeparatorText("Properties");
     static float flythrough_speed = 1;
@@ -464,6 +483,15 @@ void GuiView::FlythroughTab()
     }
 
     PrintStatus<FlythroughState>(m_flythroughState);
+    }
+    catch (const TRException& e)
+    {
+        ErrorHandler::Log(e);
+    }
+    catch (const std::exception& e)
+    {
+        ErrorHandler::Log(e);
+    }
 }
 void GuiView::Explore3DTab()
 {
@@ -591,4 +619,9 @@ void GuiView::HandleIModelState(const Explore3DState& state)
 void GuiView::HandleIModelState(const CameraState& state)
 {
     m_cameraState = state;
+}
+
+void GuiView::SetOutputDirectory(const std::wstring& dir)
+{
+    m_outputDir = dir;
 }

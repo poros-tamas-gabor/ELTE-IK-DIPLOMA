@@ -13,7 +13,7 @@
 #include <wrl/client.h>
 
 
-class GuiView : public IView
+class GuiView : public IModelSubscriber
 {
 private:
 
@@ -38,6 +38,7 @@ private:
 	CameraState								m_cameraState;
 	int										m_frame;
 	bool									m_showHelpWindow = false;
+	std::wstring							m_outputDir;
 public:
 	bool Initalize(Microsoft::WRL::ComPtr<ID3D11Device> _device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> _deviceContext, IControllerPtr controller);
 
@@ -47,12 +48,14 @@ public:
 	void Help();
 	void ShowSettingWindow();
 	void Shutdown();
+
 	void HandleIModelState(const std::vector<IRenderableState>&) override;
 	void HandleIModelState(const FlythroughState&) override;
 	void HandleIModelState(const Explore3DState&) override;
 	void HandleIModelState(const CameraState&) override;
-	bool Resize(unsigned screenWidth, unsigned screenHeight) override { return false; };
-	bool CaptureScreen() override { return true; }
+
+	void SetOutputDirectory(const std::wstring& dir);
+
 private:
 
 	void ShowHelpWindow();

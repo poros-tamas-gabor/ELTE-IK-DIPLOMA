@@ -94,3 +94,32 @@ bool ControllerRouter::IsFlythroughModeOn(void) const
 	}
 	return false;
 }
+
+void ControllerRouter::HandleIModelState(const std::vector<IRenderableState>& states)
+{
+	for (IControllerPtr controller : m_controllers)
+	{
+		controller->HandleIModelState(states);
+	}
+}
+void ControllerRouter::HandleIModelState(const FlythroughState& state)
+{
+	for (IControllerPtr controller : m_controllers)
+	{
+		controller->HandleIModelState(state);
+	}
+}
+void ControllerRouter::HandleIModelState(const Explore3DState& state)
+{
+	for (IControllerPtr controller : m_controllers)
+	{
+		controller->HandleIModelState(state);
+	}
+}
+void ControllerRouter::HandleIModelState(const CameraState& state)
+{
+	for (IControllerPtr controller : m_controllers)
+	{
+		controller->HandleIModelState(state);
+	}
+}

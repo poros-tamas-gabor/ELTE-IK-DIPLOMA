@@ -7,10 +7,8 @@
 #include "D3DView.h"
 #include "GuiView.h"
 #include "../Controller/IController.h"
-#include "../Model/TerrainModel.h"
+#include "../Model/IModel.h"
 #include <wrl/client.h>
-//TODO : TerrainModel to IMODEL
-
 
 class IModel;
 
@@ -21,8 +19,11 @@ private:
 	D3DView					m_d3dView;
 	GuiView					m_guiView;
 
-	TerrainModelPtr			m_terrainModel;
+	IModelPtr				m_terrainModel;
 	IControllerPtr			m_terrainController;
+
+	FlythroughState			m_flythroughState;
+	std::wstring			m_outputDirectoryPath;
 
 	bool			Render();
 public:
@@ -34,12 +35,11 @@ public:
 	bool Resize(unsigned screenWidth, unsigned screenHeight);
 	void Shutdown();
 	bool RenderFrame();
-	bool CaptureScreen() override;
-	//void Update(const ModelEvent::Event& event) override;
-	//void ExecuteControl(eventType eventType, const void* data);
+	bool CaptureScreen(unsigned frameNum) override;
+	void SetOutputDirectory(const std::wstring& m_outputDirectoryPath) override;
 
 	void SetController(IControllerPtr terrainController);
-	void SetModel(TerrainModelPtr terrainModel);
+	void SetModel(IModelPtr terrainModel);
 
 	void HandleIModelState(const std::vector<IRenderableState>&) override;	
 	void HandleIModelState(const FlythroughState&) override;

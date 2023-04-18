@@ -318,6 +318,7 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 		return false;
 
 	this->m_terrainModel->m_modelMessageSystem.Subscribe(m_terrainView);
+	this->m_terrainModel->m_modelMessageSystem.Subscribe(m_terrainController);
 
 	result = this->m_terrainModel->Initalize(m_renderWindow.GetHWND(), m_dataAccess, m_terrainView->GetDevice(), screenWidth, screenHeight, 1, 500);
 

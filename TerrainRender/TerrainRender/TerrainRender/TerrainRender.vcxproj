@@ -218,6 +218,7 @@
     <ClInclude Include="Input\MouseEvent.h" />
     <ClInclude Include="Model\Camera.h" />
     <ClInclude Include="Model\CompositeRenderable.h" />
+    <ClInclude Include="Model\IModelSubscriber.h" />
     <ClInclude Include="Model\IPixelShader.h" />
     <ClInclude Include="Model\Math\IInterpolation.h" />
     <ClInclude Include="Model\ModelMessageSystem.h" />

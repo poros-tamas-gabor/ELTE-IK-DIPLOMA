@@ -158,3 +158,8 @@ void Controller3DExplore::ControlMouse(const MouseEvent& e) const
 		}
 	}
 }
+
+void Controller3DExplore::HandleIModelState(const std::vector<IRenderableState>&) {}
+void Controller3DExplore::HandleIModelState(const FlythroughState&) {}
+void Controller3DExplore::HandleIModelState(const Explore3DState&) {}
+void Controller3DExplore::HandleIModelState(const CameraState&) {}

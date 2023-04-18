@@ -7,7 +7,7 @@
 class ControllerMessageSystem
 {
 private:
-	const std::vector<IControllerPtr>& m_subscriber;
+	const std::vector<IControllerPtr>& m_subscribers;
 
 public:
 	void Publish(unsigned int message, float* fparam, unsigned* uparam);

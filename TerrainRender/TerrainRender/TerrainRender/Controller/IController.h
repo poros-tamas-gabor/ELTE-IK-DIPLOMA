@@ -1,13 +1,12 @@
 #ifndef ICONTROLLER_H
 #define ICONTROLLER_H
 
-
 #include <memory>
+#include "../Model/IModelSubscriber.h"
+#include "../Model/IModel.h"
 
 class ControllerMessageSystem;
 typedef std::shared_ptr<ControllerMessageSystem> ControllerMessageSystemPtr;
-class IModel;
-typedef std::shared_ptr<IModel> IModelPtr;
 class IView;
 typedef std::shared_ptr<IView> IViewPtr;
 class Mouse;
@@ -15,7 +14,7 @@ typedef std::shared_ptr<Mouse> MousePtr;
 class Keyboard;
 typedef std::shared_ptr<Keyboard> KeyboardPtr;
 
-class IController {
+class IController : public IModelSubscriber  {
 public:
     virtual ~IController() {}
     virtual bool CanHandle(unsigned int) const = 0;

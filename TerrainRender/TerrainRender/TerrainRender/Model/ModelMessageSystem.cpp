@@ -3,50 +3,50 @@
 
 void ModelMessageSystem::PublishModelState(const std::vector<IRenderableState>& IRenderableinfo) const
 {
-	for (IViewPtr view : m_subscriber)
+	for (IModelSubscriberPtr subscriber : m_subscribers)
 	{
-		view->HandleIModelState(IRenderableinfo);
+		subscriber->HandleIModelState(IRenderableinfo);
 	}
 }
 void ModelMessageSystem::PublishModelState(const FlythroughState& state) const
 {
-	for (IViewPtr view : m_subscriber)
+	for (IModelSubscriberPtr subscriber : m_subscribers)
 	{
-		view->HandleIModelState(state);
+		subscriber->HandleIModelState(state);
 	}
 }
 void ModelMessageSystem::PublishModelState(const Explore3DState& state) const
 {
-	for (IViewPtr view : m_subscriber)
+	for (IModelSubscriberPtr subscriber : m_subscribers)
 	{
-		view->HandleIModelState(state);
+		subscriber->HandleIModelState(state);
 	}
 }
 
 void ModelMessageSystem::PublishModelState(const CameraState& state) const
 {
-	for (IViewPtr view : m_subscriber)
+	for (IModelSubscriberPtr subscriber : m_subscribers)
 	{
-		view->HandleIModelState(state);
+		subscriber->HandleIModelState(state);
 	}
 }
 
-bool ModelMessageSystem::Subscribe(IViewPtr view)
+bool ModelMessageSystem::Subscribe(IModelSubscriberPtr subscriber)
 {
-	if (std::find(this->m_subscriber.begin(), this->m_subscriber.end(), view) != this->m_subscriber.end())
+	if (std::find(this->m_subscribers.begin(), this->m_subscribers.end(), subscriber) != this->m_subscribers.end())
 	{
 		return false;
 	}
 	else {
-		this->m_subscriber.push_back(view);
+		this->m_subscribers.push_back(subscriber);
 		return true;
 	}
 }
-bool ModelMessageSystem::Unsubscribe(IViewPtr view)
+bool ModelMessageSystem::Unsubscribe(IModelSubscriberPtr subscriber)
 {
-	if (std::find(this->m_subscriber.begin(), this->m_subscriber.end(), view) != this->m_subscriber.end())
+	if (std::find(this->m_subscribers.begin(), this->m_subscribers.end(), subscriber) != this->m_subscribers.end())
 	{
-		std::remove(this->m_subscriber.begin(), this->m_subscriber.end(), view);
+		std::remove(this->m_subscribers.begin(), this->m_subscribers.end(), subscriber);
 		return true;
 	}
 	return false;

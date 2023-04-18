@@ -158,26 +158,49 @@ static void AddMenus(HWND hwnd) {
 
 	HMENU hMenubar;
 	HMENU hMenuFile;
+	HMENU hMenuFile_OpenTerrain;
+	HMENU hMenuFile_OpenProject;
 	HMENU hMenuHelp;
+	HMENU hMenuWindows;
 
 	hMenubar = CreateMenu();
 	hMenuFile = CreateMenu();
 	hMenuHelp = CreateMenu();
+	hMenuFile_OpenTerrain = CreateMenu();
+	hMenuFile_OpenProject = CreateMenu();
+	hMenuWindows = CreateMenu();
 
-	AppendMenuW(hMenuFile, MF_STRING, IDMENU_FIlE_TERRAIN_SHARP, L"&Open Terrain(Sharp edges)");
-	AppendMenuW(hMenuFile, MF_STRING, IDMENU_FIlE_TERRAIN_PROJECT_SHARP, L"&Open Terrain Project(Sharp edges)");
-	AppendMenuW(hMenuFile, MF_SEPARATOR, 0, NULL);
 
-	AppendMenuW(hMenuFile, MF_STRING, IDMENU_FIlE_TERRAIN_SOFT, L"&Open Terrain(Soft edges)");
-	AppendMenuW(hMenuFile, MF_STRING, IDMENU_FIlE_TERRAIN_PROJECT_SOFT, L"&Open Terrain Project(Soft edges)");
+	AppendMenuW(hMenuFile_OpenTerrain, MF_STRING, IDMENU_FIlE_TERRAIN_SHARP, L"&Terrain with Sharp edges");
+	AppendMenuW(hMenuFile_OpenTerrain, MF_STRING, IDMENU_FIlE_TERRAIN_SOFT, L"&Terrain with Soft edges");
+
+	AppendMenuW(hMenuFile, MF_POPUP, (UINT_PTR)hMenuFile_OpenTerrain, L"&Open Terrain");
+
+
+	AppendMenuW(hMenuFile_OpenProject, MF_STRING, IDMENU_FIlE_TERRAIN_PROJECT_SHARP, L"&Project with Sharp edges");
+	AppendMenuW(hMenuFile_OpenProject, MF_STRING, IDMENU_FIlE_TERRAIN_PROJECT_SOFT, L"&Project with Soft edges");
+	
+	AppendMenuW(hMenuFile, MF_POPUP, (UINT_PTR)hMenuFile_OpenProject, L"&Open Project");
+
 	AppendMenuW(hMenuFile, MF_SEPARATOR, 0, NULL);
 	AppendMenuW(hMenuFile, MF_STRING, IDMENU_FIlE_CAMERA_TRAJECTORY, L"&Open Trajectory");
 	AppendMenuW(hMenuFile, MF_SEPARATOR, 0, NULL);
 	AppendMenuW(hMenuFile, MF_STRING, IDMENU_FIlE_PARAMETERS, L"&Open configure file");
+	AppendMenuW(hMenuFile, MF_SEPARATOR, 0, NULL);
+
+	AppendMenuW(hMenuFile, MF_STRING, IDMENU_FILE_OUTPUT_DIRECTORY, L"&Set output directory");
 
 
 	AppendMenuW(hMenubar, MF_POPUP, (UINT_PTR)hMenuFile, L"&File");
 
+
+	AppendMenuW(hMenuWindows, MF_STRING, IDMENU_WINDOWS_GENERAL, L"&General settings");
+	AppendMenuW(hMenuWindows, MF_STRING, IDMENU_WINDOWS_EXPLORE3D, L"&Explore3D settings");
+	AppendMenuW(hMenuWindows, MF_STRING, IDMENU_WINDOWS_FLYTHROUGH, L"&Flythrough settings");
+
+	AppendMenuW(hMenubar, MF_POPUP, (UINT_PTR)hMenuWindows, L"&Window");
+
 	AppendMenuW(hMenubar, MF_STRING, IDMENU_HELP, L"&Help");
+
 	SetMenu(hwnd, hMenubar);
 }

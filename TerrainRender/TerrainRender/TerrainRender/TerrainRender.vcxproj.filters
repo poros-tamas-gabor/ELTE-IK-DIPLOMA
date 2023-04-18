@@ -141,9 +141,6 @@
     <ClCompile Include="StringConverter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Model\ModelMessageSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ImGui\imgui_draw.cpp">
       <Filter>Resource Files\ImGui</Filter>
     </ClCompile>
@@ -183,17 +180,8 @@
     <ClCompile Include="Model\VertexShaderPolyLine.cpp">
       <Filter>Source Files\Model\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="Model\CameraPositioner.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sunPos\SunPos.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Model\Persistence\ReadSTLChunk.cpp">
       <Filter>Source Files\Model\Persistence</Filter>
-    </ClCompile>
-    <ClCompile Include="Controller\CompositeController.cpp">
-      <Filter>Source Files\Controller</Filter>
     </ClCompile>
     <ClCompile Include="Controller\ContollerFlythrough.cpp">
       <Filter>Source Files\Controller</Filter>
@@ -206,6 +194,27 @@
     </ClCompile>
     <ClCompile Include="Controller\MessageSystem.cpp">
       <Filter>Source Files\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="ProgressBar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller\Tasks.cpp">
+      <Filter>Source Files\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\CameraPositioner.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller\ControllerRouter.cpp">
+      <Filter>Source Files\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\IRenderable.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelMessageSystem.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="sunPos\SunPos.cpp">
+      <Filter>Resource Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -240,9 +249,6 @@
       <Filter>Header Files\Model\Persistence</Filter>
     </ClInclude>
     <ClInclude Include="Controller\Controller3DExplore.h">
-      <Filter>Header Files\Controller</Filter>
-    </ClInclude>
-    <ClInclude Include="Controller\CompositeController.h">
       <Filter>Header Files\Controller</Filter>
     </ClInclude>
     <ClInclude Include="Controller\GuiController.h">
@@ -335,9 +341,6 @@
     <ClInclude Include="Model\VertexShaderPolyLine.h">
       <Filter>Header Files\Model\Shader\Ployline</Filter>
     </ClInclude>
-    <ClInclude Include="Model\ModelMessageSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ImGui\imgui_impl_dx11.h">
       <Filter>Resource Files\ImGui</Filter>
     </ClInclude>
@@ -388,6 +391,21 @@
     </ClInclude>
     <ClInclude Include="View\TerrainView.h">
       <Filter>Header Files\View</Filter>
+    </ClInclude>
+    <ClInclude Include="ProgressBar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelMessageSystem.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\Tasks.h">
+      <Filter>Header Files\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\IModelSubscriber.h">
+      <Filter>Header Files\Model\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\ControllerRouter.h">
+      <Filter>Header Files\Controller</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

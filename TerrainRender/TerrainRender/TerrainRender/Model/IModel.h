@@ -41,8 +41,9 @@ public:
 	virtual void	ClearTerrain(void) = 0;
 	virtual void	ClearCameraTrajectory(void) = 0;
 };
-
 typedef std::shared_ptr<IModel> IModelPtr;
+
+
 
 
 #endif

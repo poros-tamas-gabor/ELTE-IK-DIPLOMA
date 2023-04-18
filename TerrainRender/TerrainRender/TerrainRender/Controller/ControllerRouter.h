@@ -30,6 +30,10 @@ public:
 	virtual void SetTerrainView(IViewPtr pView) override;
 	virtual bool IsFlythroughModeOn(void) const override;
 
+	void HandleIModelState(const std::vector<IRenderableState>&) override;
+	void HandleIModelState(const FlythroughState&) override;
+	void HandleIModelState(const Explore3DState&) override;
+	void HandleIModelState(const CameraState&) override;
 
 	virtual bool Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse, KeyboardPtr keyboard) override;
 	virtual bool IsActive() const  override;

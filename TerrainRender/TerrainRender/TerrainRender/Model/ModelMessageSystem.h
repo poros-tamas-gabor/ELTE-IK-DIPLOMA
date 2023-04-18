@@ -1,14 +1,13 @@
 #ifndef MODEL_MESSAGE_SYSTEM
 #define MODEL_MESSAGE_SYSTEM
 
-#include "../View/IView.h"
-#include "../Controller/IController.h"
+#include "IModelSubscriber.h"
 #include "Persistence/ModelStructs.h"
 #include <vector>
 class ModelMessageSystem
 {
 private:
-	std::vector<IViewPtr> m_subscriber;
+	std::vector<IModelSubscriberPtr> m_subscribers;
 
 public:
 	ModelMessageSystem() = default;
@@ -16,8 +15,8 @@ public:
 	void PublishModelState(const FlythroughState&) const;
 	void PublishModelState(const Explore3DState&) const;
 	void PublishModelState(const CameraState&) const;
-	bool Subscribe(IViewPtr view);
-	bool Unsubscribe(IViewPtr view);
+	bool Subscribe(IModelSubscriberPtr view);
+	bool Unsubscribe(IModelSubscriberPtr view);
 
 	ModelMessageSystem operator=(const ModelMessageSystem&) = delete;
 	ModelMessageSystem(const ModelMessageSystem&) = delete;

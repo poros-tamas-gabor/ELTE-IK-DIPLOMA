@@ -69,7 +69,7 @@ void TerrainView::SetOutputDirectory(const std::wstring& m_outputDirectoryPath)
 bool TerrainView::Render()
 {
 	bool bresult;
-	this->m_d3dView.BeginScene(0.5f, 0.2f, 0.3f, 1.0f);
+	this->m_d3dView.BeginScene(m_backgroungColor.x, m_backgroungColor.y, m_backgroungColor.z, 1.0f);
 	this->m_guiView.BeginFrame();
 
 	this->m_terrainModel->Render(m_d3dView.GetDeviceContext().Get());

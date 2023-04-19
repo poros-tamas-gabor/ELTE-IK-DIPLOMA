@@ -2,15 +2,17 @@
 
 Camera::Camera()
 {
-	this->_positionX = 0.0f;
-	this->_positionY = 2.0f;
-	this->_positionZ = -2.0f;
+	this->_positionX = START_POSITION.x;
+	this->_positionY = START_POSITION.y;
+	this->_positionZ = START_POSITION.z;
 
-	this->_rotationX = DirectX::XM_PIDIV4;
+	this->_rotationX = 0.0f;
 	this->_rotationY = 0.0f;
 	this->_rotationZ = 0.0f;
 
 	this->_rotationMatrix = DirectX::XMMatrixIdentity();
+
+	Reset();
 
 }
 Camera::~Camera() {}
@@ -26,6 +28,15 @@ void Camera::SetRotationRad(float x, float y, float z)
 	this->_rotationX = x;
 	this->_rotationY = y;
 	this->_rotationZ = z;
+}
+
+void Camera::Reset()
+{
+	this->_positionX = START_POSITION.x;
+	this->_positionY = START_POSITION.y;
+	this->_positionZ = START_POSITION.z;
+
+	this->SetLookAtPos(ORIGO);
 }
 
 DirectX::XMFLOAT3 Camera::GetPositionF3(void) const

@@ -25,6 +25,8 @@ private:
 	FlythroughState			m_flythroughState;
 	std::wstring			m_outputDirectoryPath;
 
+	Vector3D				m_backgroungColor = { 0.3f, 0.4f, 0.4f };
+
 	bool			Render();
 public:
 

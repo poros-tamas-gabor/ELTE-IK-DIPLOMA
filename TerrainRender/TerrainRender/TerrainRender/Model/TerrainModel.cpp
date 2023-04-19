@@ -54,7 +54,7 @@ bool TerrainModel::Initalize(HWND hwnd, IDataAccessPtr persistence, Microsoft::W
 	this->m_polylines.Initialize(device, m_vertexShaderPolyLine, m_pixelShaderPolyLine, NULL, NULL, NULL, NULL);
 	this->m_light.UpdateSunPosition(m_cameraPositioner.GetCurrentEpochTime().getSeconds(), m_llacoordinate.latitude, m_llacoordinate.longitude);
 	PublishModelState();
-	this->AddGrid(2000, { 1.0f, 1.0f, 1.0f, 1.0f }, 200, 200);
+	this->AddGrid(2000, { 0.6f, 0.6f, 0.6f, 0.6f }, 200, 200);
 
 	return true;
 }
@@ -362,7 +362,7 @@ bool TerrainModel::IsTrajectoryInitialized(void) const
 }
 void TerrainModel::ResetCamera()
 {
-	this->m_camera.SetLookAtPos({ 0,0,0 });
+	this->m_camera.Reset();
 	PublishModelState();
 }
 
@@ -541,9 +541,16 @@ void TerrainModel::AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int g
 	for (int i = 0; i <= gridX; i++)
 	{
 		VertexPolyLine polygon;
-		polygon.color = color;
 		float zCoord = size / 2;
 		float xCoord = (-size / 2) + i * gridXStep;
+		if (xCoord == 0)
+		{
+			polygon.color = { 1.0f, 0.0f, 0.0f, 1.0f };
+		}
+		else
+		{
+			polygon.color = color;
+		}
 		polygon.position = { xCoord, 0.0f, zCoord };
 		vertices.push_back(polygon);
 
@@ -554,9 +561,17 @@ void TerrainModel::AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int g
 	for (int i = 0; i <= gridZ; i++)
 	{
 		VertexPolyLine polygon;
-		polygon.color = color;
 		float xCoord = size / 2;
 		float zCoord = (-size / 2) + i * gridZStep;
+
+		if (zCoord == 0)
+		{
+			polygon.color = { 0.0f, 1.0f, 0.0f, 1.0f };
+		}
+		else
+			polygon.color = color;
+
+
 		polygon.position = { xCoord, 0.0f, zCoord };
 		vertices.push_back(polygon);
 

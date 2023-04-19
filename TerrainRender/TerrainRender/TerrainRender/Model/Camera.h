@@ -5,12 +5,16 @@
 class Camera 
 { 
 private:
+	const DirectX::XMFLOAT3 START_POSITION = { 20.0f, 40.0f, -50.0f};
+	const DirectX::XMFLOAT3 ORIGO = { 0.0f, 0.0f, 0.0f };
 	const DirectX::XMVECTOR DEFAULT_LOOKAT_VECTOR = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
 	const DirectX::XMVECTOR DEFAULT_UP_VECTOR = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
 	DirectX::XMMATRIX	_viewMatrix;
 	DirectX::XMMATRIX	_projectionMatrix;
 	DirectX::XMMATRIX	_rotationMatrix;
+
+	
 
 	float	_positionX;
 	float	_positionY;
@@ -31,6 +35,7 @@ public:
 
 	void Initialize(int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView);
 	void Resize(int screenWidth, int screenHeight);
+	void Reset(void);
 
 	void SetProjectionValues(float fovRad, float aspectRatio, float nearZ, float farZ);
 	void SetFieldOfView(float fovRad);

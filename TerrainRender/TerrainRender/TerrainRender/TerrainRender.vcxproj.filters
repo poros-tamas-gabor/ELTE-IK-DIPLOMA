@@ -407,6 +407,9 @@
     <ClInclude Include="Controller\ControllerRouter.h">
       <Filter>Header Files\Controller</Filter>
     </ClInclude>
+    <ClInclude Include="win.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Model\pixelShaderMesh.hlsl">

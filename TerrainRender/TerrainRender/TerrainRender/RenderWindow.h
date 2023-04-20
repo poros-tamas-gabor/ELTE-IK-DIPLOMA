@@ -2,8 +2,7 @@
 #ifndef RENDER_WINDOW_H
 #define RENDER_WINDOW_H
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include "win.h"
 #include <string>
 
 class App;

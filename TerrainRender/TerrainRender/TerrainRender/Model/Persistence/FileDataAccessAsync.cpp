@@ -3,7 +3,7 @@
 
 #include <fstream>
 #include <string>
-#include <windows.h>
+#include "../../win.h"
 #include "ModelStructs.h"
 #include <vector>
 #include <thread>

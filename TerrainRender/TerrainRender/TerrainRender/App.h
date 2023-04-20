@@ -1,8 +1,7 @@
 #ifndef APP_H
 #define APP_H
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include "win.h"
 #include "RenderWindow.h"
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"

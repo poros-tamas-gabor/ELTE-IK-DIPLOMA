@@ -1,8 +1,7 @@
 #ifndef ERROR_HANDLER_H
 #define ERROR_HANDLER_H
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include "win.h"
 #include <comdef.h>
 #include <string>
 #include "COMException.h"

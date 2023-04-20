@@ -256,6 +256,7 @@
     <ClInclude Include="View\TerrainView.h" />
     <ClInclude Include="View\GuiView.h" />
     <ClInclude Include="View\IView.h" />
+    <ClInclude Include="win.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Model\pixelShaderMesh.hlsl">

@@ -2,8 +2,7 @@
 #ifndef	D3D_MANAGER_H
 #define	D3D_MANAGER_H
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include "../win.h"
 
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3d11.lib")

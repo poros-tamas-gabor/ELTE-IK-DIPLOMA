@@ -1,5 +1,4 @@
 #include "App.h"
-#include <windows.h>
 #include "ErrorHandler.h"
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"

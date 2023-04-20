@@ -415,7 +415,7 @@ bool D3DView::Resize(unsigned screenWidth, unsigned screenHeight)
 			//}
 			//if (_depthStencilView)
 			//{
-			//	_depthStencilView->Release();
+			//	_depthStencilView->Release(); 
 			//	_depthStencilView = nullptr;
 			//}
 			//if (_rasterState)

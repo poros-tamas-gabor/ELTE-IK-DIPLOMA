@@ -110,13 +110,27 @@ bool PolygonMesh::InitializeBuffers(Microsoft::WRL::ComPtr<ID3D11Device> device,
 		result = device->CreateBuffer(&indexBufferDesc, &indexData, m_indexBuffer.ReleaseAndGetAddressOf());
 
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create indexbuffer");
+		return true;
 	}
-	catch (const COMException& exception)
+	catch (const COMException& e)
 	{
-		ErrorHandler::Log(exception);
-		return false;
+		ErrorHandler::Log(e);
 	}
-	return true;
+	catch (const TRException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const std::exception& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (...)
+	{
+		ErrorHandler::Log("Unknown Exceptio: No details available");
+	}
+	
+	
+	return false;
 }
 void PolygonMesh::ShutdownBuffers()
 {

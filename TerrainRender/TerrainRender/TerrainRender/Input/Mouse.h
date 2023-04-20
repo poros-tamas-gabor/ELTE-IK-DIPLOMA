@@ -43,6 +43,9 @@ public:
 
 	bool EventBufferIsEmpty() const;
 	MouseEvent ReadEvent();
+
+	void ClearMouseEventBuffer(void);
+	void ClearMouseState(void);
 };
 
 typedef std::shared_ptr<Mouse> MousePtr;

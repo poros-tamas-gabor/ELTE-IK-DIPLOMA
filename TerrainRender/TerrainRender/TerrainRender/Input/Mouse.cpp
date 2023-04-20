@@ -94,3 +94,14 @@ MouseEvent Mouse::ReadEvent()
 	}
 	return MouseEvent();
 }
+
+void Mouse::ClearMouseEventBuffer(void)
+{
+	this->_eventBuffer = std::queue<MouseEvent>();
+}
+void Mouse::ClearMouseState(void)
+{
+	this->leftIsDown = false;
+	this->mbuttonDown = false;
+	this->rightIsDown = false;
+}

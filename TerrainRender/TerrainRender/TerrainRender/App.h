@@ -18,14 +18,12 @@ class App
 {
 private:
 
-	RenderWindow				m_renderWindow;
-	
+	RenderWindow				m_renderWindow;	
 	Timer						m_timer;
 	TerrainModelPtr				m_terrainModel;
 	TerrainViewPtr				m_terrainView;
 	CompositeControllerPtr		m_terrainController;
 	IDataAccessPtr				m_dataAccess;
-
 
 	void Update();
 	void RenderFrame();
@@ -44,6 +42,5 @@ public:
 	KeyboardPtr						m_keyboard;
 
 	LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
-
 };
 #endif

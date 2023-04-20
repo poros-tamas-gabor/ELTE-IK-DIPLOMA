@@ -55,6 +55,8 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 		this->m_keyboard->ClearCharBuffer();
 		this->m_keyboard->ClearKeyBuffer();
 		this->m_keyboard->ClearKeyStates();
+		this->m_mouse->ClearMouseEventBuffer();
+		this->m_mouse->ClearMouseState();
 		return 0;
 	}
 

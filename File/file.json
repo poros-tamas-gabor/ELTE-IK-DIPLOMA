@@ -4,8 +4,8 @@
 		"latitude": 47.497913
 	},
 	"terrain": {
-		"translation": [100, 0, 0],
-		"rotation": [0, 1.5, 0],
+		"translation": [0, 0, 0],
+		"rotation": [0, 0, 0],
 		"color": {
 			"_buildings": [1, 1, 1, 1],
 			"_plants": [0, 1, 0, 1],
@@ -13,7 +13,7 @@
 		}
 	},
 	"trajectory": {
-		"translation": [0, 0, 0],
+		"translation": [700, 65, -250],
 		"rotation": [0, 0, 0]
 	}
 }

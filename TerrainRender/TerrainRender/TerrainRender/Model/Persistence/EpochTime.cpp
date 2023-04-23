@@ -2,11 +2,22 @@
 #include "EpochTime.h"
 
 
-static const unsigned nsecPerSec    = 1000000000;
-static const unsigned msecPerSec    = 1000;
-static const unsigned nsecPermSec   = 1000000;
+static const long long nsecPerSec    = 1000000000L;
+static const long long msecPerSec    = 1000L;
+static const long long nsecPermSec   = 1000000L;
 
-EpochTime::EpochTime(long long sec, long long nsec) : m_seconds(sec), m_nanoseconds(nsec) {}
+EpochTime::EpochTime(long long sec, long long nsec) 
+{
+    m_seconds = sec;
+    if (nsec >= nsecPerSec) {
+        m_seconds += nsec / nsecPerSec;
+        m_nanoseconds = nsec % nsecPerSec;
+    }
+    else
+    {
+        m_nanoseconds = nsec;
+    }
+}
 
     // arithmetic operators
 EpochTime EpochTime::operator+(const EpochTime& other) const 

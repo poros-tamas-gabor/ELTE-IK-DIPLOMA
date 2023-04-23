@@ -52,54 +52,42 @@ unsigned BinaryFileDataAccessAsync::GetNumTriangles_stlBin(const std::wstring& f
 
 bool BinaryFileDataAccessAsync::ReadFileSharpEdges(const std::wstring& filepath)
 {
-    try
+    unsigned numTriangles = GetNumTriangles_stlBin(filepath);
+    
+    // Calculate how many threads are needed
+    int numThreads = GetNumThreads(numTriangles);
+    // Calculate how many facets are in a chunk
+    int numFacetInChunk = numTriangles / numThreads;
+    
+    std::vector<std::thread> threads;
+    std::vector<ICallablePtr> processes;
+    std::vector<std::vector<stlFacet>> facetVectors(numThreads);
+    
+    for (int i = 0; i < numThreads; i++)
     {
-        unsigned numTriangles = GetNumTriangles_stlBin(filepath);
-
-        // Calculate how many threads are needed
-        int numThreads = GetNumThreads(numTriangles);
-        // Calculate how many facets are in a chunk
-        int numFacetInChunk = numTriangles / numThreads;
-
-        std::vector<std::thread> threads;
-        std::vector<ICallablePtr> processes;
-        std::vector<std::vector<stlFacet>> facetVectors(numThreads);
-
-        for (int i = 0; i < numThreads; i++)
-        {
-            unsigned currentNumOfFacets;
-            unsigned beginInBytes = STL_BIN_HEADER_SIZE + STL_BIN_NUM_OF_TRIANGLE_SIZE + STL_BIN_TRIANGLE_SIZE * numFacetInChunk * i;
-            if (i < numThreads - 1)
-                currentNumOfFacets = numFacetInChunk;
-            else
-                currentNumOfFacets = numTriangles - i * numFacetInChunk;
-
-            processes.emplace_back(std::make_shared<ReadSTLChunkSharp>(filepath, beginInBytes, currentNumOfFacets, &facetVectors.at(i)));
-            threads.emplace_back(std::thread(std::ref(*processes.at(i))));
-        }
-
-        m_facets.clear();
-
-        for (int i = 0; i < numThreads; i++)
-        {
-            if (threads.at(i).joinable())
-                threads.at(i).join();
-        }
-        for (int i = 0; i < numThreads; i++)
-        {
-            m_facets.insert(m_facets.end(), facetVectors.at(i).begin(), facetVectors.at(i).end());
-        }
-        return true;
+        unsigned currentNumOfFacets;
+        unsigned beginInBytes = STL_BIN_HEADER_SIZE + STL_BIN_NUM_OF_TRIANGLE_SIZE + STL_BIN_TRIANGLE_SIZE * numFacetInChunk * i;
+        if (i < numThreads - 1)
+            currentNumOfFacets = numFacetInChunk;
+        else
+            currentNumOfFacets = numTriangles - i * numFacetInChunk;
+    
+        processes.emplace_back(std::make_shared<ReadSTLChunkSharp>(filepath, beginInBytes, currentNumOfFacets, &facetVectors.at(i)));
+        threads.emplace_back(std::thread(std::ref(*processes.at(i))));
     }
-    catch (TRException& e)
+    
+    m_facets.clear();
+    
+    for (int i = 0; i < numThreads; i++)
     {
-        ErrorHandler::Log(e);
+        if (threads.at(i).joinable())
+            threads.at(i).join();
     }
-    catch (std::exception& e)
+    for (int i = 0; i < numThreads; i++)
     {
-        ErrorHandler::Log(e);
+        m_facets.insert(m_facets.end(), facetVectors.at(i).begin(), facetVectors.at(i).end());
     }
-    return false;
+    return true;
 }
 
 
@@ -208,68 +196,23 @@ bool BinaryFileDataAccessAsync::ReadFileSoftEdges(const std::wstring& filepath)
     return false;
 }
 
-bool BinaryFileDataAccessAsync::LoadTerrainSoftEdges(const wchar_t* filename)
+void BinaryFileDataAccessAsync::LoadTerrainSoftEdges(const wchar_t* filename)
 {
-
-    bool success = false;
-
-    try
-    {
-
-        success = this->ReadFileSoftEdges(filename);
-
-
-        return success;
-    }
-
-    catch (TRException& e)
-    {
-        ErrorHandler::Log(e);
-    }
-    catch (std::exception& e)
-    {
-        ErrorHandler::Log(e);
-    }
-    catch (...)
-    {
-        ErrorHandler::Log("Unknown exception");
-    }
-    return false;
+    this->ReadFileSoftEdges(filename);
 }
 
-bool BinaryFileDataAccessAsync::LoadTerrainSharpEdges(const wchar_t* filename)
+void BinaryFileDataAccessAsync::LoadTerrainSharpEdges(const wchar_t* filename)
 {
     std::time_t now = std::time(NULL);
     m_facets.clear();
-    bool success = false;
 
-
-    try
-    {
-
-     success = this->ReadFileSharpEdges(filename);
+    this->ReadFileSharpEdges(filename);
 
     std::time_t end = std::time(NULL);
     std::wstring str = L"Loading time : in sec: ";
     str += std::to_wstring(end - now);
     str += L"\n";
     OutputDebugString(str.c_str());
-    return success;
-    }
-
-    catch (TRException& e)
-    {
-        ErrorHandler::Log(e);
-    }
-    catch (std::exception& e)
-    {
-        ErrorHandler::Log(e);
-    }
-    catch (...)
-    {
-        ErrorHandler::Log("Unknown exception");
-    }
-    return false;
 }
 
 const std::vector<stlFacet>& BinaryFileDataAccessAsync::GetFacets(void)
@@ -314,7 +257,7 @@ bool BinaryFileDataAccessAsync::CreateCameraPose(CameraPose& cameraPose, const s
     return true;
 }
 
-bool BinaryFileDataAccessAsync::LoadCameraTrajectory(const wchar_t* filepath, std::vector<CameraPose>& cameraPoses)
+void BinaryFileDataAccessAsync::LoadCameraTrajectory(const wchar_t* filepath, std::vector<CameraPose>& cameraPoses)
 {
     std::ifstream            file;
     std::string              line;
@@ -329,59 +272,40 @@ bool BinaryFileDataAccessAsync::LoadCameraTrajectory(const wchar_t* filepath, st
 
     cameraPoses.clear();
 
+    bool isCorrect = true;
+    // read first line
+    std::getline(file, line);
 
-    try
-    {
-        bool isCorrect = true;
-        // read first line
-        std::getline(file, line);
-
-        //read the headers
-        std::istringstream lineStream(line);
-        while ((std::getline(lineStream, word, ';'))) {
-            headers.push_back(word);
-        }
-
-        std::vector<std::string>::iterator it;
-        //TODO: CHECK headers
-        for (it = headers.begin(); it != headers.end(); it++)
-        {
-            if (*it == "nsec")
-                break;
-        }
-        if (it == headers.end())
-        {
-            THROW_TREXCEPTION(L"nsec missing");
-        }
-
-        while ((std::getline(file, line)) && isCorrect) {
-            cameraPose = CameraPose();
-            isCorrect = CreateCameraPose(cameraPose, line, headers);
-            if (isCorrect) {
-                cameraPoses.push_back(cameraPose);
-            }
-        }
-        if (!isCorrect) {
-            cameraPoses.clear();
-        }
-
-        file.close();
-
-        return isCorrect;
+    //read the headers
+    std::istringstream lineStream(line);
+    while ((std::getline(lineStream, word, ';'))) {
+        headers.push_back(word);
     }
-    catch (TRException& e)
+
+    std::vector<std::string>::iterator it;
+    //TODO: CHECK headers
+    for (it = headers.begin(); it != headers.end(); it++)
     {
-        ErrorHandler::Log(e);
+        if (*it == "nsec")
+            break;
     }
-    catch (std::exception& e)
+    if (it == headers.end())
     {
-        ErrorHandler::Log(e);
+        THROW_TREXCEPTION(L"nsec missing");
     }
-    catch (...)
-    {
-        ErrorHandler::Log("Unknown exception");
+
+    while ((std::getline(file, line)) && isCorrect) {
+        cameraPose = CameraPose();
+        isCorrect = CreateCameraPose(cameraPose, line, headers);
+        if (isCorrect) {
+            cameraPoses.push_back(cameraPose);
+        }
     }
-    return false;
+    if (!isCorrect) {
+        cameraPoses.clear();
+    }
+
+    file.close();
 
 }
 
@@ -438,37 +362,14 @@ void from_json(const nlohmann::json& j, ParameterFile& p) {
     p.trajectory = j.at("trajectory").get<ParameterFile::Trajectory>();
 }
 
-bool BinaryFileDataAccessAsync::LoadParameterFile(const wchar_t* filepath, ParameterFile& params)
+void BinaryFileDataAccessAsync::LoadConfigurationFile(const wchar_t* filepath, ParameterFile& params)
 {
-    try
-    {
-        nlohmann::json jsonFile;
-        std::ifstream file(filepath);
+    nlohmann::json jsonFile;
+    std::ifstream file(filepath);
 
-        std::wstring errormsg = L"Failed to open " + std::wstring(filepath);
-        THROW_TREXCEPTION_IF_FAILED(file.is_open(), errormsg);
+    std::wstring errormsg = L"Failed to open " + std::wstring(filepath);
+    THROW_TREXCEPTION_IF_FAILED(file.is_open(), errormsg);
 
-        jsonFile = nlohmann::json::parse(file);
-        params = jsonFile.get<ParameterFile>();
-
-        return true;
-    }
-    catch (nlohmann::json::parse_error& e)
-    {
-        ErrorHandler::Log(e.what());
-    }
-    catch (TRException& e)
-    {
-        ErrorHandler::Log(e);
-    }
-    catch (std::exception& e)
-    {
-        ErrorHandler::Log(e);
-    }
-    catch (...)
-    {
-        ErrorHandler::Log("Unknown exception");
-    }
-    return false;
-
+    jsonFile = nlohmann::json::parse(file);
+    params = jsonFile.get<ParameterFile>();
 }

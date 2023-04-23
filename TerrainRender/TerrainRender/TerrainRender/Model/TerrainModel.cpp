@@ -2,6 +2,7 @@
 #include "../resource.h"
 #include "PolyLine.h"
 #include "../StringConverter.h"
+#include "../ErrorHandler.h"
 
 TerrainModel::TerrainModel() = default;
 TerrainModel::~TerrainModel() = default;
@@ -199,27 +200,26 @@ bool TerrainModel::LoadTerrainSoftEdges(const wchar_t* filepath)
 	std::vector<unsigned long>				indices;
 	unsigned long* pIndices;
 
-
-	bool bresult = m_persistence->LoadTerrainSoftEdges(filepath);
-	if (bresult)
+	try
 	{
+		m_persistence->LoadTerrainSoftEdges(filepath);
 		const std::vector<StlVertex>& vertices = m_persistence->GetVertices_Soft();
 		const std::vector<CornerIndices>& facetIndices = m_persistence->GetIndices_Soft();
 		for (const CornerIndices& facet : facetIndices)
 		{
 			for (int i = 0; i < 3; i++)
 			{
-				const size_t& index = facet.corner[2-i];
+				const size_t& index = facet.corner[2 - i];
 				indices.push_back(index);
 			}
 		}
 		for (const StlVertex& v : vertices)
 		{
-				VertexMesh vertexMesh;
-				vertexMesh.normal = { (float)v.normal.x, (float)v.normal.z,(float)v.normal.y };
-				vertexMesh.position = { (float)v.pos.x, (float)v.pos.z, (float)v.pos.y };
-				//vertexMesh.color = { 1.0f, 0.5f, 0.5f, 1.0f };
-				verticesMesh.push_back(vertexMesh);
+			VertexMesh vertexMesh;
+			vertexMesh.normal = { (float)v.normal.x, (float)v.normal.z,(float)v.normal.y };
+			vertexMesh.position = { (float)v.pos.x, (float)v.pos.z, (float)v.pos.y };
+			//vertexMesh.color = { 1.0f, 0.5f, 0.5f, 1.0f };
+			verticesMesh.push_back(vertexMesh);
 		}
 
 		pVertices = &verticesMesh.at(0);
@@ -231,8 +231,27 @@ bool TerrainModel::LoadTerrainSoftEdges(const wchar_t* filepath)
 		this->m_meshes.Add(pVertices, pIndices, vertexCount, indexCount, creator, filepath);
 
 		PublishModelState();
+
+		return true;
 	}
-	return bresult;
+	catch (const COMException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const TRException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const std::exception& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (...)
+	{
+		ErrorHandler::Log("Unknown Exceptio: No details available");
+	}
+
+	return false;
 }
 
 bool TerrainModel::LoadTerrainSharpEdges(const wchar_t* filepath)
@@ -244,22 +263,21 @@ bool TerrainModel::LoadTerrainSharpEdges(const wchar_t* filepath)
 	std::vector<unsigned long>				indices;
 	unsigned long*							pIndices;
 
-
-	bool bresult = m_persistence->LoadTerrainSharpEdges(filepath);
-	if (bresult)
+	try
 	{
+		m_persistence->LoadTerrainSharpEdges(filepath);
 		const std::vector<stlFacet>& facets = m_persistence->GetFacets();
 		unsigned index = 0;
 		for (const stlFacet& facet : facets)
 		{
 			for (int i = 0; i < 3; i++)
 			{
-			    VertexMesh vertex;
-			    vertex.normal = { (float)facet.normal[0], (float)facet.normal[2],(float)facet.normal[1] };
-			    vertex.position = { (float)facet.position[2-i][0], (float)facet.position[2-i][2], (float)facet.position[2-i][1] };
+				VertexMesh vertex;
+				vertex.normal = { (float)facet.normal[0], (float)facet.normal[2],(float)facet.normal[1] };
+				vertex.position = { (float)facet.position[2 - i][0], (float)facet.position[2 - i][2], (float)facet.position[2 - i][1] };
 				//vertex.color = { 1.0f, 0.5f, 0.5f, 1.0f };
-			
-			    vertices.push_back(vertex);
+
+				vertices.push_back(vertex);
 				indices.push_back(index);
 				index++;
 			}
@@ -274,8 +292,25 @@ bool TerrainModel::LoadTerrainSharpEdges(const wchar_t* filepath)
 		this->m_meshes.Add(pVertices, pIndices, vertexCount, indexCount, creator, filepath);
 
 		PublishModelState();
+		return true;
 	}
-	return bresult;
+	catch (const COMException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const TRException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const std::exception& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (...)
+	{
+		ErrorHandler::Log("Unknown Exceptio: No details available");
+	}
+	return false;
 }
 
 bool	TerrainModel::LoadTerrainSharpEdges_Project(const std::vector<std::wstring>& files)
@@ -301,9 +336,9 @@ bool	TerrainModel::LoadTerrainSoftEdges_Project(const std::vector<std::wstring>&
 bool	TerrainModel::LoadParameters(const wchar_t* filepath)
 {
 	ParameterFile params;
-	bool bresult = m_persistence->LoadParameterFile(filepath, params);
-	if (bresult)
+	try
 	{
+		m_persistence->LoadConfigurationFile(filepath, params);
 		//Set world origo
 		this->m_llacoordinate = params.origo;
 
@@ -326,6 +361,23 @@ bool	TerrainModel::LoadParameters(const wchar_t* filepath)
 			m_meshes.SetColorComponent(componentName, r, g, b, a);
 		}
 		PublishModelState();
+		return true;
+	}
+	catch (const COMException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const TRException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const std::exception& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (...)
+	{
+		ErrorHandler::Log("Unknown Exceptio: No details available");
 	}
 	return false;
 }
@@ -333,9 +385,9 @@ bool	TerrainModel::LoadParameters(const wchar_t* filepath)
 bool	TerrainModel::LoadCameraTrajectory(const wchar_t* filepath)
 {
 	std::vector<CameraPose> cameraPoses;
-	bool result = m_persistence->LoadCameraTrajectory(filepath, cameraPoses);
-	if (result)
+	try
 	{
+		m_persistence->LoadCameraTrajectory(filepath, cameraPoses);
 		ClearCameraTrajectory();
 		std::vector<VertexPolyLine> vertices;
 		for (const CameraPose& camerapose : cameraPoses)
@@ -351,9 +403,25 @@ bool	TerrainModel::LoadCameraTrajectory(const wchar_t* filepath)
 		IRendarablePtr<VertexPolyLine> polyline = m_polylines.GetLastAddedComponent();
 		m_cameraTrajectory.Initialize(cameraPoses, polyline, &m_camera);
 		PublishModelState();
+		return true;
 	}
-
-	return result;
+	catch (const COMException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const TRException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const std::exception& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (...)
+	{
+		ErrorHandler::Log("Unknown Exceptio: No details available");
+	}
+	return false;
 }
 
 bool TerrainModel::IsTrajectoryInitialized(void) const

@@ -9,6 +9,7 @@
 #include <memory>
 #pragma comment(lib, "D3DCompiler.lib")
 #pragma comment(lib, "d3d11.lib")
+#include <string>
 
 class PixelShaderMesh : public IPixelShader
 {
@@ -37,7 +38,7 @@ public:
 
 private:
 	bool SetShadeParameters(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, const Light& light);
-	bool InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device>, HWND, const WCHAR*);
+	bool InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device>, HWND, const std::wstring&);
 	void ShutdownShader();
 
 	void RenderShader(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, int vertexCount);

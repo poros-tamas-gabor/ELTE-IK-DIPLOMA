@@ -7,7 +7,7 @@ bool PixelShaderMesh::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, HW
 {
 	bool result;
 
-	result = this->InitializeShader(device, hwnd, L"Model/pixelShaderMesh.hlsl");
+	result = this->InitializeShader(device, hwnd, L"pixelShaderMesh.cso");
 	if (!result)
 	{
 		return false;
@@ -36,27 +36,42 @@ void PixelShaderMesh::ShutdownShader()
 	//}
 }
 
-bool PixelShaderMesh::InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device> device, HWND hwnd, const WCHAR* psFilename)
+bool PixelShaderMesh::InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device> device, HWND hwnd, const std::wstring& psFilename)
 {
-	HRESULT						result;
-	ID3D10Blob*					errorMessage = nullptr;
-	ID3D10Blob*					pixelShaderBuffer = nullptr;
-	D3D11_BUFFER_DESC			lightBufferDesc = {0};
-	UINT						flags = D3DCOMPILE_ENABLE_STRICTNESS;
+	HRESULT								result;
+	Microsoft::WRL::ComPtr<ID3D10Blob>	pixelShaderBuffer = nullptr;
+	D3D11_BUFFER_DESC					lightBufferDesc = {0};
+	UINT								flags = D3DCOMPILE_ENABLE_STRICTNESS;
+
+	std::wstring shaderfolder = L"";
+#pragma region DetermineShaderPath
+	if (IsDebuggerPresent() == TRUE)
+	{
+#ifdef _DEBUG //Debug Mode
+#ifdef _WIN64 //x64
+		shaderfolder = L"..\\x64\\Debug\\";
+#else  //x86 (Win32)
+		shaderfolder = L"..\\Debug\\";
+#endif
+#else //Release Mode
+#ifdef _WIN64 //x64
+		shaderfolder = L"..\\x64\\Release\\";
+#else  //x86 (Win32)
+		shaderfolder = L"..\\Release\\";
+#endif
+#endif
+	}
+
 	try
 	{
 		// Compile the pixel shader code.
-		result = D3DCompileFromFile(psFilename, NULL, NULL, "main", "ps_5_0", flags, 0, &pixelShaderBuffer, &errorMessage);
+		result = D3DReadFileToBlob((shaderfolder + psFilename).c_str(), pixelShaderBuffer.ReleaseAndGetAddressOf());
 		if (FAILED(result))
 		{
-			if (errorMessage)
-			{
-				std::wstring errormsg = L"Failed to Compile the pixel shader code. Filename: ";
-				errormsg += psFilename;
-				throw COMException(result, errormsg, __FILEW__, __FUNCTIONW__, __LINE__);
-			}
-			else
-				throw COMException(result, L"Missing Shader File", __FILEW__, __FUNCTIONW__, __LINE__);
+			std::wstring errormsg = L"Failed to Compile the pixel shader code. Filename: ";
+			errormsg += psFilename;
+			THROW_COM_EXCEPTION_IF_FAILED(result, errormsg);
+
 		}
 
 		// Create the pixel shader from the buffer.

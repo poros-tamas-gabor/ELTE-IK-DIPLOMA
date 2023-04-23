@@ -1,5 +1,3 @@
-
-
 #include "ErrorHandler.h"
 
 void ErrorHandler::Log(std::string message)

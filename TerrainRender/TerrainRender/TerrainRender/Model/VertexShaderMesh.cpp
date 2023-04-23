@@ -7,7 +7,7 @@ bool VertexShaderMesh::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, H
 {
 	bool result;
 
-	result = this->InitializeShader(device, hwnd, L"Model/vertexShaderMesh.hlsl");
+	result = this->InitializeShader(device, hwnd, L"vertexShaderMesh.cso");
 	if (!result)
 	{
 		return false;
@@ -43,30 +43,38 @@ void VertexShaderMesh::ShutdownShader()
 
 bool VertexShaderMesh::InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device> device, HWND hwnd, const WCHAR* vsFilename)
 {
-	HRESULT						result;
-	ID3D10Blob*					errorMessage = nullptr;
-	ID3D10Blob*					vertexShaderBuffer = nullptr;
-	D3D11_INPUT_ELEMENT_DESC	polygonLayout[2];
-	unsigned int				numElements;
-	D3D11_BUFFER_DESC			matrixBufferDesc;
+	HRESULT									result;
+	Microsoft::WRL::ComPtr <ID3D10Blob>		vertexShaderBuffer = nullptr;
+	D3D11_INPUT_ELEMENT_DESC				polygonLayout[2];
+	unsigned int							numElements;
+	D3D11_BUFFER_DESC						matrixBufferDesc;
 
-	UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
-#if defined( DEBUG ) || defined( _DEBUG )
-	flags |= D3DCOMPILE_DEBUG;
+	std::wstring shaderfolder = L"";
+#pragma region DetermineShaderPath
+	if (IsDebuggerPresent() == TRUE)
+	{
+#ifdef _DEBUG //Debug Mode
+#ifdef _WIN64 //x64
+		shaderfolder = L"..\\x64\\Debug\\";
+#else  //x86 (Win32)
+		shaderfolder = L"..\\Debug\\";
 #endif
+#else //Release Mode
+#ifdef _WIN64 //x64
+		shaderfolder = L"..\\x64\\Release\\";
+#else  //x86 (Win32)
+		shaderfolder = L"..\\Release\\";
+#endif
+#endif
+	}
 
 	try {
-		result = D3DCompileFromFile(vsFilename, NULL, NULL, "main", "vs_5_0", flags, 0, &vertexShaderBuffer, &errorMessage);
+		result = D3DReadFileToBlob((shaderfolder + vsFilename).c_str(), vertexShaderBuffer.ReleaseAndGetAddressOf());
 		if (FAILED(result))
 		{
-			if (errorMessage)
-			{
-				std::wstring errormsg = L"Failed to Compile the vertex shader code. Filename: ";
-				errormsg += vsFilename;
-				throw COMException(result, errormsg, __FILEW__, __FUNCTIONW__, __LINE__);
-			}
-			else
-				throw COMException(result, L"Missing Shader File", __FILEW__, __FUNCTIONW__, __LINE__);
+			std::wstring errormsg = L"Failed to Compile the vertex shader code. Filename: ";
+			errormsg += vsFilename;
+			THROW_COM_EXCEPTION_IF_FAILED(result, errormsg);
 		}
 		// Create the vertex shader from the buffer.
 		result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, this->m_vertexShader.ReleaseAndGetAddressOf());

@@ -6,48 +6,23 @@ TerrainView::~TerrainView() {}
 
 bool TerrainView::Initalize(HWND hwnd, float screenWidth, float screenHeight, bool fullscreen, bool vsync)
 {
-	bool bresult;
-
-	bresult = this->m_d3dView.Initalize(hwnd, screenWidth, screenHeight,  fullscreen, vsync);
-	if (!bresult)
+	try 
 	{
-		return false;
+		bool bresult;
+
+		bresult = this->m_d3dView.Initalize(hwnd, screenWidth, screenHeight, fullscreen, vsync);
+		if (!bresult)
+		{
+			return false;
+		}
+
+		this->m_guiView.Initalize(this->m_d3dView.GetDevice().Get(), this->m_d3dView.GetDeviceContext().Get(), this->m_terrainController);
+
+		return true;
 	}
-
-	this->m_guiView.Initalize(this->m_d3dView.GetDevice().Get(), this->m_d3dView.GetDeviceContext().Get(), this->m_terrainController);
-
-	return true;
-}
-bool TerrainView::Resize(unsigned screenWidth, unsigned screenHeight)
-{
-	bool result;
-	result  = m_d3dView.Resize(screenWidth, screenHeight);
-	return result;
-}
-
-void TerrainView::Shutdown() 
-{
-	this->m_d3dView.Shutdown();
-	this->m_guiView.Shutdown();
-}
-bool TerrainView::RenderFrame() 
-{ 
-	bool result;
-
-	result = this->Render();
-
-	if (!result)
-		return false;
-
-	return true; 
-}
-
-bool TerrainView::CaptureScreen(unsigned frameNum)
-{
-	try
+	catch (const COMException& e)
 	{
-		THROW_TREXCEPTION_IF_FAILED(!m_outputDirectoryPath.empty(), L"Failed to capture screen because the output directory was not choose");
-		this->m_d3dView.CaptureScreen(m_outputDirectoryPath, frameNum);
+		ErrorHandler::Log(e);
 	}
 	catch (const TRException& e)
 	{
@@ -57,7 +32,104 @@ bool TerrainView::CaptureScreen(unsigned frameNum)
 	{
 		ErrorHandler::Log(e);
 	}
+	catch (...)
+	{
+		ErrorHandler::Log("Unknown Exceptio: No details available");
+	}
+	return false;
+}
 
+bool TerrainView::Resize(unsigned screenWidth, unsigned screenHeight)
+{
+	try
+	{
+		bool result;
+		result = m_d3dView.Resize(screenWidth, screenHeight);
+		return result;
+	}
+	catch (const COMException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const TRException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const std::exception& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (...)
+	{
+		ErrorHandler::Log("Unknown Exceptio: No details available");
+	}
+	return false;
+
+
+}
+
+void TerrainView::Shutdown() 
+{
+	this->m_d3dView.Shutdown();
+	this->m_guiView.Shutdown();
+}
+bool TerrainView::RenderFrame() 
+{ 
+	try
+	{
+		bool result;
+
+		result = this->Render();
+
+		if (!result)
+			return false;
+
+		return true;
+	}
+	catch (const COMException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const TRException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const std::exception& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (...)
+	{
+		ErrorHandler::Log("Unknown Exceptio: No details available");
+	}
+	return false;
+
+}
+
+bool TerrainView::CaptureScreen(unsigned frameNum)
+{
+	try
+	{
+		THROW_TREXCEPTION_IF_FAILED(!m_outputDirectoryPath.empty(), L"Failed to capture screen because the output directory was not choose");
+		this->m_d3dView.CaptureScreen(m_outputDirectoryPath, frameNum);
+		return true;
+	}
+	catch (const COMException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const TRException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const std::exception& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (...)
+	{
+		ErrorHandler::Log("Unknown Exceptio: No details available");
+	}
 	return false;
 }
 

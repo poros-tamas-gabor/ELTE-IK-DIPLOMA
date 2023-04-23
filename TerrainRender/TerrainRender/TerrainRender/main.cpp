@@ -38,7 +38,4 @@ int CALLBACK wWinMain(
 	{
 		ErrorHandler::Log("Unknown Exceptio: No details available");
 	}
-
-
-
 }

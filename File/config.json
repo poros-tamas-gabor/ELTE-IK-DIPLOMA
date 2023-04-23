@@ -7,9 +7,9 @@
 		"translation": [0, 0, 0],
 		"rotation": [0, 0, 0],
 		"color": {
-			"_buildings": [1, 1, 1, 1],
-			"_plants": [0, 1, 0, 1],
-			"_ground": [1, 0, 0, 1]
+			"_buildings": [229,229, 229, 1],
+			"_plants": [131, 175, 166, 1],
+			"_ground": [211, 162, 132, 1]
 		}
 	},
 	"trajectory": {

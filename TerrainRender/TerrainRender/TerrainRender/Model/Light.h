@@ -8,8 +8,8 @@ class Light
 {
 
 private:
-	DirectX::XMFLOAT4 _ambientColor = {0.2f, 0.2f, 0.2f, 1.0f};
-	DirectX::XMFLOAT4 _diffuseColor = {0.4f, 0.4f, 0.4f, 1.0f};
+	DirectX::XMFLOAT4 _ambientColor = {0.4f, 0.4f, 0.4f, 1.0f};
+	DirectX::XMFLOAT4 _diffuseColor = {0.6f, 0.6f, 0.6f, 1.0f};
 	DirectX::XMFLOAT4 _inverseDirection = {1.0f, 1.0f, 1.0f, 1.0f};
 
 	double m_azimuth;

@@ -342,7 +342,11 @@ void from_json(const nlohmann::json& json, ParameterFile::Terrain& data)
     
     for (auto it = json.at("color").begin(); it != json.at("color").end(); ++it) {
         std::string color_name = it.key();
-        std::vector<float> color_values = it.value();
+        std::vector<float> color_values;
+        for (float v : it.value())
+        {
+            color_values.push_back(v / 255.0f);
+        }
         Vector4D vec = to_Vector4D(color_values);
         data.colors.insert(std::pair<std::string, Vector4D>(color_name, vec));
     }

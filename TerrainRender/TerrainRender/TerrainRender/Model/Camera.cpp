@@ -1,5 +1,5 @@
 #include "Camera.h"
-
+#include <cmath>
 Camera::Camera()
 {
 	this->_positionX = START_POSITION.x;
@@ -131,14 +131,14 @@ void Camera::SetLookAtPos(const DirectX::XMFLOAT3& lookAtFloat)
 	float pitch = 0.0f;
 	if (lookAt.y != 0.0f)
 	{
-		const float distance = sqrt(lookAt.x * lookAt.x + lookAt.z * lookAt.z);
-		pitch = atan(lookAt.y / distance);
+		const float distance = std::sqrt(lookAt.x * lookAt.x + lookAt.z * lookAt.z);
+		pitch = std::atan(lookAt.y / distance);
 	}
 
 	float yaw = 0.0f;
 	if (lookAt.x != 0.0f)
 	{
-		yaw = atan(lookAt.x / lookAt.z);
+		yaw = std::atan(lookAt.x / lookAt.z);
 	}
 	if (lookAt.z > 0)
 		yaw += DirectX::XM_PI;

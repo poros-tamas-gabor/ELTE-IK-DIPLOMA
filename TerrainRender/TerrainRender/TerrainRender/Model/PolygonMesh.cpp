@@ -3,7 +3,7 @@
 #include	<memory>
 
 
-bool PolygonMesh::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, IVertexShaderPtr vertexShader, IPixelShaderPtr pixelShader, VertexMesh* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount)
+bool PolygonMesh::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, IVertexShaderPtr vertexShader, IPixelShaderPtr pixelShader, VertexMesh* vertices, size_t* indices, size_t vertexCount, size_t indexCount)
 {
 	if (device == nullptr || vertexShader == nullptr || pixelShader == nullptr)
 		return false;
@@ -61,7 +61,7 @@ int PolygonMesh::GetVertexCount() const
 
 }
 
-bool PolygonMesh::InitializeBuffers(Microsoft::WRL::ComPtr<ID3D11Device> device, VertexMesh* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount)
+bool PolygonMesh::InitializeBuffers(Microsoft::WRL::ComPtr<ID3D11Device> device, VertexMesh* vertices, size_t* indices, size_t vertexCount, size_t indexCount)
 {
 	D3D11_BUFFER_DESC						vertexBufferDesc, indexBufferDesc;
 	HRESULT									result;

@@ -76,7 +76,6 @@ void GuiController::OpenFileDialog(wchar_t* filePath, unsigned buffer)
 	//wchar_t filePath[260];      // buffer for file name
 	OPENFILENAME ofn;			// common dialog box structure
 	HWND hwnd = NULL;           // owner window
-	HANDLE hf;					// file handle
 
 	// Initialize OPENFILENAME
 	ZeroMemory(&ofn, sizeof(ofn));
@@ -131,7 +130,6 @@ void GuiController::OpenFileDialogMultipleSelection(std::vector<std::wstring>& f
 	wchar_t filePath[260];      // buffer for file name
 	OPENFILENAME ofn;			// common dialog box structure
 	HWND hwnd = NULL;           // owner window
-	HANDLE hf;					// file handle
 
 	// Initialize OPENFILENAME
 	ZeroMemory(&ofn, sizeof(ofn));

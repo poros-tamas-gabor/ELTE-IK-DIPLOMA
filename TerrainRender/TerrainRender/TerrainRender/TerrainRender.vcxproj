@@ -176,6 +176,7 @@
     <ClCompile Include="Model\ModelMessageSystem.cpp" />
     <ClCompile Include="Model\Persistence\EpochTime.cpp" />
     <ClCompile Include="Model\LineList.cpp" />
+    <ClCompile Include="Model\Persistence\ModelStructs.cpp" />
     <ClCompile Include="Model\Persistence\ReadSTLChunk.cpp" />
     <ClCompile Include="Model\Persistence\FileDataAccessAsync.cpp" />
     <ClCompile Include="Model\PixelShaderPolyLine.cpp" />

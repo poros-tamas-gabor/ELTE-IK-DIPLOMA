@@ -3,16 +3,16 @@
 #include <vector>
 #include <math.h>
 #include "../Persistence/ModelStructs.h"
-static const double PI = 3.14159265358979323846;
+static const float PI = 2*std::asin(1.0f);
 
 template <typename X>
 // find the greatest element in the vector which is still less than the value
-static int binarySearch(const std::vector<X>& vec, X const& value) {
-    int low = 0;
-    int high = vec.size() - 1;
-    int index = -1;
+static size_t binarySearch(const std::vector<X>& vec, X const& value) {
+    size_t low = 0;
+    size_t high = vec.size() - 1;
+    size_t index = -1;
     while (low <= high) {
-        int mid = (low + high) / 2;
+        size_t mid = (low + high) / 2;
         if (vec[mid] < value) {
             index = mid;
             low = mid + 1;
@@ -50,11 +50,11 @@ template <typename X>
 class CirclularInterpolation : public Iitenterpolation<X, Vector3D>
 {
 private:
-    int sgn(double x)
+    int sgn(float x)
     {
         return (x > 0) ? 1 : ((x < 0) ? -1 : 0);
     }
-    double angleMod(double angle)
+    float angleMod(float angle)
     {
         if (fabs(angle) < PI)
             return angle;
@@ -86,8 +86,8 @@ public:
 
         for (int i = 0; i < 3; i++)
         {
-            double diffangle = 0;
-            double angle_i = 0;
+            float diffangle = 0;
+            float angle_i = 0;
             switch (i)
             {
             case 0:
@@ -104,7 +104,7 @@ public:
                 break;
             }
             diffangle = angleMod(diffangle);
-            double angle = angle_i + diffangle * ((x - xi) / (xip1 - xi));
+            float angle = angle_i + diffangle * ((x - xi) / (xip1 - xi));
             angle = angleMod(angle);
             switch (i)
             {

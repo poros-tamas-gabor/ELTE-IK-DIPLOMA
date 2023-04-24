@@ -36,7 +36,7 @@ public:
 
 	virtual ~CompositeRenderable() = default;
 
-	bool Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, IVertexShaderPtr vertexShader, IPixelShaderPtr pixelShader, V* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount) override
+	bool Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, IVertexShaderPtr vertexShader, IPixelShaderPtr pixelShader, V* vertices, size_t* indices, size_t vertexCount, size_t indexCount) override
 	{
 		if (device == nullptr || vertexShader == nullptr || pixelShader == nullptr)
 		{
@@ -67,7 +67,7 @@ public:
 		}
 	}
 	
-	bool Add(V* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount, const IRenderableCreator<V>& renderableCreator, const std::wstring& renderableName)
+	bool Add(V* vertices, size_t* indices, size_t vertexCount, size_t indexCount, const IRenderableCreator<V>& renderableCreator, const std::wstring& renderableName)
 	{
 		IRendarablePtr<V> renderable = renderableCreator.CreateRenderable();
 		if (!renderable)

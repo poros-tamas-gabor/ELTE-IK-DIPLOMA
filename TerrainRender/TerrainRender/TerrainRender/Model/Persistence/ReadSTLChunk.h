@@ -36,7 +36,7 @@ class ReadSTLChunkSoft : public ICallable
 private:
 	const std::wstring& m_filepath;
 	int m_begin;
-	int m_numOfFacets;
+	unsigned m_numOfFacets;
 	IndicesVecPtr m_indices;
 	HashTable_Soft& m_ht;
 	std::shared_mutex& m_mutex_hashtable;

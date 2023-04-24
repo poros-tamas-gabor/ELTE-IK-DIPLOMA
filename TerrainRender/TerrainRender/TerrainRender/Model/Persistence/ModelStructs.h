@@ -15,38 +15,19 @@
 #include <array>
 
 
-inline std::string to_string_with_precision(const float a_value, const int n = 6)
-{
-	std::ostringstream out;
-	out.precision(n);
-	out << std::fixed << a_value;
-	return std::move(out).str();
-}
+std::string to_string_with_precision(const float a_value, const int n = 6);
 
-inline float to_float_with_precision(const float value, const int n = 6)
-{
-	return std::roundf(value * std::pow(10, n)) / std::pow(10, n);
-}
-inline void XMFLOAT3toCArray(float array[], DirectX::XMFLOAT3 floats)
-{
-	array[0] = floats.x;
-	array[1] = floats.y;
-	array[2] = floats.z;
-}
 
-inline void XMFLOAT4toCArray(float array[], DirectX::XMFLOAT4 floats)
-{
-	array[0] = floats.x;
-	array[1] = floats.y;
-	array[2] = floats.z;
-	array[3] = floats.w;
-}
+float to_float_with_precision(const float value, const int n = 6);
+
+void XMFLOAT3toCArray(float array[], DirectX::XMFLOAT3 floats);
+
+void XMFLOAT4toCArray(float array[], DirectX::XMFLOAT4 floats);
 
 struct VertexMesh
 {
 	DirectX::XMFLOAT3 position;
 	DirectX::XMFLOAT3 normal;
-	//DirectX::XMFLOAT4 color;
 };
 
 struct VertexPolyLine
@@ -57,21 +38,21 @@ struct VertexPolyLine
 
 struct LLACoordinate
 {
-	double latitude;
-	double longitude;
+	double latitude = 0.0;
+	double longitude = 0.0;
 };
 
 struct CameraPose {
 
 	EpochTime epochtime;
 
-	double yaw;
-	double pitch;
-	double roll;
+	float yaw = 0.0f;
+	float pitch = 0.0f;
+	float roll = 0.0f;
 
-	double north;
-	double east;
-	double down;
+	float north = 0.0f;
+	float east = 0.0f;
+	float down = 0.0f;
 };
 
 struct Vector3D
@@ -81,57 +62,34 @@ public:
 	float y;
 	float z;
 
-	Vector3D operator*(float factor) const
-	{
-		return { this->x * factor, this->y * factor, this->z * factor};
-	}
+	Vector3D operator*(float factor) const;
+	Vector3D operator+(const Vector3D& other) const;
+	Vector3D operator-(const Vector3D& other) const;
+	bool operator==(const Vector3D& other) const;
 
-	Vector3D operator+(const Vector3D& other) const
-	{
-		return { this->x + other.x, this->y + other.y, this->z + other.z };
-	}
-	Vector3D operator-(const Vector3D& other) const
-	{
-		return { this->x - other.x, this->y - other.y, this->z - other.z };
-	}
+	Vector3D(const std::array<float, 3> array);
+	Vector3D(float x, float y, float z);
+	Vector3D(void);
 
-	Vector3D (const std::array<float, 3> array) : x(array.at(0)), y(array.at(1)), z(array.at(2)) {}
-	Vector3D(float x, float y, float z) : x(x), y(y), z(z) {}
-	Vector3D(void) : x(0), y(0), z(0) {}
+	Vector3D crossProduct(const Vector3D& other) const;
 
-	Vector3D crossProduct(const Vector3D& other) const {
-		float cx = y * other.z - z * other.y;
-		float cy = z * other.x - x * other.z;
-		float cz = x * other.y - y * other.x;
-		return Vector3D(cx, cy, cz);
-	}
 
-	float squareLength() const {
-		return x * x + y * y + z * z;
-	}
+	friend std::ostream& operator<<(std::ostream& os, const Vector3D& obj);
 
-	Vector3D& normalize()
-	{
-		float sqaureLength = this->squareLength();
-		if (sqaureLength > 0)
-		{
-			float length = std::sqrt(sqaureLength);
-			x /= length;
-			y /= length;
-			z /= length;
-		}
-		return *this;
-	}
+	float squareLength() const;
+	Vector3D& normalize();
+
 };
 
-inline Vector3D operator*(double factor, const Vector3D& other)
-{
-	return other * factor;
-}
+std::wstring ToString(const Vector3D& obj);
+Vector3D operator*(float factor, const Vector3D& other);
 
 struct Vector4D
 {
-	float x, y, z, w;
+	float x = 0.0f;
+	float y = 0.0f;
+	float z = 0.0f;
+	float w = 0.0f;
 };
 
 
@@ -150,16 +108,7 @@ struct NormalsInSamePositions
 	Vector3D meanNormal;
 	std::vector<Vector3D> normals;
 
-	void sumNormals()
-	{
-		Vector3D sol = { 0, 0, 0 };
-		for (const Vector3D& v : normals)
-		{
-			sol = sol + v;
-			sol.normalize();
-		}
-		meanNormal = sol;
-	}
+	void sumNormals();
 };
 
 typedef std::map<size_t, NormalsInSamePositions> Map_Ind_Normals;
@@ -172,11 +121,8 @@ struct StlVertex
 
 // taken from http://stackoverflow.com/questions/6899392/generic-hash-function-for-all-stl-containers
 template <class T>
-inline void hash_combine(std::size_t& seed, const T& v)
-{
-	std::hash<T> hasher;
-	seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-}
+void hash_combine(std::size_t& seed, const T& v);
+
 
 struct HTindex_Soft
 {
@@ -184,21 +130,11 @@ struct HTindex_Soft
 
 	struct Hash
 	{
-		std::size_t operator()(HTindex_Soft const& key) const
-		{
-			size_t h = std::hash<float>()(key.positions[0]);
-			hash_combine(h, key.positions[1]);
-			hash_combine(h, key.positions[2]);
-			return h;
-		}
+		std::size_t operator()(HTindex_Soft const& key) const;
 	};
 	
-
 	// equivalence determination.
-	bool operator==(HTindex_Soft const& key) const
-	{
-		return positions == key.positions;
-	}
+	bool operator==(HTindex_Soft const& key) const;
 };
 
 typedef std::unordered_map<HTindex_Soft, size_t, HTindex_Soft::Hash> HashTable_Soft;
@@ -214,7 +150,7 @@ struct IRenderableState
 {
 	unsigned			id			= 0;
 	std::wstring		name		= L"";
-	bool				m_isSeen		= false;
+	bool				m_isSeen	= false;
 	DirectX::XMFLOAT3	rotation	= {0,0,0};
 	DirectX::XMFLOAT3	scale		= { 0,0,0 };
 	DirectX::XMFLOAT3	translation = { 0,0,0 };
@@ -228,11 +164,11 @@ struct SunPositionState
 };
 struct FlythroughState
 {
-	bool				IsTrajectoryInitialized			= false;
+	bool				IsTrajectoryInitialized		= false;
 	unsigned			currentFrame				= 0;
 	unsigned			numberOfFrame				= 0;
 	EpochTime			currentEpochTime			= { 0,0 };
-	EpochTime			startEpochTime			= { 0,0 };
+	EpochTime			startEpochTime				= { 0,0 };
 	DirectX::XMFLOAT3	currentCameraPosition		= { 0,0,0 };
 	DirectX::XMFLOAT3	currentCameraRotation		= { 0,0,0 };
 	SunPositionState	currentSunPosition;

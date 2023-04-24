@@ -34,7 +34,7 @@ public:
 	PolygonMesh& operator=(const PolygonMesh&) = delete;
 
 
-	bool Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, IVertexShaderPtr vertexShader, IPixelShaderPtr pixelShader, VertexMesh* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount) override;
+	bool Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, IVertexShaderPtr vertexShader, IPixelShaderPtr pixelShader, VertexMesh* vertices, size_t* indices, size_t vertexCount, size_t indexCount) override;
 	void Shutdown() override;
 	void Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat,const Light& light) override;
  
@@ -55,7 +55,7 @@ public:
 
 private:
 	
-	bool InitializeBuffers(Microsoft::WRL::ComPtr<ID3D11Device> device, VertexMesh* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount);
+	bool InitializeBuffers(Microsoft::WRL::ComPtr<ID3D11Device> device, VertexMesh* vertices, size_t* indices, size_t vertexCount, size_t indexCount);
 	void ShutdownBuffers();
 	void RenderBuffers(Microsoft::WRL::ComPtr<ID3D11DeviceContext>);
 	void CalculateLocalMatrix(void);

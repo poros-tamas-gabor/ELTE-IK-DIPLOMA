@@ -133,7 +133,7 @@ unsigned CameraTrajectory::GetCurrentFrameNum(void) const
 }
 unsigned CameraTrajectory::GetNumberOfFrame(void) const
 {
-	return this->m_elapsedmsecs.size();
+	return static_cast<unsigned>(this->m_elapsedmsecs.size());
 }
 void CameraTrajectory::SetCurrentFrame(unsigned frameNum)
 {

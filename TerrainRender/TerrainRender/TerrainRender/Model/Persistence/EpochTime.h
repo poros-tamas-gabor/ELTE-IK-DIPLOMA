@@ -8,6 +8,7 @@ public:
     // arithmetic operators
     EpochTime operator+(const EpochTime& other) const;
     EpochTime operator-(const EpochTime& other) const;
+    bool operator==(const EpochTime& other) const;
 
     double diffInMillis(const EpochTime& other) const;
 

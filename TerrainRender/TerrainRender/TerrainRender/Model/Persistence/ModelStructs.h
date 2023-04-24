@@ -53,7 +53,11 @@ struct CameraPose {
 	float north = 0.0f;
 	float east = 0.0f;
 	float down = 0.0f;
+
+	bool operator==(const CameraPose& other) const;
 };
+
+std::wstring ToString(const CameraPose& obj);
 
 struct Vector3D
 {
@@ -82,6 +86,7 @@ public:
 };
 
 std::wstring ToString(const Vector3D& obj);
+
 Vector3D operator*(float factor, const Vector3D& other);
 
 struct Vector4D

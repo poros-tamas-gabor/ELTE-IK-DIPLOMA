@@ -31,6 +31,11 @@ EpochTime EpochTime::operator+(const EpochTime& other) const
     return EpochTime(sec, nsec);
 }
 
+bool EpochTime::operator==(const EpochTime& other) const
+{
+    return this->m_seconds == other.m_seconds && this->m_nanoseconds == other.m_nanoseconds;
+}
+
 EpochTime EpochTime::operator-(const EpochTime& other) const 
 {
     long long sec = m_seconds - other.m_seconds;

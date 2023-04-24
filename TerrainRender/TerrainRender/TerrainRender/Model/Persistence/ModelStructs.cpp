@@ -49,6 +49,18 @@ bool HTindex_Soft::operator==(HTindex_Soft const& key) const
 }
 
 
+bool CameraPose::operator==(const CameraPose& o) const
+{
+	return down == o.down && east == o.east && epochtime == o.epochtime && north == o.north && pitch == o.pitch && roll == o.roll && yaw == o.yaw;
+}
+
+std::wstring ToString(const CameraPose& obj)
+{
+	std::wostringstream oss;
+	oss << L"{ " << obj.north << L", " << obj.east << L", " << obj.east << L" } / { " << obj.pitch << L", " << obj.yaw << L", " << obj.roll << L" }" ;
+	return oss.str();
+}
+
 Vector3D Vector3D::operator*(float factor) const
 {
 	return { this->x * factor, this->y * factor, this->z * factor };

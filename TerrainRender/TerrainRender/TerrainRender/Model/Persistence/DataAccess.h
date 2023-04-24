@@ -45,10 +45,11 @@ private:
 
 private:
     unsigned GetNumTriangles_stlBin(const std::wstring& filepath);
-    bool ReadFileSharpEdges(const std::wstring& filepath);
-    bool ReadFileSoftEdges(const std::wstring& filepath);
+    void ReadFileSharpEdges(const std::wstring& filepath);
+    void ReadFileSoftEdges(const std::wstring& filepath);
     int  GetNumThreads(int numOfFacets);
     bool CreateCameraPose(CameraPose& cameraPose, const std::string& line, const std::vector<std::string>& headers);
+    bool CheckTrajectoryHeaders(const std::vector<std::string>& headers);
 
 public:
     BinaryFileDataAccessAsync() = default;

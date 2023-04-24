@@ -1,5 +1,11 @@
 // pch.cpp: source file corresponding to the pre-compiled header
 
 #include "pch.h"
+#include "../TerrainRender/Model/Persistence/FileDataAccessAsync.cpp"
+#include "../TerrainRender/Model/Persistence/ReadSTLChunk.cpp"
+#include "../TerrainRender/ErrorHandler.cpp"
+#include "../TerrainRender/StringConverter.cpp"
+#include "../TerrainRender/Model/Persistence/ModelStructs.cpp"
+#include "../TerrainRender/Model/Persistence/EpochTime.cpp"
 
 // When you are using pre-compiled headers, this source file is necessary for compilation to succeed.

@@ -1,32 +1,36 @@
 #include "pch.h"
 #include "CppUnitTest.h"
-#include "../TerrainRender/Model/Persistence/FileDataAccessAsync.cpp"
-#include "../TerrainRender/Model/Persistence/ReadSTLChunk.cpp"
-#include "../TerrainRender/Model/Persistence/DataAccess.h"
-#include "../TerrainRender/ErrorHandler.cpp"
-#include "../TerrainRender/StringConverter.cpp"
-#include "../TerrainRender/Model/Persistence/ModelStructs.cpp"
+
 
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace TerrainRenderModelUnitTest
 {
-	TEST_CLASS(FileDataAccessAsyncUnitTest)
+	TEST_CLASS(DataAccessUnitTest)
 	{
 	public:
-		TEST_METHOD(LoadConfigureFile)
+		TEST_METHOD(DataAccess_LoadConfigurationFile)
 		{
 			IDataAccessPtr persistence = std::make_shared<BinaryFileDataAccessAsync>();
 			ParameterFile file;
-			auto func = [persistence, &file] { persistence->LoadConfigurationFile(L"invalid", file); };
+			auto LambdaFunc01 = [persistence, &file] { persistence->LoadConfigurationFile(L"invalid", file); };
+
+			Assert::ExpectException<TRException> (LambdaFunc01);
 
 			TCHAR buffer[MAX_PATH];
 			GetCurrentDirectory(MAX_PATH, buffer);
-			
-			std::wstring path(buffer);
-			path += L"..\\..\\..\\TerrainRenderModelUnitTest\\ResourceFiles\\testConfig.json";
-			persistence->LoadConfigurationFile(path.c_str(), file);
+
+			std::wstring incorrectHeader_path(buffer);
+			incorrectHeader_path += L"..\\..\\..\\TerrainRenderModelUnitTest\\ResourceFiles\\incorrect_header.json";
+			auto LambdaFunc02 = [persistence, &file, incorrectHeader_path] { persistence->LoadConfigurationFile(incorrectHeader_path.c_str(), file); };
+
+			Assert::ExpectException<TRException>(LambdaFunc02);
+
+
+			std::wstring correctFile_path(buffer);
+			correctFile_path += L"..\\..\\..\\TerrainRenderModelUnitTest\\ResourceFiles\\testConfig.json";
+			persistence->LoadConfigurationFile(correctFile_path.c_str(), file);
 			Assert::AreEqual(file.origo.latitude, 47.497913);
 			Assert::AreEqual(file.origo.longitude, 19.040236);
 			Assert::AreEqual(file.terrain.translation, {10,11,12});
@@ -37,12 +41,12 @@ namespace TerrainRenderModelUnitTest
 			Assert::AreEqual(file.trajectory.translation, {700,65,-250});
 			Assert::AreEqual(file.trajectory.rotation, {0,0,0});
 		}
-
-		TEST_METHOD(LoadTrajectoryFile)
+		TEST_METHOD(DataAccess_LoadCameraTrajectory)
 		{
 			IDataAccessPtr persistence = std::make_shared<BinaryFileDataAccessAsync>();
 			std::vector<CameraPose> cameraPoses;
-			auto func = [persistence, &cameraPoses] { persistence->LoadCameraTrajectory(L"invalid", cameraPoses) ; };
+			auto LambdaFunc01 = [persistence, &cameraPoses] { persistence->LoadCameraTrajectory(L"invalid", cameraPoses) ; };
+			Assert::ExpectException<TRException>(LambdaFunc01);
 
 			TCHAR buffer[MAX_PATH];
 			GetCurrentDirectory(MAX_PATH, buffer);
@@ -56,10 +60,11 @@ namespace TerrainRenderModelUnitTest
 			Assert::AreEqual(cameraPoses.at(9), test);
 		}
 
-		TEST_METHOD(LoadTerrain_withSoftEdges)
+		TEST_METHOD(DataAccess_LoadTerrain_withSoftEdges)
 		{
 			IDataAccessPtr persistence = std::make_shared<BinaryFileDataAccessAsync>();
-			auto func = [persistence] { persistence->LoadTerrainSoftEdges(L"invalid"); };
+			auto LambdaFunc01 = [persistence] { persistence->LoadTerrainSoftEdges(L"invalid"); };
+			Assert::ExpectException<TRException>(LambdaFunc01);
 
 			TCHAR buffer[MAX_PATH];
 			GetCurrentDirectory(MAX_PATH, buffer);
@@ -86,10 +91,11 @@ namespace TerrainRenderModelUnitTest
 			Assert::AreEqual(persistence->GetIndices_Soft().size(), size_t(9999));
 		}
 
-		TEST_METHOD(LoadTerrain_withSharpEdges)
+		TEST_METHOD(DataAccess_LoadTerrain_withSharpEdges)
 		{
 			IDataAccessPtr persistence = std::make_shared<BinaryFileDataAccessAsync>();
-			auto func = [persistence] { persistence->LoadTerrainSharpEdges(L"invalid"); };
+			auto LambdaFunc01 = [persistence] { persistence->LoadTerrainSharpEdges(L"invalid"); };
+			Assert::ExpectException<TRException>(LambdaFunc01);
 
 			TCHAR buffer[MAX_PATH];
 			GetCurrentDirectory(MAX_PATH, buffer);

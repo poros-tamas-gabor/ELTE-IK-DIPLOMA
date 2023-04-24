@@ -50,7 +50,7 @@ unsigned BinaryFileDataAccessAsync::GetNumTriangles_stlBin(const std::wstring& f
     return numTriangles;
 }
 
-bool BinaryFileDataAccessAsync::ReadFileSharpEdges(const std::wstring& filepath)
+void BinaryFileDataAccessAsync::ReadFileSharpEdges(const std::wstring& filepath)
 {
     unsigned numTriangles = GetNumTriangles_stlBin(filepath);
     
@@ -87,7 +87,6 @@ bool BinaryFileDataAccessAsync::ReadFileSharpEdges(const std::wstring& filepath)
     {
         m_facets.insert(m_facets.end(), facetVectors.at(i).begin(), facetVectors.at(i).end());
     }
-    return true;
 }
 
 
@@ -99,101 +98,87 @@ const std::vector<CornerIndices>& BinaryFileDataAccessAsync::GetIndices_Soft()
 {
     return this->m_indices;
 }
-bool BinaryFileDataAccessAsync::ReadFileSoftEdges(const std::wstring& filepath)
+void BinaryFileDataAccessAsync::ReadFileSoftEdges(const std::wstring& filepath)
 {
-    try
-    {
-        unsigned numTriangles = GetNumTriangles_stlBin(filepath);
 
-        // Calculate how many threads are needed
-        int numThreads = GetNumThreads(numTriangles);
-        // Calculate how many facets are in a chunk
-        int numOfFacetInChunk = numTriangles / numThreads;
+   unsigned numTriangles = GetNumTriangles_stlBin(filepath);
 
-        std::vector<std::thread> threads;
-        std::vector<ICallablePtr> callables;
-        std::vector<IndicesVecPtr> indicesVectors;
-        std::vector<Map_Ind_NormalsPtr> mapVectors;    
-        HashTable_Soft ht;
+   // Calculate how many threads are needed
+   int numThreads = GetNumThreads(numTriangles);
+   // Calculate how many facets are in a chunk
+   int numOfFacetInChunk = numTriangles / numThreads;
 
-        size_t nextID = 0;
+   std::vector<std::thread> threads;
+   std::vector<ICallablePtr> callables;
+   std::vector<IndicesVecPtr> indicesVectors;
+   std::vector<Map_Ind_NormalsPtr> mapVectors;    
+   HashTable_Soft ht;
 
-        for (int i = 0; i < numThreads; i++)
-        {
-            unsigned currentNumOfFacets;
-            unsigned beginInBytes = STL_BIN_HEADER_SIZE + STL_BIN_NUM_OF_TRIANGLE_SIZE + STL_BIN_TRIANGLE_SIZE * numOfFacetInChunk * i;
-            if (i < numThreads - 1)
-                currentNumOfFacets = numOfFacetInChunk;
-            else
-                currentNumOfFacets = numTriangles - i * numOfFacetInChunk;
+   size_t nextID = 0;
 
-            IndicesVecPtr indicesVecPtr = std::make_shared<IndicesVec>();
-            indicesVectors.push_back(indicesVecPtr);
+   for (int i = 0; i < numThreads; i++)
+   {
+       unsigned currentNumOfFacets;
+       unsigned beginInBytes = STL_BIN_HEADER_SIZE + STL_BIN_NUM_OF_TRIANGLE_SIZE + STL_BIN_TRIANGLE_SIZE * numOfFacetInChunk * i;
+       if (i < numThreads - 1)
+           currentNumOfFacets = numOfFacetInChunk;
+       else
+           currentNumOfFacets = numTriangles - i * numOfFacetInChunk;
 
-            Map_Ind_NormalsPtr mapPtr = std::make_shared<Map_Ind_Normals>();
-            mapVectors.push_back(mapPtr);
+       IndicesVecPtr indicesVecPtr = std::make_shared<IndicesVec>();
+       indicesVectors.push_back(indicesVecPtr);
 
-            callables.emplace_back(std::make_shared<ReadSTLChunkSoft>(filepath, beginInBytes, currentNumOfFacets, indicesVecPtr, ht, m_mutex_hashtable, nextID, mapPtr));
-            threads.emplace_back(std::thread(std::ref(*callables.at(i))));
-        }
-        for (int i = 0; i < numThreads; i++)
-        {
-            if (threads.at(i).joinable())
-                threads.at(i).join();
-        }
+       Map_Ind_NormalsPtr mapPtr = std::make_shared<Map_Ind_Normals>();
+       mapVectors.push_back(mapPtr);
 
-        m_vertices.clear();
-        m_indices.clear();
+       callables.emplace_back(std::make_shared<ReadSTLChunkSoft>(filepath, beginInBytes, currentNumOfFacets, indicesVecPtr, ht, m_mutex_hashtable, nextID, mapPtr));
+       threads.emplace_back(std::thread(std::ref(*callables.at(i))));
+   }
+   for (int i = 0; i < numThreads; i++)
+   {
+       if (threads.at(i).joinable())
+           threads.at(i).join();
+   }
 
-        //Collect Indices
-        for (IndicesVecPtr indicesVec : indicesVectors)
-        {
-            m_indices.insert(m_indices.begin(), indicesVec->begin(), indicesVec->end());
-        }
+   m_vertices.clear();
+   m_indices.clear();
 
-        size_t vectorSize = min(nextID, ht.size());
+   //Collect Indices
+   for (IndicesVecPtr indicesVec : indicesVectors)
+   {
+       m_indices.insert(m_indices.begin(), indicesVec->begin(), indicesVec->end());
+   }
 
-        std::vector<Vector3D> normals(vectorSize);
+   size_t vectorSize = min(nextID, ht.size());
 
-        //Collect and Calculate vertex normal vectors
-        for (Map_Ind_NormalsPtr map : mapVectors)
-        {
-            for (auto& pair : *map.get())
-            {
-                const size_t& index = pair.first;
+   std::vector<Vector3D> normals(vectorSize);
 
-                if (index < vectorSize)
-                {
-                    normals[index] = (normals[index] + pair.second.meanNormal).normalize();
-                }
-            }
+   //Collect and Calculate vertex normal vectors
+   for (Map_Ind_NormalsPtr map : mapVectors)
+   {
+       for (auto& pair : *map.get())
+       {
+           const size_t& index = pair.first;
 
-        }
+           if (index < vectorSize)
+           {
+               normals[index] = (normals[index] + pair.second.meanNormal).normalize();
+           }
+       }
 
-        m_vertices.resize(vectorSize);
+   }
 
-        //Collect Vertices
-        for (const auto& it : ht)
-        {
-            size_t index = it.second;
-            if (index < vectorSize)
-            {
-              m_vertices[index] = { it.first.positions, normals.at(index)};
-            }
-        }
+   m_vertices.resize(vectorSize);
 
-
-        return true;
-    }
-    catch (TRException& e)
-    {
-        ErrorHandler::Log(e);
-    }
-    catch (std::exception& e)
-    {
-        ErrorHandler::Log(e);
-    }
-    return false;
+   //Collect Vertices
+   for (const auto& it : ht)
+   {
+       size_t index = it.second;
+       if (index < vectorSize)
+       {
+         m_vertices[index] = { it.first.positions, normals.at(index)};
+       }
+   }
 }
 
 void BinaryFileDataAccessAsync::LoadTerrainSoftEdges(const wchar_t* filename)
@@ -203,16 +188,7 @@ void BinaryFileDataAccessAsync::LoadTerrainSoftEdges(const wchar_t* filename)
 
 void BinaryFileDataAccessAsync::LoadTerrainSharpEdges(const wchar_t* filename)
 {
-    std::time_t now = std::time(NULL);
-    m_facets.clear();
-
     this->ReadFileSharpEdges(filename);
-
-    std::time_t end = std::time(NULL);
-    std::wstring str = L"Loading time : in sec: ";
-    str += std::to_wstring(end - now);
-    str += L"\n";
-    OutputDebugString(str.c_str());
 }
 
 const std::vector<stlFacet>& BinaryFileDataAccessAsync::GetFacets(void)
@@ -257,6 +233,23 @@ bool BinaryFileDataAccessAsync::CreateCameraPose(CameraPose& cameraPose, const s
     return true;
 }
 
+bool BinaryFileDataAccessAsync::CheckTrajectoryHeaders(const std::vector<std::string>& headers)
+{
+    std::vector<std::string>::const_iterator it;
+    std::vector<std::string> expectedHeaders = { "sec" , "nsec","yaw","pitch","roll","north","east","down" };
+
+    for (std::vector<std::string>::const_iterator expected_it = expectedHeaders.cbegin(); expected_it != expectedHeaders.cend(); expected_it++)
+    {
+        std::vector<std::string>::const_iterator actual_it = std::find(headers.cbegin(), headers.cend(), *expected_it);
+        if (actual_it == headers.cend())
+        {
+            return false;
+        }
+
+    }
+    return true;
+}
+
 void BinaryFileDataAccessAsync::LoadCameraTrajectory(const wchar_t* filepath, std::vector<CameraPose>& cameraPoses)
 {
     std::ifstream            file;
@@ -282,18 +275,7 @@ void BinaryFileDataAccessAsync::LoadCameraTrajectory(const wchar_t* filepath, st
         headers.push_back(word);
     }
 
-    std::vector<std::string>::iterator it;
-    //TODO: CHECK headers
-    for (it = headers.begin(); it != headers.end(); it++)
-    {
-        if (*it == "nsec")
-            break;
-    }
-    if (it == headers.end())
-    {
-        THROW_TREXCEPTION(L"nsec missing");
-    }
-
+    THROW_TREXCEPTION_IF_FAILED(CheckTrajectoryHeaders(headers), L"Incorrect header");
     while ((std::getline(file, line)) && isCorrect) {
         cameraPose = CameraPose();
         isCorrect = CreateCameraPose(cameraPose, line, headers);

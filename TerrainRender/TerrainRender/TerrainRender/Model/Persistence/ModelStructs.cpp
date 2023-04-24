@@ -1,13 +1,5 @@
 #include "ModelStructs.h"
 
-std::string to_string_with_precision(const float a_value, const int n)
-{
-	std::ostringstream out;
-	out.precision(n);
-	out << std::fixed << a_value;
-	return std::move(out).str();
-}
-
 float to_float_with_precision(const float value, const int n)
 {
 	return std::roundf(value * std::pow(10, n)) / std::pow(10, n);
@@ -132,7 +124,8 @@ void NormalsInSamePositions::sumNormals()
 	for (const Vector3D& v : normals)
 	{
 		sol = sol + v;
-		sol.normalize();
 	}
+		
+	sol.normalize();
 	meanNormal = sol;
 }

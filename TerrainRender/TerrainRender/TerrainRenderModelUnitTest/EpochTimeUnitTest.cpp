@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "CppUnitTest.h"
-#include "../TerrainRender/Model/Persistence/EpochTime.cpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -10,7 +9,7 @@ namespace TerrainRenderModelUnitTest
 	{
 	public:
 		
-		TEST_METHOD(EpochTimeConstructor0)
+		TEST_METHOD(EpochTime_Constructor)
 		{
 			EpochTime e;
 			Assert::AreEqual(e.getNanoseconds(), 0LL);
@@ -31,7 +30,7 @@ namespace TerrainRenderModelUnitTest
 
 		}
 
-		TEST_METHOD(EpochTimeOperatorPlus)
+		TEST_METHOD(EpochTime_OperatorPlus)
 		{
 			EpochTime e = { 100LL,10LL };
 			EpochTime sum = e + EpochTime();
@@ -44,7 +43,7 @@ namespace TerrainRenderModelUnitTest
 			Assert::AreEqual(sum.getSeconds(), 2101LL);
 			Assert::AreEqual(sum.getNanoseconds(), 11LL);
 		}
-		TEST_METHOD(EpochTimeOperatorMinus)
+		TEST_METHOD(EpochTime_OperatorMinus)
 		{
 			EpochTime e = { 100LL,10LL };
 			EpochTime diff = e - EpochTime();
@@ -57,7 +56,7 @@ namespace TerrainRenderModelUnitTest
 			Assert::AreEqual(diff.getSeconds(), 1900LL);
 			Assert::AreEqual(diff.getNanoseconds(), 999999991LL);
 		}
-		TEST_METHOD(EpochTimeDiff)
+		TEST_METHOD(EpochTime_diffInMillis)
 		{
 			EpochTime e = { 100LL,10LL };
 			EpochTime e1 = { 90LL, 50LL };

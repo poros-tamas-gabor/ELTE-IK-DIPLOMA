@@ -217,7 +217,7 @@
       <Filter>Resource Files</Filter>
     </ClCompile>
     <ClCompile Include="Model\Persistence\ModelStructs.cpp">
-      <Filter>Header Files\Model\Persistence</Filter>
+      <Filter>Source Files\Model\Persistence</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

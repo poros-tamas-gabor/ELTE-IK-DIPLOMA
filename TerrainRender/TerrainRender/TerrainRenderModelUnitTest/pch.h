@@ -9,4 +9,14 @@
 
 // add headers that you want to pre-compile here
 
+#include "../TerrainRender/win.h"
+#include "../TerrainRender/Model/Persistence/DataAccess.h"
+#include "../TerrainRender/Model/Persistence/ModelStructs.h"
+#include "../TerrainRender/Model/Persistence/EpochTime.h"
+#include "../TerrainRender/App.h"
+#include "../TerrainRender/COMException.h"
+#include "../TerrainRender/ErrorHandler.h"
+#include "../TerrainRender/RenderWindow.h"
+#include "../TerrainRender/StringConverter.h"
+
 #endif //PCH_H

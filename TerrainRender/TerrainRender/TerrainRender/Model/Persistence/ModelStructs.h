@@ -14,10 +14,6 @@
 #include <sstream>
 #include <array>
 
-
-std::string to_string_with_precision(const float a_value, const int n = 6);
-
-
 float to_float_with_precision(const float value, const int n = 6);
 
 void XMFLOAT3toCArray(float array[], DirectX::XMFLOAT3 floats);

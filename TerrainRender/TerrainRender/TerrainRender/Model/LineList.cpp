@@ -1,5 +1,4 @@
 #include "LineList.h"
-
 #include	"../ErrorHandler.h"
 #include	<memory>
 

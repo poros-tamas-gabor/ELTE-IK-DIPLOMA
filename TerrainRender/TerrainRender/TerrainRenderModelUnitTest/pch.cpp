@@ -8,4 +8,8 @@
 #include "../TerrainRender/Model/Persistence/ModelStructs.cpp"
 #include "../TerrainRender/Model/Persistence/EpochTime.cpp"
 
+#include "../TerrainRender/Model/LineList.cpp"
+#include "../TerrainRender/Model/PolygonMesh.cpp"
+#include "../TerrainRender/Model/PolyLine.cpp"
+
 // When you are using pre-compiled headers, this source file is necessary for compilation to succeed.

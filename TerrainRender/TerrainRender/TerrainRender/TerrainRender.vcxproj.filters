@@ -129,9 +129,6 @@
     <ClCompile Include="Model\RenderableCreator.cpp">
       <Filter>Source Files\Model\Renderable</Filter>
     </ClCompile>
-    <ClCompile Include="Model\CameraTrajectory.cpp">
-      <Filter>Source Files\Model\Renderable</Filter>
-    </ClCompile>
     <ClCompile Include="Model\Persistence\EpochTime.cpp">
       <Filter>Source Files\Model\Persistence</Filter>
     </ClCompile>
@@ -218,6 +215,9 @@
     </ClCompile>
     <ClCompile Include="Model\Persistence\ModelStructs.cpp">
       <Filter>Source Files\Model\Persistence</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\CameraTrajectory.cpp">
+      <Filter>Source Files\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

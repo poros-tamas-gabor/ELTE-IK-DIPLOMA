@@ -35,9 +35,9 @@ TEST_F(PolygonMeshUnitTest, InitializeReturnsTrueWithValidParameters)
 }
 TEST_F(PolygonMeshUnitTest, InitializeReturnsFalseWithNullVertexShader)
 {
-
+	IVertexShaderPtr vertexShader;
 	PolygonMesh mesh;
-	bool result = mesh.Initialize(m_device, nullptr, m_pixelShader, m_vertices, m_indices, _vertexCount, _indexCount);
+	bool result = mesh.Initialize(m_device, vertexShader, m_pixelShader, m_vertices, m_indices, _vertexCount, _indexCount);
 	EXPECT_FALSE(result);
 }
 

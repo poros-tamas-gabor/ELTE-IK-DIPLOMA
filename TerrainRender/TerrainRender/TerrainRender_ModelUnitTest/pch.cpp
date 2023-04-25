@@ -14,3 +14,4 @@
 #include "../TerrainRender/Model/PolygonMesh.cpp"
 #include "../TerrainRender/Model/PolyLine.cpp"
 #include "../TerrainRender/Model/IRenderable.cpp"
+#include "../TerrainRender/Model/RenderableCreator.cpp"

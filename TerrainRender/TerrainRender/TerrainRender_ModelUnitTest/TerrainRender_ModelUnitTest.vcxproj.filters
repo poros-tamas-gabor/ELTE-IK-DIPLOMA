@@ -16,14 +16,17 @@
     <ClCompile Include="test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PolygonMeshUnitTest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\packages\gmock.1.11.0\lib\native\src\gtest\src\gtest_main.cc">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="CompositeRenderableUnitTest.cpp">
+      <Filter>Source Files\IRenderable</Filter>
+    </ClCompile>
+    <ClCompile Include="PolygonMeshUnitTest.cpp">
+      <Filter>Source Files\IRenderable</Filter>
+    </ClCompile>
     <ClCompile Include="PolyLineUnitTest.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\IRenderable</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -35,6 +38,9 @@
     </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{a2a8d2b1-3bfc-439f-bd46-24c18150c2ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\IRenderable">
+      <UniqueIdentifier>{2ddbe184-6b13-4f64-a425-fb21801a781b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

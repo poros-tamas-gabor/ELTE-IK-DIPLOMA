@@ -122,6 +122,10 @@ bool Vector4D::operator==(const Vector4D& other) const
 	return { this->x == other.x && this->y == other.y && this->z == other.z && this->w == other.w };
 }
 
+Vector4D::Vector4D(const std::array<float, 4> array) : x(array.at(0)), y(array.at(1)), z(array.at(2)), w(array.at(3)) {}
+Vector4D::Vector4D(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
+Vector4D::Vector4D(void) : x(0), y(0), z(0), w(0) {}
+
 Vector3D operator*(float factor, const Vector3D& other)
 {
 	return other * factor;

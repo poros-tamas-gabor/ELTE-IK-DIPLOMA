@@ -14,6 +14,7 @@
 #include "../TerrainRender/Model/IModelSubscriber.h"
 
 #include "../TerrainRender/Model/IRenderable.h"
+#include "../TerrainRender/Model/RenderableCreator.h"
 #include "../TerrainRender/Model/LineList.h"
 #include "../TerrainRender/Model/PolygonMesh.h"
 #include "../TerrainRender/Model/PolyLine.h"

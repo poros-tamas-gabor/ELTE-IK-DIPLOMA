@@ -6,6 +6,7 @@
 #include "Light.h"
 #include <vector>
 #include "IRenderableCreator.h"
+#include "../TRException.h"
 
 
 template <class V>
@@ -180,10 +181,17 @@ public:
 
 	IRendarablePtr<V> GetLastAddedComponent(void)
 	{
+		THROW_TREXCEPTION_IF_FAILED(!m_renderables.empty(), L"Failed to get last element because Renderables are empty");
 		return m_renderables.back();
 	}
 
-	void SetColor(float r, float g, float b, float a) override{}
+	void SetColor(float r, float g, float b, float a) override
+	{
+		for (IRendarablePtr<V> renderable : m_renderables)
+		{
+			renderable->SetColor(r, g, b, a);
+		}
+	}
 
 	void SetColorComponent(unsigned componentID, float r, float g, float b, float a)
 	{

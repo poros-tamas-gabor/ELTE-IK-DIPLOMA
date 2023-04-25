@@ -89,6 +89,10 @@ public:
 	float z = 0.0f;
 	float w = 0.0f;
 
+	Vector4D(const std::array<float, 4> array);
+	Vector4D(float x, float y, float z, float w);
+	Vector4D(void);
+
 	bool operator==(const Vector4D& other) const;
 	DirectX::XMFLOAT4 ToXMFLOAT4(void) const;
 };

@@ -5,6 +5,7 @@
 #pragma once
 
 #include "gtest/gtest.h"
+#include "gmock/gmock.h"
 #include "../TerrainRender/win.h"
 #include "../TerrainRender/Model/Persistence/DataAccess.h"
 #include "../TerrainRender/Model/Persistence/ModelStructs.h"

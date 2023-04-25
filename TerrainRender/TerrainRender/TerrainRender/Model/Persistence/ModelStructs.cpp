@@ -4,6 +4,13 @@ float to_float_with_precision(const float value, const int n)
 {
 	return std::roundf(value * std::pow(10, n)) / std::pow(10, n);
 }
+bool AreMatricesEqual(DirectX::XMMATRIX matrix1, DirectX::XMMATRIX matrix2, float epsilon = 0.0001f)
+{
+	return DirectX::XMVector4NearEqual(matrix1.r[0], matrix2.r[0], DirectX::XMVectorReplicate(epsilon)) &&
+		DirectX::XMVector4NearEqual(matrix1.r[1], matrix2.r[1], DirectX::XMVectorReplicate(epsilon)) &&
+		DirectX::XMVector4NearEqual(matrix1.r[2], matrix2.r[2], DirectX::XMVectorReplicate(epsilon)) &&
+		DirectX::XMVector4NearEqual(matrix1.r[3], matrix2.r[3], DirectX::XMVectorReplicate(epsilon));
+}
 void Vector3DtoCArray(float array[], Vector3D floats)
 {
 	array[0] = floats.x;

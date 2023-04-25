@@ -28,6 +28,9 @@
     <ClCompile Include="PolyLineUnitTest.cpp">
       <Filter>Source Files\IRenderable</Filter>
     </ClCompile>
+    <ClCompile Include="CameraUnitTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">

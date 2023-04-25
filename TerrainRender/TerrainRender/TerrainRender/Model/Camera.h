@@ -28,6 +28,8 @@ private:
 	float	m_fovRadian, m_aspectRatio, m_nearScreen, m_farScreen;
 	bool	m_isInitialized = false;
 
+	void SetProjectionValues(float fovRad, float aspectRatio, float nearZ, float farZ);
+	void SetLookAtPos(const DirectX::XMFLOAT3& lookAt);
 
 public:
 	Camera();
@@ -38,7 +40,6 @@ public:
 	void Resize(int screenWidth, int screenHeight);
 	void Reset(void);
 
-	void SetProjectionValues(float fovRad, float aspectRatio, float nearZ, float farZ);
 	void SetFieldOfView(float fovRad);
 	void SetNearScreen(float nearZ);
 	void SetFarScreen(float farZ);
@@ -47,8 +48,6 @@ public:
 	void SetRotationRad(float x, float y, float z);
 	void AdjustPosition(float deltaX, float deltaY, float deltaZ);
 	void AdjustRotationRad(float deltaX, float deltaY, float deltaZ);
-
-	void SetLookAtPos(const DirectX::XMFLOAT3& lookAt);
 
 	Vector3D GetPositionVec(void) const;
 	Vector3D GetRotationVec(void) const;

@@ -16,6 +16,9 @@
 
 float to_float_with_precision(const float value, const int n = 6);
 
+bool AreMatricesEqual(DirectX::XMMATRIX matrix1, DirectX::XMMATRIX matrix2, float epsilon);
+
+
 struct VertexMesh
 {
 	DirectX::XMFLOAT3 position;

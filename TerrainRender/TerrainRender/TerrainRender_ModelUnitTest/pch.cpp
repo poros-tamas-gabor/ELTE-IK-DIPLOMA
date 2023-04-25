@@ -15,3 +15,7 @@
 #include "../TerrainRender/Model/PolyLine.cpp"
 #include "../TerrainRender/Model/IRenderable.cpp"
 #include "../TerrainRender/Model/RenderableCreator.cpp"
+
+#include "../TerrainRender/Model/CameraPositioner.cpp"
+#include "../TerrainRender/Model/CameraTrajectory.cpp"
+#include "../TerrainRender/Model/Camera.cpp"

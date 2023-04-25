@@ -5,6 +5,8 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TerrainRender", "TerrainRender\TerrainRender.vcxproj", "{E3F49437-7AA3-4150-913D-C85143DD3D57}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TerrainRender_ModelUnitTest", "TerrainRender_ModelUnitTest\TerrainRender_ModelUnitTest.vcxproj", "{AA62D11F-051A-406D-95A8-90A0EEE9557D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{E3F49437-7AA3-4150-913D-C85143DD3D57}.Release|x64.Build.0 = Release|x64
 		{E3F49437-7AA3-4150-913D-C85143DD3D57}.Release|x86.ActiveCfg = Release|Win32
 		{E3F49437-7AA3-4150-913D-C85143DD3D57}.Release|x86.Build.0 = Release|Win32
+		{AA62D11F-051A-406D-95A8-90A0EEE9557D}.Debug|x64.ActiveCfg = Debug|x64
+		{AA62D11F-051A-406D-95A8-90A0EEE9557D}.Debug|x64.Build.0 = Debug|x64
+		{AA62D11F-051A-406D-95A8-90A0EEE9557D}.Debug|x86.ActiveCfg = Debug|Win32
+		{AA62D11F-051A-406D-95A8-90A0EEE9557D}.Debug|x86.Build.0 = Debug|Win32
+		{AA62D11F-051A-406D-95A8-90A0EEE9557D}.Release|x64.ActiveCfg = Release|x64
+		{AA62D11F-051A-406D-95A8-90A0EEE9557D}.Release|x64.Build.0 = Release|x64
+		{AA62D11F-051A-406D-95A8-90A0EEE9557D}.Release|x86.ActiveCfg = Release|Win32
+		{AA62D11F-051A-406D-95A8-90A0EEE9557D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

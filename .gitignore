@@ -10,6 +10,5 @@ File/test_landscape02.stl
 File/no_building.stl
 File/test_landscape1dot250M.stl
 File/Wikipedia_puzzle_globe_3D_render.stl
-TerrainRender/TerrainRender/TerrainRenderModelUnitTest/x64/*
-TerrainRender/TerrainRender/TerrainRenderModelUnitGoogleTest/x64/*
-TerrainRender/TerrainRender/TerrainRenderModelUnitTest/Win32/*
+TerrainRender/TerrainRender/TerrainRender_ModelUnitTest/x64/*
+TerrainRender/TerrainRender/TerrainRender_ModelUnitTest/Win32/*

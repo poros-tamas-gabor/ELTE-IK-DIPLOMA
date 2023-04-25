@@ -68,22 +68,80 @@ TEST_F(PolygonMeshUnitTest, SetNameAndGetName)
 	ASSERT_EQ(mesh.GetState().name, L"TestMesh");
 
 }
-//
-//TEST_F(PolygonMeshUnitTest, TransformationFunctions)
-//{
-//	PolygonMesh mesh;
-//	ASSERT_TRUE(mesh.Initialize(m_device, m_vertexShader, m_pixelShader, m_vertices, m_indices, _vertexCount, _indexCount));
-//
-//	DirectX::XMFLOAT4 actual = mesh.GetState();
-//		
-//	mesh.Rotate(1.0f, 2.0f, 3.0f);
-//	mesh.Translate(4.0f, 5.0f, 6.0f);
-//	mesh.Scale(2.0f, 2.0f, 2.0f);
-//	mesh.ResetTransformation();
-//	//DirectX::XMMATRIX expected = DirectX::XMMatrixIdentity();
-//	//DirectX::XMMATRIX actual = mesh.GetWorldMatrix();
-//	//ASSERT_TRUE(DirectX::XMMatrixNearEqual(expected, actual, 0.00001f));
-//}
+
+TEST_F(PolygonMeshUnitTest, Rotate)
+{
+	PolygonMesh			mesh;
+	Vector3D			actual;
+
+	ASSERT_TRUE(mesh.Initialize(m_device, m_vertexShader, m_pixelShader, m_vertices, m_indices, _vertexCount, _indexCount));
+
+
+	actual = mesh.GetState().rotation;
+	ASSERT_EQ(actual, Vector3D(0, 0, 0));
+		
+	mesh.Rotate(PI, PI/2, -PI/4);
+	actual = mesh.GetState().rotation;
+	ASSERT_EQ(actual, Vector3D(PI, PI / 2, -PI / 4));
+
+	mesh.Rotate(1.0f, 1.0f, 1.0f);
+	actual = mesh.GetState().rotation;
+	ASSERT_EQ(actual, Vector3D(1.0f, 1.0f, 1.0f));
+
+	mesh.ResetTransformation();
+	actual = mesh.GetState().rotation;
+	ASSERT_EQ(actual, Vector3D(0, 0, 0));
+}
+
+TEST_F(PolygonMeshUnitTest, Scale)
+{
+	PolygonMesh			mesh;
+	Vector3D			actual;
+
+	ASSERT_TRUE(mesh.Initialize(m_device, m_vertexShader, m_pixelShader, m_vertices, m_indices, _vertexCount, _indexCount));
+
+
+	actual = mesh.GetState().scale;
+	ASSERT_EQ(actual, Vector3D(1.0f, 1.0f, 1.0f));
+
+	mesh.Scale(PI, PI / 2, -PI / 4);
+	actual = mesh.GetState().scale;
+	ASSERT_EQ(actual, Vector3D(PI, PI / 2, -PI / 4));
+
+	mesh.Scale(1.0f, 1.0f, 1.0f);
+	actual = mesh.GetState().scale;
+	ASSERT_EQ(actual, Vector3D(1.0f, 1.0f, 1.0f));
+
+	mesh.ResetTransformation();
+	actual = mesh.GetState().scale;
+	ASSERT_EQ(actual, Vector3D(1.0f, 1.0f, 1.0f));
+}
+
+TEST_F(PolygonMeshUnitTest, Translate)
+{
+	PolygonMesh			mesh;
+	Vector3D			actual;
+
+	ASSERT_TRUE(mesh.Initialize(m_device, m_vertexShader, m_pixelShader, m_vertices, m_indices, _vertexCount, _indexCount));
+
+
+	actual = mesh.GetState().translation;
+	ASSERT_EQ(actual, Vector3D(0, 0, 0));
+
+	mesh.Translate(PI, PI / 2, -PI / 4);
+	actual = mesh.GetState().translation;
+	ASSERT_EQ(actual, Vector3D(PI, PI / 2, -PI / 4));
+
+	mesh.Translate(1.0f, 1.0f, 1.0f);
+	actual = mesh.GetState().translation;
+	ASSERT_EQ(actual, Vector3D(1.0f, 1.0f, 1.0f));
+
+	mesh.ResetTransformation();
+	actual = mesh.GetState().translation;
+	ASSERT_EQ(actual, Vector3D(0, 0, 0));
+}
+
+
 TEST_F(PolygonMeshUnitTest, SetColor)
 {
 	PolygonMesh mesh;

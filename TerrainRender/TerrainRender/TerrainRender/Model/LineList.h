@@ -26,7 +26,7 @@ public:
 	LineList& operator=(const LineList&) = delete;
 
 
-	virtual bool Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, IVertexShaderPtr vertexShader, IPixelShaderPtr pixelShader, VertexPolyLine* vertices, size_t* indices, size_t vertexCount, size_t indexCount) override;
+	virtual bool Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, IVertexShaderPtr vertexShader, IPixelShaderPtr pixelShader, VertexPolyLine* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount) override;
 	void Shutdown() override;
 	void Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light& light) override;
  
@@ -46,7 +46,7 @@ public:
 	IRenderableState	GetState(void) const override;
 
 protected:
-	bool InitializeBuffers(Microsoft::WRL::ComPtr<ID3D11Device>, VertexPolyLine* vertices, size_t indexCount);
+	bool InitializeBuffers(Microsoft::WRL::ComPtr<ID3D11Device>, VertexPolyLine* vertices,UINT indexCount);
 	void ShutdownBuffers();
 	virtual void RenderBuffers(Microsoft::WRL::ComPtr<ID3D11DeviceContext>);
 	void CalculateLocalMatrix(void);

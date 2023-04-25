@@ -29,7 +29,7 @@ class IRenderable : public IRenderableBase
 public:
 	IRenderable()			= default;
 	virtual ~IRenderable()	= default;
-	virtual bool Initialize(Microsoft::WRL::ComPtr <ID3D11Device> device, IVertexShaderPtr, IPixelShaderPtr, V* vertices,size_t* indices, size_t vertexCount, size_t indexCount ) = 0;
+	virtual bool Initialize(Microsoft::WRL::ComPtr <ID3D11Device> device, IVertexShaderPtr, IPixelShaderPtr, V* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount ) = 0;
 	virtual void Shutdown() = 0;
 	virtual void Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext>, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat,const Light& light) = 0;
 

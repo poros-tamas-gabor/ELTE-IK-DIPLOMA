@@ -3,7 +3,7 @@
 #include	<memory>
 
 
-bool LineList::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, IVertexShaderPtr vertexShader, IPixelShaderPtr pixelShader, VertexPolyLine* vertices, size_t* indices, size_t vertexCount, size_t indexCount)
+bool LineList::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, IVertexShaderPtr vertexShader, IPixelShaderPtr pixelShader, VertexPolyLine* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount)
 {
 	if (device == nullptr || vertexShader == nullptr || pixelShader == nullptr)
 		return false;
@@ -50,7 +50,7 @@ int LineList::GetVertexCount() const
 
 }
 
-bool LineList::InitializeBuffers(Microsoft::WRL::ComPtr<ID3D11Device> device, VertexPolyLine* vertices, size_t vertexCount)
+bool LineList::InitializeBuffers(Microsoft::WRL::ComPtr<ID3D11Device> device, VertexPolyLine* vertices, UINT vertexCount)
 {
 
 	D3D11_BUFFER_DESC						vertexBufferDesc;

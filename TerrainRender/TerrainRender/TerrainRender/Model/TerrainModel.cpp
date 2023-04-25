@@ -194,11 +194,11 @@ void TerrainModel::RotateCamera(unsigned message, float pitch, float yaw)
 bool TerrainModel::LoadTerrainSoftEdges(const wchar_t* filepath)
 {
 	VertexMesh* pVertices;
-	size_t									vertexCount;
-	size_t									indexCount;
+	UINT									vertexCount;
+	UINT									indexCount;
 	std::vector<VertexMesh>					verticesMesh;
-	std::vector<size_t>						indices;
-	size_t* pIndices;
+	std::vector<unsigned long>						indices;
+	unsigned long* pIndices;
 
 	try
 	{
@@ -257,11 +257,11 @@ bool TerrainModel::LoadTerrainSoftEdges(const wchar_t* filepath)
 bool TerrainModel::LoadTerrainSharpEdges(const wchar_t* filepath)
 {
 	VertexMesh*								pVertices;
-	size_t									vertexCount;
-	size_t									indexCount;
+	UINT									vertexCount;
+	UINT									indexCount;
 	std::vector<VertexMesh>					vertices;
-	std::vector<size_t>						indices;
-	size_t*									pIndices;
+	std::vector<unsigned long>						indices;
+	unsigned long*									pIndices;
 
 	try
 	{

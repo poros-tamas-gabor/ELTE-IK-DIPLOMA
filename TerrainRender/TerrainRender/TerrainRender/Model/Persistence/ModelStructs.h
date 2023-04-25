@@ -16,10 +16,6 @@
 
 float to_float_with_precision(const float value, const int n = 6);
 
-void XMFLOAT3toCArray(float array[], DirectX::XMFLOAT3 floats);
-
-void XMFLOAT4toCArray(float array[], DirectX::XMFLOAT4 floats);
-
 struct VertexMesh
 {
 	DirectX::XMFLOAT3 position;
@@ -87,12 +83,19 @@ Vector3D operator*(float factor, const Vector3D& other);
 
 struct Vector4D
 {
+public:
 	float x = 0.0f;
 	float y = 0.0f;
 	float z = 0.0f;
 	float w = 0.0f;
+
+	bool operator==(const Vector4D& other) const;
+	DirectX::XMFLOAT4 ToXMFLOAT4(void) const;
 };
 
+void Vector3DtoCArray(float array[], Vector3D floats);
+
+void Vector4DtoCArray(float array[], Vector4D floats);
 
 // For soft edges
 struct CornerIndices
@@ -152,10 +155,10 @@ struct IRenderableState
 	unsigned			id			= 0;
 	std::wstring		name		= L"";
 	bool				m_isSeen	= false;
-	DirectX::XMFLOAT3	rotation	= {0,0,0};
-	DirectX::XMFLOAT3	scale		= { 0,0,0 };
-	DirectX::XMFLOAT3	translation = { 0,0,0 };
-	DirectX::XMFLOAT4	color		= { 0,0,0,0 };
+	Vector3D	rotation	= {0,0,0};
+	Vector3D	scale		= { 0,0,0 };
+	Vector3D	translation = { 0,0,0 };
+	Vector4D	color		= { 0,0,0,0 };
 };
 
 struct SunPositionState
@@ -170,8 +173,8 @@ struct FlythroughState
 	unsigned			numberOfFrame				= 0;
 	EpochTime			currentEpochTime			= { 0,0 };
 	EpochTime			startEpochTime				= { 0,0 };
-	DirectX::XMFLOAT3	currentCameraPosition		= { 0,0,0 };
-	DirectX::XMFLOAT3	currentCameraRotation		= { 0,0,0 };
+	Vector3D			currentCameraPosition		= { 0,0,0 };
+	Vector3D			currentCameraRotation		= { 0,0,0 };
 	SunPositionState	currentSunPosition;
 	LLACoordinate		origo;
 	std::vector<IRenderableState>	trajectoryPolyLine;
@@ -182,8 +185,8 @@ struct Explore3DState
 	float				speed;
 	float				rotationSpeed;
 	EpochTime			currentEpochTime			= { 0,0 };
-	DirectX::XMFLOAT3	currentCameraPosition		= { 0,0,0 };
-	DirectX::XMFLOAT3	currentCameraRotation		= { 0,0,0 };
+	Vector3D	currentCameraPosition		= { 0,0,0 };
+	Vector3D	currentCameraRotation		= { 0,0,0 };
 	LLACoordinate		origo;
 	SunPositionState	currentSunPosition;
 };

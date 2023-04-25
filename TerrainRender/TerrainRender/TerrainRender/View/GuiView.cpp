@@ -559,19 +559,19 @@ void GuiView::HandleIModelState(const std::vector<IRenderableState>& states)
             //TODO lehet hogy itt initializalni kell 
             IRenderableTransformation tranformation;
             tranformation.id = state.id;
-            XMFLOAT3toCArray(tranformation.rotation, state.rotation);
-            XMFLOAT3toCArray(tranformation.tranlation, state.translation);
+            Vector3DtoCArray(tranformation.rotation, state.rotation);
+            Vector3DtoCArray(tranformation.tranlation, state.translation);
             tranformation.scaling = state.scale.x;
-            XMFLOAT4toCArray(tranformation.color, state.color);
+            Vector4DtoCArray(tranformation.color, state.color);
             tranformation.m_isSeen = state.m_isSeen;
 
             m_TerrainTrasnformations.push_back(tranformation);
         }
         else
         {
-            XMFLOAT4toCArray(it->color, state.color);
-            XMFLOAT3toCArray(it->rotation, state.rotation);
-            XMFLOAT3toCArray(it->tranlation, state.translation);
+            Vector4DtoCArray(it->color, state.color);
+            Vector3DtoCArray(it->rotation, state.rotation);
+            Vector3DtoCArray(it->tranlation, state.translation);
         }
     }
 }
@@ -594,19 +594,19 @@ void GuiView::HandleIModelState(const FlythroughState& state)
             //TODO lehet hogy itt initializalni kell 
             IRenderableTransformation tranformation;
             tranformation.id = state.id;
-            XMFLOAT3toCArray(tranformation.rotation, state.rotation);
-            XMFLOAT3toCArray(tranformation.tranlation, state.translation);
+            Vector3DtoCArray(tranformation.rotation, state.rotation);
+            Vector3DtoCArray(tranformation.tranlation, state.translation);
             tranformation.scaling = state.scale.x;
-            XMFLOAT4toCArray(tranformation.color, state.color);
+            Vector4DtoCArray(tranformation.color, state.color);
             tranformation.m_isSeen = state.m_isSeen;
 
             m_TrajectoryTransformation.push_back(tranformation);
         }
         else
         {
-            XMFLOAT4toCArray(it->color, state.color);
-            XMFLOAT3toCArray(it->rotation, state.rotation);
-            XMFLOAT3toCArray(it->tranlation, state.translation);
+            Vector4DtoCArray(it->color, state.color);
+            Vector3DtoCArray(it->rotation, state.rotation);
+            Vector3DtoCArray(it->tranlation, state.translation);
         }
     }
     m_TrajectoryTransformation;

@@ -522,8 +522,8 @@ FlythroughState	TerrainModel::CollectFlythroughState(void) const
 		state.IsTrajectoryInitialized		= this->IsTrajectoryInitialized();
 		state.currentEpochTime				= m_cameraTrajectory.GetCurrentEpochTime();
 		state.startEpochTime				= m_cameraTrajectory.GetStartEpochTime();
-		state.currentCameraPosition			= m_camera.GetPositionF3();
-		state.currentCameraRotation			= m_camera.GetRotationF3();
+		state.currentCameraPosition			= m_camera.GetPositionVec();
+		state.currentCameraRotation			= m_camera.GetRotationVec();
 		state.currentSunPosition.azimuth	= m_light.GetAzimuth();
 		state.currentSunPosition.elevation	= m_light.GetElevation();
 		state.trajectoryPolyLine.push_back(m_cameraTrajectory.GetTrajectoryPolyLineState());
@@ -542,8 +542,8 @@ Explore3DState TerrainModel::CollectExplore3DState(void) const
 	state.speed							= m_cameraPositioner.GetSpeed();
 	state.rotationSpeed					= m_cameraPositioner.GetRotationSpeed();
 	state.currentEpochTime				= m_cameraPositioner.GetCurrentEpochTime();
-	state.currentCameraPosition			= m_camera.GetPositionF3();
-	state.currentCameraRotation			= m_camera.GetRotationF3();
+	state.currentCameraPosition			= m_camera.GetPositionVec();
+	state.currentCameraRotation			= m_camera.GetRotationVec();
 	state.currentSunPosition.azimuth	= m_light.GetAzimuth();
 	state.currentSunPosition.elevation	= m_light.GetElevation();
 	state.origo = this->m_llacoordinate;

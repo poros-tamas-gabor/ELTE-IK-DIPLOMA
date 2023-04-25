@@ -11,12 +11,12 @@ protected:
 	IVertexShaderPtr		m_vertexShader;
 
 	std::wstring		m_name;
-	DirectX::XMFLOAT3	m_rotation;
-	DirectX::XMFLOAT3	m_scaling;
-	DirectX::XMFLOAT3	m_translation;
+	Vector3D	m_rotation;
+	Vector3D	m_scaling;
+	Vector3D	m_translation;
 	DirectX::XMMATRIX	m_localMatrix;
 	DirectX::XMMATRIX	m_worldMatrix;
-	DirectX::XMFLOAT4	m_color = {1.0f, 1.0f, 1.0f, 1.0f};
+	Vector4D	m_color = {1.0f, 1.0f, 1.0f, 1.0f};
 	bool				m_isSeen = true;
 
 public:

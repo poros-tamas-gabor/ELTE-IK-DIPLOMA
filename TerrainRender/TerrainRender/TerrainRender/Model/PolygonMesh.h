@@ -20,12 +20,12 @@ private:
 	IVertexShaderPtr m_vertexShader;
 
 	std::wstring		m_name;
-	DirectX::XMFLOAT3	m_rotation;
-	DirectX::XMFLOAT3	m_scaling;
-	DirectX::XMFLOAT3	m_translation;
+	Vector3D			m_rotation;
+	Vector3D			m_scaling;
+	Vector3D			m_translation;
+	Vector4D			m_color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	DirectX::XMMATRIX	m_localMatrix;
 	DirectX::XMMATRIX	m_worldMatrix;
-	DirectX::XMFLOAT4	m_color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	bool m_isSeen = true;
 public:
 	PolygonMesh() = default;
@@ -33,25 +33,26 @@ public:
 	PolygonMesh(const PolygonMesh&) = delete;
 	PolygonMesh& operator=(const PolygonMesh&) = delete;
 
-
 	bool Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, IVertexShaderPtr vertexShader, IPixelShaderPtr pixelShader, VertexMesh* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount) override;
 	void Shutdown() override;
 	void Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat,const Light& light) override;
  
-	int GetIndexCount() const;
-	int GetVertexCount() const;
+	int	GetIndexCount() const;
+	int	GetVertexCount() const;
+
+	std::wstring		GetName(void) override;
+	DirectX::XMMATRIX	GetWorldMatrix(void) override;
+	IRenderableState	GetState(void) const override;
 
 	void SetName(const std::wstring& name) override;
-	std::wstring GetName(void) override;
+	void SetColor(float r, float g, float b, float a) override;
+	void SetIsSeen(bool m_isSeen) override;
+
 	void Rotate(float pitch, float yaw, float roll) override;
 	void Translate(float x, float y, float z) override;
 	void Scale(float x, float y, float z) override;
 	void ResetTransformation() override;
-	DirectX::XMMATRIX GetWorldMatrix(void) override;
-	void SetColor(float r, float g, float b, float a) override;
-	void SetIsSeen(bool m_isSeen) override;
 	bool IsSeen(void) const override;
-	IRenderableState	GetState(void) const override;
 
 private:
 	

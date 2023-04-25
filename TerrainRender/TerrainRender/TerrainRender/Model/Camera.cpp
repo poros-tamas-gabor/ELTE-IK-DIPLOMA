@@ -50,17 +50,15 @@ DirectX::XMFLOAT3 Camera::GetRotationF3(void) const
 	return rotation;
 }
 
-DirectX::XMVECTOR Camera::GetPositionVec(void) const
+Vector3D Camera::GetPositionVec(void) const
 {
-	DirectX::XMFLOAT3 position = { this->_positionX, this->_positionY, this->_positionZ };
-	DirectX::XMVECTOR positionVector = DirectX::XMLoadFloat3(&position);
-	return positionVector;
+	Vector3D position = { this->_positionX, this->_positionY, this->_positionZ };
+	return position;
 }
-DirectX::XMVECTOR Camera::GetRotationVec(void) const
+Vector3D Camera::GetRotationVec(void) const
 {
-	DirectX::XMFLOAT3 rotation = { this->_rotationX, this->_rotationY, this->_rotationZ };
-	DirectX::XMVECTOR rotationVector = DirectX::XMLoadFloat3(&rotation);
-	return rotationVector;
+	Vector3D rotation = { this->_rotationX, this->_rotationY, this->_rotationZ };
+	return rotation;
 }
 void Camera::AdjustPosition(float deltaX, float deltaY, float deltaZ)
 {

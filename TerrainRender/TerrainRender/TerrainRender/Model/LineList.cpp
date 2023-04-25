@@ -30,7 +30,7 @@ void LineList::Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext,
 	if (IsSeen())
 	{
 		m_worldMatrix = m_localMatrix * worldMat;
-		bool bresult = this->m_vertexShader->Render(deviceContext, m_worldMatrix, viewMat, projectionMat, m_color);
+		bool bresult = this->m_vertexShader->Render(deviceContext, m_worldMatrix, viewMat, projectionMat, m_color.ToXMFLOAT4());
 		if (!bresult)
 			THROW_TREXCEPTION(L"Failed to render vertex shader");
 		this->RenderBuffers(deviceContext);

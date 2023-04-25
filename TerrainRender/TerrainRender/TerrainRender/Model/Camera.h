@@ -2,6 +2,7 @@
 #define CAMERA_H
 
 #include <DirectXMath.h>
+#include "Persistence/ModelStructs.h"
 class Camera 
 { 
 private:
@@ -49,8 +50,8 @@ public:
 
 	void SetLookAtPos(const DirectX::XMFLOAT3& lookAt);
 
-	DirectX::XMVECTOR GetPositionVec(void) const;
-	DirectX::XMVECTOR GetRotationVec(void) const;
+	Vector3D GetPositionVec(void) const;
+	Vector3D GetRotationVec(void) const;
 	DirectX::XMFLOAT3 GetPositionF3(void) const;
 	DirectX::XMFLOAT3 GetRotationF3(void) const;
 

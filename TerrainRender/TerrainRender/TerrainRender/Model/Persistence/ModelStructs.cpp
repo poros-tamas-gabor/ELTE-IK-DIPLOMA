@@ -4,14 +4,14 @@ float to_float_with_precision(const float value, const int n)
 {
 	return std::roundf(value * std::pow(10, n)) / std::pow(10, n);
 }
-void XMFLOAT3toCArray(float array[], DirectX::XMFLOAT3 floats)
+void Vector3DtoCArray(float array[], Vector3D floats)
 {
 	array[0] = floats.x;
 	array[1] = floats.y;
 	array[2] = floats.z;
 }
 
-void XMFLOAT4toCArray(float array[], DirectX::XMFLOAT4 floats)
+void Vector4DtoCArray(float array[], Vector4D floats)
 {
 	array[0] = floats.x;
 	array[1] = floats.y;
@@ -111,6 +111,15 @@ std::wstring ToString(const Vector3D& obj)
 	std::wostringstream oss;
 	oss << L"{ " << obj.x << L", " << obj.y << L", " << obj.z << L" }";
 	return oss.str();
+}
+
+DirectX::XMFLOAT4 Vector4D::ToXMFLOAT4(void) const
+{
+	return { x,y,z,w };
+}
+bool Vector4D::operator==(const Vector4D& other) const
+{
+	return { this->x == other.x && this->y == other.y && this->z == other.z && this->w == other.w };
 }
 
 Vector3D operator*(float factor, const Vector3D& other)

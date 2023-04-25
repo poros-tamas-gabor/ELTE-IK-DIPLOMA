@@ -33,15 +33,15 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
+    <ClInclude Include="Mocks.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\packages\gmock.1.11.0\lib\native\src\gmock\gmock-all.cc" />
-    <ClCompile Include="..\packages\gmock.1.11.0\lib\native\src\gtest\gtest-all.cc" />
     <ClCompile Include="..\packages\gmock.1.11.0\lib\native\src\gtest\src\gtest_main.cc" />
     <ClCompile Include="EpochTimeUnitTest.cpp" />
     <ClCompile Include="FileDataAccessUnitTest.cpp" />
     <ClCompile Include="ModelStructsUnitTest.cpp" />
+    <ClCompile Include="PolygonMeshUnitTest.cpp" />
     <ClCompile Include="test.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

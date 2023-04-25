@@ -5,10 +5,6 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TerrainRender", "TerrainRender\TerrainRender.vcxproj", "{E3F49437-7AA3-4150-913D-C85143DD3D57}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TerrainRenderModelUnitTest", "TerrainRenderModelUnitTest\TerrainRenderModelUnitTest.vcxproj", "{64ECEB58-476F-4C10-AE01-3633D27BA204}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TerrainRenderModelUnitGoogleTest", "TerrainRenderModelUnitGoogleTest\TerrainRenderModelUnitGoogleTest.vcxproj", "{D2CAD5FF-BAED-440C-A788-43494E30A6EA}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -25,22 +21,6 @@ Global
 		{E3F49437-7AA3-4150-913D-C85143DD3D57}.Release|x64.Build.0 = Release|x64
 		{E3F49437-7AA3-4150-913D-C85143DD3D57}.Release|x86.ActiveCfg = Release|Win32
 		{E3F49437-7AA3-4150-913D-C85143DD3D57}.Release|x86.Build.0 = Release|Win32
-		{64ECEB58-476F-4C10-AE01-3633D27BA204}.Debug|x64.ActiveCfg = Debug|x64
-		{64ECEB58-476F-4C10-AE01-3633D27BA204}.Debug|x64.Build.0 = Debug|x64
-		{64ECEB58-476F-4C10-AE01-3633D27BA204}.Debug|x86.ActiveCfg = Debug|Win32
-		{64ECEB58-476F-4C10-AE01-3633D27BA204}.Debug|x86.Build.0 = Debug|Win32
-		{64ECEB58-476F-4C10-AE01-3633D27BA204}.Release|x64.ActiveCfg = Release|x64
-		{64ECEB58-476F-4C10-AE01-3633D27BA204}.Release|x64.Build.0 = Release|x64
-		{64ECEB58-476F-4C10-AE01-3633D27BA204}.Release|x86.ActiveCfg = Release|Win32
-		{64ECEB58-476F-4C10-AE01-3633D27BA204}.Release|x86.Build.0 = Release|Win32
-		{D2CAD5FF-BAED-440C-A788-43494E30A6EA}.Debug|x64.ActiveCfg = Debug|x64
-		{D2CAD5FF-BAED-440C-A788-43494E30A6EA}.Debug|x64.Build.0 = Debug|x64
-		{D2CAD5FF-BAED-440C-A788-43494E30A6EA}.Debug|x86.ActiveCfg = Debug|Win32
-		{D2CAD5FF-BAED-440C-A788-43494E30A6EA}.Debug|x86.Build.0 = Debug|Win32
-		{D2CAD5FF-BAED-440C-A788-43494E30A6EA}.Release|x64.ActiveCfg = Release|x64
-		{D2CAD5FF-BAED-440C-A788-43494E30A6EA}.Release|x64.Build.0 = Release|x64
-		{D2CAD5FF-BAED-440C-A788-43494E30A6EA}.Release|x86.ActiveCfg = Release|Win32
-		{D2CAD5FF-BAED-440C-A788-43494E30A6EA}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

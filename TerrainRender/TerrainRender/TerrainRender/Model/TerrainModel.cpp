@@ -19,10 +19,11 @@ bool TerrainModel::Initalize(HWND hwnd, IDataAccessPtr persistence, Microsoft::W
 
 	this->m_device = device;
 
-	m_vertexShaderMesh = std::make_shared<VertexShaderMesh>();
-	m_pixelShaderMesh = std::make_shared<PixelShaderMesh>();
-	m_vertexShaderPolyLine = std::make_shared<VertexShaderPolyLine>();
-	m_pixelShaderPolyLine = std::make_shared<PixelShaderPolyLine>();
+	m_vertexShaderMesh		= std::make_shared<VertexShaderMesh>();
+	m_pixelShaderMesh		= std::make_shared<PixelShaderMesh>();
+	m_vertexShaderPolyLine	= std::make_shared<VertexShaderPolyLine>();
+	m_pixelShaderPolyLine	= std::make_shared<PixelShaderPolyLine>();
+	m_camera				= std::make_shared<Camera>();
 
 	bresult = this->m_vertexShaderMesh->Initialize(device, hwnd);
 	if (!bresult)
@@ -48,8 +49,8 @@ bool TerrainModel::Initalize(HWND hwnd, IDataAccessPtr persistence, Microsoft::W
 		return false;
 	}
 
-	this->m_camera.Initialize(screenWidth, screenHeight, screenNear, screenDepth, fieldOfView);
-	this->m_cameraPositioner.Initialize(&this->m_camera);
+	this->m_camera->Initialize(screenWidth, screenHeight, screenNear, screenDepth, fieldOfView);
+	this->m_cameraPositioner.Initialize(this->m_camera);
 
 	this->m_meshes.Initialize(device, m_vertexShaderMesh, m_pixelShaderMesh, NULL, NULL, NULL, NULL);
 	this->m_polylines.Initialize(device, m_vertexShaderPolyLine, m_pixelShaderPolyLine, NULL, NULL, NULL, NULL);
@@ -62,7 +63,8 @@ bool TerrainModel::Initalize(HWND hwnd, IDataAccessPtr persistence, Microsoft::W
 
 void TerrainModel::Resize(unsigned screenWidth, unsigned screenHeight)
 {
-	this->m_camera.Resize(screenWidth, screenHeight);
+	if (m_camera != nullptr)
+		this->m_camera->Resize(screenWidth, screenHeight);
 }
 
 void TerrainModel::Shutdown()
@@ -77,13 +79,13 @@ void TerrainModel::Shutdown()
 
 bool TerrainModel::Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext)
 {
-	this->m_camera.Render();
+	this->m_camera->Render();
 
 	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixIdentity();
 
-	this->m_meshes.Render(deviceContext,worldMatrix, m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix(), m_light);
+	this->m_meshes.Render(deviceContext,worldMatrix, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix(), m_light);
 
-	this->m_polylines.Render(deviceContext, worldMatrix, m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix(), m_light);
+	this->m_polylines.Render(deviceContext, worldMatrix, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix(), m_light);
 	return true;
 }
 
@@ -401,7 +403,7 @@ bool	TerrainModel::LoadCameraTrajectory(const wchar_t* filepath)
 		
 		m_polylines.Add(&vertices.at(0), NULL, vertices.size(), NULL, creator, filepath);
 		IRendarablePtr<VertexPolyLine> polyline = m_polylines.GetLastAddedComponent();
-		m_cameraTrajectory.Initialize(cameraPoses, polyline, &m_camera);
+		m_cameraTrajectory.Initialize(cameraPoses, polyline, m_camera);
 		PublishModelState();
 		return true;
 	}
@@ -430,7 +432,7 @@ bool TerrainModel::IsTrajectoryInitialized(void) const
 }
 void TerrainModel::ResetCamera()
 {
-	this->m_camera.Reset();
+	this->m_camera->Reset();
 	PublishModelState();
 }
 
@@ -493,17 +495,17 @@ void TerrainModel::UpdateCameraProperties(unsigned message, float data)
 
 	case IDM_SET_CAMERA_FIELD_OF_VIEW:
 	{
-		this->m_camera.SetFieldOfView(data);
+		this->m_camera->SetFieldOfView(data);
 		break;
 	}
 	case IDM_SET_CAMERA_ASPECT_NEAR_SCREEN:
 	{
-		this->m_camera.SetNearScreen(data);
+		this->m_camera->SetNearScreen(data);
 		break;
 	}
 	case IDM_SET_CAMERA_ASPECT_FAR_SCREEN:
 	{
-		this->m_camera.SetFarScreen(data);
+		this->m_camera->SetFarScreen(data);
 		break;
 	}
 	default:
@@ -522,8 +524,8 @@ FlythroughState	TerrainModel::CollectFlythroughState(void) const
 		state.IsTrajectoryInitialized		= this->IsTrajectoryInitialized();
 		state.currentEpochTime				= m_cameraTrajectory.GetCurrentEpochTime();
 		state.startEpochTime				= m_cameraTrajectory.GetStartEpochTime();
-		state.currentCameraPosition			= m_camera.GetPositionVec();
-		state.currentCameraRotation			= m_camera.GetRotationVec();
+		state.currentCameraPosition			= m_camera->GetPositionVec();
+		state.currentCameraRotation			= m_camera->GetRotationVec();
 		state.currentSunPosition.azimuth	= m_light.GetAzimuth();
 		state.currentSunPosition.elevation	= m_light.GetElevation();
 		state.trajectoryPolyLine.push_back(m_cameraTrajectory.GetTrajectoryPolyLineState());
@@ -534,7 +536,7 @@ FlythroughState	TerrainModel::CollectFlythroughState(void) const
 
 CameraState		TerrainModel::CollectCameraState(void) const
 {
-	return CameraState{ m_camera.GetFOVrad(), m_camera.GetNearScreen(), m_camera.GetFarScreen() };
+	return CameraState{ m_camera->GetFOVrad(), m_camera->GetNearScreen(), m_camera->GetFarScreen() };
 }
 Explore3DState TerrainModel::CollectExplore3DState(void) const
 {
@@ -542,8 +544,8 @@ Explore3DState TerrainModel::CollectExplore3DState(void) const
 	state.speed							= m_cameraPositioner.GetSpeed();
 	state.rotationSpeed					= m_cameraPositioner.GetRotationSpeed();
 	state.currentEpochTime				= m_cameraPositioner.GetCurrentEpochTime();
-	state.currentCameraPosition			= m_camera.GetPositionVec();
-	state.currentCameraRotation			= m_camera.GetRotationVec();
+	state.currentCameraPosition			= m_camera->GetPositionVec();
+	state.currentCameraRotation			= m_camera->GetRotationVec();
 	state.currentSunPosition.azimuth	= m_light.GetAzimuth();
 	state.currentSunPosition.elevation	= m_light.GetElevation();
 	state.origo = this->m_llacoordinate;

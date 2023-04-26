@@ -1,7 +1,7 @@
 #include "CameraTrajectory.h"
 #include "../ErrorHandler.h"
 
-bool CameraTrajectory::Initialize(const std::vector<CameraPose>& cameraPoses, IRendarablePtr<VertexPolyLine> renderable, Camera* camera)
+bool CameraTrajectory::Initialize(const std::vector<CameraPose>& cameraPoses, IRendarablePtr<VertexPolyLine> renderable, CameraPtr camera)
 {
 	if (renderable == nullptr || camera == nullptr)
 	{

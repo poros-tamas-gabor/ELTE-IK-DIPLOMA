@@ -4,8 +4,9 @@
 #include <DirectXMath.h>
 #include "Persistence/ModelStructs.h"
 #include <ctime>
-
+#include <memory>
 class Camera;
+typedef std::shared_ptr<Camera> CameraPtr;
 class CameraPositioner
 {
 
@@ -26,7 +27,7 @@ private:
 
 	DirectX::XMMATRIX m_rotationMatrix;
 
-	Camera* m_camera;
+	CameraPtr m_camera;
 
 	float m_speed = 0.005f;
 	float m_rotationSpeed = 0.001f;
@@ -42,7 +43,7 @@ public:
 	void MoveUp(float dt);
 	void MoveDown(float dt);
 	void RotatePitchYaw(float x, float y);
-	void Initialize(Camera* camera);
+	void Initialize(CameraPtr camera);
 
 	void SetSpeed(float speed);
 	void SetRotationSpeed(float speed);

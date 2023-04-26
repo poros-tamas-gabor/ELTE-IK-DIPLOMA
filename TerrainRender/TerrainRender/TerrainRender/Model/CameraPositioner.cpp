@@ -62,7 +62,7 @@ void CameraPositioner::MoveDown(float dt)
 	this->MoveTemplate(this->DEFAULT_DOWN, this->m_current_down, dt);
 }
 
-void CameraPositioner::Initialize(Camera* camera)
+void CameraPositioner::Initialize(CameraPtr camera)
 {
 	this->m_camera = camera;
 	this->m_rotationMatrix = this->m_camera->GetRotationMatrix();

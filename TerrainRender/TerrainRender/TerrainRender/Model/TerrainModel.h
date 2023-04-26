@@ -43,7 +43,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext>	m_deviceContext;
 
 public:
-	Camera									m_camera;
+	CameraPtr									m_camera;
 	ModelMessageSystem							m_modelMessageSystem;
 	
 

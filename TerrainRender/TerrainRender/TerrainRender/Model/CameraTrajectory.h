@@ -22,11 +22,11 @@ private:
 	std::vector<Vector3D>					m_rotations;
 	unsigned								m_currentFrameNum;
 	IRendarablePtr<VertexPolyLine> 			m_polyLine;
-	Camera*									m_camera;
+	CameraPtr								m_camera;
 
 
 public:
-	bool Initialize(const std::vector<CameraPose>& cameraPoses, IRendarablePtr<VertexPolyLine>  renderable, Camera* camera);
+	bool Initialize(const std::vector<CameraPose>& cameraPoses, IRendarablePtr<VertexPolyLine>  renderable, CameraPtr camera);
 
 	bool IsInitialized(void) const;
 	void UpdateCamera(double elapsedmsecs);

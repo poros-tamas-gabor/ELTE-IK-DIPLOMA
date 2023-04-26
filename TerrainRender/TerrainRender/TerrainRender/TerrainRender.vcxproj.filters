@@ -371,9 +371,6 @@
     <ClInclude Include="ImGui\imgui.h">
       <Filter>Resource Files\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Model\CameraPositioner.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="nlohmann\json.hpp">
       <Filter>Resource Files</Filter>
     </ClInclude>
@@ -412,6 +409,9 @@
     </ClInclude>
     <ClInclude Include="win.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\CameraPositioner.h">
+      <Filter>Header Files\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

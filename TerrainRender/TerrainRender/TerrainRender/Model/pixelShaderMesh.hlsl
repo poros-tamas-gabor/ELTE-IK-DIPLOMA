@@ -1,7 +1,7 @@
 struct PS_INPUT // == VS_OUTPUT
 {
     float4 position : SV_POSITION;
-    float4 normal   : NORMAL;
+    float3 normal   : NORMAL;
     float4 color    : COLOR;
 };
 
@@ -18,8 +18,14 @@ float4 main(PS_INPUT input) : SV_TARGET
     float4 color;
     float diffuseBrightness;
     float4 ambient;
-    float3 lightDir = normalize(inverseLightDirection.xyz);
-    float3 normal = normalize(input.normal);
+    float3 lightDir;
+    float3 normal;
+
+    lightDir = normalize(inverseLightDirection.xyz);
+    normal = normalize(input.normal);
+
+    //to test normal vectors
+   // return color = float4((normal * 0.5) + 0.5, 1.0f);
 
     color = ambientColor;
     diffuseBrightness = saturate(dot(normal, lightDir));

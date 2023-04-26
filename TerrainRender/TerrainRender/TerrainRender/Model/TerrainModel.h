@@ -38,12 +38,12 @@ private:
 	CameraPositioner							m_cameraPositioner;
 	CameraTrajectory							m_cameraTrajectory;
 
-	Microsoft::WRL::ComPtr<ID3D11Device>								m_device;
-	Microsoft::WRL::ComPtr<ID3D11DeviceContext>						m_deviceContext;
 	IDataAccessPtr								m_persistence;
+	Microsoft::WRL::ComPtr<ID3D11Device>		m_device;
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext>	m_deviceContext;
 
 public:
-	Camera										m_camera;
+	Camera									m_camera;
 	ModelMessageSystem							m_modelMessageSystem;
 	
 
@@ -58,12 +58,12 @@ public:
 	void	Shutdown() override;
 	bool	Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext) override;
 
-	bool	LoadTerrainSharpEdges(const wchar_t* filepath) override;
-	bool	LoadTerrainSoftEdges(const wchar_t* filepath) override;
+	bool	LoadTerrain_withSharpEdges(const wchar_t* filepath) override;
+	bool	LoadTerrain_withSoftEdges(const wchar_t* filepath) override;
 	bool	LoadCameraTrajectory(const wchar_t* filepath) override;
-	bool	LoadParameters(const wchar_t* filepath) override;
-	bool	LoadTerrainSharpEdges_Project(const std::vector<std::wstring>& files) override;
-	bool	LoadTerrainSoftEdges_Project(const std::vector<std::wstring>& files) override;
+	bool	LoadConfigurationFile(const wchar_t* filepath) override;
+	bool	LoadProject_withSharpEdges(const std::vector<std::wstring>& files) override;
+	bool	LoadProject_withSoftEdges(const std::vector<std::wstring>& files) override;
 
 	bool	IsTrajectoryInitialized(void) const override;
 

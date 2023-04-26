@@ -3,6 +3,7 @@
 
 #include <DirectXMath.h>
 #include "Persistence/ModelStructs.h"
+#include <memory>
 class Camera 
 { 
 private:
@@ -62,7 +63,6 @@ public:
 	float GetFOVrad(void) const;
 	float GetNearScreen(void) const;
 	float GetFarScreen(void) const;
-
-
 };
+typedef std::shared_ptr<Camera> CameraPtr;
 #endif // !CAMERA_H

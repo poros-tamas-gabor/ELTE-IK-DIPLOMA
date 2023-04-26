@@ -13,17 +13,17 @@ class IDataAccess
 public:
 	virtual ~IDataAccess() = default;
 
-	virtual void LoadTerrainSharpEdges(const wchar_t*) = 0;
-    //Use After LoadTerrainSharpEdges
+	virtual void LoadTerrain_withSharpEdges(const wchar_t*) = 0;
+    //Use After LoadTerrain_withSharpEdges
     virtual const std::vector<stlFacet>& GetFacets(void) = 0;
 
     virtual void LoadCameraTrajectory(const wchar_t*, std::vector<CameraPose>&) = 0;
     virtual void LoadConfigurationFile(const wchar_t*, ParameterFile& params) = 0;
 
-	virtual void LoadTerrainSoftEdges(const wchar_t*) = 0;
-    //Use After LoadTerrainSoftEdges
+	virtual void LoadTerrain_withSoftEdges(const wchar_t*) = 0;
+    //Use After LoadTerrain_withSoftEdges
     virtual const std::vector<StlVertex>& GetVertices_Soft() = 0;
-    //Use After LoadTerrainSoftEdges
+    //Use After LoadTerrain_withSoftEdges
     virtual const std::vector<CornerIndices>& GetIndices_Soft() = 0;
 };
 
@@ -57,8 +57,8 @@ public:
     BinaryFileDataAccessAsync& operator=(const BinaryFileDataAccessAsync&) = delete;
     ~BinaryFileDataAccessAsync() = default;
 
-    void LoadTerrainSharpEdges(const wchar_t* filename) override;
-    void LoadTerrainSoftEdges(const wchar_t* filename) override;
+    void LoadTerrain_withSharpEdges(const wchar_t* filename) override;
+    void LoadTerrain_withSoftEdges(const wchar_t* filename) override;
     void LoadCameraTrajectory(const wchar_t*, std::vector<CameraPose>& cameraPoses) override;
     void LoadConfigurationFile(const wchar_t*, ParameterFile& params) override;
     

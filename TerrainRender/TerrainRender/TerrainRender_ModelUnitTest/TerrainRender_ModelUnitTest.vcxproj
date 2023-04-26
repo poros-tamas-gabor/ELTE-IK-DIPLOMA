@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\packages\gmock.1.11.0\lib\native\src\gtest\src\gtest_main.cc" />
+    <ClCompile Include="CameraPositionerUnitTest.cpp" />
     <ClCompile Include="CameraUnitTest.cpp" />
     <ClCompile Include="CompositeRenderableUnitTest.cpp" />
     <ClCompile Include="EpochTimeUnitTest.cpp" />

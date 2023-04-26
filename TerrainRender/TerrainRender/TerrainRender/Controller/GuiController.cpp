@@ -247,7 +247,7 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 		wchar_t filePath[260];
 		this->OpenFileDialog(filePath, 260, m_filter_json);
 		if (!std::wstring(filePath).empty())
-			this->m_terrainModel->LoadParameters(filePath);
+			this->m_terrainModel->LoadConfigurationFile(filePath);
 		break;
 	}
 

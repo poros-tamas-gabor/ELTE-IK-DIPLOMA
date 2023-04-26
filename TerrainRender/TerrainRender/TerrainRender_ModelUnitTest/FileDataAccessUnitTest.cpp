@@ -72,33 +72,33 @@ TEST_F(DataAccessTest, LoadCameraTrajectory1)
 TEST_F(DataAccessTest, LoadTerrain_withSoftEdges)
 {
 	IDataAccessPtr persistence = std::make_shared<BinaryFileDataAccessAsync>();
-	ASSERT_THROW(persistence->LoadTerrainSoftEdges(L"invalid"), TRException);
+	ASSERT_THROW(persistence->LoadTerrain_withSoftEdges(L"invalid"), TRException);
 
 	TCHAR buffer[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, buffer);
 
 	std::wstring asciiPath(buffer);
 	asciiPath += L"..\\..\\..\\TerrainRender_ModelUnitTest\\ResourceFiles\\ASCII_Sphericon.stl";
-	ASSERT_THROW(persistence->LoadTerrainSoftEdges(asciiPath.c_str()), TRException);
+	ASSERT_THROW(persistence->LoadTerrain_withSoftEdges(asciiPath.c_str()), TRException);
 
 
 	std::wstring spherePath(buffer);
 	spherePath += L"..\\..\\..\\TerrainRender_ModelUnitTest\\ResourceFiles\\3d_model_of_Sphere.stl";
-	persistence->LoadTerrainSoftEdges(spherePath.c_str());
+	persistence->LoadTerrain_withSoftEdges(spherePath.c_str());
 
 	ASSERT_EQ(persistence->GetVertices_Soft().size(), size_t(1538));
 	ASSERT_EQ(persistence->GetIndices_Soft().size(), size_t(3072));
 
 	std::wstring bunny70k_path(buffer);
 	bunny70k_path += L"..\\..\\..\\TerrainRender_ModelUnitTest\\ResourceFiles\\bunny70k.stl";
-	persistence->LoadTerrainSoftEdges(bunny70k_path.c_str());
+	persistence->LoadTerrain_withSoftEdges(bunny70k_path.c_str());
 
 	ASSERT_EQ(persistence->GetVertices_Soft().size(), size_t(34834));
 	ASSERT_EQ(persistence->GetIndices_Soft().size(), size_t(69451));
 
 	std::wstring bunny10k_path(buffer);
 	bunny10k_path += L"..\\..\\..\\TerrainRender_ModelUnitTest\\ResourceFiles\\bunny10k.stl";
-	persistence->LoadTerrainSoftEdges(bunny10k_path.c_str());
+	persistence->LoadTerrain_withSoftEdges(bunny10k_path.c_str());
 
 	ASSERT_EQ(persistence->GetVertices_Soft().size(), size_t(5051));
 	ASSERT_EQ(persistence->GetIndices_Soft().size(), size_t(9999));

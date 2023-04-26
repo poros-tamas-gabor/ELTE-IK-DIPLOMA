@@ -191,7 +191,7 @@ void TerrainModel::RotateCamera(unsigned message, float pitch, float yaw)
 	PublishModelState();
 }
 
-bool TerrainModel::LoadTerrainSoftEdges(const wchar_t* filepath)
+bool TerrainModel::LoadTerrain_withSoftEdges(const wchar_t* filepath)
 {
 	VertexMesh* pVertices;
 	UINT									vertexCount;
@@ -202,7 +202,7 @@ bool TerrainModel::LoadTerrainSoftEdges(const wchar_t* filepath)
 
 	try
 	{
-		m_persistence->LoadTerrainSoftEdges(filepath);
+		m_persistence->LoadTerrain_withSoftEdges(filepath);
 		const std::vector<StlVertex>& vertices = m_persistence->GetVertices_Soft();
 		const std::vector<CornerIndices>& facetIndices = m_persistence->GetIndices_Soft();
 		for (const CornerIndices& facet : facetIndices)
@@ -254,7 +254,7 @@ bool TerrainModel::LoadTerrainSoftEdges(const wchar_t* filepath)
 	return false;
 }
 
-bool TerrainModel::LoadTerrainSharpEdges(const wchar_t* filepath)
+bool TerrainModel::LoadTerrain_withSharpEdges(const wchar_t* filepath)
 {
 	VertexMesh*								pVertices;
 	UINT									vertexCount;
@@ -265,7 +265,7 @@ bool TerrainModel::LoadTerrainSharpEdges(const wchar_t* filepath)
 
 	try
 	{
-		m_persistence->LoadTerrainSharpEdges(filepath);
+		m_persistence->LoadTerrain_withSharpEdges(filepath);
 		const std::vector<stlFacet>& facets = m_persistence->GetFacets();
 		unsigned index = 0;
 		for (const stlFacet& facet : facets)
@@ -313,27 +313,27 @@ bool TerrainModel::LoadTerrainSharpEdges(const wchar_t* filepath)
 	return false;
 }
 
-bool	TerrainModel::LoadTerrainSharpEdges_Project(const std::vector<std::wstring>& files)
+bool	TerrainModel::LoadProject_withSharpEdges(const std::vector<std::wstring>& files)
 {
 	for (const std::wstring& filepath : files)
 	{
-		this->LoadTerrainSharpEdges(filepath.c_str());
+		this->LoadTerrain_withSharpEdges(filepath.c_str());
 	}
 	return true;
 
 }
 
-bool	TerrainModel::LoadTerrainSoftEdges_Project(const std::vector<std::wstring>& files)
+bool	TerrainModel::LoadProject_withSoftEdges(const std::vector<std::wstring>& files)
 {
 	for (const std::wstring& filepath : files)
 	{
-		this->LoadTerrainSoftEdges(filepath.c_str());
+		this->LoadTerrain_withSoftEdges(filepath.c_str());
 	}
 	return true;
 
 }
 
-bool	TerrainModel::LoadParameters(const wchar_t* filepath)
+bool	TerrainModel::LoadConfigurationFile(const wchar_t* filepath)
 {
 	ParameterFile params;
 	try

@@ -181,12 +181,12 @@ void BinaryFileDataAccessAsync::ReadFileSoftEdges(const std::wstring& filepath)
    }
 }
 
-void BinaryFileDataAccessAsync::LoadTerrainSoftEdges(const wchar_t* filename)
+void BinaryFileDataAccessAsync::LoadTerrain_withSoftEdges(const wchar_t* filename)
 {
     this->ReadFileSoftEdges(filename);
 }
 
-void BinaryFileDataAccessAsync::LoadTerrainSharpEdges(const wchar_t* filename)
+void BinaryFileDataAccessAsync::LoadTerrain_withSharpEdges(const wchar_t* filename)
 {
     this->ReadFileSharpEdges(filename);
 }

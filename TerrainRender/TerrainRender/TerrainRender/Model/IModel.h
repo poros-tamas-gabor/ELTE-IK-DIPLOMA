@@ -19,12 +19,12 @@ public:
 	virtual void	Shutdown() = 0;
 	virtual bool	Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext) = 0;
 
-	virtual bool	LoadTerrainSharpEdges(const wchar_t* filepath) = 0;
-	virtual bool	LoadTerrainSoftEdges(const wchar_t* filepath) = 0;
+	virtual bool	LoadTerrain_withSharpEdges(const wchar_t* filepath) = 0;
+	virtual bool	LoadTerrain_withSoftEdges(const wchar_t* filepath) = 0;
 	virtual bool	LoadCameraTrajectory(const wchar_t* filepath) = 0;
-	virtual bool	LoadParameters(const wchar_t* filepath) = 0;
-	virtual bool	LoadTerrainSharpEdges_Project(const std::vector<std::wstring>& files) = 0;
-	virtual bool	LoadTerrainSoftEdges_Project(const std::vector<std::wstring>& files) = 0;
+	virtual bool	LoadConfigurationFile(const wchar_t* filepath) = 0;
+	virtual bool	LoadProject_withSharpEdges(const std::vector<std::wstring>& files) = 0;
+	virtual bool	LoadProject_withSoftEdges(const std::vector<std::wstring>& files) = 0;
  
 	virtual bool	IsTrajectoryInitialized(void) const = 0;
 

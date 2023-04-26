@@ -163,3 +163,5 @@ TEST_F(PolygonMeshUnitTest, SetIsSeenAndIsSeen)
 	ASSERT_FALSE(mesh.GetState().m_isSeen);
 }
 
+
+

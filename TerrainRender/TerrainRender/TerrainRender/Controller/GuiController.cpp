@@ -71,7 +71,7 @@ bool GuiController::IsFlythroughModeOn(void) const
 	return false;
 }
 
-void GuiController::OpenFileDialog(wchar_t* filePath, unsigned buffer)
+void GuiController::OpenFileDialog(wchar_t* filePath, unsigned buffer, const wchar_t* filter)
 {
 	//wchar_t filePath[260];      // buffer for file name
 	OPENFILENAME ofn;			// common dialog box structure
@@ -88,7 +88,7 @@ void GuiController::OpenFileDialog(wchar_t* filePath, unsigned buffer)
 	//
 	ofn.lpstrFile[0] = '\0';
 	ofn.nMaxFile = sizeof(wchar_t) * buffer;
-	ofn.lpstrFilter = L"All\0*.*\0Text\0*.TXT\0";
+	ofn.lpstrFilter = filter;//fileFilter.c_str();
 	ofn.nFilterIndex = 1;
 	ofn.lpstrFileTitle = NULL;
 	ofn.nMaxFileTitle = 0;
@@ -125,7 +125,7 @@ void GuiController::OpenFileDialogDirectory(std::wstring& directory)
 	}
 }
 
-void GuiController::OpenFileDialogMultipleSelection(std::vector<std::wstring>& files)
+void GuiController::OpenFileDialogMultipleSelection(std::vector<std::wstring>& files, const wchar_t* filter)
 {
 	wchar_t filePath[260];      // buffer for file name
 	OPENFILENAME ofn;			// common dialog box structure
@@ -142,7 +142,7 @@ void GuiController::OpenFileDialogMultipleSelection(std::vector<std::wstring>& f
 	//
 	ofn.lpstrFile[0] = '\0';
 	ofn.nMaxFile = sizeof(wchar_t) * 260;
-	ofn.lpstrFilter = L"All\0*.*\0Text\0*.TXT\0";
+	ofn.lpstrFilter = filter;//L"All\0*.*\0Text\0*.TXT\0";
 	ofn.nFilterIndex = 1;
 	ofn.lpstrFileTitle = NULL;
 	ofn.nMaxFileTitle = 0;
@@ -187,7 +187,7 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 	case IDMENU_FIlE_TERRAIN_SHARP:
 	{
 		wchar_t filePath[260];
-		this->OpenFileDialog(filePath, 260);
+		this->OpenFileDialog(filePath, 260, m_filter_stl);// L"All\0*.*\0Text\0*.TXT\0";
 		std::wstring filepathwstr(filePath);
 		if (!filepathwstr.empty())
 		{
@@ -201,7 +201,7 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 	case IDMENU_FIlE_TERRAIN_SOFT:
 	{
 		wchar_t filePath[260];
-		this->OpenFileDialog(filePath, 260);
+		this->OpenFileDialog(filePath, 260, m_filter_stl);
 
 		std::wstring filepathwstr(filePath);
 		if (!filepathwstr.empty())
@@ -215,7 +215,7 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 	case IDMENU_FIlE_CAMERA_TRAJECTORY:
 	{
 		wchar_t filePath[260];
-		this->OpenFileDialog(filePath, 260);
+		this->OpenFileDialog(filePath, 260, m_filter_csv);
 		if (!std::wstring(filePath).empty())
 			this->m_terrainModel->LoadCameraTrajectory(filePath);
 		break;
@@ -223,7 +223,7 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 	case IDMENU_FIlE_TERRAIN_PROJECT_SHARP:
 	{
 		std::vector<std::wstring> files;
-		this->OpenFileDialogMultipleSelection(files);
+		this->OpenFileDialogMultipleSelection(files, m_filter_stl);
 
 		std::atomic_bool running(true);
 		Creator_LoadProject_Sharp creator(files, m_terrainModel, running);
@@ -235,7 +235,7 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 	case IDMENU_FIlE_TERRAIN_PROJECT_SOFT:
 	{
 		std::vector<std::wstring> files;
-		this->OpenFileDialogMultipleSelection(files);
+		this->OpenFileDialogMultipleSelection(files, m_filter_stl);
 
 		std::atomic_bool running(true);
 		Creator_LoadProject_Soft creator(files, m_terrainModel, running);
@@ -245,7 +245,7 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 	case IDMENU_FIlE_PARAMETERS:
 	{
 		wchar_t filePath[260];
-		this->OpenFileDialog(filePath, 260);
+		this->OpenFileDialog(filePath, 260, m_filter_json);
 		if (!std::wstring(filePath).empty())
 			this->m_terrainModel->LoadParameters(filePath);
 		break;

@@ -17,6 +17,10 @@ private:
 	ControllerMessageSystemPtr	m_messageSystem;
 	bool						m_isActive;
 
+	const wchar_t* m_filter_stl =	L"Binary stl files\0*.stl\0All\0*.*\0";
+	const wchar_t* m_filter_csv =	L"Trajectory csv files\0*.csv\0All\0*.*\0";
+	const wchar_t* m_filter_json =	L"Configuration json files\0*.json\0All\0*.*\0";
+
 public:
 	GuiController();
 	virtual ~GuiController();
@@ -39,9 +43,9 @@ public:
 	void HandleIModelState(const CameraState&) override;
 
 private:
-	void OpenFileDialog(wchar_t* filePath, unsigned buffer);
+	void OpenFileDialog(wchar_t* filePath, unsigned buffer, const wchar_t* filter);
 	void OpenFileDialogDirectory(std::wstring& directory);
-	void OpenFileDialogMultipleSelection(std::vector<std::wstring>& files);
+	void OpenFileDialogMultipleSelection(std::vector<std::wstring>& files, const wchar_t* filter);
 	void StartWorkerThread(const ICallableCreator& creator, std::atomic_bool& running);
 
 

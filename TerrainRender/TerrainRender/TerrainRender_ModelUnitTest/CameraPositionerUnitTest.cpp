@@ -1,19 +1,230 @@
 #include "pch.h"
 
-TEST(CameraPositionerUnitTest, Initialize)
+class CameraPositionerTest : public ::testing::Test {
+protected:
+    CameraPtr           m_camera;
+    CameraPositioner    m_positioner;
+
+    void SetUp() override {
+        m_camera = std::make_shared<Camera>();
+        m_positioner.Initialize(m_camera);
+    }
+};
+
+TEST_F(CameraPositionerTest, Initialize)
 {
-	Camera camera;
-	ASSERT_THROW(camera.Initialize(0, 1, 1, 2, 1), TRException);
-	ASSERT_THROW(camera.Initialize(1, 0, 1, 2, 1), TRException);
-	ASSERT_THROW(camera.Initialize(1, 1, 0, 2, 1), TRException);
-	ASSERT_THROW(camera.Initialize(1, 1, 1, 0, 1), TRException);
-	ASSERT_THROW(camera.Initialize(1, 1, 1, 2, 0), TRException);
-	ASSERT_THROW(camera.Initialize(1, 1, 1, 1, 1), TRException);
+    CameraPtr           nullCamera;
+    CameraPositioner    positioner;
 
-	camera.Initialize(800, 600, 0.1f, 100.0f, DirectX::XMConvertToRadians(60.0f));
+    ASSERT_THROW(positioner.Initialize(nullCamera), TRException);
+}
 
-	DirectX::XMMATRIX actual = camera.GetProjectionMatrix();
-	DirectX::XMMATRIX expected = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(60.0f), float(800) / 600, 0.1f, 100.0f);
+TEST_F(CameraPositionerTest, CurrentEpochTime)
+{
+    const EpochTime epochtime = 1234567890;
+    m_positioner.SetCurrentEpochTime(epochtime);
+    ASSERT_EQ(m_positioner.GetCurrentEpochTime(), epochtime);
+}
 
-	ASSERT_TRUE(AreMatricesEqual(actual, expected, 0.0001f));
+TEST_F(CameraPositionerTest, MoveForward)
+{
+    Vector3D    expected;
+    const float elapsedTime = 1.0f;
+    float       speed       = 1.0f;
+
+    m_camera->SetPosition(0.0f, 0.0f, 0.0f);
+
+    m_positioner.SetSpeed(speed);
+    m_positioner.MoveForward(elapsedTime);
+
+    expected = { 0.0f, 0.0f, 1.0f };
+    ASSERT_EQ(m_camera->GetPositionVec(), expected);
+
+    speed = 2.0f;
+    m_positioner.SetSpeed(speed);
+    m_positioner.MoveForward(elapsedTime);
+
+    expected = { 0.0f, 0.0f, 3.0f };
+    ASSERT_EQ(m_camera->GetPositionVec(), expected);
+
+    speed = 0.0f;
+    m_positioner.SetSpeed(speed);
+    m_positioner.MoveForward(elapsedTime);
+
+    expected = { 0.0f, 0.0f, 3.0f };
+    ASSERT_EQ(m_camera->GetPositionVec(), expected);
+}
+
+TEST_F(CameraPositionerTest, MoveBack)
+{
+    Vector3D    expected;
+    const float elapsedTime = 1.0f;
+    float       speed = 1.0f;
+
+    m_camera->SetPosition(0.0f, 0.0f, 0.0f);
+
+    m_positioner.SetSpeed(speed);
+    m_positioner.MoveBack(elapsedTime);
+
+    expected = { 0.0f, 0.0f, -1.0f };
+    ASSERT_EQ(m_camera->GetPositionVec(), expected);
+
+    speed = 2.0f;
+    m_positioner.SetSpeed(speed);
+    m_positioner.MoveBack(elapsedTime);
+
+    expected = { 0.0f, 0.0f, -3.0f };
+    ASSERT_EQ(m_camera->GetPositionVec(), expected);
+
+    speed = 0.0f;
+    m_positioner.SetSpeed(speed);
+    m_positioner.MoveBack(elapsedTime);
+
+    expected = { 0.0f, 0.0f, -3.0f };
+    ASSERT_EQ(m_camera->GetPositionVec(), expected);
+}
+
+TEST_F(CameraPositionerTest, MoveLeft)
+{
+    Vector3D    expected;
+    const float elapsedTime = 1.0f;
+    float       speed = 1.0f;
+
+    m_camera->SetPosition(0.0f, 0.0f, 0.0f);
+
+    m_positioner.SetSpeed(speed);
+    m_positioner.MoveLeft(elapsedTime);
+
+    expected = { -1.0f, 0.0f, 0.0f };
+    ASSERT_EQ(m_camera->GetPositionVec(), expected);
+
+    speed = 2.0f;
+    m_positioner.SetSpeed(speed);
+    m_positioner.MoveLeft(elapsedTime);
+
+    expected = { -3.0f, 0.0f, 0.0f };
+    ASSERT_EQ(m_camera->GetPositionVec(), expected);
+
+    speed = 0.0f;
+    m_positioner.SetSpeed(speed);
+    m_positioner.MoveLeft(elapsedTime);
+
+    expected = { -3.0f, 0.0f, 0.0f };
+    ASSERT_EQ(m_camera->GetPositionVec(), expected);
+}
+
+TEST_F(CameraPositionerTest, MoveRight)
+{
+    Vector3D    expected;
+    const float elapsedTime = 1.0f;
+    float       speed = 1.0f;
+
+    m_camera->SetPosition(0.0f, 0.0f, 0.0f);
+
+    m_positioner.SetSpeed(speed);
+    m_positioner.MoveRight(elapsedTime);
+
+    expected = { +1.0f, 0.0f, 0.0f };
+    ASSERT_EQ(m_camera->GetPositionVec(), expected);
+
+    speed = 2.0f;
+    m_positioner.SetSpeed(speed);
+    m_positioner.MoveRight(elapsedTime);
+
+    expected = { +3.0f, 0.0f, 0.0f };
+    ASSERT_EQ(m_camera->GetPositionVec(), expected);
+
+    speed = 0.0f;
+    m_positioner.SetSpeed(speed);
+    m_positioner.MoveRight(elapsedTime);
+
+    expected = { +3.0f, 0.0f, 0.0f };
+    ASSERT_EQ(m_camera->GetPositionVec(), expected);
+}
+
+TEST_F(CameraPositionerTest, MoveUp)
+{
+    Vector3D    expected;
+    const float elapsedTime = 1.0f;
+    float       speed = 1.0f;
+
+    m_camera->SetPosition(0.0f, 0.0f, 0.0f);
+
+    m_positioner.SetSpeed(speed);
+    m_positioner.MoveUp(elapsedTime);
+
+    expected = { 0.0f, +1.0f, 0.0f };
+    ASSERT_EQ(m_camera->GetPositionVec(), expected);
+
+    speed = 2.0f;
+    m_positioner.SetSpeed(speed);
+    m_positioner.MoveUp(elapsedTime);
+
+    expected = { 0.0f, +3.0f, 0.0f };
+    ASSERT_EQ(m_camera->GetPositionVec(), expected);
+
+    speed = 0.0f;
+    m_positioner.SetSpeed(speed);
+    m_positioner.MoveUp(elapsedTime);
+
+    expected = { 0.0f, +3.0f, 0.0f };
+    ASSERT_EQ(m_camera->GetPositionVec(), expected);
+}
+
+TEST_F(CameraPositionerTest, MoveDown)
+{
+    Vector3D    expected;
+    const float elapsedTime = 1.0f;
+    float       speed = 1.0f;
+
+    m_camera->SetPosition(0.0f, 0.0f, 0.0f);
+
+    m_positioner.SetSpeed(speed);
+    m_positioner.MoveDown(elapsedTime);
+
+    expected = { 0.0f, -1.0f, 0.0f };
+    ASSERT_EQ(m_camera->GetPositionVec(), expected);
+
+    speed = 2.0f;
+    m_positioner.SetSpeed(speed);
+    m_positioner.MoveDown(elapsedTime);
+
+    expected = { 0.0f, -3.0f, 0.0f };
+    ASSERT_EQ(m_camera->GetPositionVec(), expected);
+
+    speed = 0.0f;
+    m_positioner.SetSpeed(speed);
+    m_positioner.MoveDown(elapsedTime);
+
+    expected = { 0.0f, -3.0f, 0.0f };
+    ASSERT_EQ(m_camera->GetPositionVec(), expected);
+}
+
+TEST_F(CameraPositionerTest, Rotate)
+{
+    Vector3D    expected;
+    const float elapsedTime = 1.0f;
+    float       speed = 1.0f;
+
+    m_camera->SetRotationRad(0.0f, 0.0f, 0.0f);
+
+    m_positioner.RotatePitchYaw(1.0f, 1.0f);
+    expected = { 1.0f, 1.0f, 0.0f };
+    ASSERT_EQ(m_camera->GetRotationVec(), expected);
+
+    m_positioner.RotatePitchYaw(1.0f, 1.0f);
+    expected = { 2.0f, 2.0f, 0.0f };
+    ASSERT_EQ(m_camera->GetRotationVec(), expected);
+
+    m_positioner.RotatePitchYaw(0.0f, 0.0f);
+    expected = { 2.0f, 2.0f, 0.0f };
+    ASSERT_EQ(m_camera->GetRotationVec(), expected);
+
+    m_positioner.RotatePitchYaw(-1.0f, -1.0f);
+    expected = { 1.0f, 1.0f, 0.0f };
+    ASSERT_EQ(m_camera->GetRotationVec(), expected);
+
+    m_positioner.RotatePitchYaw(-1.0f, -1.0f);
+    expected = { 0.0f, 0.0f, 0.0f };
+    ASSERT_EQ(m_camera->GetRotationVec(), expected);
 }

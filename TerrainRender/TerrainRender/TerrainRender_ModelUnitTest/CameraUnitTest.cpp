@@ -56,6 +56,80 @@ TEST(CameraUnitTest, SetRotation)
 	ASSERT_EQ(rotationV, Vector3D(1.0f, 2.0f, 3.0f));
 }
 
+TEST(CameraUnitTest, AdjustPosition)
+{
+	Camera				camera;
+	Vector3D			expected;
+	DirectX::XMFLOAT3	positionF;
+	Vector3D			positionV;
+
+	camera.SetPosition(0.0f, 0.0f, 0.0f);
+
+	camera.AdjustPosition(1.0f, 2.0f, 3.0f);
+	expected = { 1.0f, 2.0f, 3.0f };
+	positionF = camera.GetPositionF3();
+	positionV = camera.GetPositionVec();
+	ASSERT_FLOAT_EQ(positionF.x, expected.x);
+	ASSERT_FLOAT_EQ(positionF.y, expected.y);
+	ASSERT_FLOAT_EQ(positionF.z, expected.z);
+	ASSERT_EQ(positionV, expected);
+
+	camera.AdjustPosition(-3.0f, +7.0f, 11.0f);
+	expected = { 1.0f - 3.0f, 2.0f + 7.0f, 3.0f + 11.0f };
+	positionF = camera.GetPositionF3();
+	positionV = camera.GetPositionVec();
+	ASSERT_FLOAT_EQ(positionF.x, expected.x);
+	ASSERT_FLOAT_EQ(positionF.y, expected.y);
+	ASSERT_FLOAT_EQ(positionF.z, expected.z);
+	ASSERT_EQ(positionV, expected);
+
+	camera.AdjustPosition(+13.0f, +17.0f, -23.0f);
+	expected = { 1.0f - 3.0f + 13.0f, 2.0f + 7.0f + 17.0f, 3.0f + 11.0f -23.0f };
+	positionF = camera.GetPositionF3();
+	positionV = camera.GetPositionVec();
+	ASSERT_FLOAT_EQ(positionF.x, expected.x);
+	ASSERT_FLOAT_EQ(positionF.y, expected.y);
+	ASSERT_FLOAT_EQ(positionF.z, expected.z);
+	ASSERT_EQ(positionV, expected);
+}
+
+TEST(CameraUnitTest, AdjustRotation)
+{
+	Camera				camera;
+	Vector3D			expected;
+	DirectX::XMFLOAT3	rotationF;
+	Vector3D			rotationV;
+
+	camera.SetRotationRad(0.0f, 0.0f, 0.0f);
+
+	camera.AdjustRotationRad(1.0f, 2.0f, 3.0f);
+	expected = { 1.0f, 2.0f, 3.0f };
+	rotationF = camera.GetRotationF3();
+	rotationV = camera.GetRotationVec();
+	ASSERT_FLOAT_EQ(rotationF.x, expected.x);
+	ASSERT_FLOAT_EQ(rotationF.y, expected.y);
+	ASSERT_FLOAT_EQ(rotationF.z, expected.z);
+	ASSERT_EQ(rotationV, expected);
+
+	camera.AdjustRotationRad(-3.0f, +7.0f, 11.0f);
+	expected = { 1.0f - 3.0f, 2.0f + 7.0f, 3.0f + 11.0f };
+	rotationF = camera.GetRotationF3();
+	rotationV = camera.GetRotationVec();
+	ASSERT_FLOAT_EQ(rotationF.x, expected.x);
+	ASSERT_FLOAT_EQ(rotationF.y, expected.y);
+	ASSERT_FLOAT_EQ(rotationF.z, expected.z);
+	ASSERT_EQ(rotationV, expected);
+
+	camera.AdjustRotationRad(+13.0f, +17.0f, -23.0f);
+	expected = { 1.0f - 3.0f + 13.0f, 2.0f + 7.0f + 17.0f, 3.0f + 11.0f - 23.0f };
+	rotationF = camera.GetRotationF3();
+	rotationV = camera.GetRotationVec();
+	ASSERT_FLOAT_EQ(rotationF.x, expected.x);
+	ASSERT_FLOAT_EQ(rotationF.y, expected.y);
+	ASSERT_FLOAT_EQ(rotationF.z, expected.z);
+	ASSERT_EQ(rotationV, expected);
+}
+
 TEST(CameraUnitTest, SetNearScreen)
 {
 	Camera camera;

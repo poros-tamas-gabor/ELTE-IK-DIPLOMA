@@ -1,5 +1,6 @@
 #include "CameraPositioner.h"
 #include "Camera.h"
+#include "../TRException.h"
 void CameraPositioner::MoveTemplate(const DirectX::XMVECTOR& default_vector, DirectX::XMVECTOR& currentVector, float dt)
 {
 	this->m_rotationMatrix = this->m_camera->GetRotationMatrix();
@@ -64,6 +65,7 @@ void CameraPositioner::MoveDown(float dt)
 
 void CameraPositioner::Initialize(CameraPtr camera)
 {
+	THROW_TREXCEPTION_IF_FAILED( (camera != nullptr) , L"Null pointer exception");
 	this->m_camera = camera;
 	this->m_rotationMatrix = this->m_camera->GetRotationMatrix();
 }

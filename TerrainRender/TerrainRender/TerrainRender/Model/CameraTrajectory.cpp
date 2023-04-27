@@ -4,7 +4,7 @@
 bool CameraTrajectory::Initialize(const std::vector<CameraPose>& cameraPoses, IRendarablePtr<VertexPolyLine> renderable, CameraPtr camera)
 {
 	THROW_TREXCEPTION_IF_FAILED((renderable != nullptr), L"Failed to initialize CameraTrajectory because the renderable is a nullpointer");
-	THROW_TREXCEPTION_IF_FAILED((camera != nullptr), L"Failed to initialize CameraTrajectory because the camrea is a nullpointer");
+	THROW_TREXCEPTION_IF_FAILED((camera != nullptr), L"Failed to initialize CameraTrajectory because the camera is a nullpointer");
 	THROW_TREXCEPTION_IF_FAILED((!cameraPoses.empty()), L"Failed to initialize CameraTrajectory because the cameraPoses are empty");
 
 	Clear();
@@ -49,21 +49,23 @@ IRendarablePtr<VertexPolyLine> CameraTrajectory::GetPolyLine() const
 
 void CameraTrajectory::ResetStartPosition()
 {
+	THROW_TREXCEPTION_IF_FAILED((m_camera != nullptr), L"Null pointer exception");
+
 	Vector3D currentCameraRotation = m_rotations.at(0);
 	Vector3D currentCameraPosition = m_positions.at(0); 
 	
 	currentCameraPosition = TransformPosition(currentCameraPosition);
 	currentCameraRotation = TransformRotation(currentCameraRotation);
 
-
 	this->m_elapsedmsec = 0;
 	this->m_camera->SetPosition(currentCameraPosition.x, currentCameraPosition.y, currentCameraPosition.z);
 	this->m_camera->SetRotationRad(currentCameraRotation.x, currentCameraRotation.y, currentCameraRotation.z);
-
 }
 
 Vector3D  CameraTrajectory::TransformPosition(const Vector3D& vector) const
 {
+	THROW_TREXCEPTION_IF_FAILED((m_polyLine != nullptr), L"Null pointer exception");
+
 	DirectX::XMMATRIX rotation = m_polyLine->GetWorldMatrix();
 	DirectX::XMVECTOR vec = DirectX::XMVectorSet(vector.x, vector.y, vector.z, 1.0f);
 	vec = DirectX::XMVector4Transform(vec, rotation);
@@ -74,6 +76,8 @@ Vector3D  CameraTrajectory::TransformPosition(const Vector3D& vector) const
 }
 Vector3D  CameraTrajectory::TransformRotation(const Vector3D& vector) const
 {
+	THROW_TREXCEPTION_IF_FAILED((m_polyLine != nullptr), L"Null pointer exception");
+
 	DirectX::XMMATRIX polylineWorldMat = m_polyLine->GetWorldMatrix();
 	DirectX::XMMATRIX cameraRotMat = DirectX::XMMatrixRotationRollPitchYaw(vector.x, vector.y, vector.z);
 
@@ -89,6 +93,8 @@ Vector3D  CameraTrajectory::TransformRotation(const Vector3D& vector) const
 
 void CameraTrajectory::UpdateCamera(double elapsedmsec)
 {
+	THROW_TREXCEPTION_IF_FAILED((m_camera != nullptr), L"Null pointer exception");
+
 	bool result;
 	Vector3D currentCameraRotation;
 	Vector3D currentCameraPosition;
@@ -142,6 +148,7 @@ void CameraTrajectory::SetCurrentFrame(unsigned frameNum)
 
 IRenderableState CameraTrajectory::GetTrajectoryPolyLineState() const
 {
+	THROW_TREXCEPTION_IF_FAILED((m_polyLine != nullptr), L"Null pointer exception");
 	return m_polyLine->GetState();
 }
 

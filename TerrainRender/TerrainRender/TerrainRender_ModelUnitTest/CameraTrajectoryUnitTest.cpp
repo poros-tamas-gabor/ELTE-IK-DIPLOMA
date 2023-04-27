@@ -106,8 +106,6 @@ TEST_F(CameraTrajectoryTest, UpdateCamera)
 	ASSERT_FLOAT_EQ(m_camera->GetRotationVec().y, expectedRot.y);
 	ASSERT_FLOAT_EQ(m_camera->GetRotationVec().z, expectedRot.z);
 
-
-
 	m_trajectory.UpdateCamera(1000);
 
 	ASSERT_EQ(m_trajectory.GetCurrentEpochTime(), EpochTime(6, 0));

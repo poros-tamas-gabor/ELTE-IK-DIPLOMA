@@ -3,6 +3,8 @@
 #include "../TRException.h"
 void CameraPositioner::MoveTemplate(const DirectX::XMVECTOR& default_vector, DirectX::XMVECTOR& currentVector, float dt)
 {
+	THROW_TREXCEPTION_IF_FAILED((m_camera != nullptr), L"Null pointer exception");
+
 	this->m_rotationMatrix = this->m_camera->GetRotationMatrix();
 	currentVector = DirectX::XMVector3Transform(default_vector, this->m_rotationMatrix);
 	currentVector = DirectX::XMVectorScale(currentVector, this->m_speed * dt);
@@ -13,6 +15,8 @@ void CameraPositioner::MoveTemplate(const DirectX::XMVECTOR& default_vector, Dir
 
 void CameraPositioner::RotatePitchYaw(float x, float y)
 {
+	THROW_TREXCEPTION_IF_FAILED((m_camera != nullptr), L"Null pointer exception");
+
 	x *= this->m_rotationSpeed;
 	y *= this->m_rotationSpeed;
 	this->m_camera->AdjustRotationRad(x, y, 0.0f);

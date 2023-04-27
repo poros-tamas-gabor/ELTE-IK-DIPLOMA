@@ -77,11 +77,11 @@ void Camera::AdjustRotationRad(float deltaX, float deltaY, float deltaZ)
 
 void Camera::Initialize(int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView)
 {
-	THROW_TREXCEPTION_IF_FAILED(screenWidth > 0,	L"Failed to set screenWidth with 0 or negative");
-	THROW_TREXCEPTION_IF_FAILED(screenHeight > 0,	L"Failed to set screenHeight with 0 or negative");
-	THROW_TREXCEPTION_IF_FAILED(screenNear > 0,		L"Failed to set screenNear with 0 or negative");
-	THROW_TREXCEPTION_IF_FAILED(screenDepth > 0,	L"Failed to set screenDepth with 0 or negative");
-	THROW_TREXCEPTION_IF_FAILED(fieldOfView > 0,	L"Failed to set fieldOfView with 0 or negative");
+	THROW_TREXCEPTION_IF_FAILED((screenWidth > 0),	L"Failed to set screenWidth with 0 or negative");
+	THROW_TREXCEPTION_IF_FAILED((screenHeight > 0),	L"Failed to set screenHeight with 0 or negative");
+	THROW_TREXCEPTION_IF_FAILED((screenNear > 0),	L"Failed to set screenNear with 0 or negative");
+	THROW_TREXCEPTION_IF_FAILED((screenDepth > 0),	L"Failed to set screenDepth with 0 or negative");
+	THROW_TREXCEPTION_IF_FAILED((fieldOfView > 0),	L"Failed to set fieldOfView with 0 or negative");
 	THROW_TREXCEPTION_IF_FAILED((screenDepth - screenNear > 0.1f),	L"Error: ScreenDepth is less than the screenNear");
 
 	m_isInitialized = true;
@@ -91,8 +91,8 @@ void Camera::Initialize(int screenWidth, int screenHeight, float screenNear, flo
 
 void Camera::Resize(int screenWidth, int screenHeight)
 {
-	THROW_TREXCEPTION_IF_FAILED(screenWidth > 0, L"Failed to set screenWidth with 0 or negative");
-	THROW_TREXCEPTION_IF_FAILED(screenHeight > 0, L"Failed to set screenHeight with 0 or negative");
+	THROW_TREXCEPTION_IF_FAILED((screenWidth > 0), L"Failed to set screenWidth with 0 or negative");
+	THROW_TREXCEPTION_IF_FAILED((screenHeight > 0), L"Failed to set screenHeight with 0 or negative");
 	if (m_isInitialized)
 	{
 		this->m_aspectRatio = (float)screenWidth / (float)screenHeight;
@@ -103,10 +103,10 @@ void Camera::Resize(int screenWidth, int screenHeight)
 
 void Camera::SetProjectionValues(float fovRadian, float aspectRatio, float screenNear, float screenDepth)
 {
-	THROW_TREXCEPTION_IF_FAILED(fovRadian > 0,	L"Failed to set fovRadian with 0 or negative");
-	THROW_TREXCEPTION_IF_FAILED(aspectRatio > 0,L"Failed to set aspectRatio with 0 or negative");
-	THROW_TREXCEPTION_IF_FAILED(screenNear > 0,	L"Failed to set nearScreen with 0 or negative");
-	THROW_TREXCEPTION_IF_FAILED(screenDepth > 0,	L"Failed to set farScreen with 0 or negative");
+	THROW_TREXCEPTION_IF_FAILED((fovRadian > 0),	L"Failed to set fovRadian with 0 or negative");
+	THROW_TREXCEPTION_IF_FAILED((aspectRatio > 0),	L"Failed to set aspectRatio with 0 or negative");
+	THROW_TREXCEPTION_IF_FAILED((screenNear > 0),	L"Failed to set nearScreen with 0 or negative");
+	THROW_TREXCEPTION_IF_FAILED((screenDepth > 0),	L"Failed to set farScreen with 0 or negative");
 	THROW_TREXCEPTION_IF_FAILED((screenDepth - screenNear > 0.1f), L"Error: ScreenDepth is less than the screenNear");
 	this->m_fovRadian = fovRadian;
 	this->m_aspectRatio = aspectRatio;
@@ -117,20 +117,20 @@ void Camera::SetProjectionValues(float fovRadian, float aspectRatio, float scree
 
 void Camera::SetFieldOfView(float fovRad)
 {
-	THROW_TREXCEPTION_IF_FAILED(fovRad > 0, L"Failed to set fovRad with 0 or negative");
+	THROW_TREXCEPTION_IF_FAILED((fovRad > 0), L"Failed to set fovRad with 0 or negative");
 	this->m_fovRadian = fovRad;
 	this->_projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(m_fovRadian, m_aspectRatio, m_nearScreen, m_farScreen);
 }
 void Camera::SetNearScreen(float nearZ)
 {
-	THROW_TREXCEPTION_IF_FAILED(nearZ > 0, L"Failed to set nearZ with 0 or negative");
+	THROW_TREXCEPTION_IF_FAILED((nearZ > 0), L"Failed to set nearZ with 0 or negative");
 	THROW_TREXCEPTION_IF_FAILED((m_farScreen - nearZ > 0.1f), L"Error: ScreenDepth is less than the screenNear");
 	this->m_nearScreen = nearZ;
 	this->_projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(m_fovRadian, m_aspectRatio, m_nearScreen, m_farScreen);
 }
 void Camera::SetFarScreen(float farZ)
 {
-	THROW_TREXCEPTION_IF_FAILED(farZ > 0, L"Failed to set farZ with 0 or negative");
+	THROW_TREXCEPTION_IF_FAILED((farZ > 0), L"Failed to set farZ with 0 or negative");
 	THROW_TREXCEPTION_IF_FAILED((farZ - m_nearScreen > 0.1f), L"Error: ScreenDepth is less than the screenNear");
 	this->m_farScreen = farZ;
 	this->_projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(m_fovRadian, m_aspectRatio, m_nearScreen, m_farScreen);

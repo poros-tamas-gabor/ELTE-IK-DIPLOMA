@@ -101,15 +101,14 @@ void CameraTrajectory::UpdateCamera(double elapsedmsec)
 
 	this->m_elapsedmsec += elapsedmsec;
 
-	LinearInterpolation<double, Vector3D>	linearInterpolation;
+	LinearInterpolation	linearInterpolation;
 	result = linearInterpolation.Calculate(this->m_elapsedmsecs, this->m_positions, this->m_elapsedmsec, currentCameraPosition, m_currentFrameNum);
-	if (!result)
-		return;
+	THROW_TREXCEPTION_IF_FAILED(result, L"Failed to interpolate");
 
-	CirclularInterpolation<double> circularInterpolation;
+	CirclularInterpolation circularInterpolation;
 	result = circularInterpolation.Calculate(this->m_elapsedmsecs, this->m_rotations, this->m_elapsedmsec, currentCameraRotation, m_currentFrameNum);
-	if (!result)
-		return;
+	THROW_TREXCEPTION_IF_FAILED(result, L"Failed to interpolate");
+
 
 	currentCameraRotation = TransformRotation(currentCameraRotation);
 	currentCameraPosition = TransformPosition(currentCameraPosition);

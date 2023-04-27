@@ -219,6 +219,9 @@
     <ClCompile Include="Model\CameraTrajectory.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
+    <ClCompile Include="Model\Math\IInterpolation.cpp">
+      <Filter>Header Files\Model\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">

@@ -44,6 +44,7 @@
     <ClCompile Include="CompositeRenderableUnitTest.cpp" />
     <ClCompile Include="EpochTimeUnitTest.cpp" />
     <ClCompile Include="FileDataAccessUnitTest.cpp" />
+    <ClCompile Include="IInterpolationUnitTest.cpp" />
     <ClCompile Include="ModelStructsUnitTest.cpp" />
     <ClCompile Include="PolygonMeshUnitTest.cpp" />
     <ClCompile Include="PolyLineUnitTest.cpp" />

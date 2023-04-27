@@ -173,6 +173,7 @@
     <ClCompile Include="Model\CameraTrajectory.cpp" />
     <ClCompile Include="Model\IRenderable.cpp" />
     <ClCompile Include="Model\Light.cpp" />
+    <ClCompile Include="Model\Math\IInterpolation.cpp" />
     <ClCompile Include="Model\ModelMessageSystem.cpp" />
     <ClCompile Include="Model\Persistence\EpochTime.cpp" />
     <ClCompile Include="Model\LineList.cpp" />

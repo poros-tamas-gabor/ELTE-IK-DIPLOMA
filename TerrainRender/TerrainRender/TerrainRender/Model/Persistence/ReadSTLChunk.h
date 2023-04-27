@@ -16,8 +16,8 @@ class ReadSTLChunkSharp : public ICallable
 {
 private:
 	const std::wstring& m_filepath;
-	int m_begin;
-	int m_numOfFacets;
+	unsigned m_begin;
+	unsigned m_numOfFacets;
 	//std::mutex& m_mutex;
 	std::vector<stlFacet>* m_facets;
 	
@@ -35,7 +35,7 @@ class ReadSTLChunkSoft : public ICallable
 {
 private:
 	const std::wstring& m_filepath;
-	int m_begin;
+	unsigned m_begin;
 	unsigned m_numOfFacets;
 	IndicesVecPtr m_indices;
 	HashTable_Soft& m_ht;

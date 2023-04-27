@@ -7,6 +7,7 @@
 #include "../TerrainRender/Model/Persistence/ReadSTLChunk.cpp"
 #include "../TerrainRender/ErrorHandler.cpp"
 #include "../TerrainRender/StringConverter.cpp"
+#include "../TerrainRender/Model/Math/IInterpolation.cpp"
 #include "../TerrainRender/Model/Persistence/ModelStructs.cpp"
 #include "../TerrainRender/Model/Persistence/EpochTime.cpp"
 

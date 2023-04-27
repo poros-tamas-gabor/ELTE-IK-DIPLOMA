@@ -2,16 +2,12 @@
 #include "EpochTime.h"
 
 
-static const long long nsecPerSec    = 1000000000L;
-static const long long msecPerSec    = 1000L;
-static const long long nsecPermSec   = 1000000L;
-
 EpochTime::EpochTime(long long sec, long long nsec) 
 {
     m_seconds = sec;
-    if (nsec >= nsecPerSec) {
-        m_seconds += nsec / nsecPerSec;
-        m_nanoseconds = nsec % nsecPerSec;
+    if (nsec >= NSEC_PER_SEC) {
+        m_seconds += nsec / NSEC_PER_SEC;
+        m_nanoseconds = nsec % NSEC_PER_SEC;
     }
     else
     {
@@ -24,9 +20,9 @@ EpochTime EpochTime::operator+(const EpochTime& other) const
 {
     long long sec = m_seconds + other.m_seconds;
     long long nsec = m_nanoseconds + other.m_nanoseconds;
-    if (nsec >= nsecPerSec) {
-        sec += nsec / nsecPerSec;
-        nsec %= nsecPerSec;
+    if (nsec >= NSEC_PER_SEC) {
+        sec += nsec / NSEC_PER_SEC;
+        nsec %= NSEC_PER_SEC;
     }
     return EpochTime(sec, nsec);
 }
@@ -42,25 +38,25 @@ EpochTime EpochTime::operator-(const EpochTime& other) const
     long long nsec = m_nanoseconds - other.m_nanoseconds;
     if (nsec < 0) {
         sec -= 1;
-        nsec += nsecPerSec;
+        nsec += NSEC_PER_SEC;
     }
     return EpochTime(sec, nsec);
 }
 double EpochTime::diffInMillis(const EpochTime& other) const
 {
     EpochTime diff = *this - other;
-    double ellapsedMillisec = diff.m_seconds * msecPerSec + (double)diff.m_nanoseconds / nsecPermSec;
+    double ellapsedMillisec = diff.m_seconds * MSEC_PER_SEC + (double)diff.m_nanoseconds / NSEC_PER_MSEC;
     return ellapsedMillisec;
 }
 
 EpochTime EpochTime::AddMilliSeconds(double millisecond) const
 {
-    long long sec = m_seconds + long long(millisecond / msecPerSec);
-    millisecond = fmod(millisecond, msecPerSec);
-    long long nsec = m_nanoseconds + long long(millisecond * nsecPermSec);
-    if (nsec >= nsecPerSec) {
-        sec += nsec / nsecPerSec;
-        nsec %= nsecPerSec;
+    long long sec = m_seconds + long long(millisecond / MSEC_PER_SEC);
+    millisecond = fmod(millisecond, MSEC_PER_SEC);
+    long long nsec = m_nanoseconds + long long(millisecond * NSEC_PER_MSEC);
+    if (nsec >= NSEC_PER_SEC) {
+        sec += nsec / NSEC_PER_SEC;
+        nsec %= NSEC_PER_SEC;
     }
     return EpochTime(sec, nsec);
 }

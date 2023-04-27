@@ -206,6 +206,7 @@ TEST_F(CameraPositionerTest, Rotate)
     const float elapsedTime = 1.0f;
     float       speed = 1.0f;
 
+    m_positioner.SetRotationSpeed(1.0f);
     m_camera->SetRotationRad(0.0f, 0.0f, 0.0f);
 
     m_positioner.RotatePitchYaw(1.0f, 1.0f);

@@ -2,6 +2,12 @@
 #define EPOCH_TIME_H
 
 class EpochTime {
+
+public:
+    static const long long NSEC_PER_SEC = 1000000000L;
+    static const long long MSEC_PER_SEC = 1000L;
+    static const long long NSEC_PER_MSEC = 1000000L;
+
 public:
     EpochTime(long long sec = 0, long long nsec = 0);
 

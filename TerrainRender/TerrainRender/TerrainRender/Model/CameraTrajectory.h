@@ -30,27 +30,22 @@ public:
 
 	bool IsInitialized(void) const;
 	void UpdateCamera(double elapsedmsecs);
-	void Reset();
-	void Shutdown();
+	void ResetStartPosition();
 	void Clear();
+	void Shutdown();
 
-	void Rotate(Vector3D rotations);
-	void Move(Vector3D   translationVector);
+	void SetStartEpochTime(EpochTime);
+	void SetCurrentFrame(unsigned frameNum);
 
-	void			SetStartEpochTime(EpochTime);
-	EpochTime		GetCurrentEpochTime(void) const;
-	EpochTime		GetStartEpochTime(void) const;
-	unsigned		GetCurrentFrameNum(void) const;
-	unsigned		GetNumberOfFrame(void) const;
-	void			SetCurrentFrame(unsigned frameNum);
-	IRenderableState GetTrajectoryPolyLineState() const;
-	IRendarablePtr<VertexPolyLine> GetPolyLine() const;
+	EpochTime	GetCurrentEpochTime(void) const;
+	EpochTime	GetStartEpochTime(void) const;
+	unsigned	GetCurrentFrameNum(void) const;
+	unsigned	GetNumberOfFrame(void) const;
+	IRenderableState				GetTrajectoryPolyLineState() const;
+	IRendarablePtr<VertexPolyLine>	GetPolyLine() const;
 
 private:
 	Vector3D TransformPosition(const Vector3D&) const;
 	Vector3D TransformRotation(const Vector3D&) const;
-
-
-
 };
 #endif // !CAMERA_TRAJECTORY_H

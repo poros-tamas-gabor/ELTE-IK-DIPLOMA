@@ -7,13 +7,13 @@ static const float PI = 2*std::asin(1.0f);
 
 template <typename X>
 // find the greatest element in the vector which is still less than the value
-static size_t binarySearch(const std::vector<X>& vec, X const& value) {
-    size_t low = 0;
-    size_t high = vec.size() - 1;
-    size_t index = -1;
+static int binarySearch(const std::vector<X>& vec, X const& value) {
+    int low = 0;
+    int high = vec.size() - 1;
+    int index = -1;
     while (low <= high) {
-        size_t mid = (low + high) / 2;
-        if (vec[mid] < value) {
+        int mid = (low + high) / 2;
+        if (vec.at(mid) < value) {
             index = mid;
             low = mid + 1;
         }
@@ -35,10 +35,11 @@ class LinearInterpolation : public Iitenterpolation<X, Y> {
 
 public:
     bool Calculate(const std::vector<X>& Xs, const std::vector<Y>& Ys, const X& x, Y& y, unsigned& index) override {
-        index = binarySearch(Xs, x);
-        if (index == Xs.size() - 1 || index == -1)
+        int i = binarySearch(Xs, x);
+        if (i == Xs.size() - 1 || i == -1)
             return false;
 
+        index = i;
         X x0 = Xs.at(index);
         X x1 = Xs.at(index + 1);
         y = Ys.at(index) * ((x1 - x) / (x1 - x0)) + Ys.at(index + 1) * ((x - x0) / (x1 - x0));

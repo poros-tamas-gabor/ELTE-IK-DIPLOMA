@@ -93,104 +93,179 @@ bool TerrainModel::Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceCont
 
 void TerrainModel::HandleFlythroughMode(unsigned message, float* elapsedMillisec, unsigned* frameNum)
 {
-	switch (message)
+	try
 	{
-		//TODO what happen when the trajectory ends
-	case IDM_TRAJECTORY_START_POS:
-	case IDM_CAMERA_TRAJECTORY_STOP:
+		switch (message)
+		{
+			//TODO what happen when the trajectory ends
+		case IDM_TRAJECTORY_START_POS:
+		case IDM_CAMERA_TRAJECTORY_STOP:
+		{
+			this->m_cameraTrajectory.ResetStartPosition();
+			break;
+		}
+		case IDM_CAMERA_TRAJECTORY_NEXT_FRAME:
+		{
+			this->m_cameraTrajectory.UpdateCamera(*elapsedMillisec);
+			break;
+		}
+		case IDM_CAMERA_TRAJECTORY_SET_FRAME:
+		{
+			this->m_cameraTrajectory.SetCurrentFrame(*frameNum);
+			this->m_cameraTrajectory.UpdateCamera(NULL);
+			break;
+		}
+		}
+		this->m_light.UpdateSunPosition(m_cameraTrajectory.GetCurrentEpochTime().getSeconds(), m_llacoordinate.latitude, m_llacoordinate.longitude);
+		PublishModelState();
+	}
+	catch (const COMException& e)
 	{
-		this->m_cameraTrajectory.Reset();
-		break;
+		ErrorHandler::Log(e);
 	}
-	case IDM_CAMERA_TRAJECTORY_NEXT_FRAME:
+	catch (const TRException& e)
 	{
-		this->m_cameraTrajectory.UpdateCamera(*elapsedMillisec);
-		break;
+		ErrorHandler::Log(e);
 	}
-	case IDM_CAMERA_TRAJECTORY_SET_FRAME:
+	catch (const std::exception& e)
 	{
-		this->m_cameraTrajectory.SetCurrentFrame(*frameNum);
-		this->m_cameraTrajectory.UpdateCamera(NULL);
-		break;
+		ErrorHandler::Log(e);
 	}
+	catch (...)
+	{
+		ErrorHandler::Log("Unknown Exceptio: No details available");
 	}
-	this->m_light.UpdateSunPosition(m_cameraTrajectory.GetCurrentEpochTime().getSeconds(), m_llacoordinate.latitude, m_llacoordinate.longitude);
-	PublishModelState();
 }
 
 void	TerrainModel::HandleExplore3DMode(unsigned message, float* fparams)
 {
-	switch (message)
+	try
 	{
-	case IDM_CAMERA_MOVE_FORWARD:
-	case IDM_CAMERA_MOVE_BACK:
-	case IDM_CAMERA_MOVE_LEFT:
-	case IDM_CAMERA_MOVE_RIGHT:
-	case IDM_CAMERA_MOVE_UP:
-	case IDM_CAMERA_MOVE_DOWN:
+		switch (message)
+		{
+		case IDM_CAMERA_MOVE_FORWARD:
+		case IDM_CAMERA_MOVE_BACK:
+		case IDM_CAMERA_MOVE_LEFT:
+		case IDM_CAMERA_MOVE_RIGHT:
+		case IDM_CAMERA_MOVE_UP:
+		case IDM_CAMERA_MOVE_DOWN:
+		{
+			this->MoveCamera(message, *fparams);
+			break;
+		}
+		case IDM_CAMERA_ROTATE:
+		{
+			this->RotateCamera(message, fparams[0], fparams[1]);
+			break;
+		}
+		default:
+			break;
+		}
+		this->m_light.UpdateSunPosition(m_cameraPositioner.GetCurrentEpochTime().getSeconds(), m_llacoordinate.latitude, m_llacoordinate.longitude);
+		PublishModelState();
+	}
+	catch (const COMException& e)
 	{
-		this->MoveCamera(message, *fparams);
-		break;
+		ErrorHandler::Log(e);
 	}
-	case IDM_CAMERA_ROTATE:
+	catch (const TRException& e)
 	{
-		this->RotateCamera(message, fparams[0], fparams[1]);
-		break;
+		ErrorHandler::Log(e);
 	}
-	default:
-		break;
+	catch (const std::exception& e)
+	{
+		ErrorHandler::Log(e);
 	}
-	this->m_light.UpdateSunPosition(m_cameraPositioner.GetCurrentEpochTime().getSeconds(), m_llacoordinate.latitude, m_llacoordinate.longitude);
-	PublishModelState();
+	catch (...)
+	{
+		ErrorHandler::Log("Unknown Exceptio: No details available");
+	}
 }
 
 void TerrainModel::MoveCamera(unsigned message, float timeElapsed)
 {
-	switch (message)
-	{
-	case IDM_CAMERA_MOVE_FORWARD:
-	{
-		this->m_cameraPositioner.MoveForward(timeElapsed);
-		break;
+	try {
+		switch (message)
+		{
+		case IDM_CAMERA_MOVE_FORWARD:
+		{
+			this->m_cameraPositioner.MoveForward(timeElapsed);
+			break;
+		}
+		case IDM_CAMERA_MOVE_BACK:
+		{
+			this->m_cameraPositioner.MoveBack(timeElapsed);
+			break;
+		}
+		case IDM_CAMERA_MOVE_LEFT:
+		{
+			this->m_cameraPositioner.MoveLeft(timeElapsed);
+			break;
+		}
+		case IDM_CAMERA_MOVE_RIGHT:
+		{
+			this->m_cameraPositioner.MoveRight(timeElapsed);
+			break;
+		}
+		case IDM_CAMERA_MOVE_UP:
+		{
+			this->m_cameraPositioner.MoveUp(timeElapsed);
+			break;
+		}
+		case IDM_CAMERA_MOVE_DOWN:
+		{
+			this->m_cameraPositioner.MoveDown(timeElapsed);
+			break;
+		}
+		}
 	}
-	case IDM_CAMERA_MOVE_BACK:
+	catch (const COMException& e)
 	{
-		this->m_cameraPositioner.MoveBack(timeElapsed);
-		break;
+		ErrorHandler::Log(e);
 	}
-	case IDM_CAMERA_MOVE_LEFT:
+	catch (const TRException& e)
 	{
-		this->m_cameraPositioner.MoveLeft(timeElapsed);
-		break;
+		ErrorHandler::Log(e);
 	}
-	case IDM_CAMERA_MOVE_RIGHT:
+	catch (const std::exception& e)
 	{
-		this->m_cameraPositioner.MoveRight(timeElapsed);
-		break;
+		ErrorHandler::Log(e);
 	}
-	case IDM_CAMERA_MOVE_UP:
+	catch (...)
 	{
-		this->m_cameraPositioner.MoveUp(timeElapsed);
-		break;
-	}
-	case IDM_CAMERA_MOVE_DOWN:
-	{
-		this->m_cameraPositioner.MoveDown(timeElapsed);
-		break;
-	}
+		ErrorHandler::Log("Unknown Exceptio: No details available");
 	}
 }
 
 void TerrainModel::RotateCamera(unsigned message, float pitch, float yaw)
 {
-	switch (message)
+	try 
 	{
-	case IDM_CAMERA_ROTATE:
+		switch (message)
+		{
+		case IDM_CAMERA_ROTATE:
 
-		this->m_cameraPositioner.RotatePitchYaw(pitch, yaw);
-		break;
+			this->m_cameraPositioner.RotatePitchYaw(pitch, yaw);
+			break;
+		}
+		PublishModelState();
 	}
-	PublishModelState();
+	catch (const COMException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const TRException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const std::exception& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (...)
+	{
+		ErrorHandler::Log("Unknown Exceptio: No details available");
+	}
 }
 
 bool TerrainModel::LoadTerrain_withSoftEdges(const wchar_t* filepath)
@@ -343,10 +418,21 @@ bool	TerrainModel::LoadConfigurationFile(const wchar_t* filepath)
 		m_persistence->LoadConfigurationFile(filepath, params);
 		//Set world origo
 		this->m_llacoordinate = params.origo;
-
+		
 		//Set Trajectory
-		this->m_cameraTrajectory.Move(params.trajectory.translation);
-		this->m_cameraTrajectory.Rotate(params.trajectory.rotation);
+		const float t_x = params.trajectory.translation.x;
+		const float t_y = params.trajectory.translation.y;
+		const float t_z = params.trajectory.translation.z;
+
+		const float r_x = params.trajectory.rotation.x;
+		const float r_y = params.trajectory.rotation.y;
+		const float r_z = params.trajectory.rotation.z;
+
+		if (m_cameraTrajectory.IsInitialized())
+		{
+			this->m_cameraTrajectory.GetPolyLine()->Translate(t_x, t_y, t_z);
+			this->m_cameraTrajectory.GetPolyLine()->Rotate(r_x, r_y, r_z);
+		}
 
 		//Set Terrain
 		m_meshes.Rotate(params.terrain.rotation.x, params.terrain.rotation.y, params.terrain.rotation.z);
@@ -586,17 +672,35 @@ void TerrainModel::PublishModelState(void) const
 
 void TerrainModel::SetUnixTime(unsigned message, unsigned* uparam)
 {
-	switch (message)
-	{
-	case IDM_E3D_UNIX_TIME:
-		this->m_cameraPositioner.SetCurrentEpochTime({ *uparam,0 });
-		break;
-	case IDM_FLYTHROUGH_UNIX_TIME:
-		this->m_cameraTrajectory.SetStartEpochTime({ *uparam,0 });
-	default:
-		break;
+	try {
+		switch (message)
+		{
+		case IDM_E3D_UNIX_TIME:
+			this->m_cameraPositioner.SetCurrentEpochTime({ *uparam,0 });
+			break;
+		case IDM_FLYTHROUGH_UNIX_TIME:
+			this->m_cameraTrajectory.SetStartEpochTime({ *uparam,0 });
+		default:
+			break;
+		}
+		PublishModelState();
 	}
-	PublishModelState();
+	catch (const COMException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const TRException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const std::exception& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (...)
+	{
+		ErrorHandler::Log("Unknown Exceptio: No details available");
+	}
 }
 
 void TerrainModel::AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int gridZ)

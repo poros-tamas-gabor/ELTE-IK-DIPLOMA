@@ -3,10 +3,10 @@
 
 bool CameraTrajectory::Initialize(const std::vector<CameraPose>& cameraPoses, IRendarablePtr<VertexPolyLine> renderable, CameraPtr camera)
 {
-	if (renderable == nullptr || camera == nullptr)
-	{
-		return false;
-	}
+	THROW_TREXCEPTION_IF_FAILED((renderable != nullptr), L"Failed to initialize CameraTrajectory because the renderable is a nullpointer");
+	THROW_TREXCEPTION_IF_FAILED((camera != nullptr), L"Failed to initialize CameraTrajectory because the camrea is a nullpointer");
+	THROW_TREXCEPTION_IF_FAILED((!cameraPoses.empty()), L"Failed to initialize CameraTrajectory because the cameraPoses are empty");
+
 	Clear();
 
 	this->m_camera = camera;
@@ -47,7 +47,7 @@ IRendarablePtr<VertexPolyLine> CameraTrajectory::GetPolyLine() const
 
 
 
-void CameraTrajectory::Reset()
+void CameraTrajectory::ResetStartPosition()
 {
 	Vector3D currentCameraRotation = m_rotations.at(0);
 	Vector3D currentCameraPosition = m_positions.at(0); 
@@ -137,14 +137,7 @@ unsigned CameraTrajectory::GetNumberOfFrame(void) const
 }
 void CameraTrajectory::SetCurrentFrame(unsigned frameNum)
 {
-	try
-	{
-		this->m_elapsedmsec = this->m_elapsedmsecs.at(frameNum);
-	}
-	catch (std::exception& e)
-	{
-		ErrorHandler::Log(e);
-	}
+	this->m_elapsedmsec = this->m_elapsedmsecs.at(frameNum);
 }
 
 IRenderableState CameraTrajectory::GetTrajectoryPolyLineState() const
@@ -152,19 +145,5 @@ IRenderableState CameraTrajectory::GetTrajectoryPolyLineState() const
 	return m_polyLine->GetState();
 }
 
-void CameraTrajectory::Rotate(Vector3D rotations)
-{
-	if (IsInitialized())
-	{
-		m_polyLine->Rotate(rotations.x, rotations.y, rotations.z);
-	}
-}
-void CameraTrajectory::Move(Vector3D   translationVector)
-{
-	if (IsInitialized())
-	{
-		m_polyLine->Translate(translationVector.x, translationVector.y, translationVector.z);
-	}
-}
 
 

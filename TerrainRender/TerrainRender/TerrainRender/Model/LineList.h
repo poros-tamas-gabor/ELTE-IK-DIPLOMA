@@ -5,19 +5,19 @@
 class LineList : public IRenderable<VertexPolyLine>
 {
 protected:
-	Microsoft::WRL::ComPtr<ID3D11Buffer>		m_vertexBuffer;
-	unsigned int		_vertexCount;
-	IPixelShaderPtr		m_pixelShader;
-	IVertexShaderPtr		m_vertexShader;
+	Microsoft::WRL::ComPtr<ID3D11Buffer>m_vertexBuffer;
+	unsigned int						_vertexCount;
+	IPixelShaderPtr						m_pixelShader;
+	IVertexShaderPtr					m_vertexShader;
 
-	std::wstring		m_name;
-	Vector3D	m_rotation;
-	Vector3D	m_scaling;
-	Vector3D	m_translation;
-	DirectX::XMMATRIX	m_localMatrix;
-	DirectX::XMMATRIX	m_worldMatrix;
-	Vector4D	m_color = {1.0f, 1.0f, 1.0f, 1.0f};
-	bool				m_isSeen = true;
+	std::wstring						m_name;
+	Vector3D							m_rotation		= { 0,0,0 };
+	Vector3D							m_scaling		= { 1, 1, 1 };
+	Vector3D							m_translation	= { 0,0,0 };
+	DirectX::XMMATRIX					m_localMatrix	= DirectX::XMMatrixIdentity();
+	DirectX::XMMATRIX					m_worldMatrix	= DirectX::XMMatrixIdentity();
+	Vector4D							m_color			= {1.0f, 1.0f, 1.0f, 1.0f};
+	bool								m_isSeen		= true;
 
 public:
 	LineList() = default;

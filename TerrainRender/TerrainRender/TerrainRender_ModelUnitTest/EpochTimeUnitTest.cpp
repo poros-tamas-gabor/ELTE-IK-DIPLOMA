@@ -56,11 +56,8 @@ TEST(EpochTimeUnitTest, diffInMillis)
 
 TEST(EpochTimeUnitTest, AddMilisec)
 {
-	static const long long nsecPerSec = 1000000000L;
-	static const long long msecPerSec = 1000L;
-	static const long long nsecPermSec = 1000000L;
 	EpochTime e = { 100LL,10LL };
-	EpochTime sum = e.AddMilliSeconds(2 * msecPerSec);
+	EpochTime sum = e.AddMilliSeconds(2 * EpochTime::MSEC_PER_SEC); 
 	EXPECT_EQ(sum.getSeconds(), 102LL);
 	EXPECT_EQ(sum.getNanoseconds(), 10LL);
 	sum = e.AddMilliSeconds(500L);

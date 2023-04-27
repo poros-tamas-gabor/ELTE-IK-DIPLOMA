@@ -602,4 +602,23 @@ public:
     MOCK_METHOD(Microsoft::WRL::ComPtr<ID3D11InputLayout>, GetInputLayout, (), (override));
 };
 
+template <class V>
+class MockIRenderable : public IRenderable<V> {
+public:
+    MOCK_METHOD(bool, Initialize, (Microsoft::WRL::ComPtr<ID3D11Device>, IVertexShaderPtr, IPixelShaderPtr, V*, unsigned long*, UINT, UINT), (override));
+    MOCK_METHOD(void, Shutdown, (), (override));
+    MOCK_METHOD(void, Render, (Microsoft::WRL::ComPtr<ID3D11DeviceContext>, DirectX::XMMATRIX, DirectX::XMMATRIX, DirectX::XMMATRIX, const Light&), (override));
+    MOCK_METHOD(void, SetName, (const std::wstring&), (override));
+    MOCK_METHOD(void, Rotate, (float, float, float), (override));
+    MOCK_METHOD(void, Translate, (float, float, float), (override));
+    MOCK_METHOD(void, Scale, (float, float, float), (override));
+    MOCK_METHOD(void, ResetTransformation, (), (override));
+    MOCK_METHOD(void, SetColor, (float, float, float, float), (override));
+    MOCK_METHOD(void, SetIsSeen, (bool), (override));
+    MOCK_METHOD(bool, IsSeen, (), (const override));
+    MOCK_METHOD(IRenderableState, GetState, (), (const override));
+    MOCK_METHOD(std::wstring, GetName, (), (override));
+    MOCK_METHOD(DirectX::XMMATRIX, GetWorldMatrix, (), (override));
+};
+
 #endif

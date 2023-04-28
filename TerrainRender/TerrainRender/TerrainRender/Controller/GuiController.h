@@ -11,11 +11,11 @@
 class GuiController : public IController
 {
 private:
-	IModelPtr					m_terrainModel;
-	IViewPtr					m_terrainView;
-	std::vector<unsigned>		m_handledMsgs;
-	ControllerMessageSystemPtr	m_messageSystem;
-	bool						m_isActive		= true;
+	IModelPtr								m_terrainModel;
+	IViewPtr								m_terrainView;
+	std::vector<IControllerMessageIDs>		m_handledMsgs;
+	ControllerMessageSystemPtr				m_messageSystem;
+	bool									m_isActive		= true;
 
 	const wchar_t* m_filter_stl =	L"Binary stl files\0*.stl\0All\0*.*\0";
 	const wchar_t* m_filter_csv =	L"Trajectory csv files\0*.csv\0All\0*.*\0";
@@ -25,8 +25,8 @@ public:
 	GuiController();
 	virtual ~GuiController();
 
-	virtual bool CanHandle(unsigned int message) const override;
-	virtual void HandleMessage(unsigned int message, float* fparam, unsigned* uparam) override;
+	virtual bool CanHandle(IControllerMessageIDs message) const override;
+	virtual void HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparam, const std::vector<unsigned>& uparam) override;
 	virtual void SetTerrainModel(IModelPtr pModel) override;
 	virtual void SetMouse(MousePtr mouse) override;
 	virtual void SetKeyboard(KeyboardPtr keyboard) override;

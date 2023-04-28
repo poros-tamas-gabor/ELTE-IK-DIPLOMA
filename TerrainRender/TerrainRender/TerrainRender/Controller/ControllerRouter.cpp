@@ -43,7 +43,7 @@ bool ControllerRouter::Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mou
 	return true;
 }
 
-bool ControllerRouter::CanHandle(unsigned int message) const
+bool ControllerRouter::CanHandle(IControllerMessageIDs message) const
 {
 	for (IControllerPtr controller : m_controllers)
 	{
@@ -53,9 +53,9 @@ bool ControllerRouter::CanHandle(unsigned int message) const
 	return false;
 }
 
-void ControllerRouter::HandleMessage(unsigned int message, float* fparam, unsigned* uparam)
+void ControllerRouter::HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparams, const std::vector<unsigned>& uparams)
 {
-	m_messageSystem->Publish(message, fparam, uparam);
+	m_messageSystem->Publish(message, fparams, uparams);
 }
 
 void ControllerRouter::Shutdown()

@@ -1,51 +1,51 @@
 #include "pch.h"
 
 TEST(BinarySearchTest, Test1) {
-    std::vector<double> vec = { 1.0, 2.0, 3.0, 4.0, 5.0 };
-    double value = 3.5;
+    std::vector<float> vec = { 1.0, 2.0, 3.0, 4.0, 5.0 };
+    float value = 3.5;
     int expected_index = 2;
     EXPECT_EQ(Iitenterpolation::binarySearch_greatestLessOrEqual(vec, value), expected_index);
 }
 
 TEST(BinarySearchTest, Test2) {
 
-    std::vector<double> vec = { 1.0, 2.0, 3.0, 4.0, 5.0 };
-    double value = 0.5;
+    std::vector<float> vec = { 1.0, 2.0, 3.0, 4.0, 5.0 };
+    float value = 0.5;
     int expected_index = -1;
     EXPECT_EQ(Iitenterpolation::binarySearch_greatestLessOrEqual(vec, value), expected_index);
 }
 
 TEST(BinarySearchTest, Test3) {
-    std::vector<double> vec = { 1.0, 2.0, 3.0, 4.0, 5.0 };
-    double value = 5.5;
+    std::vector<float> vec = { 1.0, 2.0, 3.0, 4.0, 5.0 };
+    float value = 5.5;
     int expected_index = 4;
     EXPECT_EQ(Iitenterpolation::binarySearch_greatestLessOrEqual(vec, value), expected_index);
 }
 
 TEST(BinarySearchTest, Test4) {
-    std::vector<double> vec = { 1.0, 2.0, 3.0, 4.0, 5.0 };
-    double value = 3.0;
+    std::vector<float> vec = { 1.0, 2.0, 3.0, 4.0, 5.0 };
+    float value = 3.0;
     int expected_index = 2;
     EXPECT_EQ(Iitenterpolation::binarySearch_greatestLessOrEqual(vec, value), expected_index);
 }
 
 TEST(BinarySearchTest, Test5) {
-    std::vector<double> vec = { 1.0, 2.0, 3.0, 4.0, 5.0 };
-    double value = 5.0;
+    std::vector<float> vec = { 1.0, 2.0, 3.0, 4.0, 5.0 };
+    float value = 5.0;
     int expected_index = 4;
     EXPECT_EQ(Iitenterpolation::binarySearch_greatestLessOrEqual(vec, value), expected_index);
 }
 
 TEST(BinarySearchTest, Test6) {
-    std::vector<double> vec = { 1.0, 1.0, 1.0, 1.0, 1.0 };
-    double value = 1.0;
+    std::vector<float> vec = { 1.0, 1.0, 1.0, 1.0, 1.0 };
+    float value = 1.0;
     int expected_index = 4;
     EXPECT_EQ(Iitenterpolation::binarySearch_greatestLessOrEqual(vec, value), expected_index);
 }
 
 TEST(BinarySearchTest, Test7) {
-    std::vector<double> vec = {  };
-    double value = 1.0;
+    std::vector<float> vec = {  };
+    float value = 1.0;
     int expected_index = -1;
     EXPECT_EQ(Iitenterpolation::binarySearch_greatestLessOrEqual(vec, value), expected_index);
 }
@@ -57,7 +57,7 @@ TEST(LinearInterpolationTest, Calculate)
     unsigned            index;
     bool                success;
 
-    std::vector<double>     xValues = { 0.0, 1.0, 2.0, 3.0 };
+    std::vector<float>     xValues = { 0.0, 1.0, 2.0, 3.0 };
     std::vector<Vector3D>   yValues = { { 1.0, 2.0, 3.0 }, { 2.0, 4.0, 6.0 }, { 3.0, 6.0, 9.0 }, { 4.0, 8.0, 12.0 } };
 
     success = interpolation.Calculate(xValues, yValues, -1.0, y, index);
@@ -95,7 +95,7 @@ TEST(LinearInterpolationTest, Calculate2)
     unsigned            index;
     bool                success;
 
-    std::vector<double>     xValues = {  };
+    std::vector<float>     xValues = {  };
     std::vector<Vector3D>   yValues = {  };
 
     success = interpolation.Calculate(xValues, yValues, -1.0, y, index);
@@ -111,12 +111,12 @@ TEST(CirclularInterpolationTest, CalculateTest)
 
     CirclularInterpolation  interpolation;
     Vector3D                y;
-    double                  x;
+    float                   x;
     unsigned                index;
     bool                    success;
 
     // Test case 1
-    std::vector<double> xValues{ 0, 1, 2, 3, 4 };
+    std::vector<float> xValues{ 0, 1, 2, 3, 4 };
     std::vector<Vector3D> yValues{
         Vector3D(0,         0,          0),
         Vector3D(PI,        PI / 2,     PI / 4),

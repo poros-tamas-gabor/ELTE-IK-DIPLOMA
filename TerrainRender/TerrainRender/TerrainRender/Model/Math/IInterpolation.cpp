@@ -2,7 +2,7 @@
 #include <cmath>
 
 // find the greatest element in the vector which is still less than or equal to a given value:
-int Iitenterpolation::binarySearch_greatestLessOrEqual(const std::vector<double>& vec, double value) {
+int Iitenterpolation::binarySearch_greatestLessOrEqual(const std::vector<float>& vec, float value) {
     int low = 0;
     int high = vec.size() - 1;
     int index = -1;
@@ -20,7 +20,7 @@ int Iitenterpolation::binarySearch_greatestLessOrEqual(const std::vector<double>
 }
 
 
-bool LinearInterpolation::Calculate(const std::vector<double>& xValues, const std::vector<Vector3D>& yValues, double x, Vector3D& y, unsigned& index)
+bool LinearInterpolation::Calculate(const std::vector<float>& xValues, const std::vector<Vector3D>& yValues, float x, Vector3D& y, unsigned& index)
 {
     int i = binarySearch_greatestLessOrEqual(xValues, x);
     if (i == -1)
@@ -35,8 +35,8 @@ bool LinearInterpolation::Calculate(const std::vector<double>& xValues, const st
     }
     
     index = static_cast<unsigned>(i);
-    double x0 = xValues.at(index);
-    double x1 = xValues.at(index + 1);
+    float x0 = xValues.at(index);
+    float x1 = xValues.at(index + 1);
     y = yValues.at(index) * ((x1 - x) / (x1 - x0)) + yValues.at(index + 1) * ((x - x0) / (x1 - x0));
     return true;
 }
@@ -60,7 +60,7 @@ float CirclularInterpolation::angleMod(float angle)
     }
 }
 
-bool CirclularInterpolation::Calculate(const std::vector<double>& xValues, const std::vector<Vector3D>& yValues,  double x, Vector3D& y, unsigned& index)
+bool CirclularInterpolation::Calculate(const std::vector<float>& xValues, const std::vector<Vector3D>& yValues,  float x, Vector3D& y, unsigned& index)
 {
     //TODO ::
 //Compute the difference between the two angles : d = angle2 - angle1
@@ -80,8 +80,8 @@ bool CirclularInterpolation::Calculate(const std::vector<double>& xValues, const
     }
 
     index = static_cast<unsigned>(i);
-    double x_i = xValues.at(index);
-    double x_ip1 = xValues.at(index + 1);
+    float x_i = xValues.at(index);
+    float x_ip1 = xValues.at(index + 1);
 
     Vector3D y_i = yValues.at(index);
     Vector3D y_ip1 = yValues.at(index + 1);

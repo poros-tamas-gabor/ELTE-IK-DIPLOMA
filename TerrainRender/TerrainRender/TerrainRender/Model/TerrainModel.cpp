@@ -54,6 +54,7 @@ bool TerrainModel::Initalize(HWND hwnd, IDataAccessPtr persistence, Microsoft::W
 
 	this->m_meshes.Initialize(device, m_vertexShaderMesh, m_pixelShaderMesh, NULL, NULL, NULL, NULL);
 	this->m_polylines.Initialize(device, m_vertexShaderPolyLine, m_pixelShaderPolyLine, NULL, NULL, NULL, NULL);
+	this->m_linelist.Initialize(device, m_vertexShaderPolyLine, m_pixelShaderPolyLine, NULL, NULL, NULL, NULL);
 	this->m_light.UpdateSunPosition(m_cameraPositioner.GetCurrentEpochTime().getSeconds(), m_llacoordinate.latitude, m_llacoordinate.longitude);
 	PublishModelState();
 	this->AddGrid(2000, { 0.6f, 0.6f, 0.6f, 0.6f }, 200, 200);
@@ -86,83 +87,106 @@ bool TerrainModel::Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceCont
 	this->m_meshes.Render(deviceContext,worldMatrix, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix(), m_light);
 
 	this->m_polylines.Render(deviceContext, worldMatrix, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix(), m_light);
+
+	this->m_linelist.Render(deviceContext, worldMatrix, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix(), m_light);
 	return true;
 }
 
-
-
-void TerrainModel::HandleFlythroughMode(unsigned message, float* elapsedMillisec, unsigned* frameNum)
+bool TerrainModel::HandleMessage(IModelMessageIDs message, const std::vector<std::wstring>& stringParams, const std::vector<float>& fparams, const std::vector<unsigned>& uparams)
 {
 	try
 	{
+		bool success = true;
 		switch (message)
 		{
-			//TODO what happen when the trajectory ends
-		case IDM_TRAJECTORY_START_POS:
-		case IDM_CAMERA_TRAJECTORY_STOP:
-		{
-			this->m_cameraTrajectory.ResetStartPosition();
-			break;
-		}
-		case IDM_CAMERA_TRAJECTORY_NEXT_FRAME:
-		{
-			this->m_cameraTrajectory.UpdateCamera(*elapsedMillisec);
-			break;
-		}
-		case IDM_CAMERA_TRAJECTORY_SET_FRAME:
-		{
-			this->m_cameraTrajectory.SetCurrentFrame(*frameNum);
-			this->m_cameraTrajectory.UpdateCamera(NULL);
-			break;
-		}
-		}
-		this->m_light.UpdateSunPosition(m_cameraTrajectory.GetCurrentEpochTime().getSeconds(), m_llacoordinate.latitude, m_llacoordinate.longitude);
-		PublishModelState();
-	}
-	catch (const COMException& e)
-	{
-		ErrorHandler::Log(e);
-	}
-	catch (const TRException& e)
-	{
-		ErrorHandler::Log(e);
-	}
-	catch (const std::exception& e)
-	{
-		ErrorHandler::Log(e);
-	}
-	catch (...)
-	{
-		ErrorHandler::Log("Unknown Exceptio: No details available");
-	}
-}
 
-void	TerrainModel::HandleExplore3DMode(unsigned message, float* fparams)
-{
-	try
-	{
-		switch (message)
-		{
-		case IDM_CAMERA_MOVE_FORWARD:
-		case IDM_CAMERA_MOVE_BACK:
-		case IDM_CAMERA_MOVE_LEFT:
-		case IDM_CAMERA_MOVE_RIGHT:
-		case IDM_CAMERA_MOVE_UP:
-		case IDM_CAMERA_MOVE_DOWN:
-		{
-			this->MoveCamera(message, *fparams);
+		case IDM_LOAD_TERRAIN_SHARP:
+			success = this->LoadTerrain_withSharpEdges(stringParams.at(0));
 			break;
-		}
-		case IDM_CAMERA_ROTATE:
-		{
-			this->RotateCamera(message, fparams[0], fparams[1]);
+
+		case IDM_LOAD_PROJECT_SHARP:
+			success = this->LoadProject_withSharpEdges(stringParams);
 			break;
-		}
+
+		case IDM_LOAD_TERRAIN_SOFT:
+			success = this->LoadTerrain_withSoftEdges(stringParams.at(0));
+			break;
+
+		case IDM_LOAD_PROJECT_SOFT:
+			success = this->LoadProject_withSoftEdges(stringParams);
+			break;
+
+		case IDM_LOAD_CAMERA_TRAJECTORY:
+			success = this->LoadCameraTrajectory(stringParams.at(0));
+			break;
+
+		case IDM_LOAD_CONFIGURATION:
+			success = this->LoadConfigurationFile(stringParams.at(0));
+			break;
+
+		case IDM_E3D_MOVE_FORWARD:
+		case IDM_E3D_MOVE_BACK:
+		case IDM_E3D_MOVE_LEFT:
+		case IDM_E3D_MOVE_RIGHT:
+		case IDM_E3D_MOVE_UP:
+		case IDM_E3D_MOVE_DOWN:
+		case IDM_E3D_ROTATE:
+		case IDM_E3D_SET_SPEED:
+		case IDM_E3D_SET_ROTATION_SPEED:
+			success = HandleExplore3DMode(message, fparams);
+			break;
+
+		case IDM_E3D_CAMERA_RESET:
+			success = ResetCamera();
+			break;
+
+		case IDM_SET_CAMERA_FIELD_OF_VIEW:
+		case IDM_SET_CAMERA_ASPECT_NEAR_SCREEN:
+		case IDM_SET_CAMERA_ASPECT_FAR_SCREEN:
+			success = SetCameraProperties(message, fparams.at(0));
+			break;
+
+		case IDM_FLYTHROUGH_NEXT_FRAME:
+		case IDM_FLYTHROUGH_START_POSITION:
+		case IDM_FLYTHROUGH_STOP:
+		case IDM_FLYTHROUGH_SET_FRAME:
+		case IDM_FLYTHROUGH_SET_SPEED:
+			success = HandleFlythroughMode(message, fparams, uparams);
+			break;
+
+		case IDM_SET_TIME_E3D:
+		case IDM_SET_START_TIME_TRAJECTORY:
+			success = SetUnixTime(message, uparams.at(0));
+			break;
+		case IDM_IRENDERABLE_COLOR:
+		case IDM_IRENDERABLE_ISSEEN:
+			success = TransformIRenderable(message, uparams.at(0), fparams);
+			break;
+
+		case IDM_MESHES_SCALE:
+		case IDM_MESHES_ROTATION:
+		case IDM_MESHES_TRANSLATION:
+			success = TransformMeshes(message, fparams);
+			break;
+
+		case IDM_TRAJECTORY_ROTATION:
+		case IDM_TRAJECTORY_TRANSLATION:
+			success = TransformMeshes(message, fparams);
+			break;
+
+		case IDM_CLEAR_TRAJECTORY:
+			success = ClearCameraTrajectory();
+			break;
+
+		case IDM_CLEAR_MESHES:
+			success = ClearMeshes();
+			break;
 		default:
 			break;
 		}
-		this->m_light.UpdateSunPosition(m_cameraPositioner.GetCurrentEpochTime().getSeconds(), m_llacoordinate.latitude, m_llacoordinate.longitude);
+		this->m_light.UpdateSunPosition(m_cameraTrajectory.GetCurrentEpochTime().getSeconds(), m_llacoordinate.latitude, m_llacoordinate.longitude);
 		PublishModelState();
+		return success;
 	}
 	catch (const COMException& e)
 	{
@@ -180,95 +204,122 @@ void	TerrainModel::HandleExplore3DMode(unsigned message, float* fparams)
 	{
 		ErrorHandler::Log("Unknown Exceptio: No details available");
 	}
+	return false;
 }
 
-void TerrainModel::MoveCamera(unsigned message, float timeElapsed)
+
+bool TerrainModel::HandleFlythroughMode(IModelMessageIDs message, const std::vector<float>& fparams, const std::vector<unsigned>& uparams)
 {
-	try {
-		switch (message)
-		{
-		case IDM_CAMERA_MOVE_FORWARD:
-		{
-			this->m_cameraPositioner.MoveForward(timeElapsed);
-			break;
-		}
-		case IDM_CAMERA_MOVE_BACK:
-		{
-			this->m_cameraPositioner.MoveBack(timeElapsed);
-			break;
-		}
-		case IDM_CAMERA_MOVE_LEFT:
-		{
-			this->m_cameraPositioner.MoveLeft(timeElapsed);
-			break;
-		}
-		case IDM_CAMERA_MOVE_RIGHT:
-		{
-			this->m_cameraPositioner.MoveRight(timeElapsed);
-			break;
-		}
-		case IDM_CAMERA_MOVE_UP:
-		{
-			this->m_cameraPositioner.MoveUp(timeElapsed);
-			break;
-		}
-		case IDM_CAMERA_MOVE_DOWN:
-		{
-			this->m_cameraPositioner.MoveDown(timeElapsed);
-			break;
-		}
-		}
-	}
-	catch (const COMException& e)
+	bool success = true;
+	switch (message)
 	{
-		ErrorHandler::Log(e);
-	}
-	catch (const TRException& e)
+	case IDM_FLYTHROUGH_START_POSITION:
+	case IDM_FLYTHROUGH_STOP:
 	{
-		ErrorHandler::Log(e);
+		m_cameraTrajectory.ResetStartPosition();
+		break;
 	}
-	catch (const std::exception& e)
+	case IDM_FLYTHROUGH_NEXT_FRAME:
 	{
-		ErrorHandler::Log(e);
+		success = m_cameraTrajectory.UpdateCamera(fparams.at(0));
+		break;
 	}
-	catch (...)
+	case IDM_FLYTHROUGH_SET_FRAME:
 	{
-		ErrorHandler::Log("Unknown Exceptio: No details available");
+		m_cameraTrajectory.SetCurrentFrame(uparams.at(0));
+		success = m_cameraTrajectory.UpdateCamera(NULL);
+		break;
 	}
+	case IDM_FLYTHROUGH_SET_SPEED:
+		m_cameraTrajectory.SetSpeed(fparams.at(0));
+		break;
+	}
+	return success;
 }
 
-void TerrainModel::RotateCamera(unsigned message, float pitch, float yaw)
+bool	TerrainModel::HandleExplore3DMode(IModelMessageIDs message, const std::vector<float>& fparams)
 {
-	try 
+	bool success = true;
+	switch (message)
 	{
-		switch (message)
-		{
-		case IDM_CAMERA_ROTATE:
+	case IDM_E3D_MOVE_FORWARD:
+	case IDM_E3D_MOVE_BACK:
+	case IDM_E3D_MOVE_LEFT:
+	case IDM_E3D_MOVE_RIGHT:
+	case IDM_E3D_MOVE_UP:
+	case IDM_E3D_MOVE_DOWN:
+	{
+		this->MoveCamera(message, fparams.at(0));
+		break;
+	}
+	case IDM_E3D_ROTATE:
+	{
+		this->RotateCamera(message, fparams.at(0), fparams.at(1));
+		break;
+	}
+	case IDM_E3D_SET_SPEED:
+	{
+		this->m_cameraPositioner.SetSpeed(fparams.at(0));
+		break;
+	}
+	case IDM_E3D_SET_ROTATION_SPEED:
+	{
+		this->m_cameraPositioner.SetRotationSpeed(fparams.at(0));
+		break;
+	}
+	}
+	return success;
+}
 
-			this->m_cameraPositioner.RotatePitchYaw(pitch, yaw);
-			break;
-		}
-		PublishModelState();
-	}
-	catch (const COMException& e)
+void TerrainModel::MoveCamera(IModelMessageIDs message, float timeElapsed)
+{
+	switch (message)
 	{
-		ErrorHandler::Log(e);
-	}
-	catch (const TRException& e)
+	case IDM_E3D_MOVE_FORWARD:
 	{
-		ErrorHandler::Log(e);
+		this->m_cameraPositioner.MoveForward(timeElapsed);
+		break;
 	}
-	catch (const std::exception& e)
+	case IDM_E3D_MOVE_BACK:
 	{
-		ErrorHandler::Log(e);
+		this->m_cameraPositioner.MoveBack(timeElapsed);
+		break;
 	}
-	catch (...)
+	case IDM_E3D_MOVE_LEFT:
 	{
-		ErrorHandler::Log("Unknown Exceptio: No details available");
+		this->m_cameraPositioner.MoveLeft(timeElapsed);
+		break;
+	}
+	case IDM_E3D_MOVE_RIGHT:
+	{
+		this->m_cameraPositioner.MoveRight(timeElapsed);
+		break;
+	}
+	case IDM_E3D_MOVE_UP:
+	{
+		this->m_cameraPositioner.MoveUp(timeElapsed);
+		break;
+	}
+	case IDM_E3D_MOVE_DOWN:
+	{
+		this->m_cameraPositioner.MoveDown(timeElapsed);
+		break;
+	}
 	}
 }
 
-bool TerrainModel::LoadTerrain_withSoftEdges(const wchar_t* filepath)
+void TerrainModel::RotateCamera(IModelMessageIDs message, float pitch, float yaw)
+{
+	switch (message)
+	{
+	case IDM_E3D_ROTATE:
+
+		this->m_cameraPositioner.RotatePitchYaw(pitch, yaw);
+		break;
+	}
+}
+
+bool TerrainModel::LoadTerrain_withSoftEdges(const std::wstring& filepath)
 {
 	VertexMesh* pVertices;
 	UINT									vertexCount;
@@ -277,117 +328,73 @@ bool TerrainModel::LoadTerrain_withSoftEdges(const wchar_t* filepath)
 	std::vector<unsigned long>						indices;
 	unsigned long* pIndices;
 
-	try
+	m_persistence->LoadTerrain_withSoftEdges(filepath.c_str());
+	const std::vector<StlVertex>& vertices = m_persistence->GetVertices_Soft();
+	const std::vector<CornerIndices>& facetIndices = m_persistence->GetIndices_Soft();
+	for (const CornerIndices& facet : facetIndices)
 	{
-		m_persistence->LoadTerrain_withSoftEdges(filepath);
-		const std::vector<StlVertex>& vertices = m_persistence->GetVertices_Soft();
-		const std::vector<CornerIndices>& facetIndices = m_persistence->GetIndices_Soft();
-		for (const CornerIndices& facet : facetIndices)
+		for (int i = 0; i < 3; i++)
 		{
-			for (int i = 0; i < 3; i++)
-			{
-				const size_t& index = facet.corner[2 - i];
-				indices.push_back(index);
-			}
+			const size_t& index = facet.corner[2 - i];
+			indices.push_back(index);
 		}
-		for (const StlVertex& v : vertices)
-		{
-			VertexMesh vertexMesh;
-			vertexMesh.normal = { (float)v.normal.x, (float)v.normal.z,(float)v.normal.y };
-			vertexMesh.position = { (float)v.pos.x, (float)v.pos.z, (float)v.pos.y };
-			//vertexMesh.color = { 1.0f, 0.5f, 0.5f, 1.0f };
-			verticesMesh.push_back(vertexMesh);
-		}
-
-		pVertices = &verticesMesh.at(0);
-		vertexCount = verticesMesh.size();
-		pIndices = &indices.at(0);
-		indexCount = indices.size();
-
-		PolygonMeshCreator creator;
-		this->m_meshes.Add(pVertices, pIndices, vertexCount, indexCount, creator, filepath);
-
-		PublishModelState();
-
-		return true;
 	}
-	catch (const COMException& e)
+	for (const StlVertex& v : vertices)
 	{
-		ErrorHandler::Log(e);
-	}
-	catch (const TRException& e)
-	{
-		ErrorHandler::Log(e);
-	}
-	catch (const std::exception& e)
-	{
-		ErrorHandler::Log(e);
-	}
-	catch (...)
-	{
-		ErrorHandler::Log("Unknown Exceptio: No details available");
+		VertexMesh vertexMesh;
+		vertexMesh.normal = { (float)v.normal.x, (float)v.normal.z,(float)v.normal.y };
+		vertexMesh.position = { (float)v.pos.x, (float)v.pos.z, (float)v.pos.y };
+		verticesMesh.push_back(vertexMesh);
 	}
 
-	return false;
+	pVertices = &verticesMesh.at(0);
+	vertexCount = verticesMesh.size();
+	pIndices = &indices.at(0);
+	indexCount = indices.size();
+
+	PolygonMeshCreator creator;
+	this->m_meshes.Add(pVertices, pIndices, vertexCount, indexCount, creator, filepath);
+
+	return true;
+
 }
 
-bool TerrainModel::LoadTerrain_withSharpEdges(const wchar_t* filepath)
+bool TerrainModel::LoadTerrain_withSharpEdges(const std::wstring& filepath)
 {
 	VertexMesh*								pVertices;
 	UINT									vertexCount;
 	UINT									indexCount;
 	std::vector<VertexMesh>					vertices;
-	std::vector<unsigned long>						indices;
-	unsigned long*									pIndices;
+	std::vector<unsigned long>				indices;
+	unsigned long*							pIndices;
 
-	try
+
+	m_persistence->LoadTerrain_withSharpEdges(filepath.c_str());
+	const std::vector<stlFacet>& facets = m_persistence->GetFacets();
+	unsigned index = 0;
+	for (const stlFacet& facet : facets)
 	{
-		m_persistence->LoadTerrain_withSharpEdges(filepath);
-		const std::vector<stlFacet>& facets = m_persistence->GetFacets();
-		unsigned index = 0;
-		for (const stlFacet& facet : facets)
+		for (int i = 0; i < 3; i++)
 		{
-			for (int i = 0; i < 3; i++)
-			{
-				VertexMesh vertex;
-				vertex.normal = { (float)facet.normal[0], (float)facet.normal[2],(float)facet.normal[1] };
-				vertex.position = { (float)facet.position[2 - i][0], (float)facet.position[2 - i][2], (float)facet.position[2 - i][1] };
-				//vertex.color = { 1.0f, 0.5f, 0.5f, 1.0f };
+			VertexMesh vertex;
+			vertex.normal = { (float)facet.normal[0], (float)facet.normal[2],(float)facet.normal[1] };
+			vertex.position = { (float)facet.position[2 - i][0], (float)facet.position[2 - i][2], (float)facet.position[2 - i][1] };
+			//vertex.color = { 1.0f, 0.5f, 0.5f, 1.0f };
 
-				vertices.push_back(vertex);
-				indices.push_back(index);
-				index++;
-			}
+			vertices.push_back(vertex);
+			indices.push_back(index);
+			index++;
 		}
+	}
 
-		pVertices = &vertices.at(0);
-		vertexCount = vertices.size();
-		pIndices = &indices.at(0);
-		indexCount = indices.size();
+	pVertices = &vertices.at(0);
+	vertexCount = vertices.size();
+	pIndices = &indices.at(0);
+	indexCount = indices.size();
 
-		PolygonMeshCreator creator;
-		this->m_meshes.Add(pVertices, pIndices, vertexCount, indexCount, creator, filepath);
-
-		PublishModelState();
-		return true;
-	}
-	catch (const COMException& e)
-	{
-		ErrorHandler::Log(e);
-	}
-	catch (const TRException& e)
-	{
-		ErrorHandler::Log(e);
-	}
-	catch (const std::exception& e)
-	{
-		ErrorHandler::Log(e);
-	}
-	catch (...)
-	{
-		ErrorHandler::Log("Unknown Exceptio: No details available");
-	}
-	return false;
+	PolygonMeshCreator creator;
+	this->m_meshes.Add(pVertices, pIndices, vertexCount, indexCount, creator, filepath);
+	return true;
 }
 
 bool	TerrainModel::LoadProject_withSharpEdges(const std::vector<std::wstring>& files)
@@ -410,149 +417,125 @@ bool	TerrainModel::LoadProject_withSoftEdges(const std::vector<std::wstring>& fi
 
 }
 
-bool	TerrainModel::LoadConfigurationFile(const wchar_t* filepath)
+bool	TerrainModel::LoadConfigurationFile(const std::wstring& filepath)
 {
 	ParameterFile params;
-	try
-	{
-		m_persistence->LoadConfigurationFile(filepath, params);
-		//Set world origo
-		this->m_llacoordinate = params.origo;
-		
-		//Set Trajectory
-		const float t_x = params.trajectory.translation.x;
-		const float t_y = params.trajectory.translation.y;
-		const float t_z = params.trajectory.translation.z;
 
-		const float r_x = params.trajectory.rotation.x;
-		const float r_y = params.trajectory.rotation.y;
-		const float r_z = params.trajectory.rotation.z;
+	m_persistence->LoadConfigurationFile(filepath.c_str(), params);
+	//Set world origo
+	this->m_llacoordinate = params.origo;
+	
+	//Set Trajectory
+	const float t_x = params.trajectory.translation.x;
+	const float t_y = params.trajectory.translation.y;
+	const float t_z = params.trajectory.translation.z;
 
-		if (m_cameraTrajectory.IsInitialized())
-		{
-			this->m_cameraTrajectory.GetPolyLine()->Translate(t_x, t_y, t_z);
-			this->m_cameraTrajectory.GetPolyLine()->Rotate(r_x, r_y, r_z);
-		}
+	const float r_x = params.trajectory.rotation.x;
+	const float r_y = params.trajectory.rotation.y;
+	const float r_z = params.trajectory.rotation.z;
 
-		//Set Terrain
-		m_meshes.Rotate(params.terrain.rotation.x, params.terrain.rotation.y, params.terrain.rotation.z);
-		m_meshes.Translate(params.terrain.translation.x, params.terrain.translation.y, params.terrain.translation.z);
+	if (m_cameraTrajectory.IsInitialized())
+	{
+		this->m_cameraTrajectory.GetPolyLine()->Translate(t_x, t_y, t_z);
+		this->m_cameraTrajectory.GetPolyLine()->Rotate(r_x, r_y, r_z);
+	}
 
-		for (auto it = params.terrain.colors.begin(); it != params.terrain.colors.end(); it++)
-		{
-			float r, g, b, a;
-			std::wstring componentName = StringConverter::StringToWide(it->first);
-			r = it->second.x;
-			g = it->second.y;
-			b = it->second.z;
-			a = it->second.w;
-			m_meshes.SetColorComponent(componentName, r, g, b, a);
-		}
-		PublishModelState();
-		return true;
-	}
-	catch (const COMException& e)
+	//Set Terrain
+	m_meshes.Rotate(params.terrain.rotation.x, params.terrain.rotation.y, params.terrain.rotation.z);
+	m_meshes.Translate(params.terrain.translation.x, params.terrain.translation.y, params.terrain.translation.z);
+
+	for (auto it = params.terrain.colors.begin(); it != params.terrain.colors.end(); it++)
 	{
-		ErrorHandler::Log(e);
+		float r, g, b, a;
+		std::wstring componentName = StringConverter::StringToWide(it->first);
+		r = it->second.x;
+		g = it->second.y;
+		b = it->second.z;
+		a = it->second.w;
+		m_meshes.SetColorComponent(componentName, r, g, b, a);
 	}
-	catch (const TRException& e)
-	{
-		ErrorHandler::Log(e);
-	}
-	catch (const std::exception& e)
-	{
-		ErrorHandler::Log(e);
-	}
-	catch (...)
-	{
-		ErrorHandler::Log("Unknown Exceptio: No details available");
-	}
-	return false;
+	return true;
 }
 
-bool	TerrainModel::LoadCameraTrajectory(const wchar_t* filepath)
+bool	TerrainModel::LoadCameraTrajectory(const std::wstring& filepath)
 {
 	std::vector<CameraPose> cameraPoses;
-	try
+
+	m_persistence->LoadCameraTrajectory(filepath.c_str(), cameraPoses);
+	ClearCameraTrajectory();
+	std::vector<VertexPolyLine> vertices;
+	for (const CameraPose& camerapose : cameraPoses)
 	{
-		m_persistence->LoadCameraTrajectory(filepath, cameraPoses);
-		ClearCameraTrajectory();
-		std::vector<VertexPolyLine> vertices;
-		for (const CameraPose& camerapose : cameraPoses)
-		{
-			VertexPolyLine vertex;
-			vertex.position = { (float)camerapose.east,-(float)camerapose.down,(float)camerapose.north };
-			vertex.color = { 1.0f, 0.0f, 1.0f, 1.0f };
-			vertices.push_back(vertex);
-		}
-		PolyLineCreator creator;
-		
-		m_polylines.Add(&vertices.at(0), NULL, vertices.size(), NULL, creator, filepath);
-		IRendarablePtr<VertexPolyLine> polyline = m_polylines.GetLastAddedComponent();
-		m_cameraTrajectory.Initialize(cameraPoses, polyline, m_camera);
-		PublishModelState();
-		return true;
+		VertexPolyLine vertex;
+		vertex.position = { (float)camerapose.east,-(float)camerapose.down,(float)camerapose.north };
+		vertex.color = { 1.0f, 0.0f, 1.0f, 1.0f };
+		vertices.push_back(vertex);
 	}
-	catch (const COMException& e)
-	{
-		ErrorHandler::Log(e);
-	}
-	catch (const TRException& e)
-	{
-		ErrorHandler::Log(e);
-	}
-	catch (const std::exception& e)
-	{
-		ErrorHandler::Log(e);
-	}
-	catch (...)
-	{
-		ErrorHandler::Log("Unknown Exceptio: No details available");
-	}
-	return false;
+	PolyLineCreator creator;
+	
+	m_polylines.Add(&vertices.at(0), NULL, vertices.size(), NULL, creator, filepath);
+	IRendarablePtr<VertexPolyLine> polyline = m_polylines.GetLastAddedComponent();
+	m_cameraTrajectory.Initialize(cameraPoses, polyline, m_camera);
+	PublishModelState();
+	return true;
+
+
 }
 
 bool TerrainModel::IsTrajectoryInitialized(void) const
 {
 	return m_cameraTrajectory.IsInitialized();
 }
-void TerrainModel::ResetCamera()
+bool TerrainModel::ResetCamera()
 {
 	this->m_camera->Reset();
-	PublishModelState();
+	return true;
 }
 
-void TerrainModel::TransformIRenderable(unsigned message, unsigned id,  float parameters[])
+bool TerrainModel::TransformTrajectory(IModelMessageIDs message, const std::vector<float>& fparams)
 {
 	switch (message)
 	{
-	case IDM_TRANSFORMATION_IRENDERABLE_ROTATION:
-	{
-		m_polylines.RotateComponent(id, parameters[0], parameters[1], parameters[2]);
-		m_meshes.RotateComponent(id, parameters[0], parameters[1], parameters[2]);
+	case IDM_TRAJECTORY_ROTATION:
+		m_polylines.Rotate(fparams.at(0), fparams.at(1), fparams.at(2));
+		break;
+	case IDM_TRAJECTORY_TRANSLATION:
+		m_polylines.Translate(fparams.at(0), fparams.at(1), fparams.at(2));
 		break;
 	}
-	case IDM_TRANSFORMATION_IRENDERABLE_SCALE:
+	return true;
+}
+
+bool TerrainModel::TransformMeshes(IModelMessageIDs message, const std::vector<float>& fparams)
+{
+	switch (message)
 	{
-		m_polylines.ScaleComponent(id, parameters[0], parameters[0], parameters[0]);
-		m_meshes.ScaleComponent(id, parameters[0], parameters[0], parameters[0]);
+	case IDM_MESHES_ROTATION:
+		m_meshes.Rotate(fparams.at(0), fparams.at(1), fparams.at(2));
+		break;
+	case IDM_MESHES_SCALE:
+		m_meshes.Scale(fparams.at(0), fparams.at(1), fparams.at(2));
+		break;
+	case IDM_MESHES_TRANSLATION:
+		m_meshes.Translate(fparams.at(0), fparams.at(1), fparams.at(2));
 		break;
 	}
-	case IDM_TRANSFORMATION_IRENDERABLE_TRANSLATION:
+	return true;
+}
+
+bool TerrainModel::TransformIRenderable(IModelMessageIDs message, unsigned id, const std::vector<float>& fparams)
+{
+	switch (message)
 	{
-		m_polylines.TranslateComponent(id, parameters[0], parameters[1], parameters[2]);
-		m_meshes.TranslateComponent(id, parameters[0], parameters[1], parameters[2]);
-		break;
-	}
-	case IDM_TRANSFORMATION_IRENDERABLE_COLOR:
+	case IDM_IRENDERABLE_COLOR:
 	{
-		m_meshes.SetColorComponent(id, parameters[0], parameters[1], parameters[2], parameters[3]);
+		m_meshes.SetColorComponent(id, fparams.at(0), fparams.at(1), fparams.at(2), fparams.at(3));
 		break;
 	}
 
 	case IDM_IRENDERABLE_ISSEEN:
 	{
-		bool m_isSeen = parameters[0] > 0 ? 1 : 0;
+		bool m_isSeen = fparams.at(0) > 0 ? 1 : 0;
 		m_meshes.SetIsSeenComponent(id, m_isSeen);
 		m_polylines.SetIsSeenComponent(id, m_isSeen);
 		break;
@@ -560,25 +543,14 @@ void TerrainModel::TransformIRenderable(unsigned message, unsigned id,  float pa
 	default:
 		break;
 	}
-	PublishModelState();
+	return true;
 
 }
 
-void TerrainModel::UpdateCameraProperties(unsigned message, float data)
+bool TerrainModel::SetCameraProperties(IModelMessageIDs message, float data)
 {
 	switch (message)
 	{
-	case IDM_SET_CAMERA_SPEED:
-	{
-		this->m_cameraPositioner.SetSpeed(data);
-		break;
-	}
-	case IDM_SET_CAMERA_ROTATION_SPEED:
-	{
-		this->m_cameraPositioner.SetRotationSpeed(data);
-		break;
-	}
-
 	case IDM_SET_CAMERA_FIELD_OF_VIEW:
 	{
 		this->m_camera->SetFieldOfView(data);
@@ -597,7 +569,7 @@ void TerrainModel::UpdateCameraProperties(unsigned message, float data)
 	default:
 		break;
 	}
-	PublishModelState();
+	return true;
 }
 
 FlythroughState	TerrainModel::CollectFlythroughState(void) const
@@ -645,13 +617,13 @@ std::vector<IRenderableState> TerrainModel::CollectTerrainMeshState() const
 	return meshInfo;
 }
 
-void TerrainModel::ClearTerrain(void)
+bool TerrainModel::ClearMeshes(void)
 {
 	this->m_meshes.ClearRenderables();
-	PublishModelState();
+	return true;
 }
 
-void TerrainModel::ClearCameraTrajectory(void)
+bool TerrainModel::ClearCameraTrajectory(void)
 {
 	if (this->m_cameraTrajectory.GetPolyLine() != nullptr)
 	{
@@ -659,7 +631,7 @@ void TerrainModel::ClearCameraTrajectory(void)
 		this->m_cameraTrajectory.GetPolyLine()->Shutdown();
 	}
 	this->m_cameraTrajectory.Clear();
-	PublishModelState();
+	return true;
 }
 
 void TerrainModel::PublishModelState(void) const
@@ -670,37 +642,19 @@ void TerrainModel::PublishModelState(void) const
 	this->m_modelMessageSystem.PublishModelState(CollectCameraState());
 }
 
-void TerrainModel::SetUnixTime(unsigned message, unsigned* uparam)
+bool TerrainModel::SetUnixTime(IModelMessageIDs message, unsigned uparam)
 {
-	try {
-		switch (message)
-		{
-		case IDM_E3D_UNIX_TIME:
-			this->m_cameraPositioner.SetCurrentEpochTime({ *uparam,0 });
-			break;
-		case IDM_FLYTHROUGH_UNIX_TIME:
-			this->m_cameraTrajectory.SetStartEpochTime({ *uparam,0 });
-		default:
-			break;
-		}
-		PublishModelState();
-	}
-	catch (const COMException& e)
+	switch (message)
 	{
-		ErrorHandler::Log(e);
+	case IDM_SET_TIME_E3D:
+		this->m_cameraPositioner.SetCurrentEpochTime({ uparam,0 });
+		break;
+	case IDM_SET_START_TIME_TRAJECTORY:
+		this->m_cameraTrajectory.SetStartEpochTime({ uparam,0 });
+	default:
+		break;
 	}
-	catch (const TRException& e)
-	{
-		ErrorHandler::Log(e);
-	}
-	catch (const std::exception& e)
-	{
-		ErrorHandler::Log(e);
-	}
-	catch (...)
-	{
-		ErrorHandler::Log("Unknown Exceptio: No details available");
-	}
+	return true;
 }
 
 void TerrainModel::AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int gridZ)
@@ -756,7 +710,7 @@ void TerrainModel::AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int g
 	VertexPolyLine* pVertex = &vertices[0];
 	unsigned verteCount = vertices.size();
 	LineListCreator	lineListCreator;
-	this->m_polylines.Add(pVertex, NULL, verteCount,NULL, lineListCreator, L"Grid");
+	this->m_linelist.Add(pVertex, NULL, verteCount,NULL, lineListCreator, L"Grid");
 }
 
 

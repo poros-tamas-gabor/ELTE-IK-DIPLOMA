@@ -91,7 +91,11 @@ LRESULT CALLBACK App::WindowProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM
 
 	case WM_COMMAND:
 	{
-		this->m_terrainController->HandleMessage(LOWORD(wparam), NULL, NULL);
+		if (LOWORD(wparam) >= IControllerMessageIDs::FIRST && LOWORD(wparam) <= IControllerMessageIDs::LAST)
+		{
+			IControllerMessageIDs message = static_cast<IControllerMessageIDs>(LOWORD(wparam));
+			this->m_terrainController->HandleMessage( message, {}, {});
+		}
 		return 0;
 	}
 	// Check if a key has been released on the keyboard.
@@ -336,7 +340,7 @@ void App::Update()
 {
 	float dt = (float)this->m_timer.GetMilisecondsElapsed();
 	this->m_timer.Restart();
-	this->m_terrainController->HandleMessage(IDC_TIME_ELAPSED, &dt, NULL);
+	this->m_terrainController->HandleMessage(IDC_TIME_ELAPSED, { dt }, {});
 }
 
 

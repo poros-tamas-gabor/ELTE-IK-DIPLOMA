@@ -11,15 +11,15 @@ static const float PI = 2*std::asin(1.0f);
 class Iitenterpolation {
 public:
     virtual ~Iitenterpolation() = default;
-    virtual bool Calculate(const std::vector<double>& xValues, const std::vector<Vector3D>& yValues, double x, Vector3D& y, unsigned& index) = 0;
+    virtual bool Calculate(const std::vector<float>& xValues, const std::vector<Vector3D>& yValues, float x, Vector3D& y, unsigned& index) = 0;
     // find the greatest element in the vector which is still less than or equal to a given value:
-    static int binarySearch_greatestLessOrEqual(const std::vector<double>& vec, double value);
+    static int binarySearch_greatestLessOrEqual(const std::vector<float>& vec, float value);
 };
 
 class LinearInterpolation : public Iitenterpolation {
 
 public:
-    bool Calculate(const std::vector<double>& xValues, const std::vector<Vector3D>& yValues, double x, Vector3D& y, unsigned& index) override;
+    bool Calculate(const std::vector<float>& xValues, const std::vector<Vector3D>& yValues, float x, Vector3D& y, unsigned& index) override;
 };
 
 class CirclularInterpolation : public Iitenterpolation
@@ -28,6 +28,6 @@ private:
     int sgn(float x);
     float angleMod(float angle);
 public:
-    bool Calculate(const std::vector<double>& xValues, const std::vector<Vector3D>& yValues, double x, Vector3D& y, unsigned& index) override;
+    bool Calculate(const std::vector<float>& xValues, const std::vector<Vector3D>& yValues, float x, Vector3D& y, unsigned& index) override;
 };
 #endif

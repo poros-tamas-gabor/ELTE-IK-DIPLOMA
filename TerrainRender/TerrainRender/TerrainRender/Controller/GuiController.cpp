@@ -15,26 +15,18 @@ GuiController::GuiController()
 	m_handledMsgs.push_back(IDMENU_FIlE_TERRAIN_SOFT);
 	m_handledMsgs.push_back(IDMENU_FIlE_TERRAIN_PROJECT_SOFT);
 	m_handledMsgs.push_back(IDMENU_FIlE_CAMERA_TRAJECTORY);
-	m_handledMsgs.push_back(IDMENU_FIlE_PARAMETERS);
+	m_handledMsgs.push_back(IDMENU_FIlE_CONFIGURATION);
 	m_handledMsgs.push_back(IDMENU_FILE_OUTPUT_DIRECTORY);
 	m_handledMsgs.push_back(IDMENU_HELP);
 
-	m_handledMsgs.push_back(IDC_SLIDER_CAMERA_SPEED);
-	m_handledMsgs.push_back(IDC_SLIDER_CAMERA_ROTATION_SPEED);
-	m_handledMsgs.push_back(IDC_BUTTON_CAMERA_RESET);
+
 	m_handledMsgs.push_back(IDC_SLIDER_PROJECTION_FIELD_OF_VIEW);
 	m_handledMsgs.push_back(IDC_SLIDER_PROJECTION_NEAR_SCREEN);
 	m_handledMsgs.push_back(IDC_SLIDER_PROJECTION_FAR_SCREEN);
 
-	m_handledMsgs.push_back(IDC_BUTTON_FLYTHROUGH_MODE);
-	m_handledMsgs.push_back(IDC_BUTTON_3DEXPLORE_MODE);
-	m_handledMsgs.push_back(IDC_BUTTON_FLYTHROUGH_START);
-	m_handledMsgs.push_back(IDC_BUTTON_FLYTHROUGH_PAUSE);
-	m_handledMsgs.push_back(IDC_BUTTON_FLYTHROUGH_PAUSE);
-	m_handledMsgs.push_back(IDC_BUTTON_FLYTHROUGH_STOP);
-	m_handledMsgs.push_back(IDC_BUTTON_FLYTHROUGH_RECORD);
-	m_handledMsgs.push_back(IDC_BUTTON_FLYTHROUGH_STOP_RECORD);
-	m_handledMsgs.push_back(IDC_SLIDER_FLYTHROUGH_SPEED);
+	m_handledMsgs.push_back(IDC_ACTIVATE_FLYTHROUGH_MODE);
+	m_handledMsgs.push_back(IDC_ACTIVATE_3DEXPLORE_MODE);
+
 
 	m_handledMsgs.push_back(IDC_SLIDER_IRENDERABLE_SCALE);
 	m_handledMsgs.push_back(IDC_SLIDER_IRENDERABLE_ROTATION);
@@ -44,7 +36,6 @@ GuiController::GuiController()
 	m_handledMsgs.push_back(IDC_BUTTON_CLEAR_TRAJECTORY);
 	m_handledMsgs.push_back(IDC_CHECKBOX_IRENDERABLE_ISSEEN);
 
-	m_handledMsgs.push_back(IDC_SLIDER_FLYTHROUGH_FRAME);
 	m_handledMsgs.push_back(IDC_INPUT_3DE_UNIXTIME);
 	m_handledMsgs.push_back(IDC_INPUT_FLYTHROUGH_UNIXTIME);
 }
@@ -55,7 +46,7 @@ void GuiController::SetMessageSystem(ControllerMessageSystemPtr messageSystem)
 	m_messageSystem = messageSystem;
 }
 
-bool GuiController::CanHandle(unsigned int message) const
+bool GuiController::CanHandle(IControllerMessageIDs message) const
 {
 	auto it = std::find(m_handledMsgs.begin(), m_handledMsgs.end(), message);
 	return it != m_handledMsgs.end();
@@ -180,22 +171,17 @@ void GuiController::StartWorkerThread(const ICallableCreator& creator, std::atom
 }
 
 
-void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned* uparam)
+void GuiController::HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparam, const std::vector<unsigned>& uparam)
 {
 	switch (message)
 	{
 	case IDMENU_FIlE_TERRAIN_SHARP:
 	{
 		wchar_t filePath[260];
-		this->OpenFileDialog(filePath, 260, m_filter_stl);// L"All\0*.*\0Text\0*.TXT\0";
+		this->OpenFileDialog(filePath, 260, m_filter_stl);
 		std::wstring filepathwstr(filePath);
 		if (!filepathwstr.empty())
-		{
-			std::atomic_bool running(true);
-			Creator_LoadTerrain_Sharp creator(filepathwstr, m_terrainModel, running);
-			StartWorkerThread(creator, running);
-
-		}
+			m_terrainModel->HandleMessage(IDM_LOAD_TERRAIN_SHARP, { filepathwstr }, fparam, uparam);
 		break;
 	}
 	case IDMENU_FIlE_TERRAIN_SOFT:
@@ -205,30 +191,23 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 
 		std::wstring filepathwstr(filePath);
 		if (!filepathwstr.empty())
-		{
-			std::atomic_bool running(true);
-			Creator_LoadTerrain_Soft creator(filepathwstr, m_terrainModel, running);
-			StartWorkerThread(creator, running);
-		}
+			m_terrainModel->HandleMessage(IDM_LOAD_TERRAIN_SOFT, { filepathwstr }, fparam, uparam);
 		break;
 	}
 	case IDMENU_FIlE_CAMERA_TRAJECTORY:
 	{
 		wchar_t filePath[260];
 		this->OpenFileDialog(filePath, 260, m_filter_csv);
-		if (!std::wstring(filePath).empty())
-			this->m_terrainModel->LoadCameraTrajectory(filePath);
+		std::wstring filepathwstr(filePath);
+		if (!filepathwstr.empty())
+			m_terrainModel->HandleMessage(IDM_LOAD_CAMERA_TRAJECTORY, { filepathwstr }, fparam, uparam);
 		break;
 	}
 	case IDMENU_FIlE_TERRAIN_PROJECT_SHARP:
 	{
 		std::vector<std::wstring> files;
 		this->OpenFileDialogMultipleSelection(files, m_filter_stl);
-
-		std::atomic_bool running(true);
-		Creator_LoadProject_Sharp creator(files, m_terrainModel, running);
-		StartWorkerThread(creator, running);
-
+		m_terrainModel->HandleMessage(IDM_LOAD_PROJECT_SHARP, files, fparam, uparam);
 		break;
 	}
 
@@ -236,18 +215,16 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 	{
 		std::vector<std::wstring> files;
 		this->OpenFileDialogMultipleSelection(files, m_filter_stl);
-
-		std::atomic_bool running(true);
-		Creator_LoadProject_Soft creator(files, m_terrainModel, running);
-		StartWorkerThread(creator, running);
+		m_terrainModel->HandleMessage(IDM_LOAD_PROJECT_SOFT, files, fparam, uparam);
 		break;
 	}
-	case IDMENU_FIlE_PARAMETERS:
+	case IDMENU_FIlE_CONFIGURATION:
 	{
 		wchar_t filePath[260];
 		this->OpenFileDialog(filePath, 260, m_filter_json);
-		if (!std::wstring(filePath).empty())
-			this->m_terrainModel->LoadConfigurationFile(filePath);
+		std::wstring filepathwstr(filePath);
+		if (!filepathwstr.empty())
+			m_terrainModel->HandleMessage(IDM_LOAD_CONFIGURATION, { filepathwstr }, fparam, uparam);
 		break;
 	}
 
@@ -265,132 +242,69 @@ void GuiController::HandleMessage(unsigned int message, float* fparam, unsigned*
 		break;
 	}
 
-
-	case IDC_SLIDER_CAMERA_SPEED:
-	{
-		this->m_terrainModel->UpdateCameraProperties(IDM_SET_CAMERA_SPEED, *fparam);
-		break;
-	}
-	case IDC_SLIDER_CAMERA_ROTATION_SPEED:
-	{
-		this->m_terrainModel->UpdateCameraProperties(IDM_SET_CAMERA_ROTATION_SPEED, *fparam);
-		break;
-	}
-	case IDC_BUTTON_CAMERA_RESET:
-	{
-		this->m_terrainModel->ResetCamera();
-		break;
-	}
-
 	case IDC_SLIDER_PROJECTION_FIELD_OF_VIEW:
 	{
-		this->m_terrainModel->UpdateCameraProperties(IDM_SET_CAMERA_FIELD_OF_VIEW, *fparam);
+		this->m_terrainModel->HandleMessage(IDM_SET_CAMERA_FIELD_OF_VIEW, {}, fparam, uparam);
 		break;
 	}
 	case IDC_SLIDER_PROJECTION_NEAR_SCREEN:
 	{
-		this->m_terrainModel->UpdateCameraProperties(IDM_SET_CAMERA_ASPECT_NEAR_SCREEN, *fparam);
+		this->m_terrainModel->HandleMessage(IDM_SET_CAMERA_ASPECT_NEAR_SCREEN, {}, fparam, uparam);
 		break;
 	}
 	case IDC_SLIDER_PROJECTION_FAR_SCREEN:
 	{
-		this->m_terrainModel->UpdateCameraProperties(IDM_SET_CAMERA_ASPECT_FAR_SCREEN, *fparam);
-		break;
-	}
-	case IDC_BUTTON_FLYTHROUGH_MODE:
-	{
-		if (this->m_terrainModel->IsTrajectoryInitialized())
-		{
-			this->m_messageSystem->Publish(IDCC_ACTIVATE_FLYTHROUGH, NULL, NULL);
-		}
-		break;
-	}
-	case IDC_BUTTON_3DEXPLORE_MODE:
-	{
-		this->m_messageSystem->Publish(IDCC_ACTIVATE_3DEXPLORE, NULL, NULL);
-		break;
-
-	}
-	case IDC_BUTTON_FLYTHROUGH_START:
-	{
-		this->m_messageSystem->Publish(IDCC_PLAY_FLYTHROUGH, NULL, NULL);
-		break;
-	}
-	case IDC_BUTTON_FLYTHROUGH_PAUSE:
-	{
-		this->m_messageSystem->Publish(IDCC_PAUSE_FLYTHROUGH ,NULL, NULL);
-		break;
-	}
-	case IDC_BUTTON_FLYTHROUGH_STOP:
-	{
-		this->m_messageSystem->Publish(IDCC_STOP_FLYTHROUGH, NULL, NULL);
-		break;
-	}
-	case IDC_SLIDER_FLYTHROUGH_FRAME:
-	{
-		this->m_messageSystem->Publish(IDCC_SET_FRAME_FLYTHROUGH, fparam, uparam);
-		break;
-	}
-	case IDC_BUTTON_FLYTHROUGH_RECORD: 
-	{
-		this->m_messageSystem->Publish(IDCC_RECORD_FLYTHROUGH, NULL, NULL);
-		break;
-	}
-	case IDC_BUTTON_FLYTHROUGH_STOP_RECORD:
-	{
-		this->m_messageSystem->Publish(IDCC_STOP_RECORD_FLYTHROUGH, NULL, NULL);
-	}
-	case IDC_SLIDER_FLYTHROUGH_SPEED: 
-	{
-		this->m_messageSystem->Publish(IDCC_SPEED_FLYTHROUGH, fparam, uparam);
-		break;
-	}
-	case IDC_CHECKBOX_IRENDERABLE_ISSEEN:
-	{
-		this->m_terrainModel->TransformIRenderable(IDM_IRENDERABLE_ISSEEN, *uparam, fparam);
+		this->m_terrainModel->HandleMessage(IDM_SET_CAMERA_ASPECT_FAR_SCREEN, {}, fparam, uparam);
 		break;
 	}
 
-	case IDC_SLIDER_IRENDERABLE_SCALE: 		 
-	{
-		this->m_terrainModel->TransformIRenderable(IDM_TRANSFORMATION_IRENDERABLE_SCALE, *uparam, fparam);
-		break;
-	}
-	case IDC_SLIDER_IRENDERABLE_ROTATION:	 
-	{
-		this->m_terrainModel->TransformIRenderable(IDM_TRANSFORMATION_IRENDERABLE_ROTATION, *uparam, fparam);
-		break; 
-	}
-	case IDC_SLIDER_IRENDERABLE_TRANSLATION:
-	{
-		this->m_terrainModel->TransformIRenderable(IDM_TRANSFORMATION_IRENDERABLE_TRANSLATION, *uparam, fparam);
-		break;
-	}
-	case IDC_SLIDER_IRENDERABLE_COLOR:
-	{
-		this->m_terrainModel->TransformIRenderable(IDM_TRANSFORMATION_IRENDERABLE_COLOR, *uparam, fparam);
-		break;
-	}
+
+	//case IDC_CHECKBOX_IRENDERABLE_ISSEEN:
+	//{
+	//	this->m_terrainModel->TransformIRenderable(IDM_IRENDERABLE_ISSEEN, *uparam, fparam);
+	//	break;
+	//}
+	//
+	//case IDC_SLIDER_IRENDERABLE_SCALE: 		 
+	//{
+	//	this->m_terrainModel->TransformIRenderable(IDM_IRENDERABLE_SCALE, *uparam, fparam);
+	//	break;
+	//}
+	//case IDC_SLIDER_IRENDERABLE_ROTATION:	 
+	//{
+	//	this->m_terrainModel->TransformIRenderable(IDM_IRENDERABLE_ROTATION, *uparam, fparam);
+	//	break; 
+	//}
+	//case IDC_SLIDER_IRENDERABLE_TRANSLATION:
+	//{
+	//	this->m_terrainModel->TransformIRenderable(IDM_IRENDERABLE_TRANSLATION, *uparam, fparam);
+	//	break;
+	//}
+	//case IDC_SLIDER_IRENDERABLE_COLOR:
+	//{
+	//	this->m_terrainModel->TransformIRenderable(IDM_IRENDERABLE_COLOR, *uparam, fparam);
+	//	break;
+	//}
 	case IDC_BUTTON_CLEAR_MESHES:
 	{
-		this->m_terrainModel->ClearTerrain();
+		this->m_terrainModel->HandleMessage(IDM_CLEAR_MESHES, {}, fparam, uparam);
 		break;
 	}
 	case IDC_BUTTON_CLEAR_TRAJECTORY:
 	{
-		this->m_terrainModel->ClearCameraTrajectory();
-		this->m_messageSystem->Publish(IDCC_ACTIVATE_3DEXPLORE, NULL, NULL);
+		this->m_terrainModel->HandleMessage(IDM_CLEAR_TRAJECTORY, {}, fparam, uparam);
+		this->m_messageSystem->Publish(IDC_ACTIVATE_3DEXPLORE_MODE, {}, {});
 		break;
 	}
 
 	case IDC_INPUT_3DE_UNIXTIME:
 	{
-		this->m_terrainModel->SetUnixTime(IDM_E3D_UNIX_TIME, uparam);
+		this->m_terrainModel->HandleMessage(IDM_SET_TIME_E3D, {}, fparam, uparam);
 		break;
 	}
 	case IDC_INPUT_FLYTHROUGH_UNIXTIME:
 	{
-		this->m_terrainModel->SetUnixTime(IDM_FLYTHROUGH_UNIX_TIME, uparam);
+		this->m_terrainModel->HandleMessage(IDM_SET_START_TIME_TRAJECTORY, {}, fparam, uparam);
 		break;
 	}
 

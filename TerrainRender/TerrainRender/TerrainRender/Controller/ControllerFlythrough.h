@@ -15,24 +15,24 @@ private:
 	IViewPtr							m_terrainView;
 	MousePtr							m_mouse;
 	KeyboardPtr							m_keyboard;
-	std::vector<unsigned>				m_handledMsgs;
+	std::vector<IControllerMessageIDs>	m_handledMsgs;
 	ControllerMessageSystemPtr			m_messageSystem;
 	
 	FlythroughState						m_flythroughState;
 	size_t								m_recordedPrevFrameNum = 0;
 
-	bool					m_isActive = false;
-	bool					m_isRunning = false;
-	bool					m_isRecording = false;
-	float					m_speed = 1.0f;
+	bool								m_isActive = false;
+	bool								m_isRunning = false;
+	bool								m_isRecording = false;
+	float								m_speed = 1.0f;
 
 
 public:
 	ControllerFlythrough();
 	virtual ~ControllerFlythrough() {}
 
-	virtual bool CanHandle(unsigned int message) const override;
-	virtual void HandleMessage(unsigned int message, float* fparam, unsigned* uparam) override;
+	virtual bool CanHandle(IControllerMessageIDs message) const override;
+	virtual void HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparam, const std::vector<unsigned>& uparam) override;
 	virtual void SetTerrainModel(IModelPtr pModel) override;
 	virtual void SetMouse(MousePtr mouse) override;
 	virtual void SetKeyboard(KeyboardPtr keyboard) override;

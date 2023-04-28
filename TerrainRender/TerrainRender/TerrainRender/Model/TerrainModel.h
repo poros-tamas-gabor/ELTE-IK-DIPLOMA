@@ -34,6 +34,7 @@ private:
 
 	CompositeRenderable<VertexMesh>				m_meshes;
 	CompositeRenderable<VertexPolyLine>			m_polylines;
+	CompositeRenderable<VertexPolyLine>			m_linelist;
 	Light										m_light;
 	CameraPositioner							m_cameraPositioner;
 	CameraTrajectory							m_cameraTrajectory;
@@ -58,28 +59,33 @@ public:
 	void	Shutdown() override;
 	bool	Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext) override;
 
-	bool	LoadTerrain_withSharpEdges(const wchar_t* filepath) override;
-	bool	LoadTerrain_withSoftEdges(const wchar_t* filepath) override;
-	bool	LoadCameraTrajectory(const wchar_t* filepath) override;
-	bool	LoadConfigurationFile(const wchar_t* filepath) override;
-	bool	LoadProject_withSharpEdges(const std::vector<std::wstring>& files) override;
-	bool	LoadProject_withSoftEdges(const std::vector<std::wstring>& files) override;
+	bool	HandleMessage(IModelMessageIDs message, const std::vector<std::wstring>& stringParams, const std::vector<float>& fparams, const std::vector<unsigned>& uparams) override;
+
+	bool	LoadTerrain_withSharpEdges(const std::wstring& filepath) ;
+	bool	LoadTerrain_withSoftEdges(const std::wstring& filepath) ;
+	bool	LoadCameraTrajectory(const std::wstring& filepath) ;
+	bool	LoadConfigurationFile(const std::wstring& filepath) ;
+	bool	LoadProject_withSharpEdges(const std::vector<std::wstring>& files) ;
+	bool	LoadProject_withSoftEdges(const std::vector<std::wstring>& files) ;
 
 	bool	IsTrajectoryInitialized(void) const override;
 
-	void	HandleFlythroughMode(unsigned message, float* elapsedMillisec, unsigned* frameNum) override;
-	void	HandleExplore3DMode(unsigned message, float* fparams) override;
+	bool	HandleFlythroughMode(IModelMessageIDs message, const std::vector<float>& fparams, const std::vector<unsigned>& uparams) ;
+	bool	HandleExplore3DMode(IModelMessageIDs message, const std::vector<float>& fparams) ;
 
-	void	SetUnixTime(unsigned message, unsigned* uparam) override;
-	void	ResetCamera(void) override;
-	void	UpdateCameraProperties(unsigned message, float data) override;
-	void    TransformIRenderable(unsigned message, unsigned id, float parameters[]) override;
-	void	ClearTerrain(void) override;
-	void	ClearCameraTrajectory(void) override;
+	bool	SetUnixTime(IModelMessageIDs message, unsigned uparam) ;
+	bool	ResetCamera(void) ;
+	bool	SetCameraProperties(IModelMessageIDs message, float data) ;
+	bool    TransformIRenderable(IModelMessageIDs message, unsigned id, const std::vector<float>& fparams) ;
+
+	bool	TransformMeshes(IModelMessageIDs message, const std::vector<float>& fparams);
+	bool	TransformTrajectory(IModelMessageIDs message, const std::vector<float>& fparams);
+	bool	ClearMeshes(void) ;
+	bool	ClearCameraTrajectory(void) ;
 private:
 
-	void							MoveCamera(unsigned message, float timeElapsed);
-	void							RotateCamera(unsigned message, float pitch, float yaw);
+	void							MoveCamera(IModelMessageIDs message, float timeElapsed);
+	void							RotateCamera(IModelMessageIDs message, float pitch, float yaw);
 	std::vector <IRenderableState>	CollectTerrainMeshState(void) const;
 	FlythroughState					CollectFlythroughState(void) const;
 	Explore3DState					CollectExplore3DState(void) const;

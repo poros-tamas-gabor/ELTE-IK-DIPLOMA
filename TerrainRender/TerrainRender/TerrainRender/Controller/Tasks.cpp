@@ -8,7 +8,7 @@ Task_LoadTerrain_Soft::Task_LoadTerrain_Soft(const std::wstring& filepath, IMode
 void Task_LoadTerrain_Soft::Task()
 {
 	m_keepRunning = true;
-	m_modelPtr->LoadTerrain_withSoftEdges(m_filepath.c_str());
+	//m_modelPtr->LoadTerrain_withSoftEdges(m_filepath.c_str());
     m_keepRunning = false;
 }
 void Task_LoadTerrain_Soft::operator()()
@@ -31,7 +31,7 @@ Task_LoadTerrain_Sharp::Task_LoadTerrain_Sharp(const std::wstring& filepath, IMo
 void Task_LoadTerrain_Sharp::Task()
 {
 	m_keepRunning = true;
-	m_modelPtr->LoadTerrain_withSharpEdges(m_filepath.c_str());
+	//m_modelPtr->LoadTerrain_withSharpEdges(m_filepath.c_str());
 	m_keepRunning = false;
 }
 void Task_LoadTerrain_Sharp::operator()()
@@ -54,7 +54,7 @@ Task_LoadProject_Soft::Task_LoadProject_Soft(const std::vector<std::wstring>& fi
 
 void Task_LoadProject_Soft::Task()
 {
-	m_modelPtr->LoadProject_withSoftEdges(m_filepaths);
+	//m_modelPtr->LoadProject_withSoftEdges(m_filepaths);
 	m_keepRunning = false;
 }
 void Task_LoadProject_Soft::operator()()
@@ -77,7 +77,7 @@ Task_LoadProject_Sharp::Task_LoadProject_Sharp(const std::vector<std::wstring>& 
 
 void Task_LoadProject_Sharp::Task()
 {
-	m_modelPtr->LoadProject_withSharpEdges(m_filepaths);
+	//m_modelPtr->LoadProject_withSharpEdges(m_filepaths);
 	m_keepRunning = false;
 }
 void Task_LoadProject_Sharp::operator()()

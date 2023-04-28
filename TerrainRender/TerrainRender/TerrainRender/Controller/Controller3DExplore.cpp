@@ -6,8 +6,11 @@
 Controller3DExplore::Controller3DExplore()
 {
 	m_handledMsgs.push_back(IDC_TIME_ELAPSED);
-	m_handledMsgs.push_back(IDCC_ACTIVATE_FLYTHROUGH);
-	m_handledMsgs.push_back(IDCC_ACTIVATE_3DEXPLORE);
+	m_handledMsgs.push_back(IDC_ACTIVATE_3DEXPLORE_MODE);
+	m_handledMsgs.push_back(IDC_ACTIVATE_FLYTHROUGH_MODE);
+	m_handledMsgs.push_back(IDC_E3D_CAMERA_SPEED);
+	m_handledMsgs.push_back(IDC_E3D_ROTATION_SPEED);
+	m_handledMsgs.push_back(IDC_E3D_CAMERA_RESET);
 
 }
 
@@ -16,75 +19,88 @@ void Controller3DExplore::SetMessageSystem(ControllerMessageSystemPtr messageSys
 	m_messageSystem = messageSystem;
 }
 
-bool Controller3DExplore::CanHandle(unsigned int message) const
+bool Controller3DExplore::CanHandle(IControllerMessageIDs message) const
 {
 	auto it = std::find(m_handledMsgs.begin(), m_handledMsgs.end(), message);
 	return it != m_handledMsgs.end();
 }
 
-void Controller3DExplore::HandleMessage(unsigned int message, float* fparam, unsigned* uparam)
+void Controller3DExplore::HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparams, const std::vector<unsigned>& uparams)
 {
 	float TimeEllapsed = 0;
 	switch (message)
 	{
-	case IDCC_ACTIVATE_3DEXPLORE:
+	case IDC_ACTIVATE_3DEXPLORE_MODE:
 	{
 		this->m_isActive = true;
 		break;
 	}
-	case IDCC_ACTIVATE_FLYTHROUGH:
+	case IDC_ACTIVATE_FLYTHROUGH_MODE:
 	{
-		this->m_isActive = false;
+		if (m_terrainModel->IsTrajectoryInitialized())
+		{
+			this->m_isActive = false;
+		}
+		break;
+	}
+	case IDC_E3D_CAMERA_SPEED:
+	{
+		this->m_terrainModel->HandleMessage(IDM_E3D_SET_SPEED, {}, fparams, uparams);
+		break;
+	}
+	case IDC_E3D_ROTATION_SPEED:
+	{
+		this->m_terrainModel->HandleMessage(IDM_E3D_SET_ROTATION_SPEED, {}, fparams, uparams);
+		break;
+	}
+	case IDC_E3D_CAMERA_RESET:
+	{
+		this->m_terrainModel->HandleMessage(IDM_E3D_CAMERA_RESET, {}, fparams, uparams);
 		break;
 	}
 	case IDC_TIME_ELAPSED:
 	{
 		if (!IsActive())
 			return;
-		if(fparam != nullptr)
+
+		while (!m_keyboard->KeyBufferIsEmpty())
 		{
-			TimeEllapsed = *fparam;
+			KeyboardEvent e = m_keyboard->ReadKey();
+		}
+		while (!m_keyboard->CharBufferIsEmpty())
+		{
+			unsigned char c = m_keyboard->ReadChar();
+		}
 
-			while (!m_keyboard->KeyBufferIsEmpty())
-			{
-				KeyboardEvent e = m_keyboard->ReadKey();
-			}
-			while (!m_keyboard->CharBufferIsEmpty())
-			{
-				unsigned char c = m_keyboard->ReadChar();
-			}
+		while (!m_mouse->EventBufferIsEmpty())
+		{
+			MouseEvent e = m_mouse->ReadEvent();
+			ControlMouse(e);
+		}
 
-			while (!m_mouse->EventBufferIsEmpty())
-			{
-				MouseEvent e = m_mouse->ReadEvent();
-				ControlMouse(e);
-			}
-
-			if (m_keyboard->KeyIsPressed(VK_SPACE))
-			{
-				this->m_terrainModel->HandleExplore3DMode(IDM_CAMERA_MOVE_UP, &TimeEllapsed);
-			}
-			if (m_keyboard->KeyIsPressed('C'))
-			{
-				this->m_terrainModel->HandleExplore3DMode(IDM_CAMERA_MOVE_DOWN, &TimeEllapsed);
-			}
-			if (m_keyboard->KeyIsPressed('W'))
-			{
-				this->m_terrainModel->HandleExplore3DMode(IDM_CAMERA_MOVE_FORWARD, &TimeEllapsed);
-			}
-			if (m_keyboard->KeyIsPressed('S'))
-			{
-				this->m_terrainModel->HandleExplore3DMode(IDM_CAMERA_MOVE_BACK, &TimeEllapsed);
-			}
-			if (m_keyboard->KeyIsPressed('A'))
-			{
-				this->m_terrainModel->HandleExplore3DMode(IDM_CAMERA_MOVE_LEFT, &TimeEllapsed);
-			}
-			if (m_keyboard->KeyIsPressed('D'))
-			{
-				this->m_terrainModel->HandleExplore3DMode(IDM_CAMERA_MOVE_RIGHT, &TimeEllapsed);
-			}
-
+		if (m_keyboard->KeyIsPressed(VK_SPACE))
+		{
+			this->m_terrainModel->HandleMessage(IDM_E3D_MOVE_UP, {},fparams, uparams);
+		}
+		if (m_keyboard->KeyIsPressed('C'))
+		{
+			this->m_terrainModel->HandleMessage(IDM_E3D_MOVE_DOWN, {}, fparams, uparams);
+		}
+		if (m_keyboard->KeyIsPressed('W'))
+		{
+			this->m_terrainModel->HandleMessage(IDM_E3D_MOVE_FORWARD, {}, fparams, uparams);
+		}
+		if (m_keyboard->KeyIsPressed('S'))
+		{
+			this->m_terrainModel->HandleMessage(IDM_E3D_MOVE_BACK, {}, fparams, uparams);
+		}
+		if (m_keyboard->KeyIsPressed('A'))
+		{
+			this->m_terrainModel->HandleMessage(IDM_E3D_MOVE_LEFT, {}, fparams, uparams);
+		}
+		if (m_keyboard->KeyIsPressed('D'))
+		{
+			this->m_terrainModel->HandleMessage(IDM_E3D_MOVE_RIGHT, {}, fparams, uparams);
 		}
 		break;
 		
@@ -142,8 +158,8 @@ void Controller3DExplore::ControlMouse(const MouseEvent& e) const
 
 			if (m_mouse->IsLeftDown())
 			{
-				float rotates[2] = { (float)pitch, (float)yaw };
-				this->m_terrainModel->HandleExplore3DMode(IDM_CAMERA_ROTATE, rotates);
+				std::vector<float> rotates = { (float)pitch, (float)yaw };
+				this->m_terrainModel->HandleMessage(IDM_E3D_ROTATE, {}, rotates, {});
 			}
 
 		}
@@ -153,8 +169,8 @@ void Controller3DExplore::ControlMouse(const MouseEvent& e) const
 	{
 		if (m_mouse->IsLeftDown())
 		{
-			float rotates[2] = { (float)e.GetPosY(), (float)e.GetPosX() };
-			this->m_terrainModel->HandleExplore3DMode(IDM_CAMERA_ROTATE, rotates);
+			std::vector<float> rotates = { (float)e.GetPosY(), (float)e.GetPosX() };
+			this->m_terrainModel->HandleMessage(IDM_E3D_ROTATE, {}, rotates, {});
 		}
 	}
 }

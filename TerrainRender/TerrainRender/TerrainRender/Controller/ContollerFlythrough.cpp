@@ -6,15 +6,15 @@
 ControllerFlythrough::ControllerFlythrough()
 {
 	m_handledMsgs.push_back(IDC_TIME_ELAPSED);
-	m_handledMsgs.push_back(IDCC_ACTIVATE_FLYTHROUGH);
-	m_handledMsgs.push_back(IDCC_ACTIVATE_3DEXPLORE);
-	m_handledMsgs.push_back(IDCC_SPEED_FLYTHROUGH);
-	m_handledMsgs.push_back(IDCC_PLAY_FLYTHROUGH);
-	m_handledMsgs.push_back(IDCC_PAUSE_FLYTHROUGH);
-	m_handledMsgs.push_back(IDCC_STOP_FLYTHROUGH);
-	m_handledMsgs.push_back(IDCC_SET_FRAME_FLYTHROUGH);
-	m_handledMsgs.push_back(IDCC_RECORD_FLYTHROUGH);
-	m_handledMsgs.push_back(IDCC_STOP_RECORD_FLYTHROUGH);
+	m_handledMsgs.push_back(IDC_ACTIVATE_3DEXPLORE_MODE);
+	m_handledMsgs.push_back(IDC_ACTIVATE_FLYTHROUGH_MODE);
+	m_handledMsgs.push_back(IDC_FLYTHROUGH_START);
+	m_handledMsgs.push_back(IDC_FLYTHROUGH_PAUSE);
+	m_handledMsgs.push_back(IDC_FLYTHROUGH_STOP);
+	m_handledMsgs.push_back(IDC_FLYTHROUGH_RECORD_START);
+	m_handledMsgs.push_back(IDC_FLYTHROUGH_RECORD_STOP);
+	m_handledMsgs.push_back(IDC_FLYTHROUGH_SET_SPEED);
+	m_handledMsgs.push_back(IDC_FLYTHROUGH_SET_FRAME);
 
 }
 
@@ -23,121 +23,104 @@ void ControllerFlythrough::SetMessageSystem(ControllerMessageSystemPtr messageSy
 	m_messageSystem = messageSystem;
 }
 
-bool ControllerFlythrough::CanHandle(unsigned int message) const
+bool ControllerFlythrough::CanHandle(IControllerMessageIDs message) const
 {
 	auto it = std::find(m_handledMsgs.begin(), m_handledMsgs.end(), message);
 	return it != m_handledMsgs.end();
 }
 
-void ControllerFlythrough::HandleMessage(unsigned int message, float* fparam, unsigned* uparam)
+void ControllerFlythrough::HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparams, const std::vector<unsigned>& uparams)
 {
 	switch (message)
 	{
-
-	case IDCC_ACTIVATE_3DEXPLORE:
+	case IDC_ACTIVATE_3DEXPLORE_MODE:
 	{
 		this->m_isActive = false;
 		this->m_isRunning = false;
 		break;
 	}
-	case IDCC_ACTIVATE_FLYTHROUGH:
+	case IDC_ACTIVATE_FLYTHROUGH_MODE:
 	{
-		this->m_isActive = true;
-		this->m_isRunning = false;
-		this->m_terrainModel->HandleFlythroughMode(IDM_TRAJECTORY_START_POS, NULL, NULL);
+		if (m_terrainModel->IsTrajectoryInitialized())
+		{
+			this->m_isActive = true;
+			this->m_isRunning = false;
+			this->m_terrainModel->HandleMessage(IDM_FLYTHROUGH_START_POSITION, {}, fparams, uparams);
+		}
 		break;
 	}
-
-	case IDCC_PLAY_FLYTHROUGH:
+	case IDC_FLYTHROUGH_START:
 	{
 		this->m_isRunning = true;
 		break;
 	}
 
-	case IDCC_PAUSE_FLYTHROUGH:
+	case IDC_FLYTHROUGH_PAUSE:
 	{
 		this->m_isRunning = false;
 		break;
 	}
-	case IDCC_STOP_FLYTHROUGH:
+	case IDC_FLYTHROUGH_STOP:
 	{
 		this->m_isRunning = false;
-		this->m_terrainModel->HandleFlythroughMode(IDM_TRAJECTORY_START_POS, NULL, NULL);
+		this->m_terrainModel->HandleMessage(IDM_FLYTHROUGH_START_POSITION, {}, fparams, uparams);
 		break;
 	}
-
-	case IDCC_RECORD_FLYTHROUGH:
+	case IDC_FLYTHROUGH_RECORD_START:
 	{
 		this->m_isRunning = true;
 		this->m_isRecording = true;
 		m_recordedPrevFrameNum = 0;
 		break;
 	}
-
-	case IDCC_STOP_RECORD_FLYTHROUGH:
+	case IDC_FLYTHROUGH_RECORD_STOP:
 	{
 		this->m_isRunning = false;
 		this->m_isRecording = false;
 		break;
 	}
-
-
-	case IDCC_SPEED_FLYTHROUGH:
+	case IDC_FLYTHROUGH_SET_SPEED:
 	{
-		if (fparam != nullptr)
-		{
-			this->m_speed = *fparam;
-		}
+		this->m_terrainModel->HandleMessage(IDM_FLYTHROUGH_SET_SPEED, {}, fparams, uparams);
 		break;
 	}
-	case IDCC_SET_FRAME_FLYTHROUGH:
+	case IDC_FLYTHROUGH_SET_FRAME:
 	{
-		if (uparam != nullptr)
-		{
-			this->m_terrainModel->HandleFlythroughMode(IDM_CAMERA_TRAJECTORY_SET_FRAME, NULL, uparam);
-		}
+		this->m_terrainModel->HandleMessage(IDM_FLYTHROUGH_SET_FRAME, {}, fparams, uparams); 	
 		break;
 	}
 	case IDC_TIME_ELAPSED:
 	{
-		if (fparam != nullptr)
+		while (!m_keyboard->KeyBufferIsEmpty())
 		{
-			float TimeEllapsed = 0;
-			TimeEllapsed = *fparam;
-
-			while (!m_keyboard->KeyBufferIsEmpty())
-			{
-				KeyboardEvent e = m_keyboard->ReadKey();
-			}
-			while (!m_keyboard->CharBufferIsEmpty())
-			{
-				unsigned char c = m_keyboard->ReadChar();
-			}
-
-			if (m_isActive && m_isRunning)
-			{
-				if (m_isRecording && (m_recordedPrevFrameNum == 0 || m_recordedPrevFrameNum != m_flythroughState.currentFrame))
-				{
-					m_recordedPrevFrameNum = m_flythroughState.currentFrame;
-					this->m_terrainView->CaptureScreen(m_flythroughState.currentFrame);
-				}
-				TimeEllapsed *= m_speed;
-				this->m_terrainModel->HandleFlythroughMode(IDM_CAMERA_TRAJECTORY_NEXT_FRAME, &TimeEllapsed, NULL);
-
-
-			}
-
-			if (m_keyboard->KeyIsPressed(VK_SPACE))
-			{
-				m_isRunning ^= 1;
-			}
-
-			if (m_keyboard->KeyIsPressed(VK_ESCAPE))
-			{
-				this->m_terrainModel->HandleFlythroughMode(IDM_CAMERA_TRAJECTORY_STOP, NULL, NULL);
-				m_isRunning = false;
-			}
+			KeyboardEvent e = m_keyboard->ReadKey();
 		}
+		while (!m_keyboard->CharBufferIsEmpty())
+		{
+			unsigned char c = m_keyboard->ReadChar();
+		}
+
+		if (m_isActive && m_isRunning)
+		{
+			if (m_isRecording && (m_recordedPrevFrameNum == 0 || m_recordedPrevFrameNum != m_flythroughState.currentFrame))
+			{
+				m_recordedPrevFrameNum = m_flythroughState.currentFrame;
+				this->m_terrainView->CaptureScreen(m_flythroughState.currentFrame);
+			}
+			this->m_terrainModel->HandleMessage(IDM_FLYTHROUGH_NEXT_FRAME, {}, fparams, uparams);
+		}
+
+		if (m_keyboard->KeyIsPressed(VK_SPACE))
+		{
+			m_isRunning ^= 1;
+		}
+
+		if (m_keyboard->KeyIsPressed(VK_ESCAPE))
+		{
+			this->m_terrainModel->HandleMessage(IDM_FLYTHROUGH_STOP, {}, fparams, uparams);
+			m_isRunning = false;
+		}
+		
 		break;
 	}
 	default:

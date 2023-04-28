@@ -4,6 +4,8 @@
 #include <memory>
 #include "../Model/IModelSubscriber.h"
 #include "../Model/IModel.h"
+#include "../resource.h"
+#include <vector>
 
 class ControllerMessageSystem;
 typedef std::shared_ptr<ControllerMessageSystem> ControllerMessageSystemPtr;
@@ -17,9 +19,9 @@ typedef std::shared_ptr<Keyboard> KeyboardPtr;
 class IController : public IModelSubscriber  {
 public:
     virtual ~IController() {}
-    virtual bool CanHandle(unsigned int) const = 0;
+    virtual bool CanHandle(IControllerMessageIDs message) const = 0;
     //TODO const float* param, const unsigned* uparam
-    virtual void HandleMessage(unsigned int message, float* fparam, unsigned* uparam) = 0;
+    virtual void HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparam, const std::vector<unsigned>& uparam) = 0;
 
     virtual void SetTerrainModel(IModelPtr pModel) = 0;
     virtual void SetTerrainView(IViewPtr pView) = 0;

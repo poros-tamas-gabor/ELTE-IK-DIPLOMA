@@ -45,8 +45,6 @@ IRendarablePtr<VertexPolyLine> CameraTrajectory::GetPolyLine() const
 	return m_polyLine;
 }
 
-
-
 void CameraTrajectory::ResetStartPosition()
 {
 	THROW_TREXCEPTION_IF_FAILED((m_camera != nullptr), L"Null pointer exception");
@@ -94,6 +92,8 @@ Vector3D  CameraTrajectory::TransformRotation(const Vector3D& vector) const
 bool CameraTrajectory::UpdateCamera(double elapsedmsec)
 {
 	THROW_TREXCEPTION_IF_FAILED((m_camera != nullptr), L"Null pointer exception");
+
+	elapsedmsec *= m_speed;
 
 	bool result;
 	Vector3D currentCameraRotation;
@@ -152,6 +152,17 @@ IRenderableState CameraTrajectory::GetTrajectoryPolyLineState() const
 {
 	THROW_TREXCEPTION_IF_FAILED((m_polyLine != nullptr), L"Null pointer exception");
 	return m_polyLine->GetState();
+}
+
+void CameraTrajectory::SetSpeed(float speed)
+{
+	THROW_TREXCEPTION_IF_FAILED((speed >= 0.0f), L"Failed to set speed a negative number");
+	m_speed = speed;
+}
+
+float CameraTrajectory::GetSpeed(void) const
+{
+	return m_speed;
 }
 
 

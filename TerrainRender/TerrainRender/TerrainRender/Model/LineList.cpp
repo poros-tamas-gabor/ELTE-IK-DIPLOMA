@@ -140,7 +140,7 @@ void LineList::Translate(float x, float y, float z)
 }
 void LineList::Scale(float x, float y, float z)
 {
-	THROW_TREXCEPTION(L"Not implemented function");
+	//THROW_TREXCEPTION(L"Not implemented function");
 	//m_scaling = { x, y, z };
 	//CalculateLocalMatrix();
 }

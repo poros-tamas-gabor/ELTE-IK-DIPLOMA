@@ -1,7 +1,7 @@
 // dear imgui, v1.89.5 WIP
 // (headers)
 
-// Help:
+// ShowHelp:
 // - Read FAQ at http://dearimgui.org/faq
 // - Newcomers, read 'Programmer guide' in imgui.cpp for notes on how to setup Dear ImGui in your codebase.
 // - Call and read ImGui::ShowDemoWindow() in imgui_demo.cpp. All applications in examples/ are doing that.

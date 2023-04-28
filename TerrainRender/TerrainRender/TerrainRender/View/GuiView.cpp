@@ -64,19 +64,23 @@ bool GuiView::Initalize(Microsoft::WRL::ComPtr<ID3D11Device> _device, Microsoft:
     return result;
 }
 
-void GuiView::ShowWindows()
+void GuiView::DisplayWindows()
 {
-    ShowSettingWindow();
-    if (m_showHelpWindow)
-    {
-        ShowHelpWindow();
-    }
+    isFlythroughOn = m_terrainController->IsFlythroughModeOn();
+    isTrajectoryLoaded = m_flythroughState.IsTrajectoryInitialized;
+    if (m_show_GeneralWin)
+        GeneralWindow();
+    if (m_show_HelpWindow)
+        Help();
+    if (m_show_FlythroughWin && isFlythroughOn)
+        FlythroughWindow();
+    if (m_show_Explore3DWin && !isFlythroughOn)
+        Explore3DWindow();
 }
 
-void GuiView::ShowHelpWindow()
+void GuiView::Help()
 {
-
-    ImGui::Begin("Help", &m_showHelpWindow, 0);
+    ImGui::Begin("Help", &m_show_HelpWindow, 0);
 
     if (ImGui::BeginTable("Controls", 2))
     {
@@ -107,53 +111,104 @@ void GuiView::ShowHelpWindow()
     ImGui::End();
 }
 
-void GuiView::Help()
+void GuiView::ShowHelp()
 {
-    m_showHelpWindow = true;
+    m_show_HelpWindow = true;
+}
+void GuiView::ShowGeneralWindow()
+{
+    m_show_GeneralWin = true;
+}
+void GuiView::ShowExplore3DWindow()
+{
+    m_show_Explore3DWin = true;
+}
+void GuiView::ShowFlythroughWindow()
+{
+    m_show_FlythroughWin = true;
 }
 
 
-void GuiView::ShowSettingWindow()
+void GuiView::GeneralWindow()
 {
-    static bool show_setting_window = true;
     ImGui::PushItemWidth(ImGui::GetFontSize() * -15);
-    ImGui::Begin("Setting Window", &show_setting_window, 0 ); 
-    
-    bool isFlythroughOn = m_terrainController->IsFlythroughModeOn();
-    bool isTrajectoryLoaded = m_flythroughState.IsTrajectoryInitialized;
+    ImGui::Begin("General Settings Window", &m_show_GeneralWin, 0);
+
+
     if (ToggleButton("Mode", &isFlythroughOn, isTrajectoryLoaded))
     {
-        if(isFlythroughOn)
+        if (isFlythroughOn)
             this->m_terrainController->HandleMessage(IDC_ACTIVATE_FLYTHROUGH_MODE, {}, {});
         else
             this->m_terrainController->HandleMessage(IDC_ACTIVATE_3DEXPLORE_MODE, {}, {});
     }
-
-    if (ImGui::BeginTabBar("TabBar"))
+    if (ImGui::CollapsingHeader("Camera Properties"))
     {
-        if (ImGui::BeginTabItem("General"))
+        float fov = m_cameraState.fieldOfView;
+        if (ImGui::SliderFloat("Field of view", &fov, 0.5, /*0.01*/ PI, "%.3f"))
         {
-            GeneralTab();
-            ImGui::EndTabItem();
+            this->m_terrainController->HandleMessage(IDC_SLIDER_PROJECTION_FIELD_OF_VIEW, { fov }, {});
         }
-        if (!isFlythroughOn)
+        float nearScreen = m_cameraState.screenNear;
+        if (ImGui::SliderFloat("NearScreen", &nearScreen, 0.5, /*0.01*/ 5, "%.3f"))
         {
-            if (ImGui::BeginTabItem("Explore 3D"))
-            {
-                Explore3DTab();
-                ImGui::EndTabItem();
-            }
+            this->m_terrainController->HandleMessage(IDC_SLIDER_PROJECTION_NEAR_SCREEN, { nearScreen }, {});
         }
-        if (isFlythroughOn)
+        float farScreen = m_cameraState.screenDepth;
+        if (ImGui::SliderFloat("FarScreen", &farScreen, 10, /*0.01*/ 3000, "%.3f"))
         {
-            if (ImGui::BeginTabItem("Flythrough"))
-            {
-                FlythroughTab();
-                ImGui::EndTabItem();
-            }
+            this->m_terrainController->HandleMessage(IDC_SLIDER_PROJECTION_FAR_SCREEN, { farScreen }, {});
         }
 
-        ImGui::EndTabBar();
+        if (ImGui::Button("Reset Camera"))
+        {
+            this->m_terrainController->HandleMessage(IDC_E3D_CAMERA_RESET, {}, {});
+        }
+    }
+
+    if (ImGui::CollapsingHeader("Terrain Meshes"))
+    {
+        if (ImGui::Button("Clear Terrain meshes"))
+        {
+            m_terrainController->HandleMessage(IDC_BUTTON_CLEAR_MESHES, {}, {});
+        }
+
+        TerrainListBox();
+    }
+    if (ImGui::CollapsingHeader("Trajectory"))
+    {
+        if (ImGui::Button("Clear Trajectory"))
+        {
+            m_terrainController->HandleMessage(IDC_BUTTON_CLEAR_TRAJECTORY, {}, {});
+        }
+        static int item_current_idx = 0; // Here we store our selection data as an index.
+
+        std::vector<std::string> polyLineId;
+        for (IRenderableState state : m_flythroughState.trajectoryPolyLine)
+        {
+            polyLineId.push_back("polyline: " + StringConverter::WideToString(state.name));
+        }
+        for (int n = 0; n < polyLineId.size(); n++)
+        {
+            ImGui::PushID(polyLineId.at(n).c_str());
+            const bool is_selected = (item_current_idx == n);
+            if (ImGui::Selectable(polyLineId.at(n).c_str(), is_selected))
+            {
+                item_current_idx = n;
+                ImGui::OpenPopup("Terrain");
+            }
+            // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+            if (is_selected)
+            {
+                ImGui::SetItemDefaultFocus();
+            }
+
+            unsigned int polylineId = m_flythroughState.trajectoryPolyLine.at(n).id;
+
+
+            IRenderablePopUp(polylineId, RenderableTypes::TrajectoryPolyline, m_TrajectoryTransformation.at(n));
+            ImGui::PopID();
+        }
     }
     ImGui::End();
 }
@@ -260,77 +315,7 @@ void GuiView::TerrainListBox()
         ImGui::EndListBox();
     }
 }
-void GuiView::GeneralTab()
-{
-    if (ImGui::CollapsingHeader("Camera Properties"))
-    {
-        float fov = m_cameraState.fieldOfView;
-        if (ImGui::SliderFloat("Field of view", &fov, 0.5, /*0.01*/ PI, "%.3f"))
-        {
-            this->m_terrainController->HandleMessage(IDC_SLIDER_PROJECTION_FIELD_OF_VIEW, { fov }, {});
-        }
-        float nearScreen = m_cameraState.screenNear;
-        if (ImGui::SliderFloat("NearScreen", &nearScreen, 0.5, /*0.01*/ 5, "%.3f"))
-        {
-            this->m_terrainController->HandleMessage(IDC_SLIDER_PROJECTION_NEAR_SCREEN, { nearScreen }, {});
-        }
-        float farScreen = m_cameraState.screenDepth;
-        if (ImGui::SliderFloat("FarScreen", &farScreen, 10, /*0.01*/ 3000, "%.3f"))
-        {
-            this->m_terrainController->HandleMessage(IDC_SLIDER_PROJECTION_FAR_SCREEN, { farScreen }, {});
-        }
 
-        if (ImGui::Button("Reset Camera"))
-        {
-            this->m_terrainController->HandleMessage(IDC_E3D_CAMERA_RESET, {}, {});
-        }
-    }
-
-    if (ImGui::CollapsingHeader("Terrain Meshes"))
-    {
-        if (ImGui::Button("Clear Terrain meshes"))
-        {
-            m_terrainController->HandleMessage(IDC_BUTTON_CLEAR_MESHES, {}, {});
-        }
-
-        TerrainListBox();
-    }
-    if (ImGui::CollapsingHeader("Trajectory"))
-    {
-        if (ImGui::Button("Clear Trajectory"))
-        {
-            m_terrainController->HandleMessage(IDC_BUTTON_CLEAR_TRAJECTORY, {}, {});
-        }
-        static int item_current_idx = 0; // Here we store our selection data as an index.
-    
-            std::vector<std::string> polyLineId;
-            for (IRenderableState state : m_flythroughState.trajectoryPolyLine)
-            {
-                polyLineId.push_back("polyline: " + StringConverter::WideToString(state.name));
-            }
-            for (int n = 0; n < polyLineId.size(); n++)
-            {
-                ImGui::PushID(polyLineId.at(n).c_str());
-                const bool is_selected = (item_current_idx == n);
-                if (ImGui::Selectable(polyLineId.at(n).c_str(), is_selected))
-                {
-                    item_current_idx = n;
-                    ImGui::OpenPopup("Terrain");
-                }
-                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-                if (is_selected)
-                {
-                    ImGui::SetItemDefaultFocus();
-                }
-
-                unsigned int polylineId = m_flythroughState.trajectoryPolyLine.at(n).id;
-
-
-                IRenderablePopUp(polylineId, RenderableTypes::TrajectoryPolyline, m_TrajectoryTransformation.at(n));
-                ImGui::PopID();
-            }
-    }
-}
 
 template <class T>
 void PrintStatus(const T& state)
@@ -415,74 +400,67 @@ void PrintStatus(const T& state)
     }
 }
 
-void GuiView::FlythroughTab()
+void GuiView::FlythroughWindow()
 {
+    ImGui::PushItemWidth(ImGui::GetFontSize() * -15);
+    ImGui::Begin("General Flythrough Window", &m_show_FlythroughWin, 0);
     try
     {
+        ImGui::SeparatorText("Buttons");
+        if (ImGui::Button("Play"))
+            this->m_terrainController->HandleMessage(IDC_FLYTHROUGH_START, {}, {});
 
-    ImGui::SeparatorText("Buttons");
-    if (ImGui::Button("Play"))
-    {
-        this->m_terrainController->HandleMessage(IDC_FLYTHROUGH_START, {}, {});
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("Pause"))
-    {
-        this->m_terrainController->HandleMessage(IDC_FLYTHROUGH_PAUSE, {}, {});
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("Stop"))
-    {
-        this->m_terrainController->HandleMessage(IDC_FLYTHROUGH_STOP, {}, {});
-    }
+        ImGui::SameLine();
+        if (ImGui::Button("Pause"))
+            this->m_terrainController->HandleMessage(IDC_FLYTHROUGH_PAUSE, {}, {});
 
-    static bool isRecording = false;
-
-    if (!isRecording)
-    {
-        if (ImGui::Button("Record"))
+        ImGui::SameLine();
+        if (ImGui::Button("Stop"))
+            this->m_terrainController->HandleMessage(IDC_FLYTHROUGH_STOP, {}, {});      
+        
+        static bool isRecording = false;  
+        if (!isRecording)
         {
-            THROW_TREXCEPTION_IF_FAILED(!m_outputDir.empty(), L"Failed to capture screen because the output directory was not choose");
-            this->m_terrainController->HandleMessage(IDC_FLYTHROUGH_RECORD_START, {}, {});
-            isRecording = true;
+            if (ImGui::Button("Record"))
+            {
+                THROW_TREXCEPTION_IF_FAILED(!m_outputDir.empty(), L"Failed to capture screen because the output directory was not choose");
+                this->m_terrainController->HandleMessage(IDC_FLYTHROUGH_RECORD_START, {}, {});
+                isRecording = true;
+            }
         }
-    }
-    else
-    {
-        if (ImGui::Button("Stop Record"))
+        else
         {
-            isRecording = false;
-            this->m_terrainController->HandleMessage(IDC_FLYTHROUGH_RECORD_STOP, {}, {});
+            if (ImGui::Button("Stop Record"))
+            {
+                isRecording = false;
+                this->m_terrainController->HandleMessage(IDC_FLYTHROUGH_RECORD_STOP, {}, {});
+            }
         }
-    }
-
-
-    ImGui::SeparatorText("Properties");
-    static float flythrough_speed = 1;
-    if (ImGui::SliderFloat("Speed", &flythrough_speed, 0.1f, 3.0f, "%.3f"))
-    {
-        this->m_terrainController->HandleMessage(IDC_FLYTHROUGH_SET_SPEED, { flythrough_speed }, {});
-    }
-
-    m_frame = m_flythroughState.currentFrame;
-    ImGui::Text("Frame: %d / %d", m_frame, m_flythroughState.numberOfFrame);
-    if (ImGui::SliderInt("Frames", &m_frame, 0, max(0,m_flythroughState.numberOfFrame-1)))
-    {
-        this->m_terrainController->HandleMessage(IDC_FLYTHROUGH_SET_FRAME, {}, { (unsigned)(m_frame) });
-    }
-    std::string unixtimestr = std::to_string(m_flythroughState.startEpochTime.getSeconds());
-    char ut[11];
-    strcpy_s<11>(ut, unixtimestr.c_str());
-    if (ImGui::InputText("UnixTime_FT", ut, 11))
-    {
-        unsigned newUnix = std::atol(ut);
-        if (newUnix > 0)
+        ImGui::SeparatorText("Properties");
+        static float flythrough_speed = 1;
+        if (ImGui::SliderFloat("Speed", &flythrough_speed, 0.1f, 3.0f, "%.3f"))
         {
-            this->m_terrainController->HandleMessage(IDC_INPUT_FLYTHROUGH_UNIXTIME, {}, {newUnix});
+            this->m_terrainController->HandleMessage(IDC_FLYTHROUGH_SET_SPEED, { flythrough_speed }, {});
         }
-    }
-
-    PrintStatus<FlythroughState>(m_flythroughState);
+        
+        m_frame = m_flythroughState.currentFrame;
+        ImGui::Text("Frame: %d / %d", m_frame, m_flythroughState.numberOfFrame);
+        if (ImGui::SliderInt("Frames", &m_frame, 0, max(0,m_flythroughState.numberOfFrame-1)))
+        {
+            this->m_terrainController->HandleMessage(IDC_FLYTHROUGH_SET_FRAME, {}, { (unsigned)(m_frame) });
+        }
+        std::string unixtimestr = std::to_string(m_flythroughState.startEpochTime.getSeconds());
+        char ut[11];
+        strcpy_s<11>(ut, unixtimestr.c_str());
+        if (ImGui::InputText("UnixTime_FT", ut, 11))
+        {
+            unsigned newUnix = std::atol(ut);
+            if (newUnix > 0)
+            {
+                this->m_terrainController->HandleMessage(IDC_INPUT_FLYTHROUGH_UNIXTIME, {}, {newUnix});
+            }
+        }      
+        PrintStatus<FlythroughState>(m_flythroughState);
     }
     catch (const TRException& e)
     {
@@ -492,9 +470,13 @@ void GuiView::FlythroughTab()
     {
         ErrorHandler::Log(e);
     }
+    ImGui::End();
 }
-void GuiView::Explore3DTab()
+void GuiView::Explore3DWindow()
 {
+    ImGui::PushItemWidth(ImGui::GetFontSize() * -15);
+    ImGui::Begin("Explore 3D Window", &m_show_Explore3DWin, 0);
+
     ImGui::SeparatorText("FPS camera properties");
     float cameraSpeed = m_explore3dState.speed;
     if (ImGui::SliderFloat("speed", &cameraSpeed, 0.0f, /*0.01*/ 0.8f, "%.3f"))
@@ -520,6 +502,7 @@ void GuiView::Explore3DTab()
     }
 
     PrintStatus<Explore3DState>(m_explore3dState);
+    ImGui::End();
 }
 void GuiView::BeginFrame()
 {

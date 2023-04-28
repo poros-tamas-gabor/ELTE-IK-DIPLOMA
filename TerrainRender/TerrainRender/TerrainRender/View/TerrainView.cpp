@@ -146,7 +146,7 @@ bool TerrainView::Render()
 
 	this->m_terrainModel->Render(m_d3dView.GetDeviceContext().Get());
 
-	this->m_guiView.ShowWindows();
+	this->m_guiView.DisplayWindows();
 	
 	this->m_guiView.EndFrame();
 	this->m_d3dView.EndScene();
@@ -190,7 +190,19 @@ void TerrainView::HandleIModelState(const CameraState& state)
 	this->m_guiView.HandleIModelState(state);
 }
 
-void TerrainView::Help()
+void TerrainView::ShowHelp()
 {
-	this->m_guiView.Help();
+	this->m_guiView.ShowHelp();
+}
+void TerrainView::ShowGeneralWindow()
+{
+	this->m_guiView.ShowGeneralWindow();
+}
+void TerrainView::ShowExplore3DWindow()
+{
+	this->m_guiView.ShowExplore3DWindow();
+}
+void TerrainView::ShowFlythroughWindow()
+{
+	this->m_guiView.ShowFlythroughWindow();
 }

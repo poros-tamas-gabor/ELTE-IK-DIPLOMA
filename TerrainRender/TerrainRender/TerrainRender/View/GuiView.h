@@ -37,16 +37,25 @@ private:
 	Explore3DState							m_explore3dState;
 	CameraState								m_cameraState;
 	int										m_frame;
-	bool									m_showHelpWindow = false;
+	bool									m_show_HelpWindow = false;
+	bool									m_show_GeneralWin = true;
+	bool									m_show_Explore3DWin = false;
+	bool									m_show_FlythroughWin = false;
 	std::wstring							m_outputDir;
+	bool									isFlythroughOn;
+	bool									isTrajectoryLoaded;
 public:
 	bool Initalize(Microsoft::WRL::ComPtr<ID3D11Device> _device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> _deviceContext, IControllerPtr controller);
 
 	void BeginFrame();
 	void EndFrame();
-	void ShowWindows();
-	void Help();
-	void ShowSettingWindow();
+	void DisplayWindows();
+
+	void ShowHelp();
+	void ShowGeneralWindow();
+	void ShowExplore3DWindow();
+	void ShowFlythroughWindow();
+
 	void Shutdown();
 
 	void HandleIModelState(const std::vector<IRenderableState>&) override;
@@ -58,10 +67,11 @@ public:
 
 private:
 
-	void ShowHelpWindow();
-	void GeneralTab();
-	void FlythroughTab();
-	void Explore3DTab();
+
+	void Help();
+	void GeneralWindow();
+	void FlythroughWindow();
+	void Explore3DWindow();
 	void TerrainListBox();
 	void IRenderablePopUp(unsigned int, RenderableTypes, IRenderableTransformation& t);
 

@@ -14,6 +14,9 @@ class CompositeRenderable : public IRenderable<V>
 {
 private:
 	std::wstring							m_name;
+	Vector3D								m_rotation = { 0,0,0 };
+	Vector3D								m_scaling = { 1, 1, 1 };
+	Vector3D								m_translation = { 0,0,0 };
 	std::vector<IRendarablePtr<V>>			m_renderables;
 	IVertexShaderPtr						m_vertexShader = NULL;
 	IPixelShaderPtr							m_pixelShader = NULL;
@@ -29,7 +32,36 @@ private:
 		}
 		else {
 			this->m_renderables.push_back(renderable);
+
+			renderable->Rotate(m_rotation.x, m_rotation.y, m_rotation.z);
+			renderable->Translate(m_translation.x, m_translation.y, m_translation.z);
+			renderable->Scale(m_scaling.x, m_scaling.y, m_scaling.z);
+
 			return true;
+		}
+	}
+	void RotateComponent(unsigned componentID, float pitch, float yaw, float roll)
+	{
+		for (IRendarablePtr<V> renderable : m_renderables)
+		{
+			if (renderable->GetID() == componentID)
+				renderable->Rotate(pitch, yaw, roll);
+		}
+	}
+	void TranslateComponent(unsigned componentID, float x, float y, float z)
+	{
+		for (IRendarablePtr<V> renderable : m_renderables)
+		{
+			if (renderable->GetID() == componentID)
+				renderable->Translate(x, y, z);
+		}
+	}
+	void ScaleComponent(unsigned componentID, float x, float y, float z)
+	{
+		for (IRendarablePtr<V> renderable : m_renderables)
+		{
+			if (renderable->GetID() == componentID)
+				renderable->Scale(x, y, z);
 		}
 	}
 
@@ -95,15 +127,17 @@ public:
 	{
 		m_name = name;
 	}
-	void Rotate(float yaw, float pitch, float roll) override
+	void Rotate(float pitch, float yaw, float roll) override
 	{
+		m_rotation = { pitch, yaw, roll };
 		for (IRendarablePtr<V> renderable : m_renderables)
 		{
-			renderable->Rotate(yaw, pitch, roll);
+			renderable->Rotate(pitch, yaw, roll);
 		}
 	}
 	void Translate(float x, float y, float z) override
 	{
+		m_translation = { x,y,z };
 		for (IRendarablePtr<V> renderable : m_renderables)
 		{
 			renderable->Translate(x, y, z);
@@ -111,6 +145,7 @@ public:
 	}
 	void Scale(float x, float y, float z) override
 	{
+		m_scaling = { x, y, z };
 		for (IRendarablePtr<V> renderable : m_renderables)
 		{
 			renderable->Scale(x, y, z);
@@ -119,7 +154,6 @@ public:
 
 	DirectX::XMMATRIX GetWorldMatrix(void)  override
 	{
-		//TODO 
 		return DirectX::XMMatrixIdentity();
 	}
 
@@ -131,31 +165,6 @@ public:
 		}
 	}
 	
-	void RotateComponent(unsigned componentID, float pitch, float yaw,  float roll)
-	{
-		for (IRendarablePtr<V> renderable : m_renderables)
-		{
-			if(renderable->GetID() == componentID)
-				renderable->Rotate(pitch, yaw,  roll);
-		}
-	}
-	void TranslateComponent(unsigned componentID, float x, float y, float z)
-	{
-		for (IRendarablePtr<V> renderable : m_renderables)
-		{
-			if (renderable->GetID() == componentID)
-				renderable->Translate(x, y, z);
-		}
-	}
-	void ScaleComponent(unsigned componentID, float x, float y, float z)
-	{
-		for (IRendarablePtr<V> renderable : m_renderables)
-		{
-			if (renderable->GetID() == componentID)
-				renderable->Scale(x, y, z);
-		}
-	}
-
 	IRenderableState	GetState(void) const override {
 		return IRenderableState();
 	}
@@ -236,5 +245,7 @@ public:
 				renderable->SetIsSeen(m_isSeen);
 		}
 	}
+
+
 };
 #endif

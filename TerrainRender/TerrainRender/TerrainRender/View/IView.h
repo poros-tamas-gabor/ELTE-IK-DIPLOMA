@@ -21,7 +21,10 @@ public:
 	virtual	bool CaptureScreen(unsigned frameNum) = 0;
 	virtual	bool Resize(unsigned screenWidth, unsigned screenHeight) = 0;
 	virtual void Shutdown() = 0;
-	virtual void Help() = 0;
+	virtual void ShowHelp() = 0;	
+	virtual void ShowGeneralWindow() = 0;
+	virtual void ShowExplore3DWindow() = 0;
+	virtual void ShowFlythroughWindow() = 0;
 
 	virtual void SetController(IControllerPtr terrainController) = 0;
 	virtual void SetModel(IModelPtr terrainModel) = 0;

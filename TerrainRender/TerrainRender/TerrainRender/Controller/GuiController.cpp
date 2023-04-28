@@ -38,6 +38,10 @@ GuiController::GuiController()
 
 	m_handledMsgs.push_back(IDC_INPUT_3DE_UNIXTIME);
 	m_handledMsgs.push_back(IDC_INPUT_FLYTHROUGH_UNIXTIME);
+
+	m_handledMsgs.push_back(IDMENU_WINDOWS_EXPLORE3D);
+	m_handledMsgs.push_back(IDMENU_WINDOWS_FLYTHROUGH);
+	m_handledMsgs.push_back(IDMENU_WINDOWS_GENERAL);
 }
 GuiController::~GuiController() {}
 
@@ -230,9 +234,21 @@ void GuiController::HandleMessage(IControllerMessageIDs message, const std::vect
 
 	case IDMENU_HELP:
 	{
-		this->m_terrainView->Help();
+		this->m_terrainView->ShowHelp();
 		break;
 	}
+
+	case IDMENU_WINDOWS_EXPLORE3D:
+		m_terrainView->ShowExplore3DWindow();
+		break;
+
+	case IDMENU_WINDOWS_FLYTHROUGH:
+		m_terrainView->ShowFlythroughWindow();
+		break;
+
+	case IDMENU_WINDOWS_GENERAL:
+		this->m_terrainView->ShowGeneralWindow();
+		break;
 
 	case IDMENU_FILE_OUTPUT_DIRECTORY:
 	{
@@ -307,8 +323,6 @@ void GuiController::HandleMessage(IControllerMessageIDs message, const std::vect
 		this->m_terrainModel->HandleMessage(IDM_SET_START_TIME_TRAJECTORY, {}, fparam, uparam);
 		break;
 	}
-
-
 	}
 }
 

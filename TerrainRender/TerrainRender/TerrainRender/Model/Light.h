@@ -22,15 +22,15 @@ public:
 	Light& operator=(const Light&) = delete;
 
 	void UpdateSunPosition(std::time_t currentEpochTime, double lat, double longitude);
-	void SetInverseDirection(const DirectX::XMFLOAT4& direction);
+
 	void SetDiffuseColor(const DirectX::XMFLOAT4& diffuseColor);
 	void SetAmbientColor(const DirectX::XMFLOAT4& ambientColor);
 
-	DirectX::XMFLOAT4 GetDiffuseColor( void ) const;
-	DirectX::XMFLOAT4 GetAmbientColor( void ) const;
-	DirectX::XMFLOAT4 GetInverseDirection( void ) const;
-	double GetAzimuth(void) const;
-	double GetElevation(void) const;
+	DirectX::XMFLOAT4	GetDiffuseColor( void ) const;
+	DirectX::XMFLOAT4	GetAmbientColor( void ) const;
+	DirectX::XMFLOAT4	GetInverseDirection( void ) const;
+	double				GetAzimuth(void) const;
+	double				GetElevation(void) const;
 private:
 	void SetInverseDirectionBySunPosition(double azimuth, double elevation);
 

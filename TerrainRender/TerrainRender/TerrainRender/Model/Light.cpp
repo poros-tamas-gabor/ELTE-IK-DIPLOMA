@@ -10,10 +10,6 @@ void Light::SetDiffuseColor(const DirectX::XMFLOAT4& diffuseColor)
 {
 	this->_diffuseColor = diffuseColor;
 }
-void Light::SetInverseDirection(const DirectX::XMFLOAT4& direction)
-{
-	this->_inverseDirection = direction;
-}
 
 void Light::UpdateSunPosition(std::time_t currentEpochTime, double lat, double longitude)
 {

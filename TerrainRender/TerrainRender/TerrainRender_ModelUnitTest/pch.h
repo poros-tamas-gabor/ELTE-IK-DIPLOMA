@@ -25,6 +25,8 @@
 #include "../TerrainRender/Model/CameraPositioner.h"
 #include "../TerrainRender/Model/CameraTrajectory.h"
 #include "../TerrainRender/Model/Camera.h"
+#include "../TerrainRender/Model/Light.h"
+#include "../TerrainRender/sunPos/SunPos.h"
 
 
 #include "../TerrainRender/App.h"

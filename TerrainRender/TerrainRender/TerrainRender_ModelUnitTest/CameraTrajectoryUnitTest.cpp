@@ -71,7 +71,7 @@ TEST_F(CameraTrajectoryTest, Initialize)
 TEST_F(CameraTrajectoryTest, UpdateCamera)
 {
 	m_trajectory.ResetStartPosition();
-	m_trajectory.UpdateCamera(0);
+	ASSERT_TRUE(m_trajectory.UpdateCamera(0));
 	
 	ASSERT_EQ(m_trajectory.GetCurrentEpochTime(), EpochTime(0, 0));
 	ASSERT_EQ(m_trajectory.GetCurrentFrameNum(), 0);
@@ -80,21 +80,21 @@ TEST_F(CameraTrajectoryTest, UpdateCamera)
 	ASSERT_EQ(m_camera->GetPositionVec(), Vector3D(0, 0, 0));
 	ASSERT_EQ(m_camera->GetRotationVec(), Vector3D(0, 0, 0));
 
-	m_trajectory.UpdateCamera(500);
+	ASSERT_TRUE(m_trajectory.UpdateCamera(500));
 	
 	ASSERT_EQ(m_trajectory.GetCurrentEpochTime(), EpochTime(0, 500 * EpochTime::NSEC_PER_MSEC));
 	ASSERT_EQ(m_trajectory.GetCurrentFrameNum(), 0);
 	ASSERT_EQ(m_camera->GetPositionVec(), Vector3D(0, 0, +0.5f));
 	ASSERT_EQ(m_camera->GetRotationVec(), Vector3D(0, 0, -0.5f));
 
-	m_trajectory.UpdateCamera(500);
+	ASSERT_TRUE(m_trajectory.UpdateCamera(500));
 
 	ASSERT_EQ(m_trajectory.GetCurrentEpochTime(), EpochTime(0, 1000 * EpochTime::NSEC_PER_MSEC));
 	ASSERT_EQ(m_trajectory.GetCurrentFrameNum(), 1);
 	ASSERT_EQ(m_camera->GetPositionVec(), Vector3D(0, 0, +1.0f));
 	ASSERT_EQ(m_camera->GetRotationVec(), Vector3D(0, 0, -1.0f));
 
-	m_trajectory.UpdateCamera(4000);
+	ASSERT_TRUE(m_trajectory.UpdateCamera(4000));
 
 	ASSERT_EQ(m_trajectory.GetCurrentEpochTime(), EpochTime(5, 0));
 	ASSERT_EQ(m_trajectory.GetCurrentFrameNum(), 5);
@@ -106,5 +106,5 @@ TEST_F(CameraTrajectoryTest, UpdateCamera)
 	ASSERT_FLOAT_EQ(m_camera->GetRotationVec().y, expectedRot.y);
 	ASSERT_FLOAT_EQ(m_camera->GetRotationVec().z, expectedRot.z);
 
-	ASSERT_THROW(m_trajectory.UpdateCamera(1000), TRException);
+	ASSERT_FALSE(m_trajectory.UpdateCamera(1000));
 }

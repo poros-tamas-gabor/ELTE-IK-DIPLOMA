@@ -53,11 +53,11 @@ void PolygonMesh::Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceConte
 
 int PolygonMesh::GetIndexCount() const
 {
-	return this->_indexCount;
+	return this->m_indexCount;
 }
 int PolygonMesh::GetVertexCount() const
 {
-	return this->_vertexCount;
+	return this->m_vertexCount;
 
 }
 
@@ -70,13 +70,13 @@ bool PolygonMesh::InitializeBuffers(Microsoft::WRL::ComPtr<ID3D11Device> device,
 	try {
 		// Set the number of vertices in the vertex array.
 		// Set the number of indices in the index array.
-		this->_indexCount = indexCount;
-		this->_vertexCount = vertexCount;
+		this->m_indexCount = indexCount;
+		this->m_vertexCount = vertexCount;
 
 		// Set up the description of the static vertex buffer.
 		ZeroMemory(&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
 		vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-		vertexBufferDesc.ByteWidth = sizeof(VertexMesh) * this->_vertexCount;
+		vertexBufferDesc.ByteWidth = sizeof(VertexMesh) * this->m_vertexCount;
 		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		vertexBufferDesc.CPUAccessFlags = 0;
 		vertexBufferDesc.MiscFlags = 0;
@@ -95,7 +95,7 @@ bool PolygonMesh::InitializeBuffers(Microsoft::WRL::ComPtr<ID3D11Device> device,
 		// Set up the description of the static index buffer.
 		ZeroMemory(&indexBufferDesc, sizeof(D3D11_BUFFER_DESC));
 		indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-		indexBufferDesc.ByteWidth = sizeof(unsigned long) * _indexCount;
+		indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_indexCount;
 		indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		indexBufferDesc.CPUAccessFlags = 0;
 		indexBufferDesc.MiscFlags = 0;

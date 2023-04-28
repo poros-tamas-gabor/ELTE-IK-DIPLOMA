@@ -15,7 +15,7 @@ private:
 	IViewPtr					m_terrainView;
 	std::vector<unsigned>		m_handledMsgs;
 	ControllerMessageSystemPtr	m_messageSystem;
-	bool						m_isActive;
+	bool						m_isActive		= true;
 
 	const wchar_t* m_filter_stl =	L"Binary stl files\0*.stl\0All\0*.*\0";
 	const wchar_t* m_filter_csv =	L"Trajectory csv files\0*.csv\0All\0*.*\0";

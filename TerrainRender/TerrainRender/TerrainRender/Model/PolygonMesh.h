@@ -14,8 +14,8 @@ class PolygonMesh : public IRenderable<VertexMesh>
 private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> m_vertexBuffer;
 	Microsoft::WRL::ComPtr<ID3D11Buffer> m_indexBuffer;
-	unsigned int						_vertexCount;
-	unsigned int						_indexCount;
+	unsigned int						m_vertexCount = 0;
+	unsigned int						m_indexCount = 0;
 	IPixelShaderPtr						m_pixelShader;
 	IVertexShaderPtr					m_vertexShader;
 

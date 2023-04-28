@@ -91,7 +91,7 @@ Vector3D  CameraTrajectory::TransformRotation(const Vector3D& vector) const
 	return { pitch,yaw, roll };
 }
 
-void CameraTrajectory::UpdateCamera(double elapsedmsec)
+bool CameraTrajectory::UpdateCamera(double elapsedmsec)
 {
 	THROW_TREXCEPTION_IF_FAILED((m_camera != nullptr), L"Null pointer exception");
 
@@ -103,18 +103,21 @@ void CameraTrajectory::UpdateCamera(double elapsedmsec)
 
 	LinearInterpolation	linearInterpolation;
 	result = linearInterpolation.Calculate(this->m_elapsedmsecs, this->m_positions, this->m_elapsedmsec, currentCameraPosition, m_currentFrameNum);
-	THROW_TREXCEPTION_IF_FAILED(result, L"Failed to interpolate");
+	if (!result)
+		return false;
 
 	CirclularInterpolation circularInterpolation;
 	result = circularInterpolation.Calculate(this->m_elapsedmsecs, this->m_rotations, this->m_elapsedmsec, currentCameraRotation, m_currentFrameNum);
-	THROW_TREXCEPTION_IF_FAILED(result, L"Failed to interpolate");
-
+	if (!result)
+		return false;
 
 	currentCameraRotation = TransformRotation(currentCameraRotation);
 	currentCameraPosition = TransformPosition(currentCameraPosition);
 	
 	this->m_camera->SetPosition(currentCameraPosition.x, currentCameraPosition.y, currentCameraPosition.z);
 	this->m_camera->SetRotationRad(currentCameraRotation.x, currentCameraRotation.y, currentCameraRotation.z);
+
+	return true;
 }
 
 void CameraTrajectory::SetStartEpochTime(EpochTime time)

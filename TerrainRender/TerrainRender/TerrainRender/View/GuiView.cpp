@@ -46,7 +46,7 @@ bool ToggleButton(const char* str_id, bool* isFlythroughOn, bool isActive)
 
 }
 
-const static float PI = 3.14159265358979323846;
+const static float PI = 3.14159265358979323846f;
 bool GuiView::Initalize(Microsoft::WRL::ComPtr<ID3D11Device> _device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> _deviceContext, IControllerPtr controller)
 {
     bool result;
@@ -208,7 +208,7 @@ void GuiView::IRenderablePopUp(unsigned int terrainId, RenderableTypes type, IRe
         }
 
         ImGui::SeparatorText("Translation");
-        if (ImGui::DragFloat3("slider T", t.tranlation,0.1))
+        if (ImGui::DragFloat3("slider T", t.tranlation,0.1f))
         {
             m_terrainController->HandleMessage(IDC_SLIDER_IRENDERABLE_TRANSLATION, t.tranlation, &terrainId);
         }
@@ -459,7 +459,7 @@ void GuiView::FlythroughTab()
 
     ImGui::SeparatorText("Properties");
     static float flythrough_speed = 1;
-    if (ImGui::SliderFloat("Speed", &flythrough_speed, 0.1, 3, "%.3f"))
+    if (ImGui::SliderFloat("Speed", &flythrough_speed, 0.1f, 3.0f, "%.3f"))
     {
         this->m_terrainController->HandleMessage(IDC_SLIDER_FLYTHROUGH_SPEED, &flythrough_speed, NULL);
     }
@@ -497,12 +497,12 @@ void GuiView::Explore3DTab()
 {
     ImGui::SeparatorText("FPS camera properties");
     float cameraSpeed = m_explore3dState.speed;
-    if (ImGui::SliderFloat("speed", &cameraSpeed, 0, /*0.01*/ 0.8, "%.3f"))
+    if (ImGui::SliderFloat("speed", &cameraSpeed, 0.0f, /*0.01*/ 0.8f, "%.3f"))
     {
         this->m_terrainController->HandleMessage(IDC_SLIDER_CAMERA_SPEED, &cameraSpeed, NULL);
     }
     float cameraRotationSpeed = m_explore3dState.rotationSpeed;
-    if (ImGui::SliderFloat("rotation speed", &cameraRotationSpeed, 0.0001, 0.002, "%.4f"))
+    if (ImGui::SliderFloat("rotation speed", &cameraRotationSpeed, 0.0001f, 0.002f, "%.4f"))
     {
         this->m_terrainController->HandleMessage(IDC_SLIDER_CAMERA_ROTATION_SPEED, &cameraRotationSpeed, NULL);
     }

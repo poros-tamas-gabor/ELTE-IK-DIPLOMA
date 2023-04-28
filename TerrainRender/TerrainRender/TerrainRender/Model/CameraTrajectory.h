@@ -16,11 +16,11 @@ class CameraTrajectory
 private:
 
 	EpochTime								m_start;
-	double									m_elapsedmsec;
+	double									m_elapsedmsec = 0.0;
 	std::vector<double>						m_elapsedmsecs;
 	std::vector<Vector3D>					m_positions;
 	std::vector<Vector3D>					m_rotations;
-	unsigned								m_currentFrameNum;
+	unsigned								m_currentFrameNum = 0;
 	IRendarablePtr<VertexPolyLine> 			m_polyLine;
 	CameraPtr								m_camera;
 
@@ -29,7 +29,7 @@ public:
 	bool Initialize(const std::vector<CameraPose>& cameraPoses, IRendarablePtr<VertexPolyLine>  renderable, CameraPtr camera);
 
 	bool IsInitialized(void) const;
-	void UpdateCamera(double elapsedmsecs);
+	bool UpdateCamera(double elapsedmsecs);
 	void ResetStartPosition();
 	void Clear();
 	void Shutdown();

@@ -20,3 +20,6 @@
 #include "../TerrainRender/Model/CameraPositioner.cpp"
 #include "../TerrainRender/Model/CameraTrajectory.cpp"
 #include "../TerrainRender/Model/Camera.cpp"
+
+#include "../TerrainRender/Model/Light.cpp"
+#include "../TerrainRender/sunPos/SunPos.cpp"

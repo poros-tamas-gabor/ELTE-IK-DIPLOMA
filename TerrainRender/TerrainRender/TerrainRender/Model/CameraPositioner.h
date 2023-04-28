@@ -25,7 +25,7 @@ private:
 	DirectX::XMVECTOR m_current_left;
 	DirectX::XMVECTOR m_current_right;
 
-	DirectX::XMMATRIX m_rotationMatrix;
+	DirectX::XMMATRIX m_rotationMatrix = DirectX::XMMatrixIdentity();
 
 	CameraPtr m_camera;
 

@@ -198,7 +198,7 @@ static void AddMenus(HWND hwnd) {
 	AppendMenuW(hMenuWindows, MF_STRING, static_cast<UINT>(IDMENU_WINDOWS_EXPLORE3D), L"&Explore3D settings");
 	AppendMenuW(hMenuWindows, MF_STRING, static_cast<UINT>(IDMENU_WINDOWS_FLYTHROUGH), L"&Flythrough settings");
 
-	AppendMenuW(hMenubar, MF_POPUP, (UINT_PTR)hMenuWindows, L"&Window");
+	AppendMenuW(hMenubar, MF_POPUP, (UINT_PTR)hMenuWindows, L"&Settings");
 
 	AppendMenuW(hMenubar, MF_STRING, static_cast<UINT>(IDMENU_HELP), L"&Help");
 

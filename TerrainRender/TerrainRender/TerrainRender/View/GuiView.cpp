@@ -83,6 +83,20 @@ void GuiView::Help()
     ImGui::Begin("Help", &m_show_HelpWindow, 0);
 
     try {
+        ImGui::SeparatorText("Steps");
+
+        std::string text = R"(To use this program, follow these steps:
+
+1. Load the meshes by selecting either "File > Open Terrain" or "File > Open Project" from the menu. You can choose to load the meshes with either soft or sharp edges. Soft edges are for interpolated shading, while sharp edges are for flat shading. The default mode is "Explore3D", where you can move the camera using the keyboard.
+
+2. Load a trajectory file by selecting "File > Open Trajectory". After the file is successfully loaded, you can switch to "Flythrough" mode, where you can play and record the camera path.
+
+3. Load a configuration file or set the position of the meshes and trajectory using the graphical user interface (GUI).
+
+4. Set the output directory path where you want to save the frames of the picture.)";
+        ImGui::TextWrapped(text.c_str());
+
+        ImGui::SeparatorText("Controls");
         if (ImGui::BeginTable("Controls", 2))
         {
             ImGui::TableNextRow();
@@ -149,7 +163,7 @@ void GuiView::GeneralWindow()
     {
 
         ImGui::PushItemWidth(ImGui::GetFontSize() * -15);
-        ImGui::Begin("General Settings Window", &m_show_GeneralWin, 0);
+        ImGui::Begin("General Settings", &m_show_GeneralWin, 0);
 
 
         if (ToggleButton("Mode", &isFlythroughOn, isTrajectoryLoaded))
@@ -277,7 +291,7 @@ std::vector<std::string> GuiView::CollectTerrainIDNames(void)
    
     for (const MeshState& info : m_TerrainsState.Meshes)
     {
-        std::string id = "Mesh: " + StringConverter::WideToString(info.name) + " id: " + std::to_string(info.id);
+        std::string id = StringConverter::WideToString(info.name) + ", id: " + std::to_string(info.id);
         names.push_back(id);
     }
     return names;
@@ -459,7 +473,7 @@ void GuiView::FlythroughWindow()
     try
     {
         ImGui::PushItemWidth(ImGui::GetFontSize() * -15);
-        ImGui::Begin("General Flythrough Window", &m_show_FlythroughWin, 0);
+        ImGui::Begin("Flythrough Settings", &m_show_FlythroughWin, 0);
         ImGui::SeparatorText("Buttons");
         if (ImGui::Button("Play"))
             this->m_terrainController->HandleMessage(IDC_FLYTHROUGH_START, {}, {});
@@ -475,9 +489,9 @@ void GuiView::FlythroughWindow()
         static bool isRecording = false;  
         if (!isRecording)
         {
-            if (ImGui::Button("Record"))
+            if (ImGui::Button("Record Frames"))
             {
-                THROW_TREXCEPTION_IF_FAILED(!m_outputDir.empty(), L"Failed to capture screen because the output directory was not choose");
+                THROW_TREXCEPTION_IF_FAILED(!m_outputDir.empty(), L"Screen capture failed because the output directory was not specified. To fix this, select the \"File > Set output directory\" menu item and choose the directory where you want to save the captured screen images.");
                 this->m_terrainController->HandleMessage(IDC_FLYTHROUGH_RECORD_START, {}, {});
                 isRecording = true;
             }
@@ -497,11 +511,11 @@ void GuiView::FlythroughWindow()
             this->m_terrainController->HandleMessage(IDC_FLYTHROUGH_SET_SPEED, { flythrough_speed }, {});
         }
         
-        m_frame = m_flythroughState.currentFrame;
+        m_frame = m_flythroughState.currentFrame + 1;
         ImGui::Text("Frame: %d / %d", m_frame, m_flythroughState.numberOfFrame);
-        if (ImGui::SliderInt("Frames", &m_frame, 0, max(0,m_flythroughState.numberOfFrame-1)))
+        if (ImGui::SliderInt("Frames", &m_frame, 1, max(1,m_flythroughState.numberOfFrame)))
         {
-            this->m_terrainController->HandleMessage(IDC_FLYTHROUGH_SET_FRAME, {}, { (unsigned)(m_frame) });
+            this->m_terrainController->HandleMessage(IDC_FLYTHROUGH_SET_FRAME, {}, { (unsigned)(m_frame - 1) });
         }
         std::string unixtimestr = std::to_string(m_flythroughState.startEpochTime.getSeconds());
         char ut[11];
@@ -535,7 +549,7 @@ void GuiView::Explore3DWindow()
 {
     try {
         ImGui::PushItemWidth(ImGui::GetFontSize() * -15);
-        ImGui::Begin("Explore 3D Window", &m_show_Explore3DWin, 0);
+        ImGui::Begin("Explore 3D Settings", &m_show_Explore3DWin, 0);
 
         ImGui::SeparatorText("FPS camera properties");
         float cameraSpeed = m_explore3dState.speed;

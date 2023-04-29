@@ -364,7 +364,7 @@ bool TerrainModel::LoadTerrain_withSoftEdges(const std::wstring& filepath)
 	indexCount = indices.size();
 
 	PolygonMeshCreator creator;
-	this->m_meshes.Add(pVertices, pIndices, vertexCount, indexCount, creator, filepath);
+	this->m_meshes.Add(pVertices, pIndices, vertexCount, indexCount, creator, StringConverter::GetFileNameFromPath(filepath));
 
 	return true;
 
@@ -404,7 +404,7 @@ bool TerrainModel::LoadTerrain_withSharpEdges(const std::wstring& filepath)
 	indexCount = indices.size();
 
 	PolygonMeshCreator creator;
-	this->m_meshes.Add(pVertices, pIndices, vertexCount, indexCount, creator, filepath);
+	this->m_meshes.Add(pVertices, pIndices, vertexCount, indexCount, creator, StringConverter::GetFileNameFromPath(filepath));
 	return true;
 }
 
@@ -484,7 +484,7 @@ bool	TerrainModel::LoadCameraTrajectory(const std::wstring& filepath)
 	}
 	PolyLineCreator creator;
 	
-	m_polylines.Add(&vertices.at(0), NULL, vertices.size(), NULL, creator, filepath);
+	m_polylines.Add(&vertices.at(0), NULL, vertices.size(), NULL, creator, StringConverter::GetFileNameFromPath(filepath));
 	IRendarablePtr<VertexPolyLine> polyline = m_polylines.GetLastAddedComponent();
 	m_cameraTrajectory.Initialize(cameraPoses, polyline, m_camera);
 	PublishModelState();

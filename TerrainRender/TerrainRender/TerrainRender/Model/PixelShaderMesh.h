@@ -19,11 +19,13 @@ public:
 		DirectX::XMFLOAT4	ambientColor;
 		DirectX::XMFLOAT4	diffuseColor;
 		DirectX::XMFLOAT4	inverseLightDirection;
+		DirectX::XMFLOAT4	isShadingOn;
 	};
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11PixelShader>	m_pixelShader;
 	Microsoft::WRL::ComPtr<ID3D11Buffer>		m_lightBuffer;
+	bool										m_isShadingOn = true;
 
 public:
 	PixelShaderMesh();
@@ -35,6 +37,9 @@ public:
 	bool Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext>, int vertexCount, const Light& light) override;
 
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> GetPixelShader(void) override;
+
+	bool GetIsShadingOn(void) const;
+	void SetIsShadingOn(bool);
 
 private:
 	bool SetShadeParameters(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, const Light& light);

@@ -46,7 +46,7 @@ public:
 	void HandleIModelState(const MeshGroupState&) override;
 	void HandleIModelState(const FlythroughState&) override;
 	void HandleIModelState(const Explore3DState&) override;
-	void HandleIModelState(const CameraState&) override;
+	void HandleIModelState(const GeneralModelState&) override;
 	void ShowHelp() override;	
 	void ShowGeneralWindow()   override;
 	void ShowExplore3DWindow() override;

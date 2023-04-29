@@ -173,19 +173,44 @@ void GuiView::GeneralWindow()
             else
                 this->m_terrainController->HandleMessage(IDC_ACTIVATE_3DEXPLORE_MODE, {}, {});
         }
+
+        if (ImGui::CollapsingHeader("Origo LLA"))
+        {
+            if (ImGui::InputFloat("Longitude", &m_explore3dState.origo.longitude, 0.0f, 0.0f, "%.4f"))
+            {
+                m_terrainController->HandleMessage(IDC_ORIGO_SET_LONGITUDE, { m_explore3dState.origo.longitude }, {  });
+            }
+            if (ImGui::InputFloat("Latitude", &m_explore3dState.origo.latitude, 0.0f, 0.0f, "%.4f"))
+            {
+                m_terrainController->HandleMessage(IDC_ORIGO_SET_LATITUDE, { m_explore3dState.origo.latitude }, {  });
+            }
+        }
+        if (ImGui::CollapsingHeader("Configurations"))
+        {
+            if (ImGui::Checkbox("Shading", &m_generalState.isShadingOn ))
+            {
+                m_terrainController->HandleMessage(IDC_PIXELSHADER_SET_SHADING, {  }, { m_generalState.isShadingOn });
+            }
+            if (ImGui::Checkbox("Grid", &m_generalState.isGridSeen))
+            {
+                m_terrainController->HandleMessage(IDC_XZ_PLANE_GRID_SET_ISSEEN, {  }, { m_generalState.isGridSeen });
+            }
+        }
+
+
         if (ImGui::CollapsingHeader("Camera Properties"))
         {
-            float fov = m_cameraState.fieldOfView;
+            float fov = m_generalState.fieldOfView;
             if (ImGui::SliderFloat("Field of view", &fov, 0.5, /*0.01*/ PI, "%.3f"))
             {
                 this->m_terrainController->HandleMessage(IDC_SET_CAMERA_FIELD_OF_VIEW, { fov }, {});
             }
-            float nearScreen = m_cameraState.screenNear;
+            float nearScreen = m_generalState.screenNear;
             if (ImGui::SliderFloat("NearScreen", &nearScreen, 0.5, /*0.01*/ 5, "%.3f"))
             {
                 this->m_terrainController->HandleMessage(IDC_SET_CAMERA_NEAR_SCREEN, { nearScreen }, {});
             }
-            float farScreen = m_cameraState.screenDepth;
+            float farScreen = m_generalState.screenDepth;
             if (ImGui::SliderFloat("FarScreen", &farScreen, 10, /*0.01*/ 3000, "%.3f"))
             {
                 this->m_terrainController->HandleMessage(IDC_SET_CAMERA_FAR_SCREEN, { farScreen }, {});
@@ -196,19 +221,6 @@ void GuiView::GeneralWindow()
                 this->m_terrainController->HandleMessage(IDC_E3D_CAMERA_RESET, {}, {});
             }
         }
-
-        if (ImGui::CollapsingHeader("Origo LLA"))
-        {
-            if (ImGui::InputFloat("Longitude", &m_explore3dState.origo.longitude, 0.0f, 0.0f, "%.6f"))
-            {
-                m_terrainController->HandleMessage(IDC_ORIGO_SET_LONGITUDE, { m_explore3dState.origo.longitude }, {  });
-            }
-            if (ImGui::InputFloat("Latitude", &m_explore3dState.origo.latitude, 0.0f, 0.0f, "%.6f"))
-            {
-                m_terrainController->HandleMessage(IDC_ORIGO_SET_LATITUDE, { m_explore3dState.origo.latitude }, {  });
-            }
-        }
-
         if (ImGui::CollapsingHeader("Terrain Meshes"))
         {
             ImGui::SeparatorText("Scale");
@@ -682,9 +694,9 @@ void GuiView::HandleIModelState(const Explore3DState& state)
     m_explore3dState = state;
 
 }
-void GuiView::HandleIModelState(const CameraState& state)
+void GuiView::HandleIModelState(const GeneralModelState& state)
 {
-    m_cameraState = state;
+    m_generalState = state;
 }
 
 void GuiView::SetOutputDirectory(const std::wstring& dir)

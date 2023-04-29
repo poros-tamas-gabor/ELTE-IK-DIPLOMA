@@ -168,4 +168,4 @@ void Controller3DExplore::ControlMouse(const MouseEvent& e) const
 void Controller3DExplore::HandleIModelState(const MeshGroupState&) {}
 void Controller3DExplore::HandleIModelState(const FlythroughState&) {}
 void Controller3DExplore::HandleIModelState(const Explore3DState&) {}
-void Controller3DExplore::HandleIModelState(const CameraState&) {}
+void Controller3DExplore::HandleIModelState(const GeneralModelState&) {}

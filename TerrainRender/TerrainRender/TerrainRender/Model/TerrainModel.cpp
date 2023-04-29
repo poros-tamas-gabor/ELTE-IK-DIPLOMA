@@ -196,6 +196,17 @@ bool TerrainModel::HandleMessage(IModelMessageIDs message, const std::vector<std
 		case IDM_CLEAR_MESHES:
 			success = ClearMeshes();
 			break;
+
+		case IDM_XZ_PLANE_GRID_SET_ISSEEN:
+		{
+			m_linelist.SetIsSeen(uparams.at(0));
+			break;
+		}
+		case IDM_PIXELSHADER_SET_SHADING:
+		{
+			m_pixelShaderMesh->SetIsShadingOn(uparams.at(0));
+			break;
+		}
 		default:
 			THROW_TREXCEPTION(L"Failed to translate message because it is not implemented");
 			break;
@@ -618,9 +629,9 @@ FlythroughState	TerrainModel::CollectFlythroughState(void) const
 	return state;
 }
 
-CameraState		TerrainModel::CollectCameraState(void) const
+GeneralModelState TerrainModel::CollectCameraState(void) const
 {
-	return CameraState{ m_camera->GetFOVrad(), m_camera->GetNearScreen(), m_camera->GetFarScreen() };
+	return GeneralModelState{ m_camera->GetFOVrad(), m_camera->GetNearScreen(), m_camera->GetFarScreen(), m_linelist.IsSeen(), m_pixelShaderMesh->GetIsShadingOn()};
 }
 Explore3DState TerrainModel::CollectExplore3DState(void) const
 {

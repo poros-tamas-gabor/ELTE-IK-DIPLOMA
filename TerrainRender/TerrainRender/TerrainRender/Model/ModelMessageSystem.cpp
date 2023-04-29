@@ -23,7 +23,7 @@ void ModelMessageSystem::PublishModelState(const Explore3DState& state) const
 	}
 }
 
-void ModelMessageSystem::PublishModelState(const CameraState& state) const
+void ModelMessageSystem::PublishModelState(const GeneralModelState& state) const
 {
 	for (IModelSubscriberPtr subscriber : m_subscribers)
 	{

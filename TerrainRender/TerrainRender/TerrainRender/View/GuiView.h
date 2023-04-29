@@ -49,7 +49,7 @@ private:
 	MeshGroupState							m_TerrainsState;
 	FlythroughState							m_flythroughState;
 	Explore3DState							m_explore3dState;
-	CameraState								m_cameraState;
+	GeneralModelState								m_generalState;
 	int										m_frame;
 	bool									m_show_HelpWindow = false;
 	bool									m_show_GeneralWin = true;
@@ -75,7 +75,7 @@ public:
 	void HandleIModelState(const MeshGroupState&) override;
 	void HandleIModelState(const FlythroughState&) override;
 	void HandleIModelState(const Explore3DState&) override;
-	void HandleIModelState(const CameraState&) override;
+	void HandleIModelState(const GeneralModelState&) override;
 
 	void SetOutputDirectory(const std::wstring& dir);
 

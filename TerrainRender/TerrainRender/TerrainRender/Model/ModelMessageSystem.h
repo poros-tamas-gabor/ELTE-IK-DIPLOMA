@@ -14,7 +14,7 @@ public:
 	void PublishModelState(const MeshGroupState&) const;
 	void PublishModelState(const FlythroughState&) const;
 	void PublishModelState(const Explore3DState&) const;
-	void PublishModelState(const CameraState&) const;
+	void PublishModelState(const GeneralModelState&) const;
 	bool Subscribe(IModelSubscriberPtr view);
 	bool Unsubscribe(IModelSubscriberPtr view);
 

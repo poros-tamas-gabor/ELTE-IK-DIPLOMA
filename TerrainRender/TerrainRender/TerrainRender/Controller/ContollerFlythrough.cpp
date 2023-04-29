@@ -161,6 +161,6 @@ void ControllerFlythrough::HandleIModelState(const FlythroughState& state) {
 	m_flythroughState = state;
 }
 void ControllerFlythrough::HandleIModelState(const Explore3DState&) {}
-void ControllerFlythrough::HandleIModelState(const CameraState&) {}
+void ControllerFlythrough::HandleIModelState(const GeneralModelState&) {}
 
 

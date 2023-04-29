@@ -87,14 +87,14 @@ public:
 	bool	ClearCameraTrajectory(void) ;
 private:
 
-	void			MoveCamera(IModelMessageIDs message, float timeElapsed);
-	void			RotateCamera(IModelMessageIDs message, float pitch, float yaw);
+	void				MoveCamera(IModelMessageIDs message, float timeElapsed);
+	void				RotateCamera(IModelMessageIDs message, float pitch, float yaw);
 	MeshGroupState		CollectMeshGroupState(void) const;
-	FlythroughState	CollectFlythroughState(void) const;
-	Explore3DState	CollectExplore3DState(void) const;
-	CameraState		CollectCameraState(void) const;
-	void			PublishModelState(void) const;
-	void			AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int gridZ);
+	FlythroughState		CollectFlythroughState(void) const;
+	Explore3DState		CollectExplore3DState(void) const;
+	GeneralModelState	CollectCameraState(void) const;
+	void				PublishModelState(void) const;
+	void				AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int gridZ);
 };
 typedef std::shared_ptr<TerrainModel> TerrainModelPtr;
 #endif

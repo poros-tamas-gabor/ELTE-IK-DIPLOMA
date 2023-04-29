@@ -146,9 +146,10 @@ bool PixelShaderMesh::SetShadeParameters(Microsoft::WRL::ComPtr<ID3D11DeviceCont
 
 		lightDataPtr = static_cast<LightBuffer*>(mappedResource.pData);
 
-		lightDataPtr->ambientColor = light.GetAmbientColor();
-		lightDataPtr->diffuseColor = light.GetDiffuseColor();
+		lightDataPtr->ambientColor			= light.GetAmbientColor();
+		lightDataPtr->diffuseColor			= light.GetDiffuseColor();
 		lightDataPtr->inverseLightDirection = light.GetInverseDirection();
+		lightDataPtr->isShadingOn			= { float(m_isShadingOn),0.0f,0.0f,0.0f };
 		// Unlock the constant buffer.
 		deviceContext->Unmap(this->m_lightBuffer.Get(), 0);
 		// Finanly set the constant buffer in the pixel shader with the updated values.
@@ -162,5 +163,14 @@ bool PixelShaderMesh::SetShadeParameters(Microsoft::WRL::ComPtr<ID3D11DeviceCont
 
 
 	return true;
+}
+
+bool PixelShaderMesh::GetIsShadingOn(void) const
+{
+	return m_isShadingOn;
+}
+void PixelShaderMesh::SetIsShadingOn(bool value)
+{
+	m_isShadingOn = value;
 }
 

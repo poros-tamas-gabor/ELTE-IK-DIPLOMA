@@ -225,9 +225,11 @@ struct Explore3DState
 	SunPositionState	currentSunPosition;
 };
 
-struct CameraState
-{
+struct GeneralModelState
+{	//Camera state
 	float fieldOfView; float screenNear; float screenDepth;
+	//General configuration
+	bool isGridSeen; bool isShadingOn;
 };
 
 

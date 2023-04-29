@@ -288,4 +288,4 @@ void GuiController::Shutdown() {}
 void GuiController::HandleIModelState(const MeshGroupState&) {}
 void GuiController::HandleIModelState(const FlythroughState&) {}
 void GuiController::HandleIModelState(const Explore3DState&) {}
-void GuiController::HandleIModelState(const CameraState&) {}
+void GuiController::HandleIModelState(const GeneralModelState&) {}

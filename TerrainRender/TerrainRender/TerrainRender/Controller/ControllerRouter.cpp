@@ -105,7 +105,7 @@ void ControllerRouter::HandleIModelState(const Explore3DState& state)
 		controller->HandleIModelState(state);
 	}
 }
-void ControllerRouter::HandleIModelState(const CameraState& state)
+void ControllerRouter::HandleIModelState(const GeneralModelState& state)
 {
 	for (IControllerPtr controller : m_controllers)
 	{

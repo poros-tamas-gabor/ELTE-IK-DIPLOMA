@@ -231,9 +231,9 @@ public:
 		}
 	}
 
-	void SetIsSeen(bool m_isSeen) override 
+	void SetIsSeen(bool isSeen) override 
 	{
-		m_isSeen = m_isSeen;
+		m_isSeen = isSeen;
 		for (IRendarablePtr<V> renderable : m_renderables)
 		{
 			renderable->SetIsSeen(m_isSeen);
@@ -245,12 +245,12 @@ public:
 		return m_isSeen;
 	}
 
-	void SetIsSeenComponent(unsigned componentID, bool m_isSeen)
+	void SetIsSeenComponent(unsigned componentID, bool isSeen)
 	{
 		for (IRendarablePtr<V> renderable : m_renderables)
 		{
 			if (renderable->GetID() == componentID)
-				renderable->SetIsSeen(m_isSeen);
+				renderable->SetIsSeen(isSeen);
 		}
 	}
 

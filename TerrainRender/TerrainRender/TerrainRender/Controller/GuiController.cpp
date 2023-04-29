@@ -247,6 +247,10 @@ void GuiController::HandleMessage(IControllerMessageIDs message, const std::vect
 	case IDC_BUTTON_CLEAR_MESHES:
 	case IDC_SET_TIME_E3D:
 	case IDC_SET_START_TIME_TRAJECTORY:
+	case IDC_ORIGO_SET_LONGITUDE:
+	case IDC_ORIGO_SET_LATITUDE:
+	case IDC_XZ_PLANE_GRID_SET_ISSEEN:
+	case IDC_PIXELSHADER_SET_SHADING:
 	{
 		m_terrainModel->HandleMessage(modelmsg, {}, fparam, uparam);
 		break;

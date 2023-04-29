@@ -75,6 +75,7 @@ public:
 	bool	HandleFlythroughMode(IModelMessageIDs message, const std::vector<float>& fparams, const std::vector<unsigned>& uparams) ;
 	bool	HandleExplore3DMode(IModelMessageIDs message, const std::vector<float>& fparams) ;
 
+	bool	SetLongitudeLatitude(IModelMessageIDs message, const std::vector<float>& fparams) ;
 	bool	SetUnixTime(IModelMessageIDs message, unsigned uparam) ;
 	bool	ResetCamera(void) ;
 	bool	SetCameraProperties(IModelMessageIDs message, float data) ;

@@ -33,8 +33,8 @@ struct VertexPolyLine
 
 struct LLACoordinate
 {
-	double latitude = 0.0;
-	double longitude = 0.0;
+	float latitude = 0.0;
+	float longitude = 0.0;
 };
 
 struct CameraPose {

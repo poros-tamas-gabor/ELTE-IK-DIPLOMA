@@ -184,6 +184,11 @@ bool TerrainModel::HandleMessage(IModelMessageIDs message, const std::vector<std
 			success = TransformTrajectory(message, fparams);
 			break;
 
+		case IDM_ORIGO_SET_LONGITUDE:
+		case IDM_ORIGO_SET_LATITUDE:
+			success = SetLongitudeLatitude(message, fparams);
+			break;
+			
 		case IDM_CLEAR_TRAJECTORY:
 			success = ClearCameraTrajectory();
 			break;
@@ -747,6 +752,23 @@ void TerrainModel::AddGrid(float size, DirectX::XMFLOAT4 color, int gridX, int g
 	unsigned verteCount = vertices.size();
 	LineListCreator	lineListCreator;
 	this->m_linelist.Add(pVertex, NULL, verteCount,NULL, lineListCreator, L"Grid");
+}
+
+bool TerrainModel::SetLongitudeLatitude(IModelMessageIDs message, const std::vector<float>& fparams)
+{
+	switch (message)
+	{
+	case IDM_ORIGO_SET_LONGITUDE:
+		m_llacoordinate.longitude = fparams.at(0);
+		break;
+	case IDM_ORIGO_SET_LATITUDE:
+		m_llacoordinate.latitude = fparams.at(0);
+		break;
+	
+	default:
+		break;
+	}
+	return true;
 }
 
 

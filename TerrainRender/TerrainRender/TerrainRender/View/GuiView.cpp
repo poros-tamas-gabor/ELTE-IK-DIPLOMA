@@ -197,6 +197,18 @@ void GuiView::GeneralWindow()
             }
         }
 
+        if (ImGui::CollapsingHeader("Origo LLA"))
+        {
+            if (ImGui::InputFloat("Longitude", &m_explore3dState.origo.longitude, 0.0f, 0.0f, "%.6f"))
+            {
+                m_terrainController->HandleMessage(IDC_ORIGO_SET_LONGITUDE, { m_explore3dState.origo.longitude }, {  });
+            }
+            if (ImGui::InputFloat("Latitude", &m_explore3dState.origo.latitude, 0.0f, 0.0f, "%.6f"))
+            {
+                m_terrainController->HandleMessage(IDC_ORIGO_SET_LATITUDE, { m_explore3dState.origo.latitude }, {  });
+            }
+        }
+
         if (ImGui::CollapsingHeader("Terrain Meshes"))
         {
             ImGui::SeparatorText("Scale");
@@ -668,6 +680,7 @@ void GuiView::HandleIModelState(const FlythroughState& state)
 void GuiView::HandleIModelState(const Explore3DState& state)
 {
     m_explore3dState = state;
+
 }
 void GuiView::HandleIModelState(const CameraState& state)
 {

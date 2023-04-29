@@ -5,12 +5,6 @@
 
 Controller3DExplore::Controller3DExplore()
 {
-	m_handledMsgs.push_back(IDC_TIME_ELAPSED);
-	m_handledMsgs.push_back(IDC_ACTIVATE_3DEXPLORE_MODE);
-	m_handledMsgs.push_back(IDC_ACTIVATE_FLYTHROUGH_MODE);
-	m_handledMsgs.push_back(IDC_E3D_CAMERA_SPEED);
-	m_handledMsgs.push_back(IDC_E3D_ROTATION_SPEED);
-	m_handledMsgs.push_back(IDC_E3D_CAMERA_RESET);
 
 }
 
@@ -19,11 +13,7 @@ void Controller3DExplore::SetMessageSystem(ControllerMessageSystemPtr messageSys
 	m_messageSystem = messageSystem;
 }
 
-bool Controller3DExplore::CanHandle(IControllerMessageIDs message) const
-{
-	auto it = std::find(m_handledMsgs.begin(), m_handledMsgs.end(), message);
-	return it != m_handledMsgs.end();
-}
+
 
 void Controller3DExplore::HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparams, const std::vector<unsigned>& uparams)
 {

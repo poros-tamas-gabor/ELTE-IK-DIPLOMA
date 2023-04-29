@@ -15,7 +15,6 @@ private:
 	IViewPtr							m_terrainView;
 	MousePtr							m_mouse;
 	KeyboardPtr							m_keyboard;
-	std::vector<IControllerMessageIDs>	m_handledMsgs;
 	ControllerMessageSystemPtr			m_messageSystem;
 	
 	FlythroughState						m_flythroughState;
@@ -31,7 +30,6 @@ public:
 	ControllerFlythrough();
 	virtual ~ControllerFlythrough() {}
 
-	virtual bool CanHandle(IControllerMessageIDs message) const override;
 	virtual void HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparam, const std::vector<unsigned>& uparam) override;
 	virtual void SetTerrainModel(IModelPtr pModel) override;
 	virtual void SetMouse(MousePtr mouse) override;

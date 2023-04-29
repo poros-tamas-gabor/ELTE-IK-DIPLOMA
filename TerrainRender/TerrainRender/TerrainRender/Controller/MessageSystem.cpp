@@ -4,8 +4,7 @@ void ControllerMessageSystem::Publish(IControllerMessageIDs message, const std::
 {
 	for (IControllerPtr controller : m_subscribers)
 	{
-		if(controller->CanHandle(message))
-			controller->HandleMessage(message, fparam, uparam);
+		controller->HandleMessage(message, fparam, uparam);
 	}
 }
 ControllerMessageSystem::ControllerMessageSystem(const std::vector<IControllerPtr>& controllers) : m_subscribers(controllers) {}

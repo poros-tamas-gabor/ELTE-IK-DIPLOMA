@@ -10,50 +10,12 @@
 
 GuiController::GuiController()
 {
-	m_handledMsgs.push_back(IDMENU_FIlE_TERRAIN_SHARP);
-	m_handledMsgs.push_back(IDMENU_FIlE_TERRAIN_PROJECT_SHARP);
-	m_handledMsgs.push_back(IDMENU_FIlE_TERRAIN_SOFT);
-	m_handledMsgs.push_back(IDMENU_FIlE_TERRAIN_PROJECT_SOFT);
-	m_handledMsgs.push_back(IDMENU_FIlE_CAMERA_TRAJECTORY);
-	m_handledMsgs.push_back(IDMENU_FIlE_CONFIGURATION);
-	m_handledMsgs.push_back(IDMENU_FILE_OUTPUT_DIRECTORY);
-	m_handledMsgs.push_back(IDMENU_HELP);
-
-
-	m_handledMsgs.push_back(IDC_SLIDER_PROJECTION_FIELD_OF_VIEW);
-	m_handledMsgs.push_back(IDC_SLIDER_PROJECTION_NEAR_SCREEN);
-	m_handledMsgs.push_back(IDC_SLIDER_PROJECTION_FAR_SCREEN);
-
-	m_handledMsgs.push_back(IDC_ACTIVATE_FLYTHROUGH_MODE);
-	m_handledMsgs.push_back(IDC_ACTIVATE_3DEXPLORE_MODE);
-
-
-	m_handledMsgs.push_back(IDC_MESH_GROUP_SCALE);
-	m_handledMsgs.push_back(IDC_MESH_GROUP_ROTATION);
-	m_handledMsgs.push_back(IDC_MESH_GROUP_TRANSLATION);
-	m_handledMsgs.push_back(IDC_MESH_SET_COLOR);
-	m_handledMsgs.push_back(IDC_BUTTON_CLEAR_MESHES);
-	m_handledMsgs.push_back(IDC_BUTTON_CLEAR_TRAJECTORY);
-	m_handledMsgs.push_back(IDC_IRENDERABLE_SET_ISSEEN);
-
-	m_handledMsgs.push_back(IDC_INPUT_3DE_UNIXTIME);
-	m_handledMsgs.push_back(IDC_INPUT_FLYTHROUGH_UNIXTIME);
-
-	m_handledMsgs.push_back(IDMENU_WINDOWS_EXPLORE3D);
-	m_handledMsgs.push_back(IDMENU_WINDOWS_FLYTHROUGH);
-	m_handledMsgs.push_back(IDMENU_WINDOWS_GENERAL);
 }
 GuiController::~GuiController() {}
 
 void GuiController::SetMessageSystem(ControllerMessageSystemPtr messageSystem)
 {
 	m_messageSystem = messageSystem;
-}
-
-bool GuiController::CanHandle(IControllerMessageIDs message) const
-{
-	auto it = std::find(m_handledMsgs.begin(), m_handledMsgs.end(), message);
-	return it != m_handledMsgs.end();
 }
 
 
@@ -175,152 +137,118 @@ void GuiController::StartWorkerThread(const ICallableCreator& creator, std::atom
 }
 
 
+
+
 void GuiController::HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparam, const std::vector<unsigned>& uparam)
 {
+	IModelMessageIDs modelmsg = IDC2IDM(message);
 	switch (message)
 	{
+
 	case IDMENU_FIlE_TERRAIN_SHARP:
 	{
 		wchar_t filePath[260];
-		this->OpenFileDialog(filePath, 260, m_filter_stl);
+		OpenFileDialog(filePath, 260, m_filter_stl);
 		std::wstring filepathwstr(filePath);
 		if (!filepathwstr.empty())
-			m_terrainModel->HandleMessage(IDM_LOAD_TERRAIN_SHARP, { filepathwstr }, fparam, uparam);
+			m_terrainModel->HandleMessage(modelmsg, { filepathwstr }, fparam, uparam);
 		break;
 	}
 	case IDMENU_FIlE_TERRAIN_SOFT:
 	{
 		wchar_t filePath[260];
-		this->OpenFileDialog(filePath, 260, m_filter_stl);
+		OpenFileDialog(filePath, 260, m_filter_stl);
 
 		std::wstring filepathwstr(filePath);
 		if (!filepathwstr.empty())
-			m_terrainModel->HandleMessage(IDM_LOAD_TERRAIN_SOFT, { filepathwstr }, fparam, uparam);
+			m_terrainModel->HandleMessage(modelmsg, { filepathwstr }, fparam, uparam);
 		break;
 	}
 	case IDMENU_FIlE_CAMERA_TRAJECTORY:
 	{
 		wchar_t filePath[260];
-		this->OpenFileDialog(filePath, 260, m_filter_csv);
+		OpenFileDialog(filePath, 260, m_filter_csv);
 		std::wstring filepathwstr(filePath);
 		if (!filepathwstr.empty())
-			m_terrainModel->HandleMessage(IDM_LOAD_CAMERA_TRAJECTORY, { filepathwstr }, fparam, uparam);
+			m_terrainModel->HandleMessage(modelmsg, { filepathwstr }, fparam, uparam);
 		break;
 	}
 	case IDMENU_FIlE_TERRAIN_PROJECT_SHARP:
 	{
 		std::vector<std::wstring> files;
-		this->OpenFileDialogMultipleSelection(files, m_filter_stl);
-		m_terrainModel->HandleMessage(IDM_LOAD_PROJECT_SHARP, files, fparam, uparam);
+		OpenFileDialogMultipleSelection(files, m_filter_stl);
+		m_terrainModel->HandleMessage(modelmsg, files, fparam, uparam);
 		break;
 	}
 
 	case IDMENU_FIlE_TERRAIN_PROJECT_SOFT:
 	{
 		std::vector<std::wstring> files;
-		this->OpenFileDialogMultipleSelection(files, m_filter_stl);
-		m_terrainModel->HandleMessage(IDM_LOAD_PROJECT_SOFT, files, fparam, uparam);
+		OpenFileDialogMultipleSelection(files, m_filter_stl);
+		m_terrainModel->HandleMessage(modelmsg, files, fparam, uparam);
 		break;
 	}
 	case IDMENU_FIlE_CONFIGURATION:
 	{
 		wchar_t filePath[260];
-		this->OpenFileDialog(filePath, 260, m_filter_json);
+		OpenFileDialog(filePath, 260, m_filter_json);
 		std::wstring filepathwstr(filePath);
 		if (!filepathwstr.empty())
-			m_terrainModel->HandleMessage(IDM_LOAD_CONFIGURATION, { filepathwstr }, fparam, uparam);
+			m_terrainModel->HandleMessage(modelmsg, { filepathwstr }, fparam, uparam);
 		break;
 	}
 
 	case IDMENU_HELP:
 	{
-		this->m_terrainView->ShowHelp();
+		m_terrainView->ShowHelp();
 		break;
 	}
 
 	case IDMENU_WINDOWS_EXPLORE3D:
+	{
 		m_terrainView->ShowExplore3DWindow();
 		break;
-
+	}
 	case IDMENU_WINDOWS_FLYTHROUGH:
+	{
 		m_terrainView->ShowFlythroughWindow();
 		break;
-
+	}
 	case IDMENU_WINDOWS_GENERAL:
-		this->m_terrainView->ShowGeneralWindow();
+	{
+		m_terrainView->ShowGeneralWindow();
 		break;
-
+	}
 	case IDMENU_FILE_OUTPUT_DIRECTORY:
 	{
 		std::wstring dir;
-		this->OpenFileDialogDirectory(dir);
-		this->m_terrainView->SetOutputDirectory(dir);
-		break;
-	}
-
-	case IDC_SLIDER_PROJECTION_FIELD_OF_VIEW:
-	{
-		this->m_terrainModel->HandleMessage(IDM_SET_CAMERA_FIELD_OF_VIEW, {}, fparam, uparam);
-		break;
-	}
-	case IDC_SLIDER_PROJECTION_NEAR_SCREEN:
-	{
-		this->m_terrainModel->HandleMessage(IDM_SET_CAMERA_ASPECT_NEAR_SCREEN, {}, fparam, uparam);
-		break;
-	}
-	case IDC_SLIDER_PROJECTION_FAR_SCREEN:
-	{
-		this->m_terrainModel->HandleMessage(IDM_SET_CAMERA_ASPECT_FAR_SCREEN, {}, fparam, uparam);
-		break;
-	}
-
-
-	//case IDC_IRENDERABLE_SET_ISSEEN:
-	//{
-	//	this->m_terrainModel->TransformIRenderable(IDM_IRENDERABLE_ISSEEN, *uparam, fparam);
-	//	break;
-	//}
-	//
-	//case IDC_MESH_GROUP_SCALE: 		 
-	//{
-	//	this->m_terrainModel->TransformIRenderable(IDM_IRENDERABLE_SCALE, *uparam, fparam);
-	//	break;
-	//}
-	//case IDC_MESH_GROUP_ROTATION:	 
-	//{
-	//	this->m_terrainModel->TransformIRenderable(IDM_IRENDERABLE_ROTATION, *uparam, fparam);
-	//	break; 
-	//}
-	//case IDC_MESH_GROUP_TRANSLATION:
-	//{
-	//	this->m_terrainModel->TransformIRenderable(IDM_IRENDERABLE_TRANSLATION, *uparam, fparam);
-	//	break;
-	//}
-	//case IDC_MESH_SET_COLOR:
-	//{
-	//	this->m_terrainModel->TransformIRenderable(IDM_IRENDERABLE_COLOR, *uparam, fparam);
-	//	break;
-	//}
-	case IDC_BUTTON_CLEAR_MESHES:
-	{
-		this->m_terrainModel->HandleMessage(IDM_CLEAR_MESHES, {}, fparam, uparam);
+		OpenFileDialogDirectory(dir);
+		m_terrainView->SetOutputDirectory(dir);
 		break;
 	}
 	case IDC_BUTTON_CLEAR_TRAJECTORY:
 	{
-		this->m_terrainModel->HandleMessage(IDM_CLEAR_TRAJECTORY, {}, fparam, uparam);
-		this->m_messageSystem->Publish(IDC_ACTIVATE_3DEXPLORE_MODE, {}, {});
+		m_messageSystem->Publish(IDC_ACTIVATE_3DEXPLORE_MODE, fparam, uparam);
+		m_terrainModel->HandleMessage(modelmsg, {}, fparam, uparam);
 		break;
 	}
 
-	case IDC_INPUT_3DE_UNIXTIME:
+	case IDC_SET_CAMERA_FIELD_OF_VIEW:
+	case IDC_SET_CAMERA_NEAR_SCREEN:
+	case IDC_SET_CAMERA_FAR_SCREEN:
+	case IDC_MESH_SET_ISSEEN:
+	case IDC_MESH_SET_COLOR:
+	case IDC_MESH_GROUP_SCALE:
+	case IDC_MESH_GROUP_ROTATION:
+	case IDC_MESH_GROUP_TRANSLATION:
+	case IDC_TRAJECTORY_SET_ISSEEN:
+	case IDC_TRAJECTORY_ROTATION:
+	case IDC_TRAJECTORY_TRANSLATION:
+	case IDC_BUTTON_CLEAR_MESHES:
+	case IDC_SET_TIME_E3D:
+	case IDC_SET_START_TIME_TRAJECTORY:
 	{
-		this->m_terrainModel->HandleMessage(IDM_SET_TIME_E3D, {}, fparam, uparam);
-		break;
-	}
-	case IDC_INPUT_FLYTHROUGH_UNIXTIME:
-	{
-		this->m_terrainModel->HandleMessage(IDM_SET_START_TIME_TRAJECTORY, {}, fparam, uparam);
+		m_terrainModel->HandleMessage(modelmsg, {}, fparam, uparam);
 		break;
 	}
 	}
@@ -328,11 +256,11 @@ void GuiController::HandleMessage(IControllerMessageIDs message, const std::vect
 
 void GuiController::SetTerrainView(IViewPtr pView)
 {
-	this->m_terrainView = pView;
+	m_terrainView = pView;
 }
 void GuiController::SetTerrainModel(IModelPtr pModel)
 {
-	this->m_terrainModel = pModel;
+	m_terrainModel = pModel;
 }
 void GuiController::SetMouse(MousePtr mouse) {}
 
@@ -345,10 +273,10 @@ bool  GuiController::Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse
 	{
 		return false;
 	}
-	this->SetTerrainModel(pModel);
-	this->SetMouse(mouse);
-	this->SetKeyboard(keyboard);
-	this->SetTerrainView(pView);
+	SetTerrainModel(pModel);
+	SetMouse(mouse);
+	SetKeyboard(keyboard);
+	SetTerrainView(pView);
 	return true;
 }
 void GuiController::Shutdown() {}

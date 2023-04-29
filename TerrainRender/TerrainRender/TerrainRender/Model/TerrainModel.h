@@ -43,6 +43,8 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11Device>		m_device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext>	m_deviceContext;
 
+	bool										m_isFlythroughModeOn = false;
+
 public:
 	CameraPtr									m_camera;
 	ModelMessageSystem							m_modelMessageSystem;
@@ -76,9 +78,9 @@ public:
 	bool	SetUnixTime(IModelMessageIDs message, unsigned uparam) ;
 	bool	ResetCamera(void) ;
 	bool	SetCameraProperties(IModelMessageIDs message, float data) ;
-	bool    TransformIRenderable(IModelMessageIDs message, unsigned id, const std::vector<float>& fparams) ;
+	bool    TransformMeshElement(IModelMessageIDs message, unsigned id, const std::vector<float>& fparams) ;
 
-	bool	TransformMeshes(IModelMessageIDs message, const std::vector<float>& fparams);
+	bool	TransformMeshGroup(IModelMessageIDs message, const std::vector<float>& fparams);
 	bool	TransformTrajectory(IModelMessageIDs message, const std::vector<float>& fparams);
 	bool	ClearMeshes(void) ;
 	bool	ClearCameraTrajectory(void) ;

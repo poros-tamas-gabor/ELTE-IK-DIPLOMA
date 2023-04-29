@@ -19,7 +19,7 @@ typedef std::shared_ptr<Keyboard> KeyboardPtr;
 class IController : public IModelSubscriber  {
 public:
     virtual ~IController() {}
-    virtual bool CanHandle(IControllerMessageIDs message) const = 0;
+    //virtual bool CanHandle(IControllerMessageIDs message) const = 0;
     //TODO const float* param, const unsigned* uparam
     virtual void HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparam, const std::vector<unsigned>& uparam) = 0;
 

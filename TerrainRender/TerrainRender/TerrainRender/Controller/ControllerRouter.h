@@ -22,7 +22,6 @@ private:
 public:
 	ControllerRouter();
 
-	virtual bool CanHandle(IControllerMessageIDs message) const override;
 	virtual void HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparam, const std::vector<unsigned>& uparam) override;
 	virtual void SetTerrainModel(IModelPtr pModel) override;
 	virtual void SetMouse(MousePtr mouse) override;

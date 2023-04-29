@@ -99,7 +99,16 @@ bool TerrainModel::HandleMessage(IModelMessageIDs message, const std::vector<std
 		bool success = true;
 		switch (message)
 		{
-
+		case IDM_ACTIVATE_3DEXPLORE_MODE:
+		{
+			m_isFlythroughModeOn = false;
+			break;
+		}
+		case IDM_ACTIVATE_FLYTHROUGH_MODE:
+		{
+			m_isFlythroughModeOn = true;
+			break;
+		}
 		case IDM_LOAD_TERRAIN_SHARP:
 			success = this->LoadTerrain_withSharpEdges(stringParams.at(0));
 			break;
@@ -141,8 +150,8 @@ bool TerrainModel::HandleMessage(IModelMessageIDs message, const std::vector<std
 			break;
 
 		case IDM_SET_CAMERA_FIELD_OF_VIEW:
-		case IDM_SET_CAMERA_ASPECT_NEAR_SCREEN:
-		case IDM_SET_CAMERA_ASPECT_FAR_SCREEN:
+		case IDM_SET_CAMERA_NEAR_SCREEN:
+		case IDM_SET_CAMERA_FAR_SCREEN:
 			success = SetCameraProperties(message, fparams.at(0));
 			break;
 
@@ -158,20 +167,21 @@ bool TerrainModel::HandleMessage(IModelMessageIDs message, const std::vector<std
 		case IDM_SET_START_TIME_TRAJECTORY:
 			success = SetUnixTime(message, uparams.at(0));
 			break;
-		case IDM_IRENDERABLE_COLOR:
-		case IDM_IRENDERABLE_ISSEEN:
-			success = TransformIRenderable(message, uparams.at(0), fparams);
+		case IDM_MESH_SET_COLOR:
+		case IDM_MESH_SET_ISSEEN:
+			success = TransformMeshElement(message, uparams.at(0), fparams);
 			break;
 
-		case IDM_MESHES_SCALE:
-		case IDM_MESHES_ROTATION:
-		case IDM_MESHES_TRANSLATION:
-			success = TransformMeshes(message, fparams);
+		case IDM_MESH_GROUP_SCALE:
+		case IDM_MESH_GROUP_ROTATION:
+		case IDM_MESH_GROUP_TRANSLATION:
+			success = TransformMeshGroup(message, fparams);
 			break;
 
 		case IDM_TRAJECTORY_ROTATION:
 		case IDM_TRAJECTORY_TRANSLATION:
-			success = TransformMeshes(message, fparams);
+		case IDM_TRAJECTORY_SET_ISSEEN:
+			success = TransformTrajectory(message, fparams);
 			break;
 
 		case IDM_CLEAR_TRAJECTORY:
@@ -182,9 +192,9 @@ bool TerrainModel::HandleMessage(IModelMessageIDs message, const std::vector<std
 			success = ClearMeshes();
 			break;
 		default:
+			THROW_TREXCEPTION(L"Failed to translate message because it is not implemented");
 			break;
 		}
-		this->m_light.UpdateSunPosition(m_cameraTrajectory.GetCurrentEpochTime().getSeconds(), m_llacoordinate.latitude, m_llacoordinate.longitude);
 		PublishModelState();
 		return success;
 	}
@@ -234,6 +244,7 @@ bool TerrainModel::HandleFlythroughMode(IModelMessageIDs message, const std::vec
 		m_cameraTrajectory.SetSpeed(fparams.at(0));
 		break;
 	}
+	this->m_light.UpdateSunPosition(m_cameraTrajectory.GetCurrentEpochTime().getSeconds(), m_llacoordinate.latitude, m_llacoordinate.longitude);
 	return success;
 }
 
@@ -496,6 +507,12 @@ bool TerrainModel::TransformTrajectory(IModelMessageIDs message, const std::vect
 {
 	switch (message)
 	{
+	case IDM_TRAJECTORY_SET_ISSEEN:
+	{
+		bool isSeen = fparams.at(0) > 0 ? 1 : 0;
+		m_polylines.SetIsSeen(isSeen);
+		break;
+	}
 	case IDM_TRAJECTORY_ROTATION:
 		m_polylines.Rotate(fparams.at(0), fparams.at(1), fparams.at(2));
 		break;
@@ -506,42 +523,39 @@ bool TerrainModel::TransformTrajectory(IModelMessageIDs message, const std::vect
 	return true;
 }
 
-bool TerrainModel::TransformMeshes(IModelMessageIDs message, const std::vector<float>& fparams)
+bool TerrainModel::TransformMeshGroup(IModelMessageIDs message, const std::vector<float>& fparams)
 {
 	switch (message)
 	{
-	case IDM_MESHES_ROTATION:
+	case IDM_MESH_GROUP_ROTATION:
 		m_meshes.Rotate(fparams.at(0), fparams.at(1), fparams.at(2));
 		break;
-	case IDM_MESHES_SCALE:
-		m_meshes.Scale(fparams.at(0), fparams.at(1), fparams.at(2));
+	case IDM_MESH_GROUP_SCALE:
+		m_meshes.Scale(fparams.at(0), fparams.at(0), fparams.at(0));
 		break;
-	case IDM_MESHES_TRANSLATION:
+	case IDM_MESH_GROUP_TRANSLATION:
 		m_meshes.Translate(fparams.at(0), fparams.at(1), fparams.at(2));
 		break;
 	}
 	return true;
 }
 
-bool TerrainModel::TransformIRenderable(IModelMessageIDs message, unsigned id, const std::vector<float>& fparams)
+bool TerrainModel::TransformMeshElement(IModelMessageIDs message, unsigned id, const std::vector<float>& fparams)
 {
 	switch (message)
 	{
-	case IDM_IRENDERABLE_COLOR:
+	case IDM_MESH_SET_COLOR:
 	{
 		m_meshes.SetColorComponent(id, fparams.at(0), fparams.at(1), fparams.at(2), fparams.at(3));
 		break;
 	}
 
-	case IDM_IRENDERABLE_ISSEEN:
+	case IDM_MESH_SET_ISSEEN:
 	{
 		bool m_isSeen = fparams.at(0) > 0 ? 1 : 0;
 		m_meshes.SetIsSeenComponent(id, m_isSeen);
-		m_polylines.SetIsSeenComponent(id, m_isSeen);
 		break;
 	}
-	default:
-		break;
 	}
 	return true;
 
@@ -556,18 +570,16 @@ bool TerrainModel::SetCameraProperties(IModelMessageIDs message, float data)
 		this->m_camera->SetFieldOfView(data);
 		break;
 	}
-	case IDM_SET_CAMERA_ASPECT_NEAR_SCREEN:
+	case IDM_SET_CAMERA_NEAR_SCREEN:
 	{
 		this->m_camera->SetNearScreen(data);
 		break;
 	}
-	case IDM_SET_CAMERA_ASPECT_FAR_SCREEN:
+	case IDM_SET_CAMERA_FAR_SCREEN:
 	{
 		this->m_camera->SetFarScreen(data);
 		break;
 	}
-	default:
-		break;
 	}
 	return true;
 }
@@ -670,9 +682,11 @@ bool TerrainModel::SetUnixTime(IModelMessageIDs message, unsigned uparam)
 	{
 	case IDM_SET_TIME_E3D:
 		this->m_cameraPositioner.SetCurrentEpochTime({ uparam,0 });
+		this->m_light.UpdateSunPosition(m_cameraPositioner.GetCurrentEpochTime().getSeconds(), m_llacoordinate.latitude, m_llacoordinate.longitude);
 		break;
 	case IDM_SET_START_TIME_TRAJECTORY:
 		this->m_cameraTrajectory.SetStartEpochTime({ uparam,0 });
+		this->m_light.UpdateSunPosition(m_cameraTrajectory.GetCurrentEpochTime().getSeconds(), m_llacoordinate.latitude, m_llacoordinate.longitude);
 	default:
 		break;
 	}

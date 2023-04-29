@@ -15,7 +15,6 @@ private:
 	IModelPtr							m_terrainModel;
 	MousePtr							m_mouse;
 	KeyboardPtr							m_keyboard;
-	std::vector<IControllerMessageIDs>	m_handledMsgs;
 	ControllerMessageSystemPtr			m_messageSystem;
 
 	bool					m_isActive = true;
@@ -25,7 +24,6 @@ public:
 	Controller3DExplore();
 	virtual ~Controller3DExplore() {}
 
-	virtual bool CanHandle(IControllerMessageIDs message) const override;
 	virtual void HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparam, const std::vector<unsigned>& uparam) override;
 	virtual void SetTerrainModel(IModelPtr pModel) override;
 	virtual void SetMouse(MousePtr mouse) override;

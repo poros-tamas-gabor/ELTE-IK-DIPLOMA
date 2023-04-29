@@ -9,9 +9,7 @@ ControllerRouter::ControllerRouter() : m_isActive(true)
 	m_keyboard = NULL;
 }
 
-
 void ControllerRouter::SetMessageSystem(ControllerMessageSystemPtr) {}
-
 
 void ControllerRouter::SetTerrainView(IViewPtr pView)
 {
@@ -43,15 +41,6 @@ bool ControllerRouter::Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mou
 	return true;
 }
 
-bool ControllerRouter::CanHandle(IControllerMessageIDs message) const
-{
-	for (IControllerPtr controller : m_controllers)
-	{
-		if (controller->CanHandle(message))
-			return true;
-	}
-	return false;
-}
 
 void ControllerRouter::HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparams, const std::vector<unsigned>& uparams)
 {

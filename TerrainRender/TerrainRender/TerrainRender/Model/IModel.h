@@ -40,7 +40,7 @@ public:
 	////virtual void	RotateCamera(unsigned message, float pitch, float yaw) = 0;
 	//virtual void	ResetCamera(void) = 0;
 	//virtual void	SetCameraProperties(unsigned message, float data) = 0;
-	//virtual void	TransformIRenderable(unsigned message, unsigned id, float parameters[]) = 0;
+	//virtual void	TransformMeshElement(unsigned message, unsigned id, float parameters[]) = 0;
 	//virtual void	SetUnixTime(unsigned message, unsigned* uparam) = 0;
 	//virtual void	ClearMeshes(void) = 0;
 	//virtual void	ClearCameraTrajectory(void) = 0;

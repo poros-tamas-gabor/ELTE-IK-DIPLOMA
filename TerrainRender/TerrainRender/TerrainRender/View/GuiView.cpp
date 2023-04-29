@@ -147,17 +147,17 @@ void GuiView::GeneralWindow()
         float fov = m_cameraState.fieldOfView;
         if (ImGui::SliderFloat("Field of view", &fov, 0.5, /*0.01*/ PI, "%.3f"))
         {
-            this->m_terrainController->HandleMessage(IDC_SLIDER_PROJECTION_FIELD_OF_VIEW, { fov }, {});
+            this->m_terrainController->HandleMessage(IDC_SET_CAMERA_FIELD_OF_VIEW, { fov }, {});
         }
         float nearScreen = m_cameraState.screenNear;
         if (ImGui::SliderFloat("NearScreen", &nearScreen, 0.5, /*0.01*/ 5, "%.3f"))
         {
-            this->m_terrainController->HandleMessage(IDC_SLIDER_PROJECTION_NEAR_SCREEN, { nearScreen }, {});
+            this->m_terrainController->HandleMessage(IDC_SET_CAMERA_NEAR_SCREEN, { nearScreen }, {});
         }
         float farScreen = m_cameraState.screenDepth;
         if (ImGui::SliderFloat("FarScreen", &farScreen, 10, /*0.01*/ 3000, "%.3f"))
         {
-            this->m_terrainController->HandleMessage(IDC_SLIDER_PROJECTION_FAR_SCREEN, { farScreen }, {});
+            this->m_terrainController->HandleMessage(IDC_SET_CAMERA_FAR_SCREEN, { farScreen }, {});
         }
 
         if (ImGui::Button("Reset Camera"))
@@ -264,7 +264,7 @@ void GuiView::TerrainPopUp(unsigned int terrainId, MeshTransformation& t)
         if (ImGui::Checkbox("IsSeen", &t.m_isSeen))
         {
             float b = (float)t.m_isSeen;
-            m_terrainController->HandleMessage(IDC_IRENDERABLE_SET_ISSEEN, { b }, { terrainId });
+            m_terrainController->HandleMessage(IDC_MESH_SET_ISSEEN, { b }, { terrainId });
         }
 
          ImGui::SeparatorText("Color");
@@ -284,7 +284,7 @@ void GuiView::TrajectoryPopUp(TrajectoryTransformation& t)
         if (ImGui::Checkbox("IsSeen", &t.m_isSeen))
         {
             float b = (float)t.m_isSeen;
-            m_terrainController->HandleMessage(IDC_IRENDERABLE_SET_ISSEEN, { b }, {  });
+            m_terrainController->HandleMessage(IDC_TRAJECTORY_SET_ISSEEN, { b }, {  });
         }
         
         ImGui::SeparatorText("Rotation radian");
@@ -301,11 +301,11 @@ void GuiView::TrajectoryPopUp(TrajectoryTransformation& t)
         ImGui::SeparatorText("Translation");
         if (ImGui::DragFloat3("slider T", t.tranlation,0.1f))
         {
-            m_terrainController->HandleMessage(IDC_MESH_GROUP_TRANSLATION, { t.tranlation[0], t.tranlation[1] ,t.tranlation[2] }, {});
+            m_terrainController->HandleMessage(IDC_TRAJECTORY_TRANSLATION, { t.tranlation[0], t.tranlation[1] ,t.tranlation[2] }, {});
         }
         if (ImGui::InputFloat3("input T", t.tranlation))
         {
-            m_terrainController->HandleMessage(IDC_MESH_GROUP_TRANSLATION, { t.tranlation[0], t.tranlation[1] ,t.tranlation[2] }, {});
+            m_terrainController->HandleMessage(IDC_TRAJECTORY_TRANSLATION, { t.tranlation[0], t.tranlation[1] ,t.tranlation[2] }, {});
         }
 
         ImGui::EndPopup();
@@ -485,7 +485,7 @@ void GuiView::FlythroughWindow()
             unsigned newUnix = std::atol(ut);
             if (newUnix > 0)
             {
-                this->m_terrainController->HandleMessage(IDC_INPUT_FLYTHROUGH_UNIXTIME, {}, {newUnix});
+                this->m_terrainController->HandleMessage(IDC_SET_START_TIME_TRAJECTORY, {}, {newUnix});
             }
         }      
         PrintStatus<FlythroughState>(m_flythroughState);
@@ -526,7 +526,7 @@ void GuiView::Explore3DWindow()
         unsigned newUnix = std::atol(ut);
         if (newUnix > 0)
         {
-            this->m_terrainController->HandleMessage(IDC_INPUT_3DE_UNIXTIME, {}, { newUnix });
+            this->m_terrainController->HandleMessage(IDC_SET_TIME_E3D, {}, { newUnix });
         }
     }
 

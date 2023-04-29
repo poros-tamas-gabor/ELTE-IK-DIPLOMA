@@ -5,16 +5,6 @@
 
 ControllerFlythrough::ControllerFlythrough()
 {
-	m_handledMsgs.push_back(IDC_TIME_ELAPSED);
-	m_handledMsgs.push_back(IDC_ACTIVATE_3DEXPLORE_MODE);
-	m_handledMsgs.push_back(IDC_ACTIVATE_FLYTHROUGH_MODE);
-	m_handledMsgs.push_back(IDC_FLYTHROUGH_START);
-	m_handledMsgs.push_back(IDC_FLYTHROUGH_PAUSE);
-	m_handledMsgs.push_back(IDC_FLYTHROUGH_STOP);
-	m_handledMsgs.push_back(IDC_FLYTHROUGH_RECORD_START);
-	m_handledMsgs.push_back(IDC_FLYTHROUGH_RECORD_STOP);
-	m_handledMsgs.push_back(IDC_FLYTHROUGH_SET_SPEED);
-	m_handledMsgs.push_back(IDC_FLYTHROUGH_SET_FRAME);
 
 }
 
@@ -23,11 +13,7 @@ void ControllerFlythrough::SetMessageSystem(ControllerMessageSystemPtr messageSy
 	m_messageSystem = messageSystem;
 }
 
-bool ControllerFlythrough::CanHandle(IControllerMessageIDs message) const
-{
-	auto it = std::find(m_handledMsgs.begin(), m_handledMsgs.end(), message);
-	return it != m_handledMsgs.end();
-}
+
 
 void ControllerFlythrough::HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparams, const std::vector<unsigned>& uparams)
 {

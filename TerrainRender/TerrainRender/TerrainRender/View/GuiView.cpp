@@ -82,32 +82,46 @@ void GuiView::Help()
 {
     ImGui::Begin("Help", &m_show_HelpWindow, 0);
 
-    if (ImGui::BeginTable("Controls", 2))
-    {
-        ImGui::TableNextRow();
-        ImGui::TableSetColumnIndex(0); ImGui::Text("W"); ImGui::TableSetColumnIndex(1); ImGui::Text("Move forward");
+    try {
+        if (ImGui::BeginTable("Controls", 2))
+        {
+            ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0); ImGui::Text("W"); ImGui::TableSetColumnIndex(1); ImGui::Text("Move forward");
 
-        ImGui::TableNextRow();
-        ImGui::TableSetColumnIndex(0); ImGui::Text("S"); ImGui::TableSetColumnIndex(1); ImGui::Text("Move backward");
+                ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0); ImGui::Text("S"); ImGui::TableSetColumnIndex(1); ImGui::Text("Move backward");
 
-        ImGui::TableNextRow();
-        ImGui::TableSetColumnIndex(0); ImGui::Text("A"); ImGui::TableSetColumnIndex(1); ImGui::Text("Move left");
+                ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0); ImGui::Text("A"); ImGui::TableSetColumnIndex(1); ImGui::Text("Move left");
 
-        ImGui::TableNextRow();
-        ImGui::TableSetColumnIndex(0); ImGui::Text("D"); ImGui::TableSetColumnIndex(1); ImGui::Text("Move right");
+                ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0); ImGui::Text("D"); ImGui::TableSetColumnIndex(1); ImGui::Text("Move right");
 
-        ImGui::TableNextRow();
-        ImGui::TableSetColumnIndex(0); ImGui::Text("C"); ImGui::TableSetColumnIndex(1); ImGui::Text("Move down");
+                ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0); ImGui::Text("C"); ImGui::TableSetColumnIndex(1); ImGui::Text("Move down");
 
-        ImGui::TableNextRow();
-        ImGui::TableSetColumnIndex(0); ImGui::Text("SPACE"); ImGui::TableSetColumnIndex(1); ImGui::Text("Move up");
+                ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0); ImGui::Text("SPACE"); ImGui::TableSetColumnIndex(1); ImGui::Text("Move up");
 
-        ImGui::EndTable();
+                ImGui::EndTable();
+        }
+
+            ImGui::Separator();
+        
+        ImGui::TextWrapped("Camera Rotation: To rotate the camera, press and hold the left mouse button and move the mouse.");
     }
-
-    ImGui::Separator();
-    
-    ImGui::TextWrapped("Camera Rotation: To rotate the camera, press and hold the left mouse button and move the mouse.");
+    catch (const TRException& e)
+    {
+        ErrorHandler::Log(e);
+    }
+    catch (const std::exception& e)
+    {
+        ErrorHandler::Log(e);
+    }
+    catch (const ImGuiErrorLogCallback& e)
+    {
+        ImGui::ErrorCheckEndFrameRecover(e);
+    }
     ImGui::End();
 }
 
@@ -131,113 +145,126 @@ void GuiView::ShowFlythroughWindow()
 
 void GuiView::GeneralWindow()
 {
-    ImGui::PushItemWidth(ImGui::GetFontSize() * -15);
-    ImGui::Begin("General Settings Window", &m_show_GeneralWin, 0);
-
-
-    if (ToggleButton("Mode", &isFlythroughOn, isTrajectoryLoaded))
-    {
-        if (isFlythroughOn)
-            this->m_terrainController->HandleMessage(IDC_ACTIVATE_FLYTHROUGH_MODE, {}, {});
-        else
-            this->m_terrainController->HandleMessage(IDC_ACTIVATE_3DEXPLORE_MODE, {}, {});
-    }
-    if (ImGui::CollapsingHeader("Camera Properties"))
-    {
-        float fov = m_cameraState.fieldOfView;
-        if (ImGui::SliderFloat("Field of view", &fov, 0.5, /*0.01*/ PI, "%.3f"))
-        {
-            this->m_terrainController->HandleMessage(IDC_SET_CAMERA_FIELD_OF_VIEW, { fov }, {});
-        }
-        float nearScreen = m_cameraState.screenNear;
-        if (ImGui::SliderFloat("NearScreen", &nearScreen, 0.5, /*0.01*/ 5, "%.3f"))
-        {
-            this->m_terrainController->HandleMessage(IDC_SET_CAMERA_NEAR_SCREEN, { nearScreen }, {});
-        }
-        float farScreen = m_cameraState.screenDepth;
-        if (ImGui::SliderFloat("FarScreen", &farScreen, 10, /*0.01*/ 3000, "%.3f"))
-        {
-            this->m_terrainController->HandleMessage(IDC_SET_CAMERA_FAR_SCREEN, { farScreen }, {});
-        }
-
-        if (ImGui::Button("Reset Camera"))
-        {
-            this->m_terrainController->HandleMessage(IDC_E3D_CAMERA_RESET, {}, {});
-        }
-    }
-
-    if (ImGui::CollapsingHeader("Terrain Meshes"))
+    try
     {
 
-        
-        ImGui::SeparatorText("Scale");
-        if (ImGui::SliderFloat("slider S", &m_GroupTrans.scaling, 0, 10))
-        {
-            m_terrainController->HandleMessage(IDC_MESH_GROUP_SCALE, { m_GroupTrans.scaling }, {  });
-        }
-        if (ImGui::InputFloat("input S", &m_GroupTrans.scaling))
-        {
-            m_terrainController->HandleMessage(IDC_MESH_GROUP_SCALE, { m_GroupTrans.scaling }, {  });
-        }
-        
+        ImGui::PushItemWidth(ImGui::GetFontSize() * -15);
+        ImGui::Begin("General Settings Window", &m_show_GeneralWin, 0);
 
-        ImGui::SeparatorText("Rotation radian");
-        if (ImGui::SliderFloat3("slider R", m_GroupTrans.rotation, -PI, PI))
-        {
-            m_terrainController->HandleMessage(IDC_MESH_GROUP_ROTATION, { m_GroupTrans.rotation[0],m_GroupTrans.rotation[1],m_GroupTrans.rotation[2] }, {});
-        }
 
-        if (ImGui::InputFloat3("input R", m_GroupTrans.rotation))
+        if (ToggleButton("Mode", &isFlythroughOn, isTrajectoryLoaded))
         {
-            m_terrainController->HandleMessage(IDC_MESH_GROUP_ROTATION, { m_GroupTrans.rotation[0], m_GroupTrans.rotation[1], m_GroupTrans.rotation[2] }, {});
+            if (isFlythroughOn)
+                this->m_terrainController->HandleMessage(IDC_ACTIVATE_FLYTHROUGH_MODE, {}, {});
+            else
+                this->m_terrainController->HandleMessage(IDC_ACTIVATE_3DEXPLORE_MODE, {}, {});
         }
-
-        ImGui::SeparatorText("Translation");
-        if (ImGui::DragFloat3("slider T", m_GroupTrans.tranlation, 0.1f))
+        if (ImGui::CollapsingHeader("Camera Properties"))
         {
-            m_terrainController->HandleMessage(IDC_MESH_GROUP_TRANSLATION, { m_GroupTrans.tranlation[0], m_GroupTrans.tranlation[1], m_GroupTrans.tranlation[2] }, {});
-        }
-        if (ImGui::InputFloat3("input T", m_GroupTrans.tranlation))
-        {
-            m_terrainController->HandleMessage(IDC_MESH_GROUP_TRANSLATION, { m_GroupTrans.tranlation[0], m_GroupTrans.tranlation[1], m_GroupTrans.tranlation[2] }, {});
-        }
-
-        if (ImGui::Button("Clear Terrain meshes"))
-        {
-            m_terrainController->HandleMessage(IDC_BUTTON_CLEAR_MESHES, {}, {});
-        }
-
-        TerrainListBox();
-    }
-    if (ImGui::CollapsingHeader("Trajectory"))
-    {
-        if (ImGui::Button("Clear Trajectory"))
-        {
-            m_terrainController->HandleMessage(IDC_BUTTON_CLEAR_TRAJECTORY, {}, {});
-        }
-        static int item_current_idx = 0; // Here we store our selection data as an index.
-
-        if (!m_flythroughState.trajectoryPolyLine.empty())
-        {
-            TrajectoryState& trajectoryState = m_flythroughState.trajectoryPolyLine.at(0);
-            std::string polyLineName = StringConverter::WideToString(trajectoryState.name);
-            ImGui::PushID(polyLineName.c_str());
-
-            static bool is_selected = false;
-            if (ImGui::Selectable(polyLineName.c_str(), &is_selected))
+            float fov = m_cameraState.fieldOfView;
+            if (ImGui::SliderFloat("Field of view", &fov, 0.5, /*0.01*/ PI, "%.3f"))
             {
-                ImGui::OpenPopup("Trajectory");
+                this->m_terrainController->HandleMessage(IDC_SET_CAMERA_FIELD_OF_VIEW, { fov }, {});
             }
-            // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-            if (is_selected)
+            float nearScreen = m_cameraState.screenNear;
+            if (ImGui::SliderFloat("NearScreen", &nearScreen, 0.5, /*0.01*/ 5, "%.3f"))
             {
-                ImGui::SetItemDefaultFocus();
+                this->m_terrainController->HandleMessage(IDC_SET_CAMERA_NEAR_SCREEN, { nearScreen }, {});
             }
-            TrajectoryPopUp(m_TrajectoryTrans);
-            ImGui::PopID();
+            float farScreen = m_cameraState.screenDepth;
+            if (ImGui::SliderFloat("FarScreen", &farScreen, 10, /*0.01*/ 3000, "%.3f"))
+            {
+                this->m_terrainController->HandleMessage(IDC_SET_CAMERA_FAR_SCREEN, { farScreen }, {});
+            }
+
+            if (ImGui::Button("Reset Camera"))
+            {
+                this->m_terrainController->HandleMessage(IDC_E3D_CAMERA_RESET, {}, {});
+            }
         }
 
+        if (ImGui::CollapsingHeader("Terrain Meshes"))
+        {
+            ImGui::SeparatorText("Scale");
+            if (ImGui::SliderFloat("slider S", &m_GroupTrans.scaling, 0, 10))
+            {
+                m_terrainController->HandleMessage(IDC_MESH_GROUP_SCALE, { m_GroupTrans.scaling }, {  });
+            }
+            if (ImGui::InputFloat("input S", &m_GroupTrans.scaling))
+            {
+                m_terrainController->HandleMessage(IDC_MESH_GROUP_SCALE, { m_GroupTrans.scaling }, {  });
+            }
 
+
+            ImGui::SeparatorText("Rotation radian");
+            if (ImGui::SliderFloat3("slider R", m_GroupTrans.rotation, -PI, PI))
+            {
+                m_terrainController->HandleMessage(IDC_MESH_GROUP_ROTATION, { m_GroupTrans.rotation[0],m_GroupTrans.rotation[1],m_GroupTrans.rotation[2] }, {});
+            }
+
+            if (ImGui::InputFloat3("input R", m_GroupTrans.rotation))
+            {
+                m_terrainController->HandleMessage(IDC_MESH_GROUP_ROTATION, { m_GroupTrans.rotation[0], m_GroupTrans.rotation[1], m_GroupTrans.rotation[2] }, {});
+            }
+
+            ImGui::SeparatorText("Translation");
+            if (ImGui::DragFloat3("slider T", m_GroupTrans.tranlation, 0.1f))
+            {
+                m_terrainController->HandleMessage(IDC_MESH_GROUP_TRANSLATION, { m_GroupTrans.tranlation[0], m_GroupTrans.tranlation[1], m_GroupTrans.tranlation[2] }, {});
+            }
+            if (ImGui::InputFloat3("input T", m_GroupTrans.tranlation))
+            {
+                m_terrainController->HandleMessage(IDC_MESH_GROUP_TRANSLATION, { m_GroupTrans.tranlation[0], m_GroupTrans.tranlation[1], m_GroupTrans.tranlation[2] }, {});
+            }
+
+            if (ImGui::Button("Clear Terrain meshes"))
+            {
+                m_terrainController->HandleMessage(IDC_BUTTON_CLEAR_MESHES, {}, {});
+            }
+
+            TerrainListBox();
+        }
+        if (ImGui::CollapsingHeader("Trajectory"))
+        {
+            if (ImGui::Button("Clear Trajectory"))
+            {
+                m_terrainController->HandleMessage(IDC_BUTTON_CLEAR_TRAJECTORY, {}, {});
+            }
+            static int item_current_idx = 0; // Here we store our selection data as an index.
+
+            if (!m_flythroughState.trajectoryPolyLine.empty())
+            {
+                TrajectoryState& trajectoryState = m_flythroughState.trajectoryPolyLine.at(0);
+                std::string polyLineName = StringConverter::WideToString(trajectoryState.name);
+                ImGui::PushID(polyLineName.c_str());
+
+                static bool is_selected = false;
+                if (ImGui::Selectable(polyLineName.c_str(), &is_selected))
+                {
+                    ImGui::OpenPopup("Trajectory");
+                }
+                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                if (is_selected)
+                {
+                    ImGui::SetItemDefaultFocus();
+                }
+                TrajectoryPopUp(m_TrajectoryTrans);
+                ImGui::PopID();
+            }
+
+        }
+    }
+    catch (const TRException& e)
+    {
+        ErrorHandler::Log(e);
+    }
+    catch (const std::exception& e)
+    {
+        ErrorHandler::Log(e);
+    }
+    catch (const ImGuiErrorLogCallback& e)
+    {
+        ImGui::ErrorCheckEndFrameRecover(e);
     }
     ImGui::End();
 }
@@ -429,7 +456,6 @@ void PrintStatus(const T& state)
 
 void GuiView::FlythroughWindow()
 {
-
     try
     {
         ImGui::PushItemWidth(ImGui::GetFontSize() * -15);
@@ -489,7 +515,6 @@ void GuiView::FlythroughWindow()
             }
         }      
         PrintStatus<FlythroughState>(m_flythroughState);
-        ImGui::End();
     }
     catch (const TRException& e)
     {
@@ -499,38 +524,57 @@ void GuiView::FlythroughWindow()
     {
         ErrorHandler::Log(e);
     }
+    catch (const ImGuiErrorLogCallback& e)
+    {
+        ImGui::ErrorCheckEndFrameRecover(e);
+    }
+    ImGui::End();
     
 }
 void GuiView::Explore3DWindow()
 {
-    ImGui::PushItemWidth(ImGui::GetFontSize() * -15);
-    ImGui::Begin("Explore 3D Window", &m_show_Explore3DWin, 0);
+    try {
+        ImGui::PushItemWidth(ImGui::GetFontSize() * -15);
+        ImGui::Begin("Explore 3D Window", &m_show_Explore3DWin, 0);
 
-    ImGui::SeparatorText("FPS camera properties");
-    float cameraSpeed = m_explore3dState.speed;
-    if (ImGui::SliderFloat("speed", &cameraSpeed, 0.0f, /*0.01*/ 0.8f, "%.3f"))
-    {
-        this->m_terrainController->HandleMessage(IDC_E3D_CAMERA_SPEED, { cameraSpeed }, {});
-    }
-    float cameraRotationSpeed = m_explore3dState.rotationSpeed;
-    if (ImGui::SliderFloat("rotation speed", &cameraRotationSpeed, 0.0001f, 0.002f, "%.4f"))
-    {
-        this->m_terrainController->HandleMessage(IDC_E3D_ROTATION_SPEED, { cameraRotationSpeed }, {});
-    }
-
-    std::string unixtimestr = std::to_string(m_explore3dState.currentEpochTime.getSeconds());
-    char ut[11];
-    strcpy_s<11>(ut, unixtimestr.c_str());
-    if (ImGui::InputText("UnixTime_E3D",ut, 11))
-    {
-        unsigned newUnix = std::atol(ut);
-        if (newUnix > 0)
+        ImGui::SeparatorText("FPS camera properties");
+        float cameraSpeed = m_explore3dState.speed;
+        if (ImGui::SliderFloat("speed", &cameraSpeed, 0.0f, /*0.01*/ 0.8f, "%.3f"))
         {
-            this->m_terrainController->HandleMessage(IDC_SET_TIME_E3D, {}, { newUnix });
+            this->m_terrainController->HandleMessage(IDC_E3D_CAMERA_SPEED, { cameraSpeed }, {});
         }
-    }
+        float cameraRotationSpeed = m_explore3dState.rotationSpeed;
+        if (ImGui::SliderFloat("rotation speed", &cameraRotationSpeed, 0.0001f, 0.002f, "%.4f"))
+        {
+            this->m_terrainController->HandleMessage(IDC_E3D_ROTATION_SPEED, { cameraRotationSpeed }, {});
+        }
 
-    PrintStatus<Explore3DState>(m_explore3dState);
+        std::string unixtimestr = std::to_string(m_explore3dState.currentEpochTime.getSeconds());
+        char ut[11];
+        strcpy_s<11>(ut, unixtimestr.c_str());
+        if (ImGui::InputText("UnixTime_E3D", ut, 11))
+        {
+            unsigned newUnix = std::atol(ut);
+            if (newUnix > 0)
+            {
+                this->m_terrainController->HandleMessage(IDC_SET_TIME_E3D, {}, { newUnix });
+            }
+        }
+
+        PrintStatus<Explore3DState>(m_explore3dState);
+    }
+    catch (const TRException& e)
+    {
+        ErrorHandler::Log(e);
+    }
+    catch (const std::exception& e)
+    {
+        ErrorHandler::Log(e);
+    }
+    catch (const ImGuiErrorLogCallback& e)
+    {
+        ImGui::ErrorCheckEndFrameRecover(e);
+    }
     ImGui::End();
 }
 void GuiView::BeginFrame()

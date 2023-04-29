@@ -383,6 +383,10 @@ void GuiView::TerrainListBox()
     if (ImGui::BeginListBox("Meshes"))
     {
         std::vector<std::string> terrainIds = CollectTerrainIDNames();
+        if (item_current_idx >= terrainIds.size())
+        {
+           item_current_idx = 0;
+        }
         for (int n = 0; n < terrainIds.size(); n++)
         {
             ImGui::PushID(n);

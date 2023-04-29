@@ -159,13 +159,39 @@ struct stlFacet
 
 struct IRenderableState
 {
+	unsigned			id = 0;
+	std::wstring		name = L"";
+	bool				m_isSeen = false;
+	Vector3D			rotation = { 0,0,0 };
+	Vector3D			translation = { 0,0,0 };
+	Vector3D			scale = { 0,0,0 };
+	Vector4D			color = { 0,0,0,0 };
+};
+
+struct TrajectoryState
+{
 	unsigned			id			= 0;
 	std::wstring		name		= L"";
 	bool				m_isSeen	= false;
-	Vector3D	rotation	= {0,0,0};
-	Vector3D	scale		= { 0,0,0 };
-	Vector3D	translation = { 0,0,0 };
-	Vector4D	color		= { 0,0,0,0 };
+	Vector3D			rotation	= {0,0,0};
+	Vector3D			translation = { 0,0,0 };
+};
+
+struct MeshState
+{
+	unsigned			id			= 0;
+	std::wstring		name		= L"";
+	bool				m_isSeen	= false;
+	Vector4D			color		= { 0,0,0,0 };
+};
+
+struct MeshGroupState
+{
+	Vector3D						rotation = { 0,0,0 };
+	Vector3D						scale = { 0,0,0 };
+	Vector3D						translation = { 0,0,0 };
+	std::vector<MeshState>			Meshes;
+
 };
 
 struct SunPositionState
@@ -175,16 +201,17 @@ struct SunPositionState
 };
 struct FlythroughState
 {
-	bool				IsTrajectoryInitialized		= false;
-	unsigned			currentFrame				= 0;
-	unsigned			numberOfFrame				= 0;
-	EpochTime			currentEpochTime			= { 0,0 };
-	EpochTime			startEpochTime				= { 0,0 };
-	Vector3D			currentCameraPosition		= { 0,0,0 };
-	Vector3D			currentCameraRotation		= { 0,0,0 };
-	SunPositionState	currentSunPosition;
-	LLACoordinate		origo;
-	std::vector<IRenderableState>	trajectoryPolyLine;
+	bool							IsTrajectoryInitialized		= false;
+	float							speed						= 1.0f;
+	unsigned						currentFrame				= 0;
+	unsigned						numberOfFrame				= 0;
+	EpochTime						currentEpochTime			= { 0,0 };
+	EpochTime						startEpochTime				= { 0,0 };
+	Vector3D						currentCameraPosition		= { 0,0,0 };
+	Vector3D						currentCameraRotation		= { 0,0,0 };
+	SunPositionState				currentSunPosition;
+	LLACoordinate					origo;
+	std::vector<TrajectoryState>	trajectoryPolyLine;
 };
 
 struct Explore3DState
@@ -192,8 +219,8 @@ struct Explore3DState
 	float				speed;
 	float				rotationSpeed;
 	EpochTime			currentEpochTime			= { 0,0 };
-	Vector3D	currentCameraPosition		= { 0,0,0 };
-	Vector3D	currentCameraRotation		= { 0,0,0 };
+	Vector3D			currentCameraPosition		= { 0,0,0 };
+	Vector3D			currentCameraRotation		= { 0,0,0 };
 	LLACoordinate		origo;
 	SunPositionState	currentSunPosition;
 };

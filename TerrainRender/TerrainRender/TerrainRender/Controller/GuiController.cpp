@@ -28,13 +28,13 @@ GuiController::GuiController()
 	m_handledMsgs.push_back(IDC_ACTIVATE_3DEXPLORE_MODE);
 
 
-	m_handledMsgs.push_back(IDC_SLIDER_IRENDERABLE_SCALE);
-	m_handledMsgs.push_back(IDC_SLIDER_IRENDERABLE_ROTATION);
-	m_handledMsgs.push_back(IDC_SLIDER_IRENDERABLE_TRANSLATION);
-	m_handledMsgs.push_back(IDC_SLIDER_IRENDERABLE_COLOR);
+	m_handledMsgs.push_back(IDC_MESH_GROUP_SCALE);
+	m_handledMsgs.push_back(IDC_MESH_GROUP_ROTATION);
+	m_handledMsgs.push_back(IDC_MESH_GROUP_TRANSLATION);
+	m_handledMsgs.push_back(IDC_MESH_SET_COLOR);
 	m_handledMsgs.push_back(IDC_BUTTON_CLEAR_MESHES);
 	m_handledMsgs.push_back(IDC_BUTTON_CLEAR_TRAJECTORY);
-	m_handledMsgs.push_back(IDC_CHECKBOX_IRENDERABLE_ISSEEN);
+	m_handledMsgs.push_back(IDC_IRENDERABLE_SET_ISSEEN);
 
 	m_handledMsgs.push_back(IDC_INPUT_3DE_UNIXTIME);
 	m_handledMsgs.push_back(IDC_INPUT_FLYTHROUGH_UNIXTIME);
@@ -275,28 +275,28 @@ void GuiController::HandleMessage(IControllerMessageIDs message, const std::vect
 	}
 
 
-	//case IDC_CHECKBOX_IRENDERABLE_ISSEEN:
+	//case IDC_IRENDERABLE_SET_ISSEEN:
 	//{
 	//	this->m_terrainModel->TransformIRenderable(IDM_IRENDERABLE_ISSEEN, *uparam, fparam);
 	//	break;
 	//}
 	//
-	//case IDC_SLIDER_IRENDERABLE_SCALE: 		 
+	//case IDC_MESH_GROUP_SCALE: 		 
 	//{
 	//	this->m_terrainModel->TransformIRenderable(IDM_IRENDERABLE_SCALE, *uparam, fparam);
 	//	break;
 	//}
-	//case IDC_SLIDER_IRENDERABLE_ROTATION:	 
+	//case IDC_MESH_GROUP_ROTATION:	 
 	//{
 	//	this->m_terrainModel->TransformIRenderable(IDM_IRENDERABLE_ROTATION, *uparam, fparam);
 	//	break; 
 	//}
-	//case IDC_SLIDER_IRENDERABLE_TRANSLATION:
+	//case IDC_MESH_GROUP_TRANSLATION:
 	//{
 	//	this->m_terrainModel->TransformIRenderable(IDM_IRENDERABLE_TRANSLATION, *uparam, fparam);
 	//	break;
 	//}
-	//case IDC_SLIDER_IRENDERABLE_COLOR:
+	//case IDC_MESH_SET_COLOR:
 	//{
 	//	this->m_terrainModel->TransformIRenderable(IDM_IRENDERABLE_COLOR, *uparam, fparam);
 	//	break;
@@ -353,7 +353,7 @@ bool  GuiController::Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse
 }
 void GuiController::Shutdown() {}
 
-void GuiController::HandleIModelState(const std::vector<IRenderableState>&) {}
+void GuiController::HandleIModelState(const MeshGroupState&) {}
 void GuiController::HandleIModelState(const FlythroughState&) {}
 void GuiController::HandleIModelState(const Explore3DState&) {}
 void GuiController::HandleIModelState(const CameraState&) {}

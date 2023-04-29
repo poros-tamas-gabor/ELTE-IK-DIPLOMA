@@ -95,7 +95,7 @@ bool ControllerRouter::IsFlythroughModeOn(void) const
 	return false;
 }
 
-void ControllerRouter::HandleIModelState(const std::vector<IRenderableState>& states)
+void ControllerRouter::HandleIModelState(const MeshGroupState& states)
 {
 	for (IControllerPtr controller : m_controllers)
 	{

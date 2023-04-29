@@ -6,7 +6,7 @@ class IModelSubscriber
 {
 public:
 	virtual ~IModelSubscriber() = default;
-	virtual void HandleIModelState(const std::vector<IRenderableState>&) = 0;
+	virtual void HandleIModelState(const MeshGroupState&) = 0;
 	virtual void HandleIModelState(const FlythroughState&) = 0;
 	virtual void HandleIModelState(const Explore3DState&) = 0;
 	virtual void HandleIModelState(const CameraState&) = 0;

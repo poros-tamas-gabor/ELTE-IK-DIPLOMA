@@ -586,7 +586,16 @@ FlythroughState	TerrainModel::CollectFlythroughState(void) const
 		state.currentCameraRotation			= m_camera->GetRotationVec();
 		state.currentSunPosition.azimuth	= m_light.GetAzimuth();
 		state.currentSunPosition.elevation	= m_light.GetElevation();
-		state.trajectoryPolyLine.push_back(m_cameraTrajectory.GetTrajectoryPolyLineState());
+
+		TrajectoryState ts;
+		const IRenderableState& rs = m_cameraTrajectory.GetTrajectoryPolyLineState();
+		ts.id = rs.id;
+		ts.m_isSeen = rs.m_isSeen;
+		ts.name = rs.name;
+		ts.rotation = rs.rotation;
+		ts.translation = rs.translation;
+
+		state.trajectoryPolyLine.push_back(ts);
 		state.origo = this->m_llacoordinate;
 	}
 	return state;
@@ -610,11 +619,24 @@ Explore3DState TerrainModel::CollectExplore3DState(void) const
 
 	return state;
 }
-std::vector<IRenderableState> TerrainModel::CollectTerrainMeshState() const
+MeshGroupState TerrainModel::CollectMeshGroupState() const
 {
-	std::vector<IRenderableState> meshInfo;
-	m_meshes.CollectIRenderableState(meshInfo);
-	return meshInfo;
+	MeshGroupState					state;
+	std::vector<IRenderableState>	iRenderableStates;
+	IRenderableState				compositeIrenderableState;
+
+	m_meshes.CollectIRenderableState(iRenderableStates);
+	compositeIrenderableState = m_meshes.GetState();
+
+	state.rotation		= compositeIrenderableState.rotation;
+	state.scale			= compositeIrenderableState.scale;
+	state.translation	= compositeIrenderableState.translation;
+
+	for (const IRenderableState& irs : iRenderableStates)
+	{
+		state.Meshes.push_back({ irs.id, irs.name, irs.m_isSeen, irs.color });
+	}
+	return state;
 }
 
 bool TerrainModel::ClearMeshes(void)
@@ -636,7 +658,7 @@ bool TerrainModel::ClearCameraTrajectory(void)
 
 void TerrainModel::PublishModelState(void) const
 {
-	this->m_modelMessageSystem.PublishModelState(CollectTerrainMeshState());
+	this->m_modelMessageSystem.PublishModelState(CollectMeshGroupState());
 	this->m_modelMessageSystem.PublishModelState(CollectFlythroughState());
 	this->m_modelMessageSystem.PublishModelState(CollectExplore3DState());
 	this->m_modelMessageSystem.PublishModelState(CollectCameraState());

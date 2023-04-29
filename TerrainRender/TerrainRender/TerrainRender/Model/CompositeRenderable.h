@@ -166,7 +166,15 @@ public:
 	}
 	
 	IRenderableState	GetState(void) const override {
-		return IRenderableState();
+		IRenderableState state;
+		state.id = this->GetID();
+		state.m_isSeen = m_isSeen;
+		state.name = this->m_name;
+		state.rotation = this->m_rotation;
+		state.scale = this->m_scaling;
+		state.translation = this->m_translation;
+
+		return state;
 	}
 
 	void CollectIRenderableState(std::vector<IRenderableState>& vector) const

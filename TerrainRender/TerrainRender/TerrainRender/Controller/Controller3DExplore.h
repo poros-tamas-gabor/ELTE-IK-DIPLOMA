@@ -37,7 +37,7 @@ public:
 	virtual bool IsActive() const  override;
 	virtual void Shutdown() override;
 
-	void HandleIModelState(const std::vector<IRenderableState>&) override;
+	void HandleIModelState(const MeshGroupState&) override;
 	void HandleIModelState(const FlythroughState&) override;
 	void HandleIModelState(const Explore3DState&) override;
 	void HandleIModelState(const CameraState&) override;

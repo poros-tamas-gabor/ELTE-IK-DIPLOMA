@@ -170,7 +170,7 @@ bool ControllerFlythrough::Initialize(IModelPtr pModel, IViewPtr pView, MousePtr
 }
 void ControllerFlythrough::Shutdown() {}
 
-void ControllerFlythrough::HandleIModelState(const std::vector<IRenderableState>&) {}
+void ControllerFlythrough::HandleIModelState(const MeshGroupState&) {}
 void ControllerFlythrough::HandleIModelState(const FlythroughState& state) {
 	m_flythroughState = state;
 }

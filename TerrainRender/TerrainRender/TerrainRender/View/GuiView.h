@@ -17,22 +17,36 @@ class GuiView : public IModelSubscriber
 {
 private:
 
-	enum RenderableTypes { Terrain, TrajectoryPolyline };
-	struct IRenderableTransformation
+	//enum RenderableTypes { Terrain, TrajectoryPolyline };
+	struct MeshGroupTransformation
+	{
+		float		rotation[3] = { 0.0f,0.0f,0.0f };
+		float		tranlation[3] = { 0.0f,0.0f,0.0f };
+		float		scaling = 1.0f;
+		bool		m_isSeen = true;
+	};
+	struct MeshTransformation
 	{
 		unsigned	id;
-		float		rotation[3]		= {0.0f,0.0f,0.0f};
-		float		tranlation[3]	= { 0.0f,0.0f,0.0f };
-		float		scaling			= 1.0f;
 		float		color[4]		= { 1.0f,1.0f,1.0f,1.0f };
 		bool		m_isSeen = true;
 	};
+	struct TrajectoryTransformation
+	{
+		unsigned	id;
+		float		rotation[3] = { 0.0f,0.0f,0.0f };
+		float		tranlation[3] = { 0.0f,0.0f,0.0f };
+		bool		m_isSeen = true;
+	};
+
 private:
 	IControllerPtr							m_terrainController;
 	//ModelStates:
-	std::vector<IRenderableTransformation>	m_TerrainTrasnformations;
-	std::vector<IRenderableTransformation>	m_TrajectoryTransformation;
-	std::vector<IRenderableState>			m_TerrainsState;
+	MeshGroupTransformation					m_GroupTrans;
+	std::vector<MeshTransformation>			m_MeshElementsTrans;
+	TrajectoryTransformation				m_TrajectoryTrans;
+
+	MeshGroupState							m_TerrainsState;
 	FlythroughState							m_flythroughState;
 	Explore3DState							m_explore3dState;
 	CameraState								m_cameraState;
@@ -58,7 +72,7 @@ public:
 
 	void Shutdown();
 
-	void HandleIModelState(const std::vector<IRenderableState>&) override;
+	void HandleIModelState(const MeshGroupState&) override;
 	void HandleIModelState(const FlythroughState&) override;
 	void HandleIModelState(const Explore3DState&) override;
 	void HandleIModelState(const CameraState&) override;
@@ -73,7 +87,8 @@ private:
 	void FlythroughWindow();
 	void Explore3DWindow();
 	void TerrainListBox();
-	void IRenderablePopUp(unsigned int, RenderableTypes, IRenderableTransformation& t);
+	void TerrainPopUp(unsigned int terrainId, MeshTransformation& t);
+	void TrajectoryPopUp( TrajectoryTransformation& t);
 
 	std::vector<std::string> CollectTerrainIDNames(void);
 };

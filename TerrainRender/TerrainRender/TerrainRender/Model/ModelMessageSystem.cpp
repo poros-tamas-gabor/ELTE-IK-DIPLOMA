@@ -1,11 +1,11 @@
 #include "ModelMessageSystem.h"
 #include "../resource.h"
 
-void ModelMessageSystem::PublishModelState(const std::vector<IRenderableState>& IRenderableinfo) const
+void ModelMessageSystem::PublishModelState(const MeshGroupState& state) const
 {
 	for (IModelSubscriberPtr subscriber : m_subscribers)
 	{
-		subscriber->HandleIModelState(IRenderableinfo);
+		subscriber->HandleIModelState(state);
 	}
 }
 void ModelMessageSystem::PublishModelState(const FlythroughState& state) const

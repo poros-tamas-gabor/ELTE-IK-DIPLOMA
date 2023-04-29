@@ -173,7 +173,7 @@ void TerrainView::SetModel(IModelPtr terrainModel)
 	this->m_terrainModel = terrainModel;
 }
 
-void TerrainView::HandleIModelState(const std::vector<IRenderableState>& state) {
+void TerrainView::HandleIModelState(const MeshGroupState& state) {
 	this->m_guiView.HandleIModelState(state);
 }
 

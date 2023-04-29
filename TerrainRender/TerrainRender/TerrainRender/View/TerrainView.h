@@ -43,7 +43,7 @@ public:
 	void SetController(IControllerPtr terrainController);
 	void SetModel(IModelPtr terrainModel);
 
-	void HandleIModelState(const std::vector<IRenderableState>&) override;	
+	void HandleIModelState(const MeshGroupState&) override;
 	void HandleIModelState(const FlythroughState&) override;
 	void HandleIModelState(const Explore3DState&) override;
 	void HandleIModelState(const CameraState&) override;

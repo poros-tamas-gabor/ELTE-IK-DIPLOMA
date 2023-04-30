@@ -7,7 +7,7 @@
 #include <iomanip>
 #include <ctime>
 #include "../ErrorHandler.h"
-bool ToggleButton(const char* str_id, bool* isFlythroughOn, bool isActive)
+bool ToggleButton(const char* str_id, bool* isOn)
 {
     ImVec4* colors = ImGui::GetStyle().Colors;
     ImVec2 p = ImGui::GetCursorScreenPos();
@@ -20,9 +20,9 @@ bool ToggleButton(const char* str_id, bool* isFlythroughOn, bool isActive)
     bool isClicked = false;
 
     ImGui::InvisibleButton(str_id, ImVec2(width, height));
-    if (ImGui::IsItemClicked() && isActive) 
+    if (ImGui::IsItemClicked()) 
     {
-        *isFlythroughOn = !*isFlythroughOn;
+        *isOn = !*isOn;
         isClicked = true;
     }
     ImGuiContext& gg = *GImGui;
@@ -30,14 +30,14 @@ bool ToggleButton(const char* str_id, bool* isFlythroughOn, bool isActive)
     if (gg.LastActiveId == gg.CurrentWindow->GetID(str_id))
         float t_anim = ImSaturate(gg.LastActiveIdTimer / ANIM_SPEED);
     if (ImGui::IsItemHovered())
-        draw_list->AddRectFilled(p, ImVec2(p.x + width, p.y + height), ImGui::GetColorU32(*isFlythroughOn ? colors[ImGuiCol_ButtonActive] : ImVec4(0.78f, 0.78f, 0.78f, 1.0f)), height * 0.5f);
+        draw_list->AddRectFilled(p, ImVec2(p.x + width, p.y + height), ImGui::GetColorU32(*isOn ? colors[ImGuiCol_ButtonActive] : ImVec4(0.78f, 0.78f, 0.78f, 1.0f)), height * 0.5f);
     else
-        draw_list->AddRectFilled(p, ImVec2(p.x + width, p.y + height), ImGui::GetColorU32(*isFlythroughOn ? colors[ImGuiCol_Button] : ImVec4(0.85f, 0.85f, 0.85f, 1.0f)), height * 0.50f);
-    draw_list->AddCircleFilled(ImVec2(p.x + radius + (*isFlythroughOn ? 1 : 0) * (width - radius * 2.0f), p.y + radius), radius - 1.5f, IM_COL32(255, 255, 255, 255));
+        draw_list->AddRectFilled(p, ImVec2(p.x + width, p.y + height), ImGui::GetColorU32(*isOn ? colors[ImGuiCol_Button] : ImVec4(0.85f, 0.85f, 0.85f, 1.0f)), height * 0.50f);
+    draw_list->AddCircleFilled(ImVec2(p.x + radius + (*isOn ? 1 : 0) * (width - radius * 2.0f), p.y + radius), radius - 1.5f, IM_COL32(255, 255, 255, 255));
 
     ImGui::SameLine();
 
-    if(*isFlythroughOn)
+    if(*isOn)
         ImGui::Text("Flythrough");
     else
         ImGui::Text("Explore 3D");
@@ -66,15 +66,14 @@ bool GuiView::Initalize(Microsoft::WRL::ComPtr<ID3D11Device> _device, Microsoft:
 
 void GuiView::DisplayWindows()
 {
-    isFlythroughOn = m_terrainController->IsFlythroughModeOn();
-    isTrajectoryLoaded = m_flythroughState.IsTrajectoryInitialized;
+    m_isFlythroughModeOn = m_terrainController->HandleMessage(IDCC_IS_FLYTHROUGH_MODE_ON, {}, {});
     if (m_show_GeneralWin)
         GeneralWindow();
     if (m_show_HelpWindow)
         Help();
-    if (m_show_FlythroughWin && isFlythroughOn)
+    if (m_show_FlythroughWin && m_isFlythroughModeOn)
         FlythroughWindow();
-    if (m_show_Explore3DWin && !isFlythroughOn)
+    if (m_show_Explore3DWin && !m_isFlythroughModeOn)
         Explore3DWindow();
 }
 
@@ -165,13 +164,18 @@ void GuiView::GeneralWindow()
         ImGui::PushItemWidth(ImGui::GetFontSize() * -15);
         ImGui::Begin("General Settings", &m_show_GeneralWin, 0);
 
-
-        if (ToggleButton("Mode", &isFlythroughOn, isTrajectoryLoaded))
+        if (ToggleButton("Mode", &m_isFlythroughModeOn))
         {
-            if (isFlythroughOn)
-                this->m_terrainController->HandleMessage(IDC_ACTIVATE_FLYTHROUGH_MODE, {}, {});
+            bool success = true;
+            if (m_isFlythroughModeOn)
+                success = this->m_terrainController->HandleMessage(IDC_ACTIVATE_FLYTHROUGH_MODE, {}, {});
             else
-                this->m_terrainController->HandleMessage(IDC_ACTIVATE_3DEXPLORE_MODE, {}, {});
+                success = this->m_terrainController->HandleMessage(IDC_ACTIVATE_3DEXPLORE_MODE, {}, {});
+            if (!success)
+            {
+                m_isFlythroughModeOn = false;
+                THROW_TREXCEPTION(L"To change to Flythrough mode, please load a trajectory file by going to 'File > Load trajectory' as the current trajectory file has not been loaded yet.");
+            }
         }
 
         if (ImGui::CollapsingHeader("Origo LLA"))
@@ -268,8 +272,6 @@ void GuiView::GeneralWindow()
             {
                 m_terrainController->HandleMessage(IDC_BUTTON_CLEAR_TRAJECTORY, {}, {});
             }
-            static int item_current_idx = 0; // Here we store our selection data as an index.
-
             if (!m_flythroughState.trajectoryPolyLine.empty())
             {
                 TrajectoryState& trajectoryState = m_flythroughState.trajectoryPolyLine.at(0);

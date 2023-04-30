@@ -10,13 +10,13 @@ bool TerrainView::Initalize(HWND hwnd, float screenWidth, float screenHeight, bo
 	{
 		bool bresult;
 
-		bresult = this->m_d3dView.Initalize(hwnd, screenWidth, screenHeight, fullscreen, vsync);
+		bresult = m_d3dView.Initalize(hwnd, screenWidth, screenHeight, fullscreen, vsync);
 		if (!bresult)
 		{
 			return false;
 		}
 
-		this->m_guiView.Initalize(this->m_d3dView.GetDevice().Get(), this->m_d3dView.GetDeviceContext().Get(), this->m_terrainController);
+		m_guiView.Initalize(m_d3dView.GetDevice().Get(), m_d3dView.GetDeviceContext().Get(), m_terrainController);
 
 		return true;
 	}
@@ -70,8 +70,8 @@ bool TerrainView::Resize(unsigned screenWidth, unsigned screenHeight)
 
 void TerrainView::Shutdown() 
 {
-	this->m_d3dView.Shutdown();
-	this->m_guiView.Shutdown();
+	m_d3dView.Shutdown();
+	m_guiView.Shutdown();
 }
 bool TerrainView::RenderFrame() 
 { 
@@ -79,7 +79,7 @@ bool TerrainView::RenderFrame()
 	{
 		bool result;
 
-		result = this->Render();
+		result = Render();
 
 		if (!result)
 			return false;
@@ -111,7 +111,7 @@ bool TerrainView::CaptureScreen(unsigned frameNum)
 	try
 	{
 		THROW_TREXCEPTION_IF_FAILED(!m_outputDirectoryPath.empty(), L"Failed to capture screen because the output directory was not choose");
-		this->m_d3dView.CaptureScreen(m_outputDirectoryPath, frameNum);
+		m_d3dView.CaptureScreen(m_outputDirectoryPath, frameNum);
 		return true;
 	}
 	catch (const COMException& e)
@@ -133,76 +133,76 @@ bool TerrainView::CaptureScreen(unsigned frameNum)
 	return false;
 }
 
-void TerrainView::SetOutputDirectory(const std::wstring& m_outputDirectoryPath)
+void TerrainView::SetOutputDirectory(const std::wstring& outputDirectoryPath)
 {
-	this->m_outputDirectoryPath = m_outputDirectoryPath;
-	this->m_guiView.SetOutputDirectory(m_outputDirectoryPath);
+	m_outputDirectoryPath = outputDirectoryPath;
+	m_guiView.SetOutputDirectory(m_outputDirectoryPath);
 }
 bool TerrainView::Render()
 {
 	bool bresult;
-	this->m_d3dView.BeginScene(m_backgroungColor.x, m_backgroungColor.y, m_backgroungColor.z, 1.0f);
-	this->m_guiView.BeginFrame();
+	m_d3dView.BeginScene(m_backgroungColor.x, m_backgroungColor.y, m_backgroungColor.z, 1.0f);
+	m_guiView.BeginFrame();
 
-	this->m_terrainModel->Render(m_d3dView.GetDeviceContext().Get());
+	m_terrainModel->Render(m_d3dView.GetDeviceContext().Get());
 
-	this->m_guiView.DisplayWindows();
+	m_guiView.DisplayWindows();
 	
-	this->m_guiView.EndFrame();
-	this->m_d3dView.EndScene();
+	m_guiView.EndFrame();
+	m_d3dView.EndScene();
 
 	return true;
 }
 
 Microsoft::WRL::ComPtr<ID3D11Device> TerrainView::GetDevice()
 {
-	return this->m_d3dView.GetDevice();
+	return m_d3dView.GetDevice();
 }
 Microsoft::WRL::ComPtr<ID3D11DeviceContext> TerrainView::GetDeviceContext()
 {
-	return this->m_d3dView.GetDeviceContext();
+	return m_d3dView.GetDeviceContext();
 }
 
 
 void TerrainView::SetController(IControllerPtr terrainController)
 {
-	this->m_terrainController = terrainController;
+	m_terrainController = terrainController;
 }
 void TerrainView::SetModel(IModelPtr terrainModel)
 {
-	this->m_terrainModel = terrainModel;
+	m_terrainModel = terrainModel;
 }
 
 void TerrainView::HandleIModelState(const MeshGroupState& state) {
-	this->m_guiView.HandleIModelState(state);
+	m_guiView.HandleIModelState(state);
 }
 
 void TerrainView::HandleIModelState(const FlythroughState& state)
 {
-	this->m_guiView.HandleIModelState(state);
+	m_guiView.HandleIModelState(state);
 }
 void TerrainView::HandleIModelState(const Explore3DState& state) 
 {
-	this->m_guiView.HandleIModelState(state);
+	m_guiView.HandleIModelState(state);
 }
 void TerrainView::HandleIModelState(const GeneralModelState& state)
 {
-	this->m_guiView.HandleIModelState(state);
+	m_guiView.HandleIModelState(state);
 }
 
 void TerrainView::ShowHelp()
 {
-	this->m_guiView.ShowHelp();
+	m_guiView.ShowHelp();
 }
 void TerrainView::ShowGeneralWindow()
 {
-	this->m_guiView.ShowGeneralWindow();
+	m_guiView.ShowGeneralWindow();
 }
 void TerrainView::ShowExplore3DWindow()
 {
-	this->m_guiView.ShowExplore3DWindow();
+	m_guiView.ShowExplore3DWindow();
 }
 void TerrainView::ShowFlythroughWindow()
 {
-	this->m_guiView.ShowFlythroughWindow();
+	m_guiView.ShowFlythroughWindow();
 }

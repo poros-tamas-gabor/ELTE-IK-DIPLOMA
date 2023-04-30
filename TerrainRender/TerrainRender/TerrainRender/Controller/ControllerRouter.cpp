@@ -42,9 +42,9 @@ bool ControllerRouter::Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mou
 }
 
 
-void ControllerRouter::HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparams, const std::vector<unsigned>& uparams)
+bool ControllerRouter::HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparams, const std::vector<unsigned>& uparams)
 {
-	m_messageSystem->Publish(message, fparams, uparams);
+	return m_messageSystem->Publish(message, fparams, uparams);
 }
 
 void ControllerRouter::Shutdown()
@@ -71,17 +71,6 @@ void ControllerRouter::RemoveController(IControllerPtr controller)
 	if (it != m_controllers.end()) {
 		m_controllers.erase(it);
 	}
-}
-bool ControllerRouter::IsFlythroughModeOn(void) const
-{
-	for (IControllerPtr controller : m_controllers)
-	{
-		if (dynamic_cast<ControllerFlythrough*>(controller.get()))
-		{
-			return controller->IsActive();
-		}
-	}
-	return false;
 }
 
 void ControllerRouter::HandleIModelState(const MeshGroupState& states)

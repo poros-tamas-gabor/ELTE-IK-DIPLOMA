@@ -24,14 +24,13 @@ public:
 	Controller3DExplore();
 	virtual ~Controller3DExplore() {}
 
-	virtual void HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparam, const std::vector<unsigned>& uparam) override;
+	virtual bool HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparam, const std::vector<unsigned>& uparam) override;
 	virtual void SetTerrainModel(IModelPtr pModel) override;
 	virtual void SetMouse(MousePtr mouse) override;
 	virtual void SetKeyboard(KeyboardPtr keyboard) override;
 	virtual void SetTerrainView(IViewPtr pView) override;
 
 	virtual bool Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse, KeyboardPtr keyboard) override;
-	virtual bool IsFlythroughModeOn(void) const override;
 	virtual bool IsActive() const  override;
 	virtual void Shutdown() override;
 

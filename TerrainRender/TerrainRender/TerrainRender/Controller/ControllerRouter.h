@@ -22,12 +22,11 @@ private:
 public:
 	ControllerRouter();
 
-	virtual void HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparam, const std::vector<unsigned>& uparam) override;
+	virtual bool HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparam, const std::vector<unsigned>& uparam) override;
 	virtual void SetTerrainModel(IModelPtr pModel) override;
 	virtual void SetMouse(MousePtr mouse) override;
 	virtual void SetKeyboard(KeyboardPtr keyboard) override;
 	virtual void SetTerrainView(IViewPtr pView) override;
-	virtual bool IsFlythroughModeOn(void) const override;
 
 	void HandleIModelState(const MeshGroupState&) override;
 	void HandleIModelState(const FlythroughState&) override;

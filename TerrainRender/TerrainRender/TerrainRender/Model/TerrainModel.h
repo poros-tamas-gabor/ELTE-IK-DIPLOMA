@@ -43,8 +43,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11Device>		m_device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext>	m_deviceContext;
 
-	bool										m_isFlythroughModeOn = false;
-
 public:
 	CameraPtr									m_camera;
 	ModelMessageSystem							m_modelMessageSystem;

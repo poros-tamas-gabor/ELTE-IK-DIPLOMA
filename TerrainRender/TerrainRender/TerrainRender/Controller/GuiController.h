@@ -24,7 +24,7 @@ public:
 	GuiController();
 	virtual ~GuiController();
 
-	virtual void HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparam, const std::vector<unsigned>& uparam) override;
+	virtual bool HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparam, const std::vector<unsigned>& uparam) override;
 	virtual void SetTerrainModel(IModelPtr pModel) override;
 	virtual void SetMouse(MousePtr mouse) override;
 	virtual void SetKeyboard(KeyboardPtr keyboard) override;
@@ -32,7 +32,6 @@ public:
 
 	virtual bool Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse, KeyboardPtr keyboard) override;
 	virtual bool IsActive() const  override;
-	virtual bool IsFlythroughModeOn(void) const override;
 	virtual void Shutdown() override;
 
 	void HandleIModelState(const MeshGroupState&) override;

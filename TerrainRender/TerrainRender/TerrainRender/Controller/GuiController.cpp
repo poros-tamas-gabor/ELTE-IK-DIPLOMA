@@ -23,10 +23,6 @@ bool GuiController::IsActive() const {
 	return m_isActive;
 }
 
-bool GuiController::IsFlythroughModeOn(void) const
-{
-	return false;
-}
 
 void GuiController::OpenFileDialog(wchar_t* filePath, unsigned buffer, const wchar_t* filter)
 {
@@ -139,7 +135,7 @@ void GuiController::StartWorkerThread(const ICallableCreator& creator, std::atom
 
 
 
-void GuiController::HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparam, const std::vector<unsigned>& uparam)
+bool GuiController::HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparam, const std::vector<unsigned>& uparam)
 {
 	IModelMessageIDs modelmsg = IDC2IDM(message);
 	switch (message)
@@ -151,8 +147,8 @@ void GuiController::HandleMessage(IControllerMessageIDs message, const std::vect
 		OpenFileDialog(filePath, 260, m_filter_stl);
 		std::wstring filepathwstr(filePath);
 		if (!filepathwstr.empty())
-			m_terrainModel->HandleMessage(modelmsg, { filepathwstr }, fparam, uparam);
-		break;
+			return m_terrainModel->HandleMessage(modelmsg, { filepathwstr }, fparam, uparam);
+		return false;
 	}
 	case IDMENU_FIlE_TERRAIN_SOFT:
 	{
@@ -161,8 +157,8 @@ void GuiController::HandleMessage(IControllerMessageIDs message, const std::vect
 
 		std::wstring filepathwstr(filePath);
 		if (!filepathwstr.empty())
-			m_terrainModel->HandleMessage(modelmsg, { filepathwstr }, fparam, uparam);
-		break;
+			return m_terrainModel->HandleMessage(modelmsg, { filepathwstr }, fparam, uparam);
+		return false;
 	}
 	case IDMENU_FIlE_CAMERA_TRAJECTORY:
 	{
@@ -170,23 +166,21 @@ void GuiController::HandleMessage(IControllerMessageIDs message, const std::vect
 		OpenFileDialog(filePath, 260, m_filter_csv);
 		std::wstring filepathwstr(filePath);
 		if (!filepathwstr.empty())
-			m_terrainModel->HandleMessage(modelmsg, { filepathwstr }, fparam, uparam);
-		break;
+			return m_terrainModel->HandleMessage(modelmsg, { filepathwstr }, fparam, uparam);
+		return false;
 	}
 	case IDMENU_FIlE_TERRAIN_PROJECT_SHARP:
 	{
 		std::vector<std::wstring> files;
 		OpenFileDialogMultipleSelection(files, m_filter_stl);
-		m_terrainModel->HandleMessage(modelmsg, files, fparam, uparam);
-		break;
+		return m_terrainModel->HandleMessage(modelmsg, files, fparam, uparam);
 	}
 
 	case IDMENU_FIlE_TERRAIN_PROJECT_SOFT:
 	{
 		std::vector<std::wstring> files;
 		OpenFileDialogMultipleSelection(files, m_filter_stl);
-		m_terrainModel->HandleMessage(modelmsg, files, fparam, uparam);
-		break;
+		return m_terrainModel->HandleMessage(modelmsg, files, fparam, uparam);
 	}
 	case IDMENU_FIlE_CONFIGURATION:
 	{
@@ -194,43 +188,48 @@ void GuiController::HandleMessage(IControllerMessageIDs message, const std::vect
 		OpenFileDialog(filePath, 260, m_filter_json);
 		std::wstring filepathwstr(filePath);
 		if (!filepathwstr.empty())
-			m_terrainModel->HandleMessage(modelmsg, { filepathwstr }, fparam, uparam);
-		break;
+			return m_terrainModel->HandleMessage(modelmsg, { filepathwstr }, fparam, uparam);
+		return false;
 	}
 
 	case IDMENU_HELP:
 	{
 		m_terrainView->ShowHelp();
-		break;
+		return true;
 	}
 
 	case IDMENU_WINDOWS_EXPLORE3D:
 	{
-		m_terrainView->ShowExplore3DWindow();
-		break;
+		bool isFlythroughModeOn;
+		isFlythroughModeOn = m_messageSystem->Publish(IDCC_IS_FLYTHROUGH_MODE_ON, {}, {});
+		if (!isFlythroughModeOn)
+			m_terrainView->ShowExplore3DWindow();
+		return !isFlythroughModeOn;
 	}
 	case IDMENU_WINDOWS_FLYTHROUGH:
 	{
-		m_terrainView->ShowFlythroughWindow();
-		break;
+		bool isFlythroughModeOn;
+		isFlythroughModeOn = m_messageSystem->Publish(IDCC_IS_FLYTHROUGH_MODE_ON, {}, {});
+		if(isFlythroughModeOn)
+			m_terrainView->ShowFlythroughWindow();
+		return isFlythroughModeOn;
 	}
 	case IDMENU_WINDOWS_GENERAL:
 	{
 		m_terrainView->ShowGeneralWindow();
-		break;
+		return true;
 	}
 	case IDMENU_FILE_OUTPUT_DIRECTORY:
 	{
 		std::wstring dir;
 		OpenFileDialogDirectory(dir);
 		m_terrainView->SetOutputDirectory(dir);
-		break;
+		return true;
 	}
 	case IDC_BUTTON_CLEAR_TRAJECTORY:
 	{
 		m_messageSystem->Publish(IDC_ACTIVATE_3DEXPLORE_MODE, fparam, uparam);
-		m_terrainModel->HandleMessage(modelmsg, {}, fparam, uparam);
-		break;
+		return m_terrainModel->HandleMessage(modelmsg, {}, fparam, uparam);
 	}
 
 	case IDC_SET_CAMERA_FIELD_OF_VIEW:
@@ -252,9 +251,10 @@ void GuiController::HandleMessage(IControllerMessageIDs message, const std::vect
 	case IDC_XZ_PLANE_GRID_SET_ISSEEN:
 	case IDC_PIXELSHADER_SET_SHADING:
 	{
-		m_terrainModel->HandleMessage(modelmsg, {}, fparam, uparam);
-		break;
+		return m_terrainModel->HandleMessage(modelmsg, {}, fparam, uparam);
 	}
+	default:
+		return true;
 	}
 }
 

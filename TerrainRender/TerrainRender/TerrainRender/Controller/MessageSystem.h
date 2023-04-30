@@ -10,7 +10,7 @@ private:
 	const std::vector<IControllerPtr>& m_subscribers;
 
 public:
-	void Publish(IControllerMessageIDs message, const std::vector<float>& fparam, const std::vector<unsigned>& uparam);
+	bool Publish(IControllerMessageIDs message, const std::vector<float>& fparam, const std::vector<unsigned>& uparam);
 	ControllerMessageSystem(const std::vector<IControllerPtr>& controllers);
 
 	ControllerMessageSystem operator=(const ControllerMessageSystem&) = delete;

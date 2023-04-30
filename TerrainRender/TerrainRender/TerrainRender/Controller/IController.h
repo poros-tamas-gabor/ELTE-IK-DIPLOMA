@@ -21,7 +21,7 @@ public:
     virtual ~IController() {}
     //virtual bool CanHandle(IControllerMessageIDs message) const = 0;
     //TODO const float* param, const unsigned* uparam
-    virtual void HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparam, const std::vector<unsigned>& uparam) = 0;
+    virtual bool HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparam, const std::vector<unsigned>& uparam) = 0;
 
     virtual void SetTerrainModel(IModelPtr pModel) = 0;
     virtual void SetTerrainView(IViewPtr pView) = 0;
@@ -29,7 +29,6 @@ public:
     virtual void SetKeyboard(KeyboardPtr keyboard) = 0;
 
     virtual bool Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse, KeyboardPtr keyboard) = 0;
-    virtual bool IsFlythroughModeOn(void) const = 0;
 
     virtual void Shutdown() = 0;
     virtual bool IsActive() const = 0 ;

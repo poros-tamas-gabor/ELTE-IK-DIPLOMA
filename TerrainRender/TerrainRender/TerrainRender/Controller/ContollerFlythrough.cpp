@@ -15,15 +15,19 @@ void ControllerFlythrough::SetMessageSystem(ControllerMessageSystemPtr messageSy
 
 
 
-void ControllerFlythrough::HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparams, const std::vector<unsigned>& uparams)
+bool ControllerFlythrough::HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparams, const std::vector<unsigned>& uparams)
 {
 	switch (message)
 	{
+	case IDCC_IS_FLYTHROUGH_MODE_ON:
+	{
+		return IsActive();
+	}
 	case IDC_ACTIVATE_3DEXPLORE_MODE:
 	{
 		this->m_isActive = false;
 		this->m_isRunning = false;
-		break;
+		return true;
 	}
 	case IDC_ACTIVATE_FLYTHROUGH_MODE:
 	{
@@ -32,48 +36,44 @@ void ControllerFlythrough::HandleMessage(IControllerMessageIDs message, const st
 			this->m_isActive = true;
 			this->m_isRunning = false;
 			this->m_terrainModel->HandleMessage(IDM_FLYTHROUGH_START_POSITION, {}, fparams, uparams);
+			return true;
 		}
-		break;
+		return false;
 	}
 	case IDC_FLYTHROUGH_START:
 	{
 		this->m_isRunning = true;
-		break;
+		return true;
 	}
 
 	case IDC_FLYTHROUGH_PAUSE:
 	{
 		this->m_isRunning = false;
-		break;
+		return true;
 	}
 	case IDC_FLYTHROUGH_STOP:
 	{
 		this->m_isRunning = false;
-		this->m_terrainModel->HandleMessage(IDM_FLYTHROUGH_START_POSITION, {}, fparams, uparams);
-		break;
+		return this->m_terrainModel->HandleMessage(IDM_FLYTHROUGH_START_POSITION, {}, fparams, uparams);
 	}
 	case IDC_FLYTHROUGH_RECORD_START:
 	{
 		this->m_isRunning = true;
 		this->m_isRecording = true;
 		m_recordedPrevFrameNum = 0;
-		break;
+		return true;
 	}
 	case IDC_FLYTHROUGH_RECORD_STOP:
 	{
 		this->m_isRunning = false;
 		this->m_isRecording = false;
-		break;
+		return true;
 	}
 	case IDC_FLYTHROUGH_SET_SPEED:
-	{
-		this->m_terrainModel->HandleMessage(IDM_FLYTHROUGH_SET_SPEED, {}, fparams, uparams);
-		break;
-	}
 	case IDC_FLYTHROUGH_SET_FRAME:
 	{
-		this->m_terrainModel->HandleMessage(IDM_FLYTHROUGH_SET_FRAME, {}, fparams, uparams); 	
-		break;
+		IModelMessageIDs modelMsg = IDC2IDM(message);
+		return this->m_terrainModel->HandleMessage(modelMsg, {}, fparams, uparams);
 	}
 	case IDC_TIME_ELAPSED:
 	{
@@ -86,16 +86,6 @@ void ControllerFlythrough::HandleMessage(IControllerMessageIDs message, const st
 			unsigned char c = m_keyboard->ReadChar();
 		}
 
-		if (m_isActive && m_isRunning)
-		{
-			if (m_isRecording && (m_recordedPrevFrameNum == 0 || m_recordedPrevFrameNum != m_flythroughState.currentFrame))
-			{
-				m_recordedPrevFrameNum = m_flythroughState.currentFrame;
-				this->m_terrainView->CaptureScreen(m_flythroughState.currentFrame);
-			}
-			this->m_terrainModel->HandleMessage(IDM_FLYTHROUGH_NEXT_FRAME, {}, fparams, uparams);
-		}
-
 		if (m_keyboard->KeyIsPressed(VK_SPACE))
 		{
 			m_isRunning ^= 1;
@@ -103,14 +93,24 @@ void ControllerFlythrough::HandleMessage(IControllerMessageIDs message, const st
 
 		if (m_keyboard->KeyIsPressed(VK_ESCAPE))
 		{
-			this->m_terrainModel->HandleMessage(IDM_FLYTHROUGH_STOP, {}, fparams, uparams);
 			m_isRunning = false;
+			return m_terrainModel->HandleMessage(IDM_FLYTHROUGH_STOP, {}, fparams, uparams);
 		}
-		
-		break;
+
+		if (m_isActive && m_isRunning)
+		{
+			if (m_isRecording && (m_recordedPrevFrameNum == 0 || m_recordedPrevFrameNum != m_flythroughState.currentFrame))
+			{
+				m_recordedPrevFrameNum = m_flythroughState.currentFrame;
+				this->m_terrainView->CaptureScreen(m_flythroughState.currentFrame);
+			}
+			m_isRunning = m_terrainModel->HandleMessage(IDM_FLYTHROUGH_NEXT_FRAME, {}, fparams, uparams);
+			return m_isRunning;
+		}
+		return true;
 	}
 	default:
-		break;
+		return true;
 	}
 
 }
@@ -134,10 +134,6 @@ void ControllerFlythrough::SetKeyboard(KeyboardPtr keyboard)
 
 
 bool ControllerFlythrough::IsActive() const
-{
-	return this->m_isActive;
-}
-bool ControllerFlythrough::IsFlythroughModeOn(void) const
 {
 	return this->m_isActive;
 }

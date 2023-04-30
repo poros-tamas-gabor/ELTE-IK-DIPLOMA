@@ -56,8 +56,8 @@ private:
 	bool									m_show_Explore3DWin = false;
 	bool									m_show_FlythroughWin = false;
 	std::wstring							m_outputDir;
-	bool									isFlythroughOn;
-	bool									isTrajectoryLoaded;
+	bool									m_isFlythroughModeOn = false;
+	//bool									isTrajectoryLoaded;
 public:
 	bool Initalize(Microsoft::WRL::ComPtr<ID3D11Device> _device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> _deviceContext, IControllerPtr controller);
 

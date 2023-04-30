@@ -15,43 +15,40 @@ void Controller3DExplore::SetMessageSystem(ControllerMessageSystemPtr messageSys
 
 
 
-void Controller3DExplore::HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparams, const std::vector<unsigned>& uparams)
+bool Controller3DExplore::HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparams, const std::vector<unsigned>& uparams)
 {
 	float TimeEllapsed = 0;
 	switch (message)
 	{
+	case IDCC_IS_FLYTHROUGH_MODE_ON:
+	{
+		return !IsActive();
+	}
 	case IDC_ACTIVATE_3DEXPLORE_MODE:
 	{
 		this->m_isActive = true;
-		break;
+		return true;
 	}
 	case IDC_ACTIVATE_FLYTHROUGH_MODE:
 	{
 		if (m_terrainModel->IsTrajectoryInitialized())
 		{
 			this->m_isActive = false;
+			return true;
 		}
-		break;
+		return false;
 	}
 	case IDC_E3D_CAMERA_SPEED:
-	{
-		this->m_terrainModel->HandleMessage(IDM_E3D_SET_SPEED, {}, fparams, uparams);
-		break;
-	}
 	case IDC_E3D_ROTATION_SPEED:
-	{
-		this->m_terrainModel->HandleMessage(IDM_E3D_SET_ROTATION_SPEED, {}, fparams, uparams);
-		break;
-	}
 	case IDC_E3D_CAMERA_RESET:
 	{
-		this->m_terrainModel->HandleMessage(IDM_E3D_CAMERA_RESET, {}, fparams, uparams);
-		break;
+		IModelMessageIDs modelMessage = IDC2IDM(message);
+		return this->m_terrainModel->HandleMessage(modelMessage, {}, fparams, uparams);
 	}
 	case IDC_TIME_ELAPSED:
 	{
 		if (!IsActive())
-			return;
+			return true;
 
 		while (!m_keyboard->KeyBufferIsEmpty())
 		{
@@ -92,11 +89,11 @@ void Controller3DExplore::HandleMessage(IControllerMessageIDs message, const std
 		{
 			this->m_terrainModel->HandleMessage(IDM_E3D_MOVE_RIGHT, {}, fparams, uparams);
 		}
-		break;
+		return true;
 		
 	}
 	default:
-		break;
+		return true;
 	}
 
 }
@@ -118,10 +115,7 @@ bool Controller3DExplore::IsActive() const
 {
 	return this->m_isActive;
 }
-bool Controller3DExplore::IsFlythroughModeOn(void) const
-{
-	return !this->m_isActive;
-}
+
 
 bool Controller3DExplore::Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse, KeyboardPtr keyboard)
 {

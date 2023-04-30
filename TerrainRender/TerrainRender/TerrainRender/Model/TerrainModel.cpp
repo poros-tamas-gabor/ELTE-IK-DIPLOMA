@@ -99,16 +99,6 @@ bool TerrainModel::HandleMessage(IModelMessageIDs message, const std::vector<std
 		bool success = true;
 		switch (message)
 		{
-		case IDM_ACTIVATE_3DEXPLORE_MODE:
-		{
-			m_isFlythroughModeOn = false;
-			break;
-		}
-		case IDM_ACTIVATE_FLYTHROUGH_MODE:
-		{
-			m_isFlythroughModeOn = true;
-			break;
-		}
 		case IDM_LOAD_TERRAIN_SHARP:
 			success = this->LoadTerrain_withSharpEdges(stringParams.at(0));
 			break;

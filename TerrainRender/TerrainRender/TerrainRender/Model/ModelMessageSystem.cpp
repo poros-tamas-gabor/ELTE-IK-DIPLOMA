@@ -46,7 +46,7 @@ bool ModelMessageSystem::Unsubscribe(IModelSubscriberPtr subscriber)
 {
 	if (std::find(this->m_subscribers.begin(), this->m_subscribers.end(), subscriber) != this->m_subscribers.end())
 	{
-		std::remove(this->m_subscribers.begin(), this->m_subscribers.end(), subscriber);
+		m_subscribers.erase(std::remove(this->m_subscribers.begin(), this->m_subscribers.end(), subscriber));
 		return true;
 	}
 	return false;

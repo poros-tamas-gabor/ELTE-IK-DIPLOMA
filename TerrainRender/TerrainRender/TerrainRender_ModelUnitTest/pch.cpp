@@ -16,10 +16,17 @@
 #include "../TerrainRender/Model/PolyLine.cpp"
 #include "../TerrainRender/Model/IRenderable.cpp"
 #include "../TerrainRender/Model/RenderableCreator.cpp"
+#include "../TerrainRender/Model/PixelShaderMesh.cpp"
+#include "../TerrainRender/Model/PixelShaderPolyLine.cpp"
+#include "../TerrainRender/Model/VertexShaderMesh.cpp"
+#include "../TerrainRender/Model/VertexShaderPolyLine.cpp"
 
 #include "../TerrainRender/Model/CameraPositioner.cpp"
 #include "../TerrainRender/Model/CameraTrajectory.cpp"
 #include "../TerrainRender/Model/Camera.cpp"
+
+#include "../TerrainRender/Model/ModelMessageSystem.cpp"
+#include "../TerrainRender/Model/TerrainModel.cpp"
 
 #include "../TerrainRender/Model/Light.cpp"
 #include "../TerrainRender/sunPos/SunPos.cpp"

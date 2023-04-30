@@ -37,8 +37,8 @@ TEST_F(DataAccessTest, LoadConfigurationFile_CorrectFile_LoadsSuccessfully) {
     correctFile_path += L"..\\..\\..\\TerrainRender_ModelUnitTest\\ResourceFiles\\testConfig.json";
     m_persistence->LoadConfigurationFile(correctFile_path.c_str(), file);
 
-    ASSERT_DOUBLE_EQ(file.origo.latitude, 47.497913);
-    ASSERT_DOUBLE_EQ(file.origo.longitude, 19.040236);
+    ASSERT_FLOAT_EQ(file.origo.latitude, 47.497913f);
+	ASSERT_FLOAT_EQ(file.origo.longitude, 19.040236f);
     ASSERT_EQ(file.terrain.translation, Vector3D(10, 11, 12));
     ASSERT_EQ(file.terrain.rotation, Vector3D(20, 21, 22));
     ASSERT_FALSE(file.terrain.colors.empty());

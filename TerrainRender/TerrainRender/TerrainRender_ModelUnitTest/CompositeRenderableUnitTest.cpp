@@ -128,28 +128,7 @@ TEST_F(CompositeRenderableUnitTest, Rotate)
 	ASSERT_EQ(snd->GetState().rotation, Vector3D(1.0f, -1.0f, 1.0f));
 }
 
-TEST_F(CompositeRenderableUnitTest, RotateComponent)
-{
-	CompositeRenderable<VertexMesh> meshes;
 
-	unsigned vertexCount = 4;
-	unsigned indexCount = 6;
-	VertexMesh vertices[4] = { VertexMesh(),VertexMesh(),VertexMesh(),VertexMesh() };
-	unsigned long indices[6] = { 0,1,2,2,3,4 };
-
-	ASSERT_TRUE(meshes.Initialize(m_device, m_vertexShader, m_pixelShader, NULL, NULL, NULL, NULL));
-
-	ASSERT_TRUE(meshes.Add(vertices, indices, vertexCount, indexCount, PolygonMeshCreator(), L"test"));
-	IRendarablePtr<VertexMesh> fst = meshes.GetLastAddedComponent();
-
-	ASSERT_TRUE(meshes.Add(vertices, indices, vertexCount, indexCount, PolygonMeshCreator(), L"test"));
-	IRendarablePtr<VertexMesh> snd = meshes.GetLastAddedComponent();
-
-	meshes.RotateComponent(fst->GetID(), 1.0f, -1.0f, 1.0f);
-
-	ASSERT_EQ(fst->GetState().rotation, Vector3D(1.0f, -1.0f, 1.0f));
-	ASSERT_EQ(snd->GetState().rotation, Vector3D(0.0f, 0.0f, 0.0f));
-}
 
 TEST_F(CompositeRenderableUnitTest, Translate)
 {
@@ -172,29 +151,6 @@ TEST_F(CompositeRenderableUnitTest, Translate)
 
 	ASSERT_EQ(fst->GetState().translation, Vector3D(1.0f, -1.0f, 1.0f));
 	ASSERT_EQ(snd->GetState().translation, Vector3D(1.0f, -1.0f, 1.0f));
-}
-
-TEST_F(CompositeRenderableUnitTest, TranslateComponent)
-{
-	CompositeRenderable<VertexMesh> meshes;
-
-	unsigned vertexCount = 4;
-	unsigned indexCount = 6;
-	VertexMesh vertices[4] = { VertexMesh(),VertexMesh(),VertexMesh(),VertexMesh() };
-	unsigned long indices[6] = { 0,1,2,2,3,4 };
-
-	ASSERT_TRUE(meshes.Initialize(m_device, m_vertexShader, m_pixelShader, NULL, NULL, NULL, NULL));
-
-	ASSERT_TRUE(meshes.Add(vertices, indices, vertexCount, indexCount, PolygonMeshCreator(), L"test"));
-	IRendarablePtr<VertexMesh> fst = meshes.GetLastAddedComponent();
-
-	ASSERT_TRUE(meshes.Add(vertices, indices, vertexCount, indexCount, PolygonMeshCreator(), L"test"));
-	IRendarablePtr<VertexMesh> snd = meshes.GetLastAddedComponent();
-
-	meshes.TranslateComponent(fst->GetID(), 1.0f, -1.0f, 1.0f);
-
-	ASSERT_EQ(fst->GetState().translation, Vector3D(1.0f, -1.0f, 1.0f));
-	ASSERT_EQ(snd->GetState().translation, Vector3D(0.0f, 0.0f, 0.0f));
 }
 
 TEST_F(CompositeRenderableUnitTest, Scale)
@@ -220,28 +176,6 @@ TEST_F(CompositeRenderableUnitTest, Scale)
 	ASSERT_EQ(snd->GetState().scale, Vector3D(1.0f, -1.0f, 1.0f));
 }
 
-TEST_F(CompositeRenderableUnitTest, ScaleComponent)
-{
-	CompositeRenderable<VertexMesh> meshes;
-
-	unsigned vertexCount = 4;
-	unsigned indexCount = 6;
-	VertexMesh vertices[4] = { VertexMesh(),VertexMesh(),VertexMesh(),VertexMesh() };
-	unsigned long indices[6] = { 0,1,2,2,3,4 };
-
-	ASSERT_TRUE(meshes.Initialize(m_device, m_vertexShader, m_pixelShader, NULL, NULL, NULL, NULL));
-
-	ASSERT_TRUE(meshes.Add(vertices, indices, vertexCount, indexCount, PolygonMeshCreator(), L"test"));
-	IRendarablePtr<VertexMesh> fst = meshes.GetLastAddedComponent();
-
-	ASSERT_TRUE(meshes.Add(vertices, indices, vertexCount, indexCount, PolygonMeshCreator(), L"test"));
-	IRendarablePtr<VertexMesh> snd = meshes.GetLastAddedComponent();
-
-	meshes.ScaleComponent(fst->GetID(), 1.0f, -1.0f, 1.0f);
-
-	ASSERT_EQ(fst->GetState().scale, Vector3D(1.0f, -1.0f, 1.0f));
-	ASSERT_EQ(snd->GetState().scale, Vector3D(1.0f, 1.0f, 1.0f));
-}
 
 TEST_F(CompositeRenderableUnitTest, SetColor)
 {

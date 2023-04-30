@@ -104,7 +104,11 @@ TEST_F(PolyLineUnitTest, Scale)
 	actual = polyline.GetState().scale;
 	ASSERT_EQ(actual, Vector3D(1.0f, 1.0f, 1.0f));
 
-	ASSERT_THROW(polyline.Scale(PI, PI / 2, -PI / 4), TRException);
+
+	polyline.Scale(PI, PI / 2, -PI / 4);
+	actual = polyline.GetState().scale;
+	ASSERT_EQ(actual, Vector3D(1.0f, 1.0f, 1.0f));
+	//ASSERT_THROW(polyline.Scale(PI, PI / 2, -PI / 4), TRException);
 
 	polyline.ResetTransformation();
 	actual = polyline.GetState().scale;

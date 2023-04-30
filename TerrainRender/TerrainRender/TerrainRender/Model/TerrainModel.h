@@ -27,10 +27,10 @@ class TerrainModel : public IModel
 private:
 	LLACoordinate								m_llacoordinate = { 47.497913 , 19.040236 };
 
-	VertexShaderMeshPtr							m_vertexShaderMesh;
+	IVertexShaderPtr							m_vertexShaderMesh;
 	PixelShaderMeshPtr							m_pixelShaderMesh;
-	VertexShaderPolyLinePtr						m_vertexShaderPolyLine;
-	PixelShaderPolyLinePtr						m_pixelShaderPolyLine;
+	IVertexShaderPtr							m_vertexShaderPolyLine;
+	IPixelShaderPtr								m_pixelShaderPolyLine;
 
 	CompositeRenderable<VertexMesh>				m_meshes;
 	CompositeRenderable<VertexPolyLine>			m_polylines;

@@ -584,6 +584,14 @@ public:
     // Add mock methods for the ID3D11DeviceContext  methods you want to mock
 };*/
 
+class MockIModelSubscriber : public IModelSubscriber
+{
+public:
+    MOCK_METHOD(void, HandleIModelState, (const MeshGroupState&), (override));
+    MOCK_METHOD(void, HandleIModelState, (const FlythroughState&), (override));
+    MOCK_METHOD(void, HandleIModelState, (const Explore3DState&), (override));
+    MOCK_METHOD(void, HandleIModelState, (const GeneralModelState&), (override));
+};
 
 class MockIPixelShader : public IPixelShader {
 public:
@@ -591,6 +599,16 @@ public:
     MOCK_METHOD(void, Shutdown, (), (override));
     MOCK_METHOD(bool, Render, (Microsoft::WRL::ComPtr<ID3D11DeviceContext>, int vertexCount, const Light&), (override));
     MOCK_METHOD(Microsoft::WRL::ComPtr<ID3D11PixelShader>, GetPixelShader, (), (override));
+};
+
+class MockPixelShaderMesh : public PixelShaderMesh {
+public:
+    MOCK_METHOD(bool, Initialize, (Microsoft::WRL::ComPtr<ID3D11Device>, HWND), (override));
+    MOCK_METHOD(void, Shutdown, (), (override));
+    MOCK_METHOD(bool, Render, (Microsoft::WRL::ComPtr<ID3D11DeviceContext>, int vertexCount, const Light&), (override));
+    MOCK_METHOD(Microsoft::WRL::ComPtr<ID3D11PixelShader>, GetPixelShader, (), (override));
+    MOCK_METHOD(bool, GetIsShadingOn, (), (const));
+    MOCK_METHOD(void, SetIsShadingOn, (bool), ());
 };
 
 class MockIVertexShader : public IVertexShader {
@@ -620,5 +638,103 @@ public:
     MOCK_METHOD(std::wstring, GetName, (), (override));
     MOCK_METHOD(DirectX::XMMATRIX, GetWorldMatrix, (), (override));
 };
+
+class MockCameraPositioner : public CameraPositioner {
+public:
+    MOCK_METHOD(void, MoveForward, (float dt), ());
+    MOCK_METHOD(void, MoveBack, (float dt), ());
+    MOCK_METHOD(void, MoveLeft, (float dt), ());
+    MOCK_METHOD(void, MoveRight, (float dt), ());
+    MOCK_METHOD(void, MoveUp, (float dt), ());
+    MOCK_METHOD(void, MoveDown, (float dt), ());
+    MOCK_METHOD(void, RotatePitchYaw, (float x, float y), ());
+    MOCK_METHOD(void, Initialize, (CameraPtr camera), ());
+    MOCK_METHOD(void, SetSpeed, (float speed), ());
+    MOCK_METHOD(void, SetRotationSpeed, (float speed), ());
+    MOCK_METHOD(float, GetSpeed, (), (const ));
+    MOCK_METHOD(float, GetRotationSpeed, (), (const ));
+    MOCK_METHOD(EpochTime, GetCurrentEpochTime, (), (const ));
+    MOCK_METHOD(void, SetCurrentEpochTime, (EpochTime), ());
+};
+
+class MockLight : public Light {
+public:
+    MOCK_METHOD(void, UpdateSunPosition, (std::time_t currentEpochTime, double lat, double longitude), ());
+    MOCK_METHOD(void, SetDiffuseColor, (const DirectX::XMFLOAT4& diffuseColor), ());
+    MOCK_METHOD(void, SetAmbientColor, (const DirectX::XMFLOAT4& ambientColor), ());
+    MOCK_METHOD(DirectX::XMFLOAT4, GetDiffuseColor, (), (const ));
+    MOCK_METHOD(DirectX::XMFLOAT4, GetAmbientColor, (), (const ));
+    MOCK_METHOD(DirectX::XMFLOAT4, GetInverseDirection, (), (const ));
+    MOCK_METHOD(double, GetAzimuth, (), (const ));
+    MOCK_METHOD(double, GetElevation, (), (const ));
+};
+
+class MockCameraTrajectory : public CameraTrajectory{
+public:
+    MOCK_METHOD(bool, Initialize, (const std::vector<CameraPose>&cameraPoses, IRendarablePtr<VertexPolyLine>  renderable, CameraPtr camera), ());
+    MOCK_METHOD(bool, IsInitialized, (), (const ));
+    MOCK_METHOD(bool, UpdateCamera, (double elapsedmsecs), ());
+    MOCK_METHOD(void, ResetStartPosition, (), ());
+    MOCK_METHOD(void, Clear, (), ());
+    MOCK_METHOD(void, Shutdown, (), ());
+    MOCK_METHOD(void, SetStartEpochTime,(EpochTime), ());
+    MOCK_METHOD(void, SetCurrentFrame,(unsigned frameNum), ());
+    MOCK_METHOD(void, SetSpeed,(float speed), ());
+    MOCK_METHOD(float, GetSpeed, (), (const ));
+    MOCK_METHOD(EpochTime, GetCurrentEpochTime, (), (const ));
+    MOCK_METHOD(EpochTime, GetStartEpochTime, (), (const ));
+    MOCK_METHOD(unsigned, GetCurrentFrameNum, (), (const ));
+    MOCK_METHOD(unsigned, GetNumberOfFrame, (), (const ));
+    MOCK_METHOD(IRenderableState , GetTrajectoryPolyLineState ,(),(const ));
+    MOCK_METHOD(IRendarablePtr<VertexPolyLine>, GetPolyLine ,(),(const ));
+};
+class MockIDataAccess : public IDataAccess {
+public:
+    MOCK_METHOD(void, LoadTerrain_withSharpEdges, (const wchar_t*), (override));
+    MOCK_METHOD(const std::vector<stlFacet>&, GetFacets, (), (override));
+    MOCK_METHOD(void, LoadCameraTrajectory, (const wchar_t*, std::vector<CameraPose>&), (override));
+    MOCK_METHOD(void, LoadConfigurationFile, (const wchar_t*, ParameterFile& params), (override));
+    MOCK_METHOD(void, LoadTerrain_withSoftEdges, (const wchar_t*), (override));
+    MOCK_METHOD(const std::vector<StlVertex>&, GetVertices_Soft, (), (override));
+    MOCK_METHOD(const std::vector<CornerIndices>&, GetIndices_Soft, (), (override));
+};
+
+class MockModelMessageSystem : public ModelMessageSystem {
+public:
+    MOCK_METHOD(void, PublishModelState, (const MeshGroupState&), (const ));
+    MOCK_METHOD(void, PublishModelState, (const FlythroughState&), (const ));
+    MOCK_METHOD(void, PublishModelState, (const Explore3DState&), (const ));
+    MOCK_METHOD(void, PublishModelState, (const GeneralModelState&), (const ));
+    MOCK_METHOD(bool, Subscribe, (IModelSubscriberPtr view), ());
+    MOCK_METHOD(bool, Unsubscribe, (IModelSubscriberPtr view), ());
+};
+
+class MockCamera : public Camera {
+public:
+    MOCK_METHOD(void, Initialize, (int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView), ());
+    MOCK_METHOD(void, Resize, (int screenWidth, int screenHeight), ());
+    MOCK_METHOD(void, Reset, (), ());
+    MOCK_METHOD(void, SetFieldOfView, (float fovRad), ());
+    MOCK_METHOD(void, SetNearScreen, (float nearZ), ());
+    MOCK_METHOD(void, SetFarScreen, (float farZ), ());
+    MOCK_METHOD(void, SetPosition, (float x, float y, float z), ());
+    MOCK_METHOD(void, SetRotationRad, (float x, float y, float z), ());
+    MOCK_METHOD(void, AdjustPosition, (float deltaX, float deltaY, float deltaZ), ());
+    MOCK_METHOD(void, AdjustRotationRad, (float deltaX, float deltaY, float deltaZ), ());
+    MOCK_METHOD(Vector3D, GetPositionVec, (), (const ));
+    MOCK_METHOD(Vector3D, GetRotationVec, (), (const ));
+    MOCK_METHOD(DirectX::XMFLOAT3, GetPositionF3, (), (const ));
+    MOCK_METHOD(DirectX::XMFLOAT3, GetRotationF3, (), (const ));
+    MOCK_METHOD(void, Render, (), ());
+    MOCK_METHOD(DirectX::XMMATRIX, GetViewMatrix, (), (const ));
+    MOCK_METHOD(DirectX::XMMATRIX, GetProjectionMatrix, (), (const ));
+    MOCK_METHOD(DirectX::XMMATRIX, GetRotationMatrix, (), (const ));
+    MOCK_METHOD(float, GetFOVrad, (), (const ));
+    MOCK_METHOD(float, GetNearScreen, (), (const ));
+    MOCK_METHOD(float, GetFarScreen, (), (const ));
+
+};
+
+
 
 #endif

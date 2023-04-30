@@ -5,11 +5,11 @@
 
 VertexShaderPolyLine::VertexShaderPolyLine() : m_vertexShader(nullptr), m_layout(nullptr), m_matrixBuffer(nullptr) {}
 
-bool VertexShaderPolyLine::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, HWND hwnd)
+bool VertexShaderPolyLine::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device)
 {
 	bool result;
 
-	result = this->InitializeShader(device, hwnd, L"vertexShaderPolyLine.cso");
+	result = this->InitializeShader(device, L"vertexShaderPolyLine.cso");
 	if (!result)
 	{
 		return false;
@@ -43,7 +43,7 @@ void VertexShaderPolyLine::ShutdownShader()
 	}
 }
 
-bool VertexShaderPolyLine::InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device> device, HWND hwnd, const std::wstring& vsFilename)
+bool VertexShaderPolyLine::InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device> device, const std::wstring& vsFilename)
 {
 	HRESULT									result;
 	Microsoft::WRL::ComPtr<ID3D10Blob> 		vertexShaderBuffer = nullptr;

@@ -8,64 +8,108 @@ TerrainModel::TerrainModel() = default;
 TerrainModel::~TerrainModel() = default;
 
 
-bool TerrainModel::Initalize(HWND hwnd, IDataAccessPtr persistence, Microsoft::WRL::ComPtr<ID3D11Device> device, int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView)
+bool TerrainModel::Initalize(IDataAccessPtr persistence, Microsoft::WRL::ComPtr<ID3D11Device> device, int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView)
 {
-	bool bresult;
-
-	if (persistence == nullptr || device == nullptr)
-		return false;
-
-	this->m_persistence = persistence;
-
-	this->m_device = device;
-
-	m_vertexShaderMesh		= std::make_shared<VertexShaderMesh>();
-	m_pixelShaderMesh		= std::make_shared<PixelShaderMesh>();
-	m_vertexShaderPolyLine	= std::make_shared<VertexShaderPolyLine>();
-	m_pixelShaderPolyLine	= std::make_shared<PixelShaderPolyLine>();
-	m_camera				= std::make_shared<Camera>();
-
-	bresult = this->m_vertexShaderMesh->Initialize(device, hwnd);
-	if (!bresult)
+	try
 	{
-		return false;
-	}
+		bool bresult;
 
-	bresult = this->m_vertexShaderPolyLine->Initialize(device, hwnd);
-	if (!bresult)
+		if (persistence == nullptr || device == nullptr)
+			return false;
+
+		this->m_persistence = persistence;
+
+		this->m_device = device;
+
+		m_vertexShaderMesh = std::make_shared<VertexShaderMesh>();
+		m_pixelShaderMesh = std::make_shared<PixelShaderMesh>();
+		m_vertexShaderPolyLine = std::make_shared<VertexShaderPolyLine>();
+		m_pixelShaderPolyLine = std::make_shared<PixelShaderPolyLine>();
+		m_camera = std::make_shared<Camera>();
+
+		bresult = this->m_vertexShaderMesh->Initialize(device);
+		if (!bresult)
+		{
+			return false;
+		}
+
+		bresult = this->m_vertexShaderPolyLine->Initialize(device);
+		if (!bresult)
+		{
+			return false;
+		}
+
+		bresult = this->m_pixelShaderMesh->Initialize(device);
+		if (!bresult)
+		{
+			return false;
+		}
+
+		bresult = this->m_pixelShaderPolyLine->Initialize(device);
+		if (!bresult)
+		{
+			return false;
+		}
+
+		this->m_camera->Initialize(screenWidth, screenHeight, screenNear, screenDepth, fieldOfView);
+		this->m_cameraPositioner.Initialize(this->m_camera);
+
+		this->m_meshes.Initialize(device, m_vertexShaderMesh, m_pixelShaderMesh, NULL, NULL, NULL, NULL);
+		this->m_polylines.Initialize(device, m_vertexShaderPolyLine, m_pixelShaderPolyLine, NULL, NULL, NULL, NULL);
+		this->m_linelist.Initialize(device, m_vertexShaderPolyLine, m_pixelShaderPolyLine, NULL, NULL, NULL, NULL);
+		this->m_light.UpdateSunPosition(m_cameraPositioner.GetCurrentEpochTime().getSeconds(), m_llacoordinate.latitude, m_llacoordinate.longitude);
+		PublishModelState();
+		this->AddGrid(2000, { 0.6f, 0.6f, 0.6f, 0.6f }, 200, 200);
+
+		return true;
+	}
+	catch (const COMException& e)
 	{
-		return false;
+		ErrorHandler::Log(e);
 	}
-
-	bresult = this->m_pixelShaderMesh->Initialize(device, hwnd);
-	if (!bresult)
+	catch (const TRException& e)
 	{
-		return false;
+		ErrorHandler::Log(e);
 	}
-
-	bresult = this->m_pixelShaderPolyLine->Initialize(device, hwnd);
-	if (!bresult)
+	catch (const std::exception& e)
 	{
-		return false;
+		ErrorHandler::Log(e);
 	}
-
-	this->m_camera->Initialize(screenWidth, screenHeight, screenNear, screenDepth, fieldOfView);
-	this->m_cameraPositioner.Initialize(this->m_camera);
-
-	this->m_meshes.Initialize(device, m_vertexShaderMesh, m_pixelShaderMesh, NULL, NULL, NULL, NULL);
-	this->m_polylines.Initialize(device, m_vertexShaderPolyLine, m_pixelShaderPolyLine, NULL, NULL, NULL, NULL);
-	this->m_linelist.Initialize(device, m_vertexShaderPolyLine, m_pixelShaderPolyLine, NULL, NULL, NULL, NULL);
-	this->m_light.UpdateSunPosition(m_cameraPositioner.GetCurrentEpochTime().getSeconds(), m_llacoordinate.latitude, m_llacoordinate.longitude);
-	PublishModelState();
-	this->AddGrid(2000, { 0.6f, 0.6f, 0.6f, 0.6f }, 200, 200);
-
-	return true;
+	catch (...)
+	{
+		ErrorHandler::Log("Unknown Exceptio: No details available");
+	}
+	return false;
 }
 
-void TerrainModel::Resize(unsigned screenWidth, unsigned screenHeight)
+bool TerrainModel::Resize(unsigned screenWidth, unsigned screenHeight)
 {
-	if (m_camera != nullptr)
-		this->m_camera->Resize(screenWidth, screenHeight);
+	try
+	{
+		if (m_camera != nullptr)
+		{
+			this->m_camera->Resize(screenWidth, screenHeight);
+			return true;
+		}
+		return false;
+	}
+	catch (const COMException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const TRException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const std::exception& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (...)
+	{
+		ErrorHandler::Log("Unknown Exceptio: No details available");
+	}
+	return false;
 }
 
 void TerrainModel::Shutdown()
@@ -396,7 +440,6 @@ bool TerrainModel::LoadTerrain_withSharpEdges(const std::wstring& filepath)
 			VertexMesh vertex;
 			vertex.normal = { (float)facet.normal[0], (float)facet.normal[2],(float)facet.normal[1] };
 			vertex.position = { (float)facet.position[2 - i][0], (float)facet.position[2 - i][2], (float)facet.position[2 - i][1] };
-			//vertex.color = { 1.0f, 0.5f, 0.5f, 1.0f };
 
 			vertices.push_back(vertex);
 			indices.push_back(index);
@@ -418,7 +461,26 @@ bool	TerrainModel::LoadProject_withSharpEdges(const std::vector<std::wstring>& f
 {
 	for (const std::wstring& filepath : files)
 	{
-		this->LoadTerrain_withSharpEdges(filepath.c_str());
+		try
+		{
+			this->LoadTerrain_withSharpEdges(filepath.c_str());
+		}
+		catch (const COMException& e)
+		{
+			ErrorHandler::Log(e);
+		}
+		catch (const TRException& e)
+		{
+			ErrorHandler::Log(e);
+		}
+		catch (const std::exception& e)
+		{
+			ErrorHandler::Log(e);
+		}
+		catch (...)
+		{
+			ErrorHandler::Log("Unknown Exceptio: No details available");
+		}
 	}
 	return true;
 
@@ -428,7 +490,26 @@ bool	TerrainModel::LoadProject_withSoftEdges(const std::vector<std::wstring>& fi
 {
 	for (const std::wstring& filepath : files)
 	{
-		this->LoadTerrain_withSoftEdges(filepath.c_str());
+		try
+		{
+			this->LoadTerrain_withSoftEdges(filepath.c_str());
+		}
+		catch (const COMException& e)
+		{
+			ErrorHandler::Log(e);
+		}
+		catch (const TRException& e)
+		{
+			ErrorHandler::Log(e);
+		}
+		catch (const std::exception& e)
+		{
+			ErrorHandler::Log(e);
+		}
+		catch (...)
+		{
+			ErrorHandler::Log("Unknown Exceptio: No details available");
+		}
 	}
 	return true;
 
@@ -507,6 +588,11 @@ bool TerrainModel::ResetCamera()
 {
 	this->m_camera->Reset();
 	return true;
+}
+
+LLACoordinate	TerrainModel::GetOrigo(void) const
+{
+	return m_llacoordinate;
 }
 
 bool TerrainModel::TransformTrajectory(IModelMessageIDs message, const std::vector<float>& fparams)
@@ -771,5 +857,7 @@ bool TerrainModel::SetLongitudeLatitude(IModelMessageIDs message, const std::vec
 	}
 	return true;
 }
+
+
 
 

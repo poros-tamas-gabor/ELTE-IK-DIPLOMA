@@ -15,8 +15,8 @@ public:
 
 	virtual ~IModel() = default;
 
-	virtual bool	Initalize(HWND hwnd, IDataAccessPtr persistence, Microsoft::WRL::ComPtr<ID3D11Device> device, int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView) = 0;
-	virtual void	Resize(unsigned screenWidth, unsigned screenHeight) = 0;
+	virtual bool	Initalize(IDataAccessPtr persistence, Microsoft::WRL::ComPtr<ID3D11Device> device, int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView) = 0;
+	virtual bool	Resize(unsigned screenWidth, unsigned screenHeight) = 0;
 	virtual void	Shutdown() = 0;
 	virtual bool	Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext) = 0;
 

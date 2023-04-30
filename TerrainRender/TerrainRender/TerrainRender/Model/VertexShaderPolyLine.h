@@ -32,7 +32,7 @@ public:
 	VertexShaderPolyLine& operator=(const VertexShaderPolyLine& other) = delete;
 
 
-	virtual bool Initialize(Microsoft::WRL::ComPtr<ID3D11Device>, HWND) override;
+	virtual bool Initialize(Microsoft::WRL::ComPtr<ID3D11Device>) override;
 	virtual void Shutdown() override;
 	virtual bool Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext>, DirectX::XMMATRIX worldmat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 color) override;
 
@@ -41,7 +41,7 @@ public:
 
 private:
 	bool SetShadeParameters(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, DirectX::XMMATRIX worldmat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat);
-	bool InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device>, HWND, const std::wstring&);
+	bool InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device>, const std::wstring&);
 	void ShutdownShader();
 	void RenderShader(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext);
 };

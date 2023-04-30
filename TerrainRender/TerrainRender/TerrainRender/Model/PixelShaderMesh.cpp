@@ -3,11 +3,11 @@
 
 PixelShaderMesh::PixelShaderMesh() : m_pixelShader(nullptr), m_lightBuffer(nullptr) {}
 
-bool PixelShaderMesh::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, HWND hwnd)
+bool PixelShaderMesh::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device)
 {
 	bool result;
 
-	result = this->InitializeShader(device, hwnd, L"pixelShaderMesh.cso");
+	result = this->InitializeShader(device, L"pixelShaderMesh.cso");
 	if (!result)
 	{
 		return false;
@@ -36,7 +36,7 @@ void PixelShaderMesh::ShutdownShader()
 	//}
 }
 
-bool PixelShaderMesh::InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device> device, HWND hwnd, const std::wstring& psFilename)
+bool PixelShaderMesh::InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device> device, const std::wstring& psFilename)
 {
 	HRESULT								result;
 	Microsoft::WRL::ComPtr<ID3D10Blob>	pixelShaderBuffer = nullptr;

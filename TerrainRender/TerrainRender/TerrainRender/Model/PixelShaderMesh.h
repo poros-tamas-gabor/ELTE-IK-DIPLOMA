@@ -32,7 +32,7 @@ public:
 	PixelShaderMesh(const PixelShaderMesh& other) = delete;
 	PixelShaderMesh& operator=(const PixelShaderMesh& other) = delete;
 
-	bool Initialize(Microsoft::WRL::ComPtr<ID3D11Device>, HWND) override;
+	bool Initialize(Microsoft::WRL::ComPtr<ID3D11Device>) override;
 	void Shutdown() override;
 	bool Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext>, int vertexCount, const Light& light) override;
 
@@ -43,7 +43,7 @@ public:
 
 private:
 	bool SetShadeParameters(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, const Light& light);
-	bool InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device>, HWND, const std::wstring&);
+	bool InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device>, const std::wstring&);
 	void ShutdownShader();
 
 	void RenderShader(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, int vertexCount);

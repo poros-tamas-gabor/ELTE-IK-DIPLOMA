@@ -325,7 +325,9 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 	this->m_terrainModel->m_modelMessageSystem.Subscribe(m_terrainView);
 	this->m_terrainModel->m_modelMessageSystem.Subscribe(m_terrainController);
 
-	result = this->m_terrainModel->Initalize(m_renderWindow.GetHWND(), m_dataAccess, m_terrainView->GetDevice(), screenWidth, screenHeight, 1, 500);
+	result = this->m_terrainModel->Initalize(m_dataAccess, m_terrainView->GetDevice(), screenWidth, screenHeight, 1, 500);
+	if (!result)
+		return false;
 
 	m_timer.Start();
 	return true;
@@ -369,8 +371,10 @@ void App::Shutdown()
 	this->m_renderWindow.Shutdown();
 }
 
-void App::Resize(UINT screenWidth, UINT screenHeight)
+bool App::Resize(UINT screenWidth, UINT screenHeight)
 {
-	m_terrainView->Resize(screenWidth, screenHeight);
-	m_terrainModel->Resize(screenWidth, screenHeight);
+	bool success = true;;
+	success &= m_terrainView->Resize(screenWidth, screenHeight);
+	success &=m_terrainModel->Resize(screenWidth, screenHeight);
+	return success;
 }

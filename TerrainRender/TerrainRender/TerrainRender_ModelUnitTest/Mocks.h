@@ -595,7 +595,7 @@ public:
 
 class MockIPixelShader : public IPixelShader {
 public:
-    MOCK_METHOD(bool, Initialize, (Microsoft::WRL::ComPtr<ID3D11Device>, HWND), (override));
+    MOCK_METHOD(bool, Initialize, (Microsoft::WRL::ComPtr<ID3D11Device>), (override));
     MOCK_METHOD(void, Shutdown, (), (override));
     MOCK_METHOD(bool, Render, (Microsoft::WRL::ComPtr<ID3D11DeviceContext>, int vertexCount, const Light&), (override));
     MOCK_METHOD(Microsoft::WRL::ComPtr<ID3D11PixelShader>, GetPixelShader, (), (override));
@@ -603,7 +603,7 @@ public:
 
 class MockPixelShaderMesh : public PixelShaderMesh {
 public:
-    MOCK_METHOD(bool, Initialize, (Microsoft::WRL::ComPtr<ID3D11Device>, HWND), (override));
+    MOCK_METHOD(bool, Initialize, (Microsoft::WRL::ComPtr<ID3D11Device>), (override));
     MOCK_METHOD(void, Shutdown, (), (override));
     MOCK_METHOD(bool, Render, (Microsoft::WRL::ComPtr<ID3D11DeviceContext>, int vertexCount, const Light&), (override));
     MOCK_METHOD(Microsoft::WRL::ComPtr<ID3D11PixelShader>, GetPixelShader, (), (override));
@@ -613,7 +613,7 @@ public:
 
 class MockIVertexShader : public IVertexShader {
 public:
-    MOCK_METHOD(bool, Initialize, (Microsoft::WRL::ComPtr<ID3D11Device>, HWND), (override));
+    MOCK_METHOD(bool, Initialize, (Microsoft::WRL::ComPtr<ID3D11Device>), (override));
     MOCK_METHOD(void, Shutdown, (), (override));
     MOCK_METHOD(bool, Render, (Microsoft::WRL::ComPtr<ID3D11DeviceContext>, DirectX::XMMATRIX worldmat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 color), (override));
     MOCK_METHOD(Microsoft::WRL::ComPtr<ID3D11VertexShader>, GetVertexShader, (), (override));

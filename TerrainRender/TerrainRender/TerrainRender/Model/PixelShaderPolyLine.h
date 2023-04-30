@@ -20,14 +20,14 @@ public:
 	PixelShaderPolyLine(const PixelShaderPolyLine& other) = delete;
 	PixelShaderPolyLine& operator=(const PixelShaderPolyLine& other) = delete;
 
-	bool Initialize(Microsoft::WRL::ComPtr<ID3D11Device>, HWND) override;
+	bool Initialize(Microsoft::WRL::ComPtr<ID3D11Device>) override;
 	void Shutdown() override;
 	bool Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext>, int vertexCount, const Light& light) override;
 
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> GetPixelShader(void) override;
 
 private:
-	bool InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device>, HWND, const WCHAR*);
+	bool InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device>, const WCHAR*);
 	void ShutdownShader();
 
 	void RenderShader(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, int vertexCount);

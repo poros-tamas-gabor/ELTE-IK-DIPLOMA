@@ -4,6 +4,7 @@
 
 #pragma once
 
+#define _GTEST
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 #include "../TerrainRender/win.h"

@@ -54,8 +54,8 @@ public:
 	TerrainModel();
 	TerrainModel(const TerrainModel&) = delete;
 	~TerrainModel();
-	bool	Initalize(HWND hwnd, IDataAccessPtr persistence, Microsoft::WRL::ComPtr<ID3D11Device> device, int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView = (DirectX::XM_PI / 3.0)) override;
-	void	Resize(unsigned screenWidth, unsigned screenHeight) override;
+	bool	Initalize(IDataAccessPtr persistence, Microsoft::WRL::ComPtr<ID3D11Device> device, int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView = (DirectX::XM_PI / 3.0)) override;
+	bool	Resize(unsigned screenWidth, unsigned screenHeight) override;
 	void	Shutdown() override;
 	bool	Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext) override;
 
@@ -83,6 +83,7 @@ public:
 	bool	TransformTrajectory(IModelMessageIDs message, const std::vector<float>& fparams);
 	bool	ClearMeshes(void) ;
 	bool	ClearCameraTrajectory(void) ;
+	LLACoordinate	GetOrigo(void) const;
 private:
 
 	void				MoveCamera(IModelMessageIDs message, float timeElapsed);

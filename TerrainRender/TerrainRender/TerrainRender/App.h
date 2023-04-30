@@ -37,7 +37,7 @@ public:
 	bool Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight);
 	void Run();
 	void Shutdown();
-	void Resize(UINT screenWidth, UINT screenHeight);
+	bool Resize(UINT screenWidth, UINT screenHeight);
 	MousePtr						m_mouse;
 	KeyboardPtr						m_keyboard;
 

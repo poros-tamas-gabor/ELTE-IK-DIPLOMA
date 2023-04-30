@@ -11,7 +11,7 @@ class IVertexShader
 {
 public:
 	virtual ~IVertexShader() = default;
-	virtual bool Initialize(Microsoft::WRL::ComPtr<ID3D11Device>, HWND) = 0;
+	virtual bool Initialize(Microsoft::WRL::ComPtr<ID3D11Device>) = 0;
 	virtual void Shutdown() = 0;
 	virtual bool Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext>, DirectX::XMMATRIX worldmat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 color) = 0;
 

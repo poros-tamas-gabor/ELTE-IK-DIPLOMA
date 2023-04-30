@@ -11,7 +11,7 @@ class IPixelShader
 {
 public:
 	virtual ~IPixelShader() = default;
-	virtual bool Initialize(Microsoft::WRL::ComPtr<ID3D11Device>, HWND) = 0;
+	virtual bool Initialize(Microsoft::WRL::ComPtr<ID3D11Device>) = 0;
 	virtual void Shutdown() = 0;
 	virtual bool Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext>, int vertexCount, const Light&) = 0;
 

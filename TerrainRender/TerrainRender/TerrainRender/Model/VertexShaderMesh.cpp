@@ -3,11 +3,11 @@
 
 VertexShaderMesh::VertexShaderMesh() : m_vertexShader(nullptr), m_layout(nullptr), m_matrixBuffer(nullptr) {}
 
-bool VertexShaderMesh::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, HWND hwnd)
+bool VertexShaderMesh::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device)
 {
 	bool result;
 
-	result = this->InitializeShader(device, hwnd, L"vertexShaderMesh.cso");
+	result = this->InitializeShader(device, L"vertexShaderMesh.cso");
 	if (!result)
 	{
 		return false;
@@ -41,7 +41,7 @@ void VertexShaderMesh::ShutdownShader()
 	//}
 }
 
-bool VertexShaderMesh::InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device> device, HWND hwnd, const WCHAR* vsFilename)
+bool VertexShaderMesh::InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device> device, const WCHAR* vsFilename)
 {
 	HRESULT									result;
 	Microsoft::WRL::ComPtr <ID3D10Blob>		vertexShaderBuffer = nullptr;

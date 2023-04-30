@@ -3,11 +3,11 @@
 
 PixelShaderPolyLine::PixelShaderPolyLine() : m_pixelShader(nullptr) {}
 
-bool PixelShaderPolyLine::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, HWND hwnd)
+bool PixelShaderPolyLine::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device)
 {
 	bool result;
 
-	result = this->InitializeShader(device, hwnd, L"pixelShaderPolyLine.cso");
+	result = this->InitializeShader(device, L"pixelShaderPolyLine.cso");
 	if (!result)
 	{
 		return false;
@@ -31,7 +31,7 @@ void PixelShaderPolyLine::ShutdownShader()
 	}
 }
 
-bool PixelShaderPolyLine::InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device> device, HWND hwnd, const WCHAR* psFilename)
+bool PixelShaderPolyLine::InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device> device, const WCHAR* psFilename)
 {
 	HRESULT								result;
 	Microsoft::WRL::ComPtr<ID3D10Blob>	pixelShaderBuffer = nullptr;

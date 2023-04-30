@@ -32,7 +32,7 @@ public:
 	VertexShaderMesh& operator=(const VertexShaderMesh& other) = delete;
 
 
-	bool Initialize(Microsoft::WRL::ComPtr<ID3D11Device>, HWND) override;
+	bool Initialize(Microsoft::WRL::ComPtr<ID3D11Device>) override;
 	void Shutdown() override;
 	bool Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext>, DirectX::XMMATRIX worldmat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 color) override;
 
@@ -41,7 +41,7 @@ public:
 
 private:
 	bool SetShadeParameters(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, DirectX::XMMATRIX worldmat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 color);
-	bool InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device>, HWND, const WCHAR*);
+	bool InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device>, const WCHAR*);
 	void ShutdownShader();
 	void RenderShader(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext);
 };

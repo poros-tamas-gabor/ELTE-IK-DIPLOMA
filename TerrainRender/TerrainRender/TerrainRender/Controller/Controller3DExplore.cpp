@@ -119,7 +119,7 @@ bool Controller3DExplore::IsActive() const
 
 bool Controller3DExplore::Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse, KeyboardPtr keyboard)
 {
-	if (pModel.get() == nullptr || mouse.get() == nullptr || keyboard.get() == nullptr)
+	if (pModel == nullptr || mouse == nullptr || keyboard == nullptr || pView == nullptr)
 	{
 		return false;
 	}

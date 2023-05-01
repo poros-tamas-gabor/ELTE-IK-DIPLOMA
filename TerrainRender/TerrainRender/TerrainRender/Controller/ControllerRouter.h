@@ -37,8 +37,8 @@ public:
 	virtual bool IsActive() const  override;
 	virtual void Shutdown() override;
 
-	void AddController(IControllerPtr controller);
-	void RemoveController(IControllerPtr controller);
+	bool AddController(IControllerPtr controller);
+	bool RemoveController(IControllerPtr controller);
 
 private:
 	void SetMessageSystem(ControllerMessageSystemPtr messageSystem);

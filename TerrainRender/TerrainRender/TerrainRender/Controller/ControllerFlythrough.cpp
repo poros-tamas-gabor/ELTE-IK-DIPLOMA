@@ -140,7 +140,7 @@ bool ControllerFlythrough::IsActive() const
 
 bool ControllerFlythrough::Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse, KeyboardPtr keyboard)
 {
-	if (pModel.get() == nullptr || mouse.get() == nullptr || keyboard.get() == nullptr )
+	if (pModel == nullptr || mouse == nullptr || keyboard == nullptr || pView == nullptr)
 	{
 		return false;
 	}

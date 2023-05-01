@@ -4,9 +4,9 @@
 ControllerRouter::ControllerRouter() : m_isActive(true)
 {
 	m_messageSystem = std::make_shared<ControllerMessageSystem>(m_controllers);
-	m_terrainModel = NULL;
-	m_mouse = NULL;
-	m_keyboard = NULL;
+	m_terrainModel	= nullptr;
+	m_mouse			= nullptr;
+	m_keyboard		= nullptr;
 }
 
 void ControllerRouter::SetMessageSystem(ControllerMessageSystemPtr) {}
@@ -30,7 +30,7 @@ void ControllerRouter::SetKeyboard(KeyboardPtr keyboard)
 
 bool ControllerRouter::Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse, KeyboardPtr keyboard)
 {
-	if (pModel.get() == nullptr || mouse.get() == nullptr || keyboard.get() == nullptr )
+	if (pModel == nullptr || mouse == nullptr || keyboard == nullptr || pView == nullptr)
 	{
 		return false;
 	}
@@ -60,17 +60,30 @@ bool ControllerRouter::IsActive() const
 	return this->m_isActive;
 }
 
-void ControllerRouter::AddController(IControllerPtr controller)
+bool ControllerRouter::AddController(IControllerPtr controller)
 {
-	controller->SetMessageSystem(m_messageSystem);
-	this->m_controllers.push_back(controller);
+	if (controller == nullptr)
+		return false;
+	if (std::find(this->m_controllers.begin(), this->m_controllers.end(), controller) != this->m_controllers.end())
+	{
+		return false;
+	}
+	else {
+		controller->SetMessageSystem(m_messageSystem);
+		this->m_controllers.push_back(controller);
+		return true;
+	}
 }
-void ControllerRouter::RemoveController(IControllerPtr controller)
+bool ControllerRouter::RemoveController(IControllerPtr controller)
 {
+	if (controller == nullptr)
+		return false;
 	auto it = std::find(m_controllers.begin(), m_controllers.end(), controller);
 	if (it != m_controllers.end()) {
 		m_controllers.erase(it);
+		return true;
 	}
+	return false;
 }
 
 void ControllerRouter::HandleIModelState(const MeshGroupState& states)

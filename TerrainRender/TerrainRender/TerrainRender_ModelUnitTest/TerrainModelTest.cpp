@@ -51,9 +51,6 @@ TEST_F(TerrainModelTest, Resize)
 	ASSERT_TRUE(m_terrainModel->Resize(1024, 768));
 }
 
-
-
-// 
 //	IDM_FLYTHROUGH_NEXT_FRAME,
 //	IDM_FLYTHROUGH_START_POSITION,
 //	IDM_FLYTHROUGH_STOP,
@@ -69,7 +66,7 @@ TEST_F(TerrainModelTest, Resize)
 //
 //	IDM_CLEAR_TRAJECTORY,
 //	IDM_CLEAR_MESHES
-//};
+
 
 
 TEST_F(TerrainModelTest, HandleMessage_IDM_INVALID)
@@ -331,9 +328,5 @@ TEST_F(TerrainModelTest, HandleMessage_IDM_MESH_GROUP)
 
 	ASSERT_EQ(expectedTranslation, m_subscriber->m_TerrainsState.translation);
 }
-
-//	IDM_XZ_PLANE_GRID_SET_ISSEEN,
-//	IDM_PIXELSHADER_SET_SHADING,
-
 
 

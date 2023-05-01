@@ -30,7 +30,7 @@ public:
 	bool Initialize(const std::vector<CameraPose>& cameraPoses, IRendarablePtr<VertexPolyLine>  renderable, CameraPtr camera);
 
 	bool IsInitialized(void) const;
-	bool UpdateCamera(double elapsedmsecs);
+	bool UpdateCamera(float elapsedmsecs);
 	void ResetStartPosition();
 	void Clear();
 	void Shutdown();

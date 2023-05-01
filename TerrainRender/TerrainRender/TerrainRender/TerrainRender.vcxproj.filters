@@ -180,7 +180,7 @@
     <ClCompile Include="Model\Persistence\ReadSTLChunk.cpp">
       <Filter>Source Files\Model\Persistence</Filter>
     </ClCompile>
-    <ClCompile Include="Controller\ContollerFlythrough.cpp">
+    <ClCompile Include="Controller\ControllerFlythrough.cpp">
       <Filter>Source Files\Controller</Filter>
     </ClCompile>
     <ClCompile Include="Controller\Controller3DExplore.cpp">

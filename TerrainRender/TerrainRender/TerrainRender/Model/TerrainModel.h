@@ -25,7 +25,7 @@
 class TerrainModel : public IModel
 {
 private:
-	LLACoordinate								m_llacoordinate = { 47.497913 , 19.040236 };
+	LLACoordinate								m_llacoordinate = { 47.497913f , 19.040236f };
 
 	IVertexShaderPtr							m_vertexShaderMesh;
 	PixelShaderMeshPtr							m_pixelShaderMesh;

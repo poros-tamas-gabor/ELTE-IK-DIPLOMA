@@ -35,7 +35,7 @@ unsigned BinaryFileDataAccessAsync::GetNumTriangles_stlBin(const std::wstring& f
 
     // Get the size of the file
     file.seekg(0, std::ios::end);
-    int fileSize = file.tellg();
+    unsigned fileSize = file.tellg();
     file.seekg(0, std::ios::beg);
 
     // Read the number of triangles
@@ -293,8 +293,8 @@ void BinaryFileDataAccessAsync::LoadCameraTrajectory(const wchar_t* filepath, st
 
 void from_json(const nlohmann::json& json, LLACoordinate& data)
 {
-    data.latitude = json.at("latitude").get<double>();
-    data.longitude = json.at("longitude").get<double>();
+    data.latitude = json.at("latitude").get<float>();
+    data.longitude = json.at("longitude").get<float>();
 }
 
 Vector3D to_Vector3D(const std::vector<float>& stdvec)

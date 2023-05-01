@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TerrainRender", "TerrainRen
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TerrainRender_ModelUnitTest", "TerrainRender_ModelUnitTest\TerrainRender_ModelUnitTest.vcxproj", "{AD0236D9-61E1-4A67-ACF7-D9123E0B39AF}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TerrainRender_ControllerUnitTest", "TerrainRender_ControllerUnitTest\TerrainRender_ControllerUnitTest.vcxproj", "{947B4C03-4F91-4403-85E6-62BEDFBBD571}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{AD0236D9-61E1-4A67-ACF7-D9123E0B39AF}.Release|x64.Build.0 = Release|x64
 		{AD0236D9-61E1-4A67-ACF7-D9123E0B39AF}.Release|x86.ActiveCfg = Release|Win32
 		{AD0236D9-61E1-4A67-ACF7-D9123E0B39AF}.Release|x86.Build.0 = Release|Win32
+		{947B4C03-4F91-4403-85E6-62BEDFBBD571}.Debug|x64.ActiveCfg = Debug|x64
+		{947B4C03-4F91-4403-85E6-62BEDFBBD571}.Debug|x64.Build.0 = Debug|x64
+		{947B4C03-4F91-4403-85E6-62BEDFBBD571}.Debug|x86.ActiveCfg = Debug|Win32
+		{947B4C03-4F91-4403-85E6-62BEDFBBD571}.Debug|x86.Build.0 = Debug|Win32
+		{947B4C03-4F91-4403-85E6-62BEDFBBD571}.Release|x64.ActiveCfg = Release|x64
+		{947B4C03-4F91-4403-85E6-62BEDFBBD571}.Release|x64.Build.0 = Release|x64
+		{947B4C03-4F91-4403-85E6-62BEDFBBD571}.Release|x86.ActiveCfg = Release|Win32
+		{947B4C03-4F91-4403-85E6-62BEDFBBD571}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -35,8 +35,6 @@ bool PixelShaderPolyLine::InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device> 
 {
 	HRESULT								result;
 	Microsoft::WRL::ComPtr<ID3D10Blob>	pixelShaderBuffer = nullptr;
-	unsigned int						numElements;
-	D3D11_BUFFER_DESC					lightBufferDesc;
 	UINT								flags = D3DCOMPILE_ENABLE_STRICTNESS;
 
 	std::wstring shaderfolder = L"";

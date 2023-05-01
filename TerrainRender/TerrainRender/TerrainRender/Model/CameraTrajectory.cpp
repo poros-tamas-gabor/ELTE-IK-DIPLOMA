@@ -13,7 +13,7 @@ bool CameraTrajectory::Initialize(const std::vector<CameraPose>& cameraPoses, IR
 	this->m_start = cameraPoses.at(0).epochtime;
 	for (const CameraPose& camerapose : cameraPoses)
 	{
-		double elapsedMsec = camerapose.epochtime.diffInMillis(m_start);
+		float elapsedMsec = static_cast<float>(camerapose.epochtime.diffInMillis(m_start));
 		this->m_elapsedmsecs.push_back(elapsedMsec);
 		this->m_positions.push_back({ (float)camerapose.east,-(float)camerapose.down,(float)camerapose.north });
 		this->m_rotations.push_back({ -(float)camerapose.pitch, (float)camerapose.yaw, -(float)camerapose.roll });
@@ -89,7 +89,7 @@ Vector3D  CameraTrajectory::TransformRotation(const Vector3D& vector) const
 	return { pitch,yaw, roll };
 }
 
-bool CameraTrajectory::UpdateCamera(double elapsedmsec)
+bool CameraTrajectory::UpdateCamera(float elapsedmsec)
 {
 	THROW_TREXCEPTION_IF_FAILED((m_camera != nullptr), L"Null pointer exception");
 

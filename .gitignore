@@ -13,3 +13,6 @@ File/Wikipedia_puzzle_globe_3D_render.stl
 TerrainRender/TerrainRender/TerrainRender_ModelUnitTest/x64/*
 TerrainRender/TerrainRender/TerrainRender_ModelUnitTest/Win32/*
 TerrainRender/TerrainRender/TerrainRender_ModelUnitTest/Debug/*
+TerrainRender/TerrainRender/TerrainRender_ControllerUnitTest/x64/*
+TerrainRender/TerrainRender/TerrainRender_ControllerUnitTest/Win32/*
+TerrainRender/TerrainRender/TerrainRender_ControllerUnitTest/Debug/*

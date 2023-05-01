@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-void OpenFileDialog(wchar_t* filePath, unsigned buffer, const wchar_t* filter);
+void OpenFileDialog(std::wstring& filePath, const wchar_t* filter);
 void OpenFileDialogDirectory(std::wstring& directory);
 void OpenFileDialogMultipleSelection(std::vector<std::wstring>& files, const wchar_t* filter);
 

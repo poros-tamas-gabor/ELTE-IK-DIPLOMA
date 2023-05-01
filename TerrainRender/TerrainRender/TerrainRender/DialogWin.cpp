@@ -2,9 +2,9 @@
 #include <commdlg.h>
 #include <shlobj_core.h>
 
-void OpenFileDialog(wchar_t* filePath, unsigned buffer, const wchar_t* filter)
+void OpenFileDialog(std::wstring& filePathstr, const wchar_t* filter)
 {
-	//wchar_t filePath[260];      // buffer for file name
+	wchar_t filePath[260];      // buffer for file name
 	OPENFILENAME ofn;			// common dialog box structure
 	HWND hwnd = NULL;           // owner window
 
@@ -18,7 +18,7 @@ void OpenFileDialog(wchar_t* filePath, unsigned buffer, const wchar_t* filter)
 	// use the contents of szFile to initialize itself.
 	//
 	ofn.lpstrFile[0] = '\0';
-	ofn.nMaxFile = sizeof(wchar_t) * buffer;
+	ofn.nMaxFile = sizeof(wchar_t) * 260;
 	ofn.lpstrFilter = filter;//fileFilter.c_str();
 	ofn.nFilterIndex = 1;
 	ofn.lpstrFileTitle = NULL;
@@ -29,7 +29,7 @@ void OpenFileDialog(wchar_t* filePath, unsigned buffer, const wchar_t* filter)
 	// Display the Open dialog box. 
 	if (GetOpenFileName(&ofn) == TRUE)
 	{
-		OutputDebugStringW(filePath);
+		filePathstr = filePath;
 	}
 }
 

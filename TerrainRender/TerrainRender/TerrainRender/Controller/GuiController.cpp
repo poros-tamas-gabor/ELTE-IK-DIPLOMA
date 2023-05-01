@@ -6,6 +6,7 @@
 #include "../ProgressBar.h"
 #include "Tasks.h"
 #include "../DialogWin.h"
+#include "../ErrorHandler.h"
 
 
 GuiController::GuiController()
@@ -26,135 +27,131 @@ void GuiController::StartWorkerThread(const ICallableCreator& creator, std::atom
 {
 	ICallablePtr process = creator.Create();
 	std::thread worker(std::ref(*process));
-	ProgressBar pb(running);
+	//ProgressBar pb(running);
 	if (worker.joinable())
 	{
-		pb.Run();
+		//pb.Run();
 		worker.join();
 	}
 }
 
 bool GuiController::HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparam, const std::vector<unsigned>& uparam)
 {
-	IModelMessageIDs modelmsg = IDC2IDM(message);
-	switch (message)
-	{
+	try {
+		IModelMessageIDs modelmsg = IDC2IDM(message);
+		switch (message)
+		{
+		case IDMENU_FIlE_TERRAIN_SHARP:
+		case IDMENU_FIlE_TERRAIN_SOFT:
+		case IDMENU_FIlE_CAMERA_TRAJECTORY:
+		case IDMENU_FIlE_CONFIGURATION:
+		{
+			const wchar_t* filter = nullptr;
+			if (message == IDMENU_FIlE_TERRAIN_SHARP || message == IDMENU_FIlE_TERRAIN_SOFT)
+				filter = m_filter_stl;
+			else if (message == IDMENU_FIlE_CAMERA_TRAJECTORY)
+				filter = m_filter_csv;
+			else if (message == IDMENU_FIlE_CONFIGURATION)
+				filter = m_filter_json;
+			std::wstring filePath;
+			OpenFileDialog(filePath, filter);
+			if (!filePath.empty())
+				return m_terrainModel->HandleMessage(modelmsg, { filePath }, fparam, uparam);
+			return false;
+		}
+		case IDMENU_FIlE_TERRAIN_PROJECT_SHARP:
+		case IDMENU_FIlE_TERRAIN_PROJECT_SOFT:
+		{
+			std::vector<std::wstring> files;
+			OpenFileDialogMultipleSelection(files, m_filter_stl);
+			return m_terrainModel->HandleMessage(modelmsg, files, fparam, uparam);
+		}
 
-	case IDMENU_FIlE_TERRAIN_SHARP:
-	{
-		wchar_t filePath[260];
-		OpenFileDialog(filePath, 260, m_filter_stl);
-		std::wstring filepathwstr(filePath);
-		if (!filepathwstr.empty())
-			return m_terrainModel->HandleMessage(modelmsg, { filepathwstr }, fparam, uparam);
-		return false;
-	}
-	case IDMENU_FIlE_TERRAIN_SOFT:
-	{
-		wchar_t filePath[260];
-		OpenFileDialog(filePath, 260, m_filter_stl);
+		case IDMENU_HELP:
+		{
+			m_terrainView->ShowHelp();
+			return true;
+		}
 
-		std::wstring filepathwstr(filePath);
-		if (!filepathwstr.empty())
-			return m_terrainModel->HandleMessage(modelmsg, { filepathwstr }, fparam, uparam);
-		return false;
-	}
-	case IDMENU_FIlE_CAMERA_TRAJECTORY:
-	{
-		wchar_t filePath[260];
-		OpenFileDialog(filePath, 260, m_filter_csv);
-		std::wstring filepathwstr(filePath);
-		if (!filepathwstr.empty())
-			return m_terrainModel->HandleMessage(modelmsg, { filepathwstr }, fparam, uparam);
-		return false;
-	}
-	case IDMENU_FIlE_TERRAIN_PROJECT_SHARP:
-	{
-		std::vector<std::wstring> files;
-		OpenFileDialogMultipleSelection(files, m_filter_stl);
-		return m_terrainModel->HandleMessage(modelmsg, files, fparam, uparam);
-	}
+		case IDMENU_WINDOWS_EXPLORE3D:
+		{
+			bool isFlythroughModeOn;
+			THROW_TREXCEPTION_IF_FAILED((m_messageSystem != nullptr), L"Controller message system is not initialized");
+			isFlythroughModeOn = m_messageSystem->Publish(IDCC_IS_FLYTHROUGH_MODE_ON, {}, {});
+			if (!isFlythroughModeOn)
+				m_terrainView->ShowExplore3DWindow();
+			return !isFlythroughModeOn;
+		}
+		case IDMENU_WINDOWS_FLYTHROUGH:
+		{
+			bool isFlythroughModeOn;
+			THROW_TREXCEPTION_IF_FAILED((m_messageSystem != nullptr), L"Controller message system is not initialized");
+			isFlythroughModeOn = m_messageSystem->Publish(IDCC_IS_FLYTHROUGH_MODE_ON, {}, {});
+			if (isFlythroughModeOn)
+				m_terrainView->ShowFlythroughWindow();
+			return isFlythroughModeOn;
+		}
+		case IDMENU_WINDOWS_GENERAL:
+		{
+			m_terrainView->ShowGeneralWindow();
+			return true;
+		}
+		case IDMENU_FILE_OUTPUT_DIRECTORY:
+		{
+			std::wstring dir;
+			OpenFileDialogDirectory(dir);
+			m_terrainView->SetOutputDirectory(dir);
+			return true;
+		}
+		case IDC_BUTTON_CLEAR_TRAJECTORY:
+		{
+			THROW_TREXCEPTION_IF_FAILED((m_messageSystem != nullptr), L"Controller message system is not initialized");
+			m_messageSystem->Publish(IDC_ACTIVATE_3DEXPLORE_MODE, fparam, uparam);
+			return m_terrainModel->HandleMessage(modelmsg, {}, fparam, uparam);
+		}
 
-	case IDMENU_FIlE_TERRAIN_PROJECT_SOFT:
+		case IDC_SET_CAMERA_FIELD_OF_VIEW:
+		case IDC_SET_CAMERA_NEAR_SCREEN:
+		case IDC_SET_CAMERA_FAR_SCREEN:
+		case IDC_MESH_SET_ISSEEN:
+		case IDC_MESH_SET_COLOR:
+		case IDC_MESH_GROUP_SCALE:
+		case IDC_MESH_GROUP_ROTATION:
+		case IDC_MESH_GROUP_TRANSLATION:
+		case IDC_TRAJECTORY_SET_ISSEEN:
+		case IDC_TRAJECTORY_ROTATION:
+		case IDC_TRAJECTORY_TRANSLATION:
+		case IDC_BUTTON_CLEAR_MESHES:
+		case IDC_SET_TIME_E3D:
+		case IDC_SET_START_TIME_TRAJECTORY:
+		case IDC_ORIGO_SET_LONGITUDE:
+		case IDC_ORIGO_SET_LATITUDE:
+		case IDC_XZ_PLANE_GRID_SET_ISSEEN:
+		case IDC_PIXELSHADER_SET_SHADING:
+		{
+			return m_terrainModel->HandleMessage(modelmsg, {}, fparam, uparam);
+		}
+		default:
+			return true;
+		}
+	}
+	catch (const COMException& e)
 	{
-		std::vector<std::wstring> files;
-		OpenFileDialogMultipleSelection(files, m_filter_stl);
-		return m_terrainModel->HandleMessage(modelmsg, files, fparam, uparam);
+		ErrorHandler::Log(e);
 	}
-	case IDMENU_FIlE_CONFIGURATION:
+	catch (const TRException& e)
 	{
-		wchar_t filePath[260];
-		OpenFileDialog(filePath, 260, m_filter_json);
-		std::wstring filepathwstr(filePath);
-		if (!filepathwstr.empty())
-			return m_terrainModel->HandleMessage(modelmsg, { filepathwstr }, fparam, uparam);
-		return false;
+		ErrorHandler::Log(e);
 	}
-
-	case IDMENU_HELP:
+	catch (const std::exception& e)
 	{
-		m_terrainView->ShowHelp();
-		return true;
+		ErrorHandler::Log(e);
 	}
-
-	case IDMENU_WINDOWS_EXPLORE3D:
+	catch (...)
 	{
-		bool isFlythroughModeOn;
-		isFlythroughModeOn = m_messageSystem->Publish(IDCC_IS_FLYTHROUGH_MODE_ON, {}, {});
-		if (!isFlythroughModeOn)
-			m_terrainView->ShowExplore3DWindow();
-		return !isFlythroughModeOn;
+		ErrorHandler::Log("Unknown Exceptio: No details available");
 	}
-	case IDMENU_WINDOWS_FLYTHROUGH:
-	{
-		bool isFlythroughModeOn;
-		isFlythroughModeOn = m_messageSystem->Publish(IDCC_IS_FLYTHROUGH_MODE_ON, {}, {});
-		if(isFlythroughModeOn)
-			m_terrainView->ShowFlythroughWindow();
-		return isFlythroughModeOn;
-	}
-	case IDMENU_WINDOWS_GENERAL:
-	{
-		m_terrainView->ShowGeneralWindow();
-		return true;
-	}
-	case IDMENU_FILE_OUTPUT_DIRECTORY:
-	{
-		std::wstring dir;
-		OpenFileDialogDirectory(dir);
-		m_terrainView->SetOutputDirectory(dir);
-		return true;
-	}
-	case IDC_BUTTON_CLEAR_TRAJECTORY:
-	{
-		m_messageSystem->Publish(IDC_ACTIVATE_3DEXPLORE_MODE, fparam, uparam);
-		return m_terrainModel->HandleMessage(modelmsg, {}, fparam, uparam);
-	}
-
-	case IDC_SET_CAMERA_FIELD_OF_VIEW:
-	case IDC_SET_CAMERA_NEAR_SCREEN:
-	case IDC_SET_CAMERA_FAR_SCREEN:
-	case IDC_MESH_SET_ISSEEN:
-	case IDC_MESH_SET_COLOR:
-	case IDC_MESH_GROUP_SCALE:
-	case IDC_MESH_GROUP_ROTATION:
-	case IDC_MESH_GROUP_TRANSLATION:
-	case IDC_TRAJECTORY_SET_ISSEEN:
-	case IDC_TRAJECTORY_ROTATION:
-	case IDC_TRAJECTORY_TRANSLATION:
-	case IDC_BUTTON_CLEAR_MESHES:
-	case IDC_SET_TIME_E3D:
-	case IDC_SET_START_TIME_TRAJECTORY:
-	case IDC_ORIGO_SET_LONGITUDE:
-	case IDC_ORIGO_SET_LATITUDE:
-	case IDC_XZ_PLANE_GRID_SET_ISSEEN:
-	case IDC_PIXELSHADER_SET_SHADING:
-	{
-		return m_terrainModel->HandleMessage(modelmsg, {}, fparam, uparam);
-	}
-	default:
-		return true;
-	}
+	return false;
 }
 
 void GuiController::SetTerrainView(IViewPtr pView)

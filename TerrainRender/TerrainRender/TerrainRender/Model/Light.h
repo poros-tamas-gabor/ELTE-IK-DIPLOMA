@@ -12,8 +12,8 @@ private:
 	DirectX::XMFLOAT4 _diffuseColor = {0.6f, 0.6f, 0.6f, 1.0f};
 	DirectX::XMFLOAT4 _inverseDirection = {1.0f, 1.0f, 1.0f, 1.0f};
 
-	double m_azimuth;
-	double m_elevation;
+	float m_azimuth;
+	float m_elevation;
 
 public:
 	Light() = default;
@@ -21,7 +21,7 @@ public:
 	Light(const Light&) = delete;
 	Light& operator=(const Light&) = delete;
 
-	void UpdateSunPosition(std::time_t currentEpochTime, double lat, double longitude);
+	void UpdateSunPosition(std::time_t currentEpochTime, float lat, float longitude);
 
 	void SetDiffuseColor(const DirectX::XMFLOAT4& diffuseColor);
 	void SetAmbientColor(const DirectX::XMFLOAT4& ambientColor);
@@ -29,10 +29,10 @@ public:
 	DirectX::XMFLOAT4	GetDiffuseColor( void ) const;
 	DirectX::XMFLOAT4	GetAmbientColor( void ) const;
 	DirectX::XMFLOAT4	GetInverseDirection( void ) const;
-	double				GetAzimuth(void) const;
-	double				GetElevation(void) const;
+	float				GetAzimuth(void) const;
+	float				GetElevation(void) const;
 private:
-	void SetInverseDirectionBySunPosition(double azimuth, double elevation);
+	void SetInverseDirectionBySunPosition(float azimuth, float elevation);
 
 };
 

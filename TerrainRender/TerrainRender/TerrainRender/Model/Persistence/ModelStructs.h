@@ -107,7 +107,7 @@ void Vector4DtoCArray(float array[], Vector4D floats);
 // For soft edges
 struct CornerIndices
 {
-	size_t corner[3];
+	unsigned long corner[3];
 };
 
 typedef std::vector<CornerIndices> IndicesVec;

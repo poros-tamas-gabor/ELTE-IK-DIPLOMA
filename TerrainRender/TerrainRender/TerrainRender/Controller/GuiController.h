@@ -40,12 +40,7 @@ public:
 	void HandleIModelState(const GeneralModelState&) override;
 
 private:
-	void OpenFileDialog(wchar_t* filePath, unsigned buffer, const wchar_t* filter);
-	void OpenFileDialogDirectory(std::wstring& directory);
-	void OpenFileDialogMultipleSelection(std::vector<std::wstring>& files, const wchar_t* filter);
 	void StartWorkerThread(const ICallableCreator& creator, std::atomic_bool& running);
-
-
 	void SetMessageSystem(ControllerMessageSystemPtr messageSystem);
 };
 

@@ -222,6 +222,9 @@
     <ClCompile Include="Model\Math\IInterpolation.cpp">
       <Filter>Header Files\Model\Math</Filter>
     </ClCompile>
+    <ClCompile Include="DialogWin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -415,6 +418,9 @@
     </ClInclude>
     <ClInclude Include="Model\CameraPositioner.h">
       <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogWin.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

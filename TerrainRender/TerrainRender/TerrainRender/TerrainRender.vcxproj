@@ -155,6 +155,7 @@
     <ClCompile Include="Controller\GuiController.cpp" />
     <ClCompile Include="Controller\MessageSystem.cpp" />
     <ClCompile Include="Controller\Tasks.cpp" />
+    <ClCompile Include="DialogWin.cpp" />
     <ClCompile Include="ErrorHandler.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imguistyleserializer.cpp" />
@@ -208,6 +209,7 @@
     <ClInclude Include="Controller\IController.h" />
     <ClInclude Include="Controller\MessageSystem.h" />
     <ClInclude Include="Controller\Tasks.h" />
+    <ClInclude Include="DialogWin.h" />
     <ClInclude Include="ErrorHandler.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />

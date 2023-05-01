@@ -11,7 +11,7 @@ void Light::SetDiffuseColor(const DirectX::XMFLOAT4& diffuseColor)
 	this->_diffuseColor = diffuseColor;
 }
 
-void Light::UpdateSunPosition(std::time_t currentEpochTime, double lat, double longitude)
+void Light::UpdateSunPosition(std::time_t currentEpochTime, float lat, float longitude)
 {
 	struct tm buf;
 	gmtime_s(&buf, &currentEpochTime);
@@ -19,13 +19,13 @@ void Light::UpdateSunPosition(std::time_t currentEpochTime, double lat, double l
 	cSunCoordinates sunCoords;
 	sunpos(time, { longitude, lat }, &sunCoords);
 
-	m_azimuth = sunCoords.dAzimuth /180.0 * pi;
-	m_elevation = pi / 2 - (sunCoords.dZenithAngle / 180.0 * pi);
+	m_azimuth = static_cast<float>(sunCoords.dAzimuth /180.0 * pi);
+	m_elevation = static_cast<float>(pi / 2 - (sunCoords.dZenithAngle / 180.0 * pi));
 
 	SetInverseDirectionBySunPosition(m_azimuth, m_elevation);
 }
 
-void Light::SetInverseDirectionBySunPosition(double azimuth, double elevation)
+void Light::SetInverseDirectionBySunPosition(float azimuth, float elevation)
 {
 	float rotXRad = -elevation;
 	float rotYRad = azimuth;
@@ -50,11 +50,11 @@ DirectX::XMFLOAT4 Light::GetInverseDirection(void) const
 	return this->_inverseDirection;
 }
 
-double Light::GetAzimuth(void) const
+float Light::GetAzimuth(void) const
 {
 	return m_azimuth;
 }
-double Light::GetElevation(void) const
+float Light::GetElevation(void) const
 {
 	return m_elevation;
 }

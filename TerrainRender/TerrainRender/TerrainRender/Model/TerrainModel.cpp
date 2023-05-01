@@ -386,7 +386,7 @@ bool TerrainModel::LoadTerrain_withSoftEdges(const std::wstring& filepath)
 	UINT									vertexCount;
 	UINT									indexCount;
 	std::vector<VertexMesh>					verticesMesh;
-	std::vector<unsigned long>						indices;
+	std::vector<unsigned long>				indices;
 	unsigned long* pIndices;
 
 	m_persistence->LoadTerrain_withSoftEdges(filepath.c_str());
@@ -396,7 +396,7 @@ bool TerrainModel::LoadTerrain_withSoftEdges(const std::wstring& filepath)
 	{
 		for (int i = 0; i < 3; i++)
 		{
-			const size_t& index = facet.corner[2 - i];
+			const unsigned long& index = facet.corner[2 - i];
 			indices.push_back(index);
 		}
 	}

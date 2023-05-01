@@ -10,7 +10,7 @@
 #include "../TerrainRender/Input/Mouse.cpp"
 #include "../TerrainRender/Model/Persistence/EpochTime.cpp"
 #include "../TerrainRender/Model/Persistence/ModelStructs.cpp"
-//#include "../TerrainRender/Controller/Controller3DExplore.cpp"
+#include "../TerrainRender/Controller/Controller3DExplore.cpp"
 #include "../TerrainRender/Controller/ControllerFlythrough.cpp"
 #include "../TerrainRender/Controller/GuiController.cpp"
 #include "../TerrainRender/Controller/MessageSystem.cpp"

@@ -56,6 +56,30 @@ TEST_F(ControllerGuiTest, HandleMessage)
 	ASSERT_TRUE(m_controller.HandleMessage(IDCC_IS_FLYTHROUGH_MODE_ON, {}, {}));
 	ASSERT_TRUE((m_controller.IsActive()));
 
+	std::vector<IControllerMessageIDs> fileLoadMessages = {
+		IDMENU_FIlE_TERRAIN_SHARP,
+		IDMENU_FIlE_TERRAIN_SOFT,
+		IDMENU_FIlE_CAMERA_TRAJECTORY,
+		IDMENU_FIlE_CONFIGURATION
+	};
+	for (IControllerMessageIDs message : fileLoadMessages)
+	{
+		std::vector<std::wstring> path = { L"filepath" };
+		EXPECT_CALL(*m_mock_model, HandleMessage(IDC2IDM(message), path, testing::_, testing::_)).Times(1).WillOnce(testing::Return(true));
+		ASSERT_TRUE(m_controller.HandleMessage(message, {}, {}));
+	}
+
+	std::vector<IControllerMessageIDs> projectLoadMessages = {
+		IDMENU_FIlE_TERRAIN_PROJECT_SHARP,
+		IDMENU_FIlE_TERRAIN_PROJECT_SOFT,
+	};
+	for (IControllerMessageIDs message : projectLoadMessages)
+	{
+		std::vector<std::wstring> path = { L"path1", L"path2" };
+		EXPECT_CALL(*m_mock_model, HandleMessage(IDC2IDM(message), path, testing::_, testing::_)).Times(1).WillOnce(testing::Return(true));
+		ASSERT_TRUE(m_controller.HandleMessage(message, {}, {}));
+	}
+
 	//IDMENU_HELP
 	EXPECT_CALL(*m_mock_view, ShowHelp()).Times(1);
 	ASSERT_TRUE(m_controller.HandleMessage(IDMENU_HELP, {}, {}));
@@ -71,6 +95,11 @@ TEST_F(ControllerGuiTest, HandleMessage)
 	//IDMENU_WINDOWS_GENERAL
 	EXPECT_CALL(*m_mock_view, ShowGeneralWindow()).Times(1);
 	ASSERT_TRUE(m_controller.HandleMessage(IDMENU_WINDOWS_GENERAL, {}, {}));
+
+	//IDMENU_FILE_OUTPUT_DIRECTORY
+	std::wstring dirpath = L"directoryPath";
+	EXPECT_CALL(*m_mock_view, SetOutputDirectory(dirpath)).Times(1);
+	ASSERT_TRUE(m_controller.HandleMessage(IDMENU_FILE_OUTPUT_DIRECTORY, {}, {}));
 
 	std::vector<IControllerMessageIDs> messsages = {
 		IDC_SET_CAMERA_FIELD_OF_VIEW,

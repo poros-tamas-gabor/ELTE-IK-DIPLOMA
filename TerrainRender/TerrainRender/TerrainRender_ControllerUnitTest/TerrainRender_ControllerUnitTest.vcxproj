@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\packages\gmock.1.11.0\lib\native\src\gtest\src\gtest_main.cc" />
+    <ClCompile Include="ControllerExplore3DUnitTest.cpp" />
     <ClCompile Include="ControllerFlythroughUnitTest.cpp" />
     <ClCompile Include="ControllerRouterUnitTest.cpp" />
     <ClCompile Include="ControllerGuiUnitTest.cpp" />

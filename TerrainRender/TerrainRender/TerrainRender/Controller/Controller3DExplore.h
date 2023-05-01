@@ -16,9 +16,7 @@ private:
 	MousePtr							m_mouse;
 	KeyboardPtr							m_keyboard;
 	ControllerMessageSystemPtr			m_messageSystem;
-
-	bool					m_isActive = true;
-
+	bool								m_isActive = true;
 
 public:
 	Controller3DExplore();

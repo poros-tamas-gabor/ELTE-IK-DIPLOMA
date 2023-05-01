@@ -11,13 +11,13 @@
 class ControllerRouter : public IController
 {
 private:
-	ControllerMessageSystemPtr	m_messageSystem;
-	std::vector<IControllerPtr>	m_controllers;
-	IModelPtr					m_terrainModel;
-	IViewPtr					m_terrainView;
-	MousePtr					m_mouse;
-	KeyboardPtr					m_keyboard;
-	bool						m_isActive;
+	ControllerMessageSystemPtr		m_messageSystem;
+	std::vector<IControllerPtr>		m_controllers;
+	IModelPtr						m_terrainModel;
+	IViewPtr						m_terrainView;
+	MousePtr						m_mouse;
+	KeyboardPtr						m_keyboard;
+	bool							m_isActive = true;
 
 public:
 	ControllerRouter();
@@ -42,7 +42,6 @@ public:
 
 private:
 	void SetMessageSystem(ControllerMessageSystemPtr messageSystem);
-
 };
 
 typedef std::shared_ptr<ControllerRouter> CompositeControllerPtr;

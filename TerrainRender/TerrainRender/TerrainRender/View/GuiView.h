@@ -49,7 +49,7 @@ private:
 	MeshGroupState							m_TerrainsState;
 	FlythroughState							m_flythroughState;
 	Explore3DState							m_explore3dState;
-	GeneralModelState								m_generalState;
+	GeneralModelState						m_generalState;
 	int										m_frame;
 	bool									m_show_HelpWindow = false;
 	bool									m_show_GeneralWin = true;

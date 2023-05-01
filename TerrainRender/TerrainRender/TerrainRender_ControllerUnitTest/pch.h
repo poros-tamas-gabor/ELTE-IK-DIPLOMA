@@ -3,7 +3,7 @@
 //
 
 #pragma once
-
+#define _GTEST
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 
@@ -14,3 +14,10 @@
 #include "../TerrainRender/Controller/GuiController.h"
 #include "../TerrainRender/Controller/MessageSystem.h"
 #include "../TerrainRender/Controller/Tasks.h"
+
+#include "../TerrainRender/resource.h"
+#include "../TerrainRender/App.h"
+#include "../TerrainRender/COMException.h"
+#include "../TerrainRender/ErrorHandler.h"
+#include "../TerrainRender/RenderWindow.h"
+#include "../TerrainRender/StringConverter.h"

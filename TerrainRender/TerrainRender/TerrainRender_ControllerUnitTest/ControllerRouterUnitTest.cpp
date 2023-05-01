@@ -2,22 +2,23 @@
 
 class ControllerRouterTest : public ::testing::Test {
 protected:
-	std::shared_ptr<MockIModel>					m_mock_model;
-	std::shared_ptr<MockIView>					m_mock_view;
-	std::shared_ptr<MockKeyboard>				m_mock_keyboard;
-	std::shared_ptr<MockMouse>					m_mock_mouse;
-	ControllerRouter							m_controller;
+	std::shared_ptr<MockIModel>						m_mock_model;
+	std::shared_ptr<MockIView>						m_mock_view;
+	std::shared_ptr<MockKeyboard>					m_mock_keyboard;
+	std::shared_ptr<MockMouse>						m_mock_mouse;
+	ControllerRouter								m_controller;
 
 	void SetUp() override {
 
-		m_mock_model	= std::make_shared<MockIModel>();
-		m_mock_view		= std::make_shared<MockIView>();
-		m_mock_keyboard = std::make_shared<MockKeyboard>();
-		m_mock_mouse	= std::make_shared<MockMouse>();
+		m_mock_model			= std::make_shared<MockIModel>();
+		m_mock_view				= std::make_shared<MockIView>();
+		m_mock_keyboard			= std::make_shared<MockKeyboard>();
+		m_mock_mouse			= std::make_shared<MockMouse>();
 
 		ASSERT_TRUE((m_controller.Initialize(m_mock_model, m_mock_view, m_mock_mouse, m_mock_keyboard)));
 	}
 };
+
 
 TEST_F(ControllerRouterTest, Initialize)
 {

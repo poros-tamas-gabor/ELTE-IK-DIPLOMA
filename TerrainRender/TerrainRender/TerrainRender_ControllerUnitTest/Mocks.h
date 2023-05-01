@@ -97,3 +97,6 @@ public:
     MOCK_METHOD(void, ClearMouseEventBuffer, (), ());
     MOCK_METHOD(void, ClearMouseState, (), ());
 };
+
+
+

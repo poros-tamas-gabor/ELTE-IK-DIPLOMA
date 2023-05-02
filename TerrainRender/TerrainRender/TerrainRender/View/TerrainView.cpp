@@ -106,6 +106,61 @@ bool TerrainView::RenderFrame()
 
 }
 
+bool TerrainView::HandleMessage(IViewMessageIDs message, const std::vector<std::wstring>& stringParams, const std::vector<float>& fparams, const std::vector<unsigned>& uparams)
+{
+	try
+	{
+		switch (message)
+		{
+		case IDV_INVALID:
+			return false;
+		case IDV_SET_OUTPUT_DIRECTORY:
+			SetOutputDirectory(stringParams.at(0));
+			return true;
+		case IDV_SHOW_HELP:
+			ShowHelp();
+			return true;
+		case IDV_SHOW_GENERAL:
+			ShowGeneralWindow();
+			return true;
+		case IDV_SHOW_FLYTHROUGH:
+			ShowFlythroughWindow();
+			return true;
+		case IDV_SHOW_EXPLORE3D:
+			ShowExplore3DWindow();
+			return true;
+		case IDV_CAPTURE_SCREEN:
+			return CaptureScreen(uparams.at(0));
+		case IDV_FLYTHROUGH_RECORD_START:
+			m_guiView.SetIsRecordingOn(true);
+			return true;
+		case IDV_FLYTHROUGH_RECORD_STOP:
+			m_guiView.SetIsRecordingOn(false);
+			return true;
+		default:
+			return true;
+		}
+	}
+	catch (const COMException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const TRException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const std::exception& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (...)
+	{
+		ErrorHandler::Log("Unknown Exceptio: No details available");
+	}
+	return false;
+}
+
+
 bool TerrainView::CaptureScreen(unsigned frameNum)
 {
 	try

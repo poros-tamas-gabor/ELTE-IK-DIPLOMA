@@ -1,117 +1,150 @@
 #include "ControllerFlythrough.h"
 #include "../Model/TerrainModel.h"
+#include "../ErrorHandler.h"
 #include "../resource.h"
 
 
-ControllerFlythrough::ControllerFlythrough()
-{
-
-}
+ControllerFlythrough::ControllerFlythrough() {}
 
 void ControllerFlythrough::SetMessageSystem(ControllerMessageSystemPtr messageSystem)
 {
 	m_messageSystem = messageSystem;
 }
 
-
-
 bool ControllerFlythrough::HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparams, const std::vector<unsigned>& uparams)
 {
-	switch (message)
-	{
-	case IDCC_IS_FLYTHROUGH_MODE_ON:
-	{
-		return IsActive();
-	}
-	case IDC_ACTIVATE_3DEXPLORE_MODE:
-	{
-		this->m_isActive = false;
-		this->m_isRunning = false;
-		return true;
-	}
-	case IDC_ACTIVATE_FLYTHROUGH_MODE:
-	{
-		if (m_terrainModel->IsTrajectoryInitialized())
+	try {
+		switch (message)
 		{
-			this->m_isActive = true;
-			this->m_isRunning = false;
-			this->m_terrainModel->HandleMessage(IDM_FLYTHROUGH_START_POSITION, {}, fparams, uparams);
+		case IDCC_OUTPUT_DIR_CHOOSED:
+		{
+			m_IsOutputDirChoosed = true;
 			return true;
 		}
-		return false;
-	}
-	case IDC_FLYTHROUGH_START:
-	{
-		this->m_isRunning = true;
-		return true;
-	}
-
-	case IDC_FLYTHROUGH_PAUSE:
-	{
-		this->m_isRunning = false;
-		return true;
-	}
-	case IDC_FLYTHROUGH_STOP:
-	{
-		this->m_isRunning = false;
-		return this->m_terrainModel->HandleMessage(IDM_FLYTHROUGH_START_POSITION, {}, fparams, uparams);
-	}
-	case IDC_FLYTHROUGH_RECORD_START:
-	{
-		this->m_isRunning = true;
-		this->m_isRecording = true;
-		m_recordedPrevFrameNum = 0;
-		return true;
-	}
-	case IDC_FLYTHROUGH_RECORD_STOP:
-	{
-		this->m_isRunning = false;
-		this->m_isRecording = false;
-		return true;
-	}
-	case IDC_FLYTHROUGH_SET_SPEED:
-	case IDC_FLYTHROUGH_SET_FRAME:
-	{
-		IModelMessageIDs modelMsg = IDC2IDM(message);
-		return this->m_terrainModel->HandleMessage(modelMsg, {}, fparams, uparams);
-	}
-	case IDC_TIME_ELAPSED:
-	{
-		while (!m_keyboard->KeyBufferIsEmpty())
+		case IDCC_IS_FLYTHROUGH_MODE_ON:
 		{
-			KeyboardEvent e = m_keyboard->ReadKey();
+			return IsActive();
 		}
-		while (!m_keyboard->CharBufferIsEmpty())
+		case IDC_ACTIVATE_3DEXPLORE_MODE:
 		{
-			unsigned char c = m_keyboard->ReadChar();
+			this->m_isActive = false;
+			this->m_isRunning = false;
+			return true;
 		}
-
-		if (m_keyboard->KeyIsPressed(VK_SPACE))
+		case IDC_ACTIVATE_FLYTHROUGH_MODE:
 		{
-			m_isRunning ^= 1;
-		}
-
-		if (m_keyboard->KeyIsPressed(VK_ESCAPE))
-		{
-			m_isRunning = false;
-			return m_terrainModel->HandleMessage(IDM_FLYTHROUGH_STOP, {}, fparams, uparams);
-		}
-
-		if (m_isActive && m_isRunning)
-		{
-			if (m_isRecording && (m_recordedPrevFrameNum == 0 || m_recordedPrevFrameNum != m_flythroughState.currentFrame))
+			if (m_terrainModel->IsTrajectoryInitialized())
 			{
-				m_recordedPrevFrameNum = m_flythroughState.currentFrame;
-				this->m_terrainView->CaptureScreen(m_flythroughState.currentFrame);
+				this->m_isActive = true;
+				this->m_isRunning = false;
+				this->m_terrainModel->HandleMessage(IDM_FLYTHROUGH_START_POSITION, {}, fparams, uparams);
+				return true;
 			}
-			m_isRunning = m_terrainModel->HandleMessage(IDM_FLYTHROUGH_NEXT_FRAME, {}, fparams, uparams);
-			return m_isRunning;
+			return false;
 		}
-		return true;
+		case IDC_FLYTHROUGH_START:
+		{
+			this->m_isRunning = true;
+			return true;
+		}
+
+		case IDC_FLYTHROUGH_PAUSE:
+		{
+			this->m_isRunning = false;
+			return true;
+		}
+		case IDC_FLYTHROUGH_STOP:
+		{
+			this->m_isRunning = false;
+			return this->m_terrainModel->HandleMessage(IDM_FLYTHROUGH_START_POSITION, {}, fparams, uparams);
+		}
+		case IDC_FLYTHROUGH_RECORD_START:
+		{
+			THROW_TREXCEPTION_IF_FAILED(m_IsOutputDirChoosed, L"Screen capture failed because the output directory was not specified. To fix this, select the \"File > Set output directory\" menu item and choose the directory where you want to save the captured screen images.");
+			this->m_isRunning = true;
+			this->m_isRecording = true;
+			m_recordedPrevFrameNum = 0;
+			m_terrainView->HandleMessage(IDC2IDV(IDC_FLYTHROUGH_RECORD_START), {}, {}, {});
+			return true;
+		}
+		case IDC_FLYTHROUGH_RECORD_STOP:
+		{
+			THROW_TREXCEPTION_IF_FAILED(m_IsOutputDirChoosed, L"Screen capture failed because the output directory was not specified. To fix this, select the \"File > Set output directory\" menu item and choose the directory where you want to save the captured screen images.");
+			this->m_isRunning = false;
+			this->m_isRecording = false;
+			m_terrainView->HandleMessage(IDC2IDV(IDC_FLYTHROUGH_RECORD_STOP), {}, {}, {});
+			return true;
+		}
+		case IDC_FLYTHROUGH_SET_SPEED:
+		case IDC_FLYTHROUGH_SET_FRAME:
+		{
+			IModelMessageIDs modelMsg = IDC2IDM(message);
+			return this->m_terrainModel->HandleMessage(modelMsg, {}, fparams, uparams);
+		}
+		case IDC_TIME_ELAPSED:
+		{
+			if (!IsActive())
+				return true;
+
+			while (!m_keyboard->KeyBufferIsEmpty())
+			{
+				KeyboardEvent e = m_keyboard->ReadKey();
+				if (e.GetKeyCode() == VK_SPACE && e.IsRelease())
+				{
+					m_isRunning ^= 1;
+				}
+				if (e.GetKeyCode() == 'R' && e.IsRelease())
+				{
+					if (m_isRecording)
+						m_messageSystem->Publish(IDC_FLYTHROUGH_RECORD_STOP, fparams, uparams);
+					else
+						m_messageSystem->Publish(IDC_FLYTHROUGH_RECORD_START, fparams, uparams);
+				}
+				if (e.GetKeyCode() == VK_ESCAPE && e.IsRelease())
+				{
+					m_isRunning = false;
+					return m_terrainModel->HandleMessage(IDM_FLYTHROUGH_STOP, {}, fparams, uparams);
+				}
+
+			}
+			while (!m_keyboard->CharBufferIsEmpty())
+			{
+				unsigned char c = m_keyboard->ReadChar();
+			}
+
+			if (m_isActive && m_isRunning)
+			{
+				if (m_isRecording && (m_recordedPrevFrameNum == 0 || m_recordedPrevFrameNum != m_flythroughState.currentFrame))
+				{
+					m_recordedPrevFrameNum = m_flythroughState.currentFrame;
+					this->m_terrainView->HandleMessage(IDV_CAPTURE_SCREEN, {}, {}, { m_flythroughState.currentFrame });
+				}
+				m_isRunning = m_terrainModel->HandleMessage(IDM_FLYTHROUGH_NEXT_FRAME, {}, fparams, uparams);
+				return m_isRunning;
+			}
+			return true;
+		}
+		default:
+			return true;
+		}
 	}
-	default:
-		return true;
+	catch (const COMException& e)
+	{
+		ErrorHandler::Log(e);
 	}
+	catch (const TRException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const std::exception& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (...)
+	{
+		ErrorHandler::Log("Unknown Exceptio: No details available");
+	}
+	return false;
 
 }
 

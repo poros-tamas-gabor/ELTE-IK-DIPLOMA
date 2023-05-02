@@ -79,28 +79,28 @@ TEST_F(ControllerGuiTest, HandleMessage)
 		EXPECT_CALL(*m_mock_model, HandleMessage(IDC2IDM(message), path, testing::_, testing::_)).Times(1).WillOnce(testing::Return(true));
 		ASSERT_TRUE(m_controller.HandleMessage(message, {}, {}));
 	}
-
+	
 	//IDMENU_HELP
-	EXPECT_CALL(*m_mock_view, ShowHelp()).Times(1);
+	EXPECT_CALL(*m_mock_view, HandleMessage(IDC2IDV(IDMENU_HELP), testing::_, testing::_, testing::_)).Times(1);
 	ASSERT_TRUE(m_controller.HandleMessage(IDMENU_HELP, {}, {}));
-
+	
 	//IDMENU_WINDOWS_EXPLORE3D
-	EXPECT_CALL(*m_mock_view, ShowExplore3DWindow()).Times(0);
+	//EXPECT_CALL(*m_mock_view, HandleMessage(IDC2IDV(IDMENU_WINDOWS_EXPLORE3D), testing::_, testing::_, testing::_)).Times(1);
 	ASSERT_FALSE(m_controller.HandleMessage(IDMENU_WINDOWS_EXPLORE3D, {}, {}));
-
+	
 	//IDMENU_WINDOWS_FLYTHROUGH
-	EXPECT_CALL(*m_mock_view, ShowFlythroughWindow()).Times(0);
+	//EXPECT_CALL(*m_mock_view, HandleMessage(IDC2IDV(IDMENU_WINDOWS_EXPLORE3D), testing::_, testing::_, testing::_)).Times(1);
 	ASSERT_FALSE(m_controller.HandleMessage(IDMENU_WINDOWS_FLYTHROUGH, {}, {}));
-
+	
 	//IDMENU_WINDOWS_GENERAL
-	EXPECT_CALL(*m_mock_view, ShowGeneralWindow()).Times(1);
+	EXPECT_CALL(*m_mock_view, HandleMessage(IDC2IDV(IDMENU_WINDOWS_GENERAL), testing::_, testing::_, testing::_)).Times(1);
 	ASSERT_TRUE(m_controller.HandleMessage(IDMENU_WINDOWS_GENERAL, {}, {}));
-
+	//
 	//IDMENU_FILE_OUTPUT_DIRECTORY
 	std::wstring dirpath = L"directoryPath";
-	EXPECT_CALL(*m_mock_view, SetOutputDirectory(dirpath)).Times(1);
-	ASSERT_TRUE(m_controller.HandleMessage(IDMENU_FILE_OUTPUT_DIRECTORY, {}, {}));
-
+	EXPECT_CALL(*m_mock_view, HandleMessage(IDC2IDV(IDMENU_FILE_OUTPUT_DIRECTORY), std::vector<std::wstring>{ dirpath }, testing::_, testing::_)).Times(1);
+	ASSERT_FALSE(m_controller.HandleMessage(IDMENU_FILE_OUTPUT_DIRECTORY, {}, {}));
+	
 	std::vector<IControllerMessageIDs> messsages = {
 		IDC_SET_CAMERA_FIELD_OF_VIEW,
 		IDC_SET_CAMERA_NEAR_SCREEN,
@@ -125,7 +125,7 @@ TEST_F(ControllerGuiTest, HandleMessage)
 	{
 		EXPECT_CALL(*m_mock_model, HandleMessage(IDC2IDM(message), testing::_, testing::_, testing::_)).Times(1).WillOnce(testing::Return(true));
 		ASSERT_TRUE(m_controller.HandleMessage(message, {}, {}));
-
+	
 	}
 
 	

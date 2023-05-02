@@ -60,36 +60,45 @@ TEST_F(ControllerFlythroughTest, HandleMessage)
 	//IDC_TIME_ELAPSED
 	//Flythrough mode on but it is not running
 	EXPECT_CALL(*m_mock_model, HandleMessage(testing::_, testing::_, testing::_, testing::_)).Times(0);
-	EXPECT_CALL(*m_mock_view, CaptureScreen(testing::_)).Times(0);
+	EXPECT_CALL(*m_mock_view, HandleMessage(testing::_, testing::_, testing::_, testing::_)).Times(0);
 	ASSERT_TRUE(m_controller.HandleMessage(IDC_TIME_ELAPSED, {}, {}));
 
 	//start play trajectory
 	EXPECT_CALL(*m_mock_model, HandleMessage(IDM_FLYTHROUGH_NEXT_FRAME, testing::_, testing::_, testing::_)).Times(1).WillOnce(testing::Return(true));;
-	EXPECT_CALL(*m_mock_view, CaptureScreen(testing::_)).Times(0);
+	EXPECT_CALL(*m_mock_view, HandleMessage(testing::_, testing::_, testing::_, testing::_)).Times(0);
 	ASSERT_TRUE(m_controller.HandleMessage(IDC_FLYTHROUGH_START, {}, {}));
 	ASSERT_TRUE(m_controller.HandleMessage(IDC_TIME_ELAPSED, {}, {}));
 
 	//Pause the trajectory playing
 	EXPECT_CALL(*m_mock_model, HandleMessage(testing::_, testing::_, testing::_, testing::_)).Times(0);
-	EXPECT_CALL(*m_mock_view, CaptureScreen(testing::_)).Times(0);
+	EXPECT_CALL(*m_mock_view, HandleMessage(testing::_, testing::_, testing::_, testing::_)).Times(0);
 	ASSERT_TRUE(m_controller.HandleMessage(IDC_FLYTHROUGH_PAUSE, {}, {}));
 	ASSERT_TRUE(m_controller.HandleMessage(IDC_TIME_ELAPSED, {}, {}));
 
 	//stop the trajectory playing
 	EXPECT_CALL(*m_mock_model, HandleMessage(IDM_FLYTHROUGH_START_POSITION, testing::_, testing::_, testing::_)).Times(1).WillOnce(testing::Return(true));
-	EXPECT_CALL(*m_mock_view, CaptureScreen(testing::_)).Times(0);
+	EXPECT_CALL(*m_mock_view, HandleMessage(testing::_, testing::_, testing::_, testing::_)).Times(0);
 	ASSERT_TRUE(m_controller.HandleMessage(IDC_FLYTHROUGH_STOP, {}, {}));
 	ASSERT_TRUE(m_controller.HandleMessage(IDC_TIME_ELAPSED, {}, {}));
 
-	//START RECORD
+	//START RECORD without choose output directory
+	EXPECT_CALL(*m_mock_model, HandleMessage(testing::_, testing::_, testing::_, testing::_)).Times(0);
+	EXPECT_CALL(*m_mock_view, HandleMessage(testing::_, testing::_, testing::_, testing::_)).Times(0);
+	ASSERT_FALSE(m_controller.HandleMessage(IDC_FLYTHROUGH_RECORD_START, {}, {}));
+	ASSERT_TRUE(m_controller.HandleMessage(IDC_TIME_ELAPSED, {}, {}));
+
+	//START RECORD withchoose output directory
 	EXPECT_CALL(*m_mock_model, HandleMessage(IDM_FLYTHROUGH_NEXT_FRAME, testing::_, testing::_, testing::_)).Times(1).WillOnce(testing::Return(true));;
-	EXPECT_CALL(*m_mock_view, CaptureScreen(testing::_)).Times(1);
+	EXPECT_CALL(*m_mock_view, HandleMessage(IDV_CAPTURE_SCREEN, testing::_, testing::_, testing::_)).Times(1);
+	EXPECT_CALL(*m_mock_view, HandleMessage(IDV_FLYTHROUGH_RECORD_START, testing::_, testing::_, testing::_)).Times(1);
+	ASSERT_TRUE(m_controller.HandleMessage(IDCC_OUTPUT_DIR_CHOOSED, {}, {}));
 	ASSERT_TRUE(m_controller.HandleMessage(IDC_FLYTHROUGH_RECORD_START, {}, {}));
 	ASSERT_TRUE(m_controller.HandleMessage(IDC_TIME_ELAPSED, {}, {}));
 
+
 	//STOP RECORD
 	EXPECT_CALL(*m_mock_model, HandleMessage(testing::_, testing::_, testing::_, testing::_)).Times(0);;
-	EXPECT_CALL(*m_mock_view, CaptureScreen(testing::_)).Times(0);
+	EXPECT_CALL(*m_mock_view, HandleMessage(IDV_FLYTHROUGH_RECORD_STOP, testing::_, testing::_, testing::_)).Times(1);
 	ASSERT_TRUE(m_controller.HandleMessage(IDC_FLYTHROUGH_RECORD_STOP, {}, {}));
 	ASSERT_TRUE(m_controller.HandleMessage(IDC_TIME_ELAPSED, {}, {}));
 }

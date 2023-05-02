@@ -37,8 +37,7 @@ public:
 	bool Resize(unsigned screenWidth, unsigned screenHeight);
 	void Shutdown();
 	bool RenderFrame();
-	bool CaptureScreen(unsigned frameNum) override;
-	void SetOutputDirectory(const std::wstring& m_outputDirectoryPath) override;
+	bool HandleMessage(IViewMessageIDs message, const std::vector<std::wstring>& stringParams, const std::vector<float>& fparams, const std::vector<unsigned>& uparams) override;
 
 	void SetController(IControllerPtr terrainController);
 	void SetModel(IModelPtr terrainModel);
@@ -47,17 +46,20 @@ public:
 	void HandleIModelState(const FlythroughState&) override;
 	void HandleIModelState(const Explore3DState&) override;
 	void HandleIModelState(const GeneralModelState&) override;
-	void ShowHelp() override;	
-	void ShowGeneralWindow()   override;
-	void ShowExplore3DWindow() override;
-	void ShowFlythroughWindow()override; 
-
 
 	Microsoft::WRL::ComPtr<ID3D11Device> GetDevice();
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> GetDeviceContext();
 
+private:
+	void SetOutputDirectory(const std::wstring& m_outputDirectoryPath);
+	bool CaptureScreen(unsigned frameNum);
+	void ShowHelp();
+	void ShowGeneralWindow();
+	void ShowExplore3DWindow();
+	void ShowFlythroughWindow();
 
 };
+
 typedef std::shared_ptr<TerrainView> TerrainViewPtr;
 
 #endif

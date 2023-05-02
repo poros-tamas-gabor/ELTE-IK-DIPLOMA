@@ -95,7 +95,7 @@ void GuiView::Help()
 4. Set the output directory path where you want to save the frames of the picture.)";
         ImGui::TextWrapped(text.c_str());
 
-        ImGui::SeparatorText("Controls in Explore 3D mode");
+        ImGui::SeparatorText("Controls Explore 3D");
         if (ImGui::BeginTable("Controls Explore 3D", 2))
         {
             ImGui::TableNextRow();
@@ -123,7 +123,7 @@ void GuiView::Help()
         
         ImGui::TextWrapped("Camera Rotation: To rotate the camera, press and hold the left mouse button and move the mouse.");
 
-        ImGui::SeparatorText("Controls in Flythrough mode");
+        ImGui::SeparatorText("Controls Flythrough");
         if (ImGui::BeginTable("Controls Flythrough", 2))
         {
             ImGui::TableNextRow();

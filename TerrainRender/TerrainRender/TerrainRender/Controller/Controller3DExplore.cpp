@@ -3,21 +3,15 @@
 #include "../resource.h"
 
 
-Controller3DExplore::Controller3DExplore()
-{
-
-}
+Controller3DExplore::Controller3DExplore() {}
 
 void Controller3DExplore::SetMessageSystem(ControllerMessageSystemPtr messageSystem)
 {
 	m_messageSystem = messageSystem;
 }
 
-
-
 bool Controller3DExplore::HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparams, const std::vector<unsigned>& uparams)
 {
-	float TimeEllapsed = 0;
 	switch (message)
 	{
 	case IDCC_IS_FLYTHROUGH_MODE_ON:

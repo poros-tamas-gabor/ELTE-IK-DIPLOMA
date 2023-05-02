@@ -34,16 +34,11 @@ class MockIView : public IView
 public:
     MOCK_METHOD(bool, Initalize, (HWND hwnd, float screenWidth, float screenHeight, bool fullscreen, bool vsync), (override));
     MOCK_METHOD(bool, RenderFrame, (), (override));
-    MOCK_METHOD(bool, CaptureScreen, (unsigned frameNum), (override));
     MOCK_METHOD(bool, Resize, (unsigned screenWidth, unsigned screenHeight), (override));
+    MOCK_METHOD(bool, HandleMessage, (IViewMessageIDs messageID, const std::vector<std::wstring>& stringParams, const std::vector<float>& fparams, const std::vector<unsigned>& uparams), (override));
     MOCK_METHOD(void, Shutdown, (), (override));
-    MOCK_METHOD(void, ShowHelp, (), (override));
-    MOCK_METHOD(void, ShowGeneralWindow, (), (override));
-    MOCK_METHOD(void, ShowExplore3DWindow, (), (override));
-    MOCK_METHOD(void, ShowFlythroughWindow, (), (override));
     MOCK_METHOD(void, SetController, (IControllerPtr terrainController), (override));
     MOCK_METHOD(void, SetModel, (IModelPtr terrainModel), (override));
-    MOCK_METHOD(void, SetOutputDirectory, (const std::wstring & m_outputDirectoryPath), (override));
     MOCK_METHOD(Microsoft::WRL::ComPtr<ID3D11Device>, GetDevice, (), (override));
     MOCK_METHOD(Microsoft::WRL::ComPtr<ID3D11DeviceContext>, GetDeviceContext, (), (override));
 

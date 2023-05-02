@@ -57,7 +57,8 @@ private:
 	bool									m_show_FlythroughWin = false;
 	std::wstring							m_outputDir;
 	bool									m_isFlythroughModeOn = false;
-	//bool									isTrajectoryLoaded;
+	bool									m_isRecordingOn = false;
+
 public:
 	bool Initalize(Microsoft::WRL::ComPtr<ID3D11Device> _device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> _deviceContext, IControllerPtr controller);
 
@@ -78,6 +79,7 @@ public:
 	void HandleIModelState(const GeneralModelState&) override;
 
 	void SetOutputDirectory(const std::wstring& dir);
+	void SetIsRecordingOn(bool);
 
 private:
 

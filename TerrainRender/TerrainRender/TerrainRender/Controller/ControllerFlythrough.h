@@ -18,12 +18,12 @@ private:
 	ControllerMessageSystemPtr			m_messageSystem;
 	
 	FlythroughState						m_flythroughState;
-	size_t								m_recordedPrevFrameNum = 0;
+	size_t								m_recordedPrevFrameNum	= 0;
 
-	bool								m_isActive = false;
-	bool								m_isRunning = false;
-	bool								m_isRecording = false;
-	float								m_speed = 1.0f;
+	bool								m_isActive				= false;
+	bool								m_isRunning				= false;
+	bool								m_isRecording			= false;
+	bool								m_IsOutputDirChoosed	= false;
 
 
 public:

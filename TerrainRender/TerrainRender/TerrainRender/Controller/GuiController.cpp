@@ -69,7 +69,7 @@ bool GuiController::HandleMessage(IControllerMessageIDs message, const std::vect
 
 		case IDMENU_HELP:
 		{
-			m_terrainView->ShowHelp();
+			m_terrainView->HandleMessage(IDC2IDV(IDMENU_HELP), {}, {}, {}); //ShowHelp();
 			return true;
 		}
 
@@ -79,7 +79,7 @@ bool GuiController::HandleMessage(IControllerMessageIDs message, const std::vect
 			THROW_TREXCEPTION_IF_FAILED((m_messageSystem != nullptr), L"Controller message system is not initialized");
 			isFlythroughModeOn = m_messageSystem->Publish(IDCC_IS_FLYTHROUGH_MODE_ON, {}, {});
 			if (!isFlythroughModeOn)
-				m_terrainView->ShowExplore3DWindow();
+				m_terrainView->HandleMessage(IDC2IDV(IDMENU_WINDOWS_EXPLORE3D), {}, {}, {});
 			return !isFlythroughModeOn;
 		}
 		case IDMENU_WINDOWS_FLYTHROUGH:
@@ -88,19 +88,24 @@ bool GuiController::HandleMessage(IControllerMessageIDs message, const std::vect
 			THROW_TREXCEPTION_IF_FAILED((m_messageSystem != nullptr), L"Controller message system is not initialized");
 			isFlythroughModeOn = m_messageSystem->Publish(IDCC_IS_FLYTHROUGH_MODE_ON, {}, {});
 			if (isFlythroughModeOn)
-				m_terrainView->ShowFlythroughWindow();
+				m_terrainView->HandleMessage(IDC2IDV(IDMENU_WINDOWS_FLYTHROUGH), {}, {}, {});
 			return isFlythroughModeOn;
 		}
 		case IDMENU_WINDOWS_GENERAL:
 		{
-			m_terrainView->ShowGeneralWindow();
+			m_terrainView->HandleMessage(IDC2IDV(IDMENU_WINDOWS_GENERAL), {}, {}, {});
 			return true;
 		}
 		case IDMENU_FILE_OUTPUT_DIRECTORY:
 		{
 			std::wstring dir;
 			OpenFileDialogDirectory(dir);
-			m_terrainView->SetOutputDirectory(dir);
+			if (!dir.empty())
+			{
+				m_terrainView->HandleMessage(IDC2IDV(IDMENU_FILE_OUTPUT_DIRECTORY), { dir }, {}, {});
+				THROW_TREXCEPTION_IF_FAILED((m_messageSystem != nullptr), L"Controller message system is not initialized");
+				m_messageSystem->Publish(IDCC_OUTPUT_DIR_CHOOSED, {}, {});
+			}
 			return true;
 		}
 		case IDC_BUTTON_CLEAR_TRAJECTORY:

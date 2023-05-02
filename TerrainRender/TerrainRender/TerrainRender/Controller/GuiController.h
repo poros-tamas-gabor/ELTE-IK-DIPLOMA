@@ -40,7 +40,7 @@ public:
 	void HandleIModelState(const GeneralModelState&) override;
 
 private:
-	void StartWorkerThread(const ICallableCreator& creator, std::atomic_bool& running);
+	void LoadFiles(IModelMessageIDs message, const std::vector<std::wstring>& sparam, const std::vector<float>& fparam, const std::vector<unsigned>& uparam);
 	void SetMessageSystem(ControllerMessageSystemPtr messageSystem);
 };
 

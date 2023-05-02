@@ -23,15 +23,27 @@ bool GuiController::IsActive() const {
 	return m_isActive;
 }
 
-void GuiController::StartWorkerThread(const ICallableCreator& creator, std::atomic_bool& running)
+void GuiController::LoadFiles(IModelMessageIDs message,const std::vector<std::wstring>& sparam, const std::vector<float>& fparam, const std::vector<unsigned>& uparam)
 {
-	ICallablePtr process = creator.Create();
-	std::thread worker(std::ref(*process));
-	//ProgressBar pb(running);
-	if (worker.joinable())
+	std::thread workerThread([=] {
+		m_terrainModel->HandleMessage(message, sparam, fparam, uparam);
+		});
+
+#ifndef _GTEST
+	std::atomic_bool running = true;
+	std::shared_ptr<ProgressBar> pb = std::make_shared<ProgressBar>(running);
+	std::thread pbThread([=] {pb->Run(); });
+#endif // !_GTEST
+
+
+	if (workerThread.joinable())
 	{
-		//pb.Run();
-		worker.join();
+		workerThread.join();
+#ifndef _GTEST
+		running = false;
+		pbThread.join();
+#endif // !_GTEST
+
 	}
 }
 
@@ -56,7 +68,10 @@ bool GuiController::HandleMessage(IControllerMessageIDs message, const std::vect
 			std::wstring filePath;
 			OpenFileDialog(filePath, filter);
 			if (!filePath.empty())
-				return m_terrainModel->HandleMessage(modelmsg, { filePath }, fparam, uparam);
+			{
+				LoadFiles(modelmsg, { filePath }, fparam, uparam);
+				return true;
+			}
 			return false;
 		}
 		case IDMENU_FIlE_TERRAIN_PROJECT_SHARP:
@@ -64,7 +79,8 @@ bool GuiController::HandleMessage(IControllerMessageIDs message, const std::vect
 		{
 			std::vector<std::wstring> files;
 			OpenFileDialogMultipleSelection(files, m_filter_stl);
-			return m_terrainModel->HandleMessage(modelmsg, files, fparam, uparam);
+			LoadFiles(modelmsg, files, fparam, uparam);
+			return true;
 		}
 
 		case IDMENU_HELP:

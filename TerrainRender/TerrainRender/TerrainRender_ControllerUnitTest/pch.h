@@ -11,9 +11,8 @@
 #include "../TerrainRender/Controller/Controller3DExplore.h"
 #include "../TerrainRender/Controller/ControllerFlythrough.h"
 #include "../TerrainRender/Controller/ControllerRouter.h"
-#include "../TerrainRender/Controller/GuiController.h"
+#include "../TerrainRender/Controller/ControllerGui.h"
 #include "../TerrainRender/Controller/MessageSystem.h"
-#include "../TerrainRender/Controller/Tasks.h"
 
 #include "../TerrainRender/resource.h"
 #include "../TerrainRender/App.h"

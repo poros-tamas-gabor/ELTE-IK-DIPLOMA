@@ -1,6 +1,22 @@
 #ifndef ICONTROLLER_H
 #define ICONTROLLER_H
 
+///////////////////////////////////////////////////////////////////////////////
+// IController.h
+// ============
+// An interface for the Controller component in the Model-View-Controller (MVC) architecture.
+//
+// The purpose of the controller in MVC is to act as an intermediary between the View and the Model.
+// The controller receives input from the user through the View, interprets it, and then sends commands to the Model
+// to update the data or perform an action.
+//
+// This is only an interface and does not handle any messages. Programmers must implement a derived class to handle
+// specific messages.
+//
+// AUTHOR: TAMAS GABOR POROS
+// CREATED: 2023-05-08
+///////////////////////////////////////////////////////////////////////////////
+
 #include <memory>
 #include "../Model/IModelSubscriber.h"
 #include "../Model/IModel.h"

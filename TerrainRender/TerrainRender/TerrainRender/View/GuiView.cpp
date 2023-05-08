@@ -47,7 +47,7 @@ bool ToggleButton(const char* str_id, bool* isOn)
 }
 
 const static float PI = 3.14159265358979323846f;
-bool GuiView::Initalize(Microsoft::WRL::ComPtr<ID3D11Device> _device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> _deviceContext, IControllerPtr controller)
+bool GuiView::Initalize(Microsoft::WRL::ComPtr<ID3D11Device> m_device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_deviceContext, IControllerPtr controller)
 {
     bool result;
 
@@ -60,7 +60,7 @@ bool GuiView::Initalize(Microsoft::WRL::ComPtr<ID3D11Device> _device, Microsoft:
     ImGui::ResetStyle(28);
 
     // Setup Platform/Renderer backends
-    result = ImGui_ImplDX11_Init(_device.Get(), _deviceContext.Get());
+    result = ImGui_ImplDX11_Init(m_device.Get(), m_deviceContext.Get());
     return result;
 }
 

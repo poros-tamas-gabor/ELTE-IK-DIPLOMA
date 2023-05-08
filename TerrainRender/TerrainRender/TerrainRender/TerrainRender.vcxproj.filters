@@ -186,7 +186,7 @@
     <ClCompile Include="Controller\Controller3DExplore.cpp">
       <Filter>Source Files\Controller</Filter>
     </ClCompile>
-    <ClCompile Include="Controller\GuiController.cpp">
+    <ClCompile Include="Controller\ControllerGui.cpp">
       <Filter>Source Files\Controller</Filter>
     </ClCompile>
     <ClCompile Include="Controller\MessageSystem.cpp">
@@ -194,9 +194,6 @@
     </ClCompile>
     <ClCompile Include="ProgressBar.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Controller\Tasks.cpp">
-      <Filter>Source Files\Controller</Filter>
     </ClCompile>
     <ClCompile Include="Model\CameraPositioner.cpp">
       <Filter>Source Files\Model</Filter>
@@ -260,7 +257,7 @@
     <ClInclude Include="Controller\Controller3DExplore.h">
       <Filter>Header Files\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="Controller\GuiController.h">
+    <ClInclude Include="Controller\ControllerGui.h">
       <Filter>Header Files\Controller</Filter>
     </ClInclude>
     <ClInclude Include="Model\Camera.h">
@@ -403,9 +400,6 @@
     </ClInclude>
     <ClInclude Include="Model\ModelMessageSystem.h">
       <Filter>Header Files\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Controller\Tasks.h">
-      <Filter>Header Files\Controller</Filter>
     </ClInclude>
     <ClInclude Include="Model\IModelSubscriber.h">
       <Filter>Header Files\Model\Interface</Filter>

@@ -6,17 +6,17 @@
 
 
 D3DView::D3DView() : 
-	_swapChain(nullptr),
-	_device(nullptr),
-	_deviceContext(nullptr),
-	_renderTargetView(nullptr),
+	m_swapChain(nullptr),
+	m_device(nullptr),
+	m_deviceContext(nullptr),
+	m_renderTargetView(nullptr),
 	
-	_depthStencilBuffer(nullptr),
-	_depthStencilView(nullptr),
-	_depthStencilState(nullptr),
-	_rasterState(nullptr),
-	_videoCardDescription(""),
-	_videoCardMemory(NULL)
+	m_depthStencilBuffer(nullptr),
+	m_depthStencilView(nullptr),
+	m_depthStencilState(nullptr),
+	m_rasterState(nullptr),
+	m_videoCardDescription(""),
+	m_videoCardMemory(NULL)
 {}
 
 D3DView::~D3DView() {}
@@ -87,10 +87,10 @@ bool D3DView::GetAdapterData(float screenWidth, float screenHeight, unsigned int
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to get adapter description");
 
 		// Store the dedicated video card memory in megabytes.
-		_videoCardMemory = (int)(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
+		m_videoCardMemory = (int)(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
 
 		// Convert the name of the video card to a character array and store it.
-		int error = wcstombs_s(&stringLength, _videoCardDescription, 128, adapterDesc.Description, 128);
+		int error = wcstombs_s(&stringLength, m_videoCardDescription, 128, adapterDesc.Description, 128);
 		if (error != 0)
 		{
 			throw TRException(L"wcstombs_s exception", __FILEW__, __FUNCTIONW__, __LINE__);
@@ -134,9 +134,9 @@ bool D3DView::Initalize(HWND hwnd, float screenWidth, float screenHeight, bool f
 		D3D_FEATURE_LEVEL		featureLevel;
 		DXGI_SWAP_CHAIN_DESC	swapChainDesc;
 
-		_hwnd = hwnd;
+		m_hwnd = hwnd;
 		// Store the vsync setting.
-		_vsync = vsync;
+		m_vsync = vsync;
 
 		unsigned int numerator, denominator;
 		if (!GetAdapterData(screenWidth, screenHeight, numerator, denominator))
@@ -153,7 +153,7 @@ bool D3DView::Initalize(HWND hwnd, float screenWidth, float screenHeight, bool f
 		swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;		// Set regular 32-bit surface for the back buffer.
 
 		// Set the refresh rate of the back buffer.
-		if (_vsync)
+		if (m_vsync)
 		{
 			swapChainDesc.BufferDesc.RefreshRate.Numerator = numerator;
 			swapChainDesc.BufferDesc.RefreshRate.Denominator = denominator;
@@ -190,7 +190,7 @@ bool D3DView::Initalize(HWND hwnd, float screenWidth, float screenHeight, bool f
 		// Create the swap chain, Direct3D device, and Direct3D device context.
 
 		result = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &featureLevel, 1,
-			D3D11_SDK_VERSION, &swapChainDesc, _swapChain.ReleaseAndGetAddressOf(), _device.ReleaseAndGetAddressOf(), NULL, _deviceContext.ReleaseAndGetAddressOf());
+			D3D11_SDK_VERSION, &swapChainDesc, m_swapChain.ReleaseAndGetAddressOf(), m_device.ReleaseAndGetAddressOf(), NULL, m_deviceContext.ReleaseAndGetAddressOf());
 
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create the swap chain, Direct3D device, and Direct3D device context");
 
@@ -220,12 +220,12 @@ bool  D3DView::InitalizeAttributes(unsigned screenWidth, unsigned screenHeight)
 	try
 	{
 		// Get the pointer to the back buffer.
-		result = _swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(backBufferPtr.ReleaseAndGetAddressOf()));
+		result = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(backBufferPtr.ReleaseAndGetAddressOf()));
 
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Get the pointer to the back buffer");
 
 		// Create the render target view with the back buffer pointer.
-		result = _device->CreateRenderTargetView(backBufferPtr.Get(), NULL, _renderTargetView.ReleaseAndGetAddressOf());
+		result = m_device->CreateRenderTargetView(backBufferPtr.Get(), NULL, m_renderTargetView.ReleaseAndGetAddressOf());
 
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create the render target view with the back buffer pointer");
 
@@ -250,7 +250,7 @@ bool  D3DView::InitalizeAttributes(unsigned screenWidth, unsigned screenHeight)
 		depthBufferDesc.MiscFlags = 0;
 
 		// Create the texture for the depth buffer using the filled out description.
-		result = _device->CreateTexture2D(&depthBufferDesc, NULL, _depthStencilBuffer.ReleaseAndGetAddressOf());
+		result = m_device->CreateTexture2D(&depthBufferDesc, NULL, m_depthStencilBuffer.ReleaseAndGetAddressOf());
 
 	
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create the texture for the depth buffer");
@@ -281,12 +281,12 @@ bool  D3DView::InitalizeAttributes(unsigned screenWidth, unsigned screenHeight)
 		depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
 		// Create the depth stencil state.
-		result = _device->CreateDepthStencilState(&depthStencilDesc, _depthStencilState.ReleaseAndGetAddressOf());
+		result = m_device->CreateDepthStencilState(&depthStencilDesc, m_depthStencilState.ReleaseAndGetAddressOf());
 
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create the depth stencil state");
 
 		// Set the depth stencil state.
-		_deviceContext->OMSetDepthStencilState(_depthStencilState.Get(), 1);
+		m_deviceContext->OMSetDepthStencilState(m_depthStencilState.Get(), 1);
 
 		// Initialize the depth stencil view.
 		ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
@@ -297,12 +297,12 @@ bool  D3DView::InitalizeAttributes(unsigned screenWidth, unsigned screenHeight)
 		depthStencilViewDesc.Texture2D.MipSlice = 0;
 
 		//Create the depth stencil view.
-		result = _device->CreateDepthStencilView(_depthStencilBuffer.Get(), &depthStencilViewDesc, _depthStencilView.ReleaseAndGetAddressOf());
+		result = m_device->CreateDepthStencilView(m_depthStencilBuffer.Get(), &depthStencilViewDesc, m_depthStencilView.ReleaseAndGetAddressOf());
 
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create the depth stencil view");
 
 		// Bind the render target view and depth stencil buffer to the output render pipeline.
-		_deviceContext->OMSetRenderTargets(1, _renderTargetView.GetAddressOf(), _depthStencilView.Get());
+		m_deviceContext->OMSetRenderTargets(1, m_renderTargetView.GetAddressOf(), m_depthStencilView.Get());
 
 
 		// Setup the raster description which will determine how and what polygons will be drawn.
@@ -320,12 +320,12 @@ bool  D3DView::InitalizeAttributes(unsigned screenWidth, unsigned screenHeight)
 		rasterDesc.SlopeScaledDepthBias = 0.0f;
 
 		// Create the rasterizer state from the description we just filled out.
-		result = _device->CreateRasterizerState(&rasterDesc, _rasterState.ReleaseAndGetAddressOf());
+		result = m_device->CreateRasterizerState(&rasterDesc, m_rasterState.ReleaseAndGetAddressOf());
 
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create the rasterizer state from the description we just filled out.");
 
 		// Now set the rasterizer state.
-		_deviceContext->RSSetState(_rasterState.Get());
+		m_deviceContext->RSSetState(m_rasterState.Get());
 
 		// Setup the viewport for rendering.
 		ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
@@ -337,7 +337,7 @@ bool  D3DView::InitalizeAttributes(unsigned screenWidth, unsigned screenHeight)
 		viewport.TopLeftY = 0.0f;
 		//
 		// Create the viewport.
-		_deviceContext->RSSetViewports(1, &viewport);
+		m_deviceContext->RSSetViewports(1, &viewport);
 		return true;
 	}
 	catch (COMException& exception)
@@ -353,17 +353,17 @@ HRESULT D3DView::ReleaseBackBuffer()
 	HRESULT hr = S_OK;
 
 	// Release the render target view based on the back buffer:
-	_renderTargetView.Reset();
+	m_renderTargetView.Reset();
 
 
 	// The depth stencil will need to be resized, so release it (and view):
-	_depthStencilView.Reset();
+	m_depthStencilView.Reset();
 
 
 	// After releasing references to these resources, we need to call Flush() to 
 	// ensure that Direct3D also releases any references it might still have to
 	// the same resources - such as pipeline bindings.
-	_deviceContext->Flush();
+	m_deviceContext->Flush();
 
 	return hr;
 }
@@ -371,7 +371,7 @@ HRESULT D3DView::ReleaseBackBuffer()
 bool D3DView::Resize(unsigned screenWidth, unsigned screenHeight)
 {
 	try {
-		if (_swapChain)
+		if (m_swapChain)
 		{
 			//https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/d3d10-graphics-programming-guide-dxgi#handling-window-resizing
 			HRESULT result;
@@ -384,7 +384,7 @@ bool D3DView::Resize(unsigned screenWidth, unsigned screenHeight)
 			D3D11_RASTERIZER_DESC rasterDesc;
 			D3D11_VIEWPORT viewport;
 
-			_deviceContext->OMSetRenderTargets(0, 0, 0);
+			m_deviceContext->OMSetRenderTargets(0, 0, 0);
 
 
 			// Before calling ResizeBuffers, you have to release all references to the back 
@@ -393,7 +393,7 @@ bool D3DView::Resize(unsigned screenWidth, unsigned screenHeight)
 
 			// Preserve the existing buffer count and format.
 			// Automatically choose the width and height to match the client rect for HWNDs.
-			result = _swapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+			result = m_swapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
 			// Perform error handling here!
 			THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to resize swapchain");
 
@@ -409,81 +409,81 @@ bool D3DView::Resize(unsigned screenWidth, unsigned screenHeight)
 }
 void D3DView::Shutdown() {
 
-	//if (_swapChain)
+	//if (m_swapChain)
 	//{
-	//	_swapChain->Release();
-	//	_swapChain = nullptr;
+	//	m_swapChain->Release();
+	//	m_swapChain = nullptr;
 	//}
 	//
-	//if (_device)
+	//if (m_device)
 	//{
-	//	_device->Release();
-	//	_device = nullptr;
+	//	m_device->Release();
+	//	m_device = nullptr;
 	//}
-	//if (_deviceContext)
+	//if (m_deviceContext)
 	//{
-	//	_deviceContext->Release();
-	//	_deviceContext = nullptr;
+	//	m_deviceContext->Release();
+	//	m_deviceContext = nullptr;
 	//}
-	//if (_renderTargetView)
+	//if (m_renderTargetView)
 	//{
-	//	_renderTargetView->Release();
-	//	_renderTargetView = nullptr;
+	//	m_renderTargetView->Release();
+	//	m_renderTargetView = nullptr;
 	//}
-	//if (_depthStencilBuffer)
+	//if (m_depthStencilBuffer)
 	//{
-	//	_depthStencilBuffer->Release();
-	//	_depthStencilBuffer = nullptr;
+	//	m_depthStencilBuffer->Release();
+	//	m_depthStencilBuffer = nullptr;
 	//}
-	//if (_depthStencilView)
+	//if (m_depthStencilView)
 	//{
-	//	_depthStencilView->Release();
-	//	_depthStencilView = nullptr;
+	//	m_depthStencilView->Release();
+	//	m_depthStencilView = nullptr;
 	//}
-	//if (_depthStencilState)
+	//if (m_depthStencilState)
 	//{
-	//	_depthStencilState->Release();
-	//	_depthStencilState = nullptr;
+	//	m_depthStencilState->Release();
+	//	m_depthStencilState = nullptr;
 	//}
-	//if (_rasterState)
+	//if (m_rasterState)
 	//{
-	//	_rasterState->Release();
-	//	_rasterState = nullptr;
+	//	m_rasterState->Release();
+	//	m_rasterState = nullptr;
 	//}
 }
 void D3DView::BeginScene(float red, float green, float blue, float alpha) {
 
 	float color[] = { red, green, blue, alpha };
 	// clear the back buffer to the color
-	_deviceContext->ClearRenderTargetView(_renderTargetView.Get(), color);
+	m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), color);
 
 	// Clear the depth buffer.
-	_deviceContext->ClearDepthStencilView(_depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+	m_deviceContext->ClearDepthStencilView(m_depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 }
 void D3DView::EndScene() {
 	// Present the back buffer to the screen since rendering is complete.
-	if (_vsync)
+	if (m_vsync)
 	{
 		// Lock to screen refresh rate.
-		_swapChain->Present(1, 0);
+		m_swapChain->Present(1, 0);
 	}
 	else
 	{
 		// Present as fast as possible.
-		_swapChain->Present(0, 0);
+		m_swapChain->Present(0, 0);
 	}
 
 }
 
 Microsoft::WRL::ComPtr<ID3D11Device> D3DView::GetDevice()
 {
-	return _device;
+	return m_device;
 }
 
 Microsoft::WRL::ComPtr<ID3D11DeviceContext>	D3DView::GetDeviceContext()
 {
-	return _deviceContext;
+	return m_deviceContext;
 }
 
 void D3DView::CaptureScreen(const std::wstring& directoryPath, unsigned frameNum)
@@ -500,12 +500,12 @@ void D3DView::CaptureScreen(const std::wstring& directoryPath, unsigned frameNum
 
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> backBufferPtr;
 
-		HRESULT hr = _swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(backBufferPtr.ReleaseAndGetAddressOf()));
+		HRESULT hr = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(backBufferPtr.ReleaseAndGetAddressOf()));
 
 		if (SUCCEEDED(hr))
 		{
 			std::wstring pictureName = directoryPath + L"\\screenShot" + std::to_wstring(frameNum) + L".JPG";
-			hr = DirectX::SaveWICTextureToFile(_deviceContext.Get(), backBufferPtr.Get(), GUID_ContainerFormatJpeg, pictureName.c_str());
+			hr = DirectX::SaveWICTextureToFile(m_deviceContext.Get(), backBufferPtr.Get(), GUID_ContainerFormatJpeg, pictureName.c_str());
 		}
 		THROW_COM_EXCEPTION_IF_FAILED(initialize, L"Error to grab");
 	}

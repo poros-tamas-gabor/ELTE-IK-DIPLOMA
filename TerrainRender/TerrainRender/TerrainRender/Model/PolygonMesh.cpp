@@ -126,7 +126,7 @@ bool PolygonMesh::InitializeBuffers(Microsoft::WRL::ComPtr<ID3D11Device> device,
 	}
 	catch (...)
 	{
-		ErrorHandler::Log("Unknown Exceptio: No details available");
+		ErrorHandler::Log("Unknown Exception: No details available");
 	}
 	
 	

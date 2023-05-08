@@ -6,10 +6,25 @@
 
 ControllerFlythrough::ControllerFlythrough() {}
 
-void ControllerFlythrough::SetMessageSystem(ControllerMessageSystemPtr messageSystem)
+bool ControllerFlythrough::IsActive() const
 {
-	m_messageSystem = messageSystem;
+	return this->m_isActive;
 }
+
+bool ControllerFlythrough::Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse, KeyboardPtr keyboard)
+{
+	if (pModel == nullptr || mouse == nullptr || keyboard == nullptr || pView == nullptr)
+	{
+		return false;
+	}
+	this->SetTerrainModel(pModel);
+	this->SetMouse(mouse);
+	this->SetKeyboard(keyboard);
+	this->SetTerrainView(pView);
+	return true;
+}
+
+void ControllerFlythrough::Shutdown() {}
 
 bool ControllerFlythrough::HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparams, const std::vector<unsigned>& uparams)
 {
@@ -142,16 +157,20 @@ bool ControllerFlythrough::HandleMessage(IControllerMessageIDs message, const st
 	}
 	catch (...)
 	{
-		ErrorHandler::Log("Unknown Exceptio: No details available");
+		ErrorHandler::Log("Unknown Exception: No details available");
 	}
 	return false;
 
 }
 
-void ControllerFlythrough::SetTerrainView(IViewPtr pView) {
+void ControllerFlythrough::SetMessageSystem(ControllerMessageSystemPtr messageSystem)
+{
+	m_messageSystem = messageSystem;
+}
+void ControllerFlythrough::SetTerrainView(IViewPtr pView) 
+{
 	this->m_terrainView = pView;
 }
-
 void ControllerFlythrough::SetTerrainModel(IModelPtr pModel)
 {
 	this->m_terrainModel = pModel;
@@ -165,30 +184,8 @@ void ControllerFlythrough::SetKeyboard(KeyboardPtr keyboard)
 	this->m_keyboard = keyboard;
 }
 
-
-bool ControllerFlythrough::IsActive() const
-{
-	return this->m_isActive;
-}
-
-bool ControllerFlythrough::Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse, KeyboardPtr keyboard)
-{
-	if (pModel == nullptr || mouse == nullptr || keyboard == nullptr || pView == nullptr)
-	{
-		return false;
-	}
-	this->SetTerrainModel(pModel);
-	this->SetMouse(mouse);
-	this->SetKeyboard(keyboard);
-	this->SetTerrainView(pView);
-	return true;
-}
-void ControllerFlythrough::Shutdown() {}
-
 void ControllerFlythrough::HandleIModelState(const MeshGroupState&) {}
-void ControllerFlythrough::HandleIModelState(const FlythroughState& state) {
-	m_flythroughState = state;
-}
+void ControllerFlythrough::HandleIModelState(const FlythroughState& state) { m_flythroughState = state; }
 void ControllerFlythrough::HandleIModelState(const Explore3DState&) {}
 void ControllerFlythrough::HandleIModelState(const GeneralModelState&) {}
 

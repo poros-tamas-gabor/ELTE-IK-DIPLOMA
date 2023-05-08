@@ -1,53 +1,35 @@
-#include "GuiController.h"
+#include "ControllerGui.h"
 #include <algorithm>
 #include "../Model/TerrainModel.h"
 #include "../resource.h"
 #include "MessageSystem.h"
 #include "../ProgressBar.h"
-#include "Tasks.h"
 #include "../DialogWin.h"
 #include "../ErrorHandler.h"
 
 
-GuiController::GuiController()
-{
-}
-GuiController::~GuiController() {}
+ControllerGui::ControllerGui() {}
+ControllerGui::~ControllerGui() {}
 
-void GuiController::SetMessageSystem(ControllerMessageSystemPtr messageSystem)
-{
-	m_messageSystem = messageSystem;
-}
-
-bool GuiController::IsActive() const {
+bool ControllerGui::IsActive() const {
 	return m_isActive;
 }
 
-void GuiController::LoadFiles(IModelMessageIDs message,const std::vector<std::wstring>& sparam, const std::vector<float>& fparam, const std::vector<unsigned>& uparam)
+bool  ControllerGui::Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse, KeyboardPtr keyboard)
 {
-	std::thread workerThread([=] {
-		m_terrainModel->HandleMessage(message, sparam, fparam, uparam);
-		});
-
-#ifndef _GTEST
-	std::atomic_bool running = true;
-	std::shared_ptr<ProgressBar> pb = std::make_shared<ProgressBar>(running);
-	std::thread pbThread([=] {pb->Run(); });
-#endif // !_GTEST
-
-
-	if (workerThread.joinable())
+	if (pModel == nullptr || mouse == nullptr || keyboard == nullptr || pView == nullptr)
 	{
-		workerThread.join();
-#ifndef _GTEST
-		running = false;
-		pbThread.join();
-#endif // !_GTEST
-
+		return false;
 	}
+	SetTerrainModel(pModel);
+	SetMouse(mouse);
+	SetKeyboard(keyboard);
+	SetTerrainView(pView);
+	return true;
 }
+void ControllerGui::Shutdown() {}
 
-bool GuiController::HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparam, const std::vector<unsigned>& uparam)
+bool ControllerGui::HandleMessage(IControllerMessageIDs message, const std::vector<float>& fparam, const std::vector<unsigned>& uparam)
 {
 	try {
 		IModelMessageIDs modelmsg = IDC2IDM(message);
@@ -130,7 +112,6 @@ bool GuiController::HandleMessage(IControllerMessageIDs message, const std::vect
 			m_messageSystem->Publish(IDC_ACTIVATE_3DEXPLORE_MODE, fparam, uparam);
 			return m_terrainModel->HandleMessage(modelmsg, {}, fparam, uparam);
 		}
-
 		case IDC_SET_CAMERA_FIELD_OF_VIEW:
 		case IDC_SET_CAMERA_NEAR_SCREEN:
 		case IDC_SET_CAMERA_FAR_SCREEN:
@@ -170,39 +151,53 @@ bool GuiController::HandleMessage(IControllerMessageIDs message, const std::vect
 	}
 	catch (...)
 	{
-		ErrorHandler::Log("Unknown Exceptio: No details available");
+		ErrorHandler::Log("Unknown Exception: No details available");
 	}
 	return false;
 }
 
-void GuiController::SetTerrainView(IViewPtr pView)
+void ControllerGui::SetMessageSystem(ControllerMessageSystemPtr messageSystem)
+{
+	m_messageSystem = messageSystem;
+}
+void ControllerGui::SetTerrainView(IViewPtr pView)
 {
 	m_terrainView = pView;
 }
-void GuiController::SetTerrainModel(IModelPtr pModel)
+void ControllerGui::SetTerrainModel(IModelPtr pModel)
 {
 	m_terrainModel = pModel;
 }
-void GuiController::SetMouse(MousePtr mouse) {}
+void ControllerGui::SetMouse(MousePtr mouse) {}
 
-void GuiController::SetKeyboard(KeyboardPtr keyboard) {}
+void ControllerGui::SetKeyboard(KeyboardPtr keyboard) {}
 
 
-bool  GuiController::Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse, KeyboardPtr keyboard)
+void ControllerGui::HandleIModelState(const MeshGroupState&) {}
+void ControllerGui::HandleIModelState(const FlythroughState&) {}
+void ControllerGui::HandleIModelState(const Explore3DState&) {}
+void ControllerGui::HandleIModelState(const GeneralModelState&) {}
+
+void ControllerGui::LoadFiles(IModelMessageIDs message, const std::vector<std::wstring>& sparam, const std::vector<float>& fparam, const std::vector<unsigned>& uparam)
 {
-	if (pModel == nullptr || mouse == nullptr || keyboard == nullptr || pView == nullptr)
-	{
-		return false;
-	}
-	SetTerrainModel(pModel);
-	SetMouse(mouse);
-	SetKeyboard(keyboard);
-	SetTerrainView(pView);
-	return true;
-}
-void GuiController::Shutdown() {}
+	std::thread workerThread([=] {
+		m_terrainModel->HandleMessage(message, sparam, fparam, uparam);
+		});
 
-void GuiController::HandleIModelState(const MeshGroupState&) {}
-void GuiController::HandleIModelState(const FlythroughState&) {}
-void GuiController::HandleIModelState(const Explore3DState&) {}
-void GuiController::HandleIModelState(const GeneralModelState&) {}
+#ifndef _GTEST
+	std::atomic_bool running = true;
+	std::shared_ptr<ProgressBar> pb = std::make_shared<ProgressBar>(running);
+	std::thread pbThread([=] {pb->Run(); });
+#endif // !_GTEST
+
+
+	if (workerThread.joinable())
+	{
+		workerThread.join();
+#ifndef _GTEST
+		running = false;
+		pbThread.join();
+#endif // !_GTEST
+
+	}
+}

@@ -34,7 +34,7 @@ bool TerrainView::Initalize(HWND hwnd, float screenWidth, float screenHeight, bo
 	}
 	catch (...)
 	{
-		ErrorHandler::Log("Unknown Exceptio: No details available");
+		ErrorHandler::Log("Unknown Exception: No details available");
 	}
 	return false;
 }
@@ -61,7 +61,7 @@ bool TerrainView::Resize(unsigned screenWidth, unsigned screenHeight)
 	}
 	catch (...)
 	{
-		ErrorHandler::Log("Unknown Exceptio: No details available");
+		ErrorHandler::Log("Unknown Exception: No details available");
 	}
 	return false;
 
@@ -100,7 +100,7 @@ bool TerrainView::RenderFrame()
 	}
 	catch (...)
 	{
-		ErrorHandler::Log("Unknown Exceptio: No details available");
+		ErrorHandler::Log("Unknown Exception: No details available");
 	}
 	return false;
 
@@ -155,7 +155,7 @@ bool TerrainView::HandleMessage(IViewMessageIDs message, const std::vector<std::
 	}
 	catch (...)
 	{
-		ErrorHandler::Log("Unknown Exceptio: No details available");
+		ErrorHandler::Log("Unknown Exception: No details available");
 	}
 	return false;
 }
@@ -183,7 +183,7 @@ bool TerrainView::CaptureScreen(unsigned frameNum)
 	}
 	catch (...)
 	{
-		ErrorHandler::Log("Unknown Exceptio: No details available");
+		ErrorHandler::Log("Unknown Exception: No details available");
 	}
 	return false;
 }

@@ -5,10 +5,24 @@
 #include <mutex>
 #include <memory>
 
+
+///////////////////////////////////////////////////////////////////////////////
+// Mouse.h
+// ============
+// A class that encapsulates the functionality of the mouse.
+//
+// It can be used to determine the position and state of the buttons on the mouse.
+//
+// AUTHOR: Pindrought
+// URL: https://github.com/Pindrought/DirectX-11-Engine-VS2017
+// CREATED: Unknown
+// MODIFIED: 2023-05-08 by TAMAS GABOR POROS
+///////////////////////////////////////////////////////////////////////////////
+
 class Mouse 
 {
 private:
-	std::queue<MouseEvent> _eventBuffer;
+	std::queue<MouseEvent> m_eventBuffer;
 	int x = 0;
 	int y = 0;
 	bool leftIsDown = false;

@@ -1,6 +1,22 @@
 #ifndef I_VIEW_H
 #define I_VIEW_H
 
+///////////////////////////////////////////////////////////////////////////////
+// IView.h
+// =======
+// An interface for the View component in the Model-View-Controller (MVC) architecture.
+//
+// The purpose of the View in MVC is to display the Model's data to the user and receive input from the user.
+// The View is responsible for creating and managing the user interface elements, such as buttons and text fields,
+// and updating them based on changes in the Model's data.
+//
+// This is only an interface and does not handle any messages. Programmers must implement a derived class to handle
+// specific messages.
+//
+// AUTHOR: TAMAS GABOR POROS
+// CREATED: 2023-05-08
+///////////////////////////////////////////////////////////////////////////////
+
 #include <memory>
 #include <vector>
 #include "../Model/Persistence/ModelStructs.h"

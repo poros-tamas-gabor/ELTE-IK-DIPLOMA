@@ -1,11 +1,14 @@
 #ifndef TERRAIN_RENDER_RESOURCE_H
 #define TERRAIN_RENDER_RESOURCE_H
 
-// -------------------------------------
-//	
-//	Message ID for Terrain Model (IDM)
+////////////////////////////////////////////
 //
-// -------------------------------------
+// Message IDs for Terrain Model (IDM)
+//
+// The enum IModelwMessageIDs identifies messages 
+// that are sent by the controller to the model.
+//
+////////////////////////////////////////////
 
 enum IModelMessageIDs
 {
@@ -63,6 +66,14 @@ enum IModelMessageIDs
 	IDM_CLEAR_MESHES
 };
 
+////////////////////////////////////////////
+//
+// Message IDs for Terrain View (IDV)
+//
+// The enum IViewMessageIDs identifies messages 
+// that are sent by the controller to the view.
+//
+////////////////////////////////////////////
 
 enum IViewMessageIDs
 {
@@ -77,11 +88,15 @@ enum IViewMessageIDs
 	IDV_FLYTHROUGH_RECORD_STOP
 };
 
-// -------------------------------------
-//	
-//	Message ID for Terrain Controller (IDC) 
+////////////////////////////////////////////
 //
-// -------------------------------------
+// Message IDs for Terrain Controller (IDC)
+//
+// The enum IControllerMessageIDs identifies messages 
+// that are sent by the GUI to the controller or 
+// forwarded by a controller to another controller.
+//
+////////////////////////////////////////////
 
 enum IControllerMessageIDs
 {
@@ -295,5 +310,4 @@ inline	IModelMessageIDs IDC2IDM(IControllerMessageIDs message)
 		return IDM_INVALID;
 	}
 }
-
 #endif

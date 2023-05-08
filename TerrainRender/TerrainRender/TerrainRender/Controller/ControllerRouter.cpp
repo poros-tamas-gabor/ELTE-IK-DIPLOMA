@@ -1,31 +1,13 @@
 #include "ControllerRouter.h"
 #include "ControllerFlythrough.h"
 #include <algorithm>
+
 ControllerRouter::ControllerRouter() : m_isActive(true)
 {
 	m_messageSystem = std::make_shared<ControllerMessageSystem>(m_controllers);
 	m_terrainModel	= nullptr;
 	m_mouse			= nullptr;
 	m_keyboard		= nullptr;
-}
-
-void ControllerRouter::SetMessageSystem(ControllerMessageSystemPtr) {}
-
-void ControllerRouter::SetTerrainView(IViewPtr pView)
-{
-	this->m_terrainView = pView;
-}
-void ControllerRouter::SetTerrainModel(IModelPtr pModel)
-{
-	this->m_terrainModel = pModel;
-}
-void ControllerRouter::SetMouse(MousePtr mouse)
-{
-	this->m_mouse = mouse;
-}
-void ControllerRouter::SetKeyboard(KeyboardPtr keyboard)
-{
-	this->m_keyboard = keyboard;
 }
 
 bool ControllerRouter::Initialize(IModelPtr pModel, IViewPtr pView, MousePtr mouse, KeyboardPtr keyboard)
@@ -58,6 +40,25 @@ void ControllerRouter::Shutdown()
 bool ControllerRouter::IsActive() const
 {
 	return this->m_isActive;
+}
+
+void ControllerRouter::SetMessageSystem(ControllerMessageSystemPtr) {}
+
+void ControllerRouter::SetTerrainView(IViewPtr pView)
+{
+	this->m_terrainView = pView;
+}
+void ControllerRouter::SetTerrainModel(IModelPtr pModel)
+{
+	this->m_terrainModel = pModel;
+}
+void ControllerRouter::SetMouse(MousePtr mouse)
+{
+	this->m_mouse = mouse;
+}
+void ControllerRouter::SetKeyboard(KeyboardPtr keyboard)
+{
+	this->m_keyboard = keyboard;
 }
 
 bool ControllerRouter::AddController(IControllerPtr controller)

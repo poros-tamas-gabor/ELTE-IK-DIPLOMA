@@ -156,9 +156,8 @@
     <ClCompile Include="Controller\ControllerRouter.cpp" />
     <ClCompile Include="Controller\Controller3DExplore.cpp" />
     <ClCompile Include="Controller\ControllerFlythrough.cpp" />
-    <ClCompile Include="Controller\GuiController.cpp" />
+    <ClCompile Include="Controller\ControllerGui.cpp" />
     <ClCompile Include="Controller\MessageSystem.cpp" />
-    <ClCompile Include="Controller\Tasks.cpp" />
     <ClCompile Include="DialogWin.cpp" />
     <ClCompile Include="ErrorHandler.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
@@ -209,10 +208,9 @@
     <ClInclude Include="Controller\ControllerRouter.h" />
     <ClInclude Include="Controller\Controller3DExplore.h" />
     <ClInclude Include="Controller\ControllerFlythrough.h" />
-    <ClInclude Include="Controller\GuiController.h" />
+    <ClInclude Include="Controller\ControllerGui.h" />
     <ClInclude Include="Controller\IController.h" />
     <ClInclude Include="Controller\MessageSystem.h" />
-    <ClInclude Include="Controller\Tasks.h" />
     <ClInclude Include="DialogWin.h" />
     <ClInclude Include="ErrorHandler.h" />
     <ClInclude Include="ImGui\imconfig.h" />

@@ -6,7 +6,7 @@ protected:
 	std::shared_ptr<MockIView>						m_mock_view;
 	std::shared_ptr<MockKeyboard>					m_mock_keyboard;
 	std::shared_ptr<MockMouse>						m_mock_mouse;
-	GuiController									m_controller;
+	ControllerGui									m_controller;
 
 	void SetUp() override {
 

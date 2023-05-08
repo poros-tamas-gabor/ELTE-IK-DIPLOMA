@@ -9,7 +9,7 @@
 #include <wrl/client.h>
 
 //TODO: DELETE
-#include "Controller/GuiController.h"
+#include "Controller/ControllerGui.h"
 #include "Controller/Controller3DExplore.h"
 #include "Controller/ControllerFlythrough.h"
 
@@ -307,7 +307,7 @@ bool App::Initialize(HINSTANCE hInstance, int screenWidth, int screenHeight)
 		explorec->Initialize(this->m_terrainModel, this->m_terrainView, this->m_mouse, this->m_keyboard);
 		this->m_terrainController->AddController(explorec);
 
-		IControllerPtr guic = std::make_shared<GuiController>();
+		IControllerPtr guic = std::make_shared<ControllerGui>();
 
 		guic->Initialize(this->m_terrainModel, this->m_terrainView, this->m_mouse, this->m_keyboard);
 		this->m_terrainController->AddController(guic);

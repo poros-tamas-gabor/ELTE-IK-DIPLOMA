@@ -18,3 +18,13 @@ std::string StringConverter::WideToString(const std::wstring& wstr)
 	wcstombs_s(&size, &str[0], str.size() + 1, wstr.c_str(), wstr.size());
 	return str;
 }
+
+std::wstring StringConverter::GetFileNameFromPath(const std::wstring& path)
+{
+	size_t pos = path.find_last_of(L"\\/");
+	if (pos != std::wstring::npos)
+	{
+		return path.substr(pos + 1);
+	}
+	return path;
+}

@@ -1,6 +1,19 @@
 #ifndef KEYBOARDEVENT_H
 #define KEYBOARDEVENT_H
 
+///////////////////////////////////////////////////////////////////////////////
+// KeyboardEvent.h
+// ===============
+// A class that encapsulates information about a keyboard event, such as whether a key was pressed or released and which key was affected.
+//
+// To use this class, create a KeyboardEvent object and pass it to the appropriate event handler function.
+// The event handler function can then extract information about the keyboard event from the KeyboardEvent object.
+//
+// AUTHOR: Pindrought
+// URL: https://github.com/Pindrought/DirectX-11-Engine-VS2017
+// CREATED: Unknown
+// MODIFIED: 2023-05-08 by TAMAS GABOR POROS
+///////////////////////////////////////////////////////////////////////////////
 
 class KeyboardEvent
 {
@@ -12,8 +25,8 @@ public:
 		Invalid
 	};
 private:
-	KeyboardEvent::Type _type;
-	unsigned char _code;
+	KeyboardEvent::Type m_type;
+	unsigned char m_code;
 
 public:
 	KeyboardEvent();

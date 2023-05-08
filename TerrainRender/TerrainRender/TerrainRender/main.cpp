@@ -36,7 +36,7 @@ int CALLBACK wWinMain(
 	}
 	catch (...)
 	{
-		ErrorHandler::Log("Unknown Exceptio: No details available");
+		ErrorHandler::Log("Unknown Exception: No details available");
 	}
 	return -1;
 }

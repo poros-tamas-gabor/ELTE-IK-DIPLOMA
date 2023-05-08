@@ -1,22 +1,22 @@
 #include "KeyboardEvent.h"
 
-KeyboardEvent::KeyboardEvent() : _type (KeyboardEvent::Type::Invalid) , _code(0u) {}
-KeyboardEvent::KeyboardEvent(KeyboardEvent::Type type, unsigned char code) : _type(type), _code(code) {}
+KeyboardEvent::KeyboardEvent() : m_type (KeyboardEvent::Type::Invalid) , m_code(0u) {}
+KeyboardEvent::KeyboardEvent(KeyboardEvent::Type type, unsigned char code) : m_type(type), m_code(code) {}
 
 bool KeyboardEvent::IsPress() const
 {
-	return this->_type == KeyboardEvent::Type::Press;
+	return this->m_type == KeyboardEvent::Type::Press;
 }
 bool KeyboardEvent::IsRelease() const
 {
-	return this->_type == KeyboardEvent::Type::Release;
+	return this->m_type == KeyboardEvent::Type::Release;
 
 }
 bool KeyboardEvent::IsValid() const
 {
-	return this->_type != KeyboardEvent::Type::Invalid;
+	return this->m_type != KeyboardEvent::Type::Invalid;
 }
 unsigned char KeyboardEvent::GetKeyCode() const
 {
-	return this->_code;
+	return this->m_code;
 }

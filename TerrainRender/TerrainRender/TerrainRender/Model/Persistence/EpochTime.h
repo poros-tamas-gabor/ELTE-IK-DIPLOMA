@@ -16,7 +16,7 @@ public:
     EpochTime operator-(const EpochTime& other) const;
     bool operator==(const EpochTime& other) const;
 
-    double diffInMillis(const EpochTime& other) const;
+    double DiffInMilliSec(const EpochTime& other) const;
 
     EpochTime AddMilliSeconds(double millisecond) const;
 

@@ -19,7 +19,7 @@ protected:
 	}
 };
 
-TEST_F(ControllerFlythroughTest, Initialize)
+TEST_F(ControllerFlythroughTest, Test_Initialize)
 {
 	IModelPtr									mock_model;
 	IViewPtr									mock_view;
@@ -37,7 +37,7 @@ TEST_F(ControllerFlythroughTest, Initialize)
 	ASSERT_FALSE((controller.IsActive()));
 }
 
-TEST_F(ControllerFlythroughTest, HandleMessage)
+TEST_F(ControllerFlythroughTest, Test_HandleMessage)
 {
 	ASSERT_FALSE(m_controller.HandleMessage(IDCC_IS_FLYTHROUGH_MODE_ON, {}, {}));
 	ASSERT_FALSE((m_controller.IsActive()));

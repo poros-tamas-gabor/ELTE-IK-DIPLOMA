@@ -28,12 +28,12 @@ protected:
 	}
 };
 
-TEST_F(PolyLineUnitTest, InitializeReturnsTrueWithValidParameters)
+TEST_F(PolyLineUnitTest, Test_InitializeReturns)
 {
 	PolyLine polyline;
 	ASSERT_TRUE(polyline.Initialize(m_device, m_vertexShader, m_pixelShader, m_vertices, m_indices, _vertexCount, _indexCount));
 }
-TEST_F(PolyLineUnitTest, InitializeReturnsFalseWithNullVertexShader)
+TEST_F(PolyLineUnitTest, Test_InitializeReturnsFalseWithNullVertexShader)
 {
 
 	PolyLine polyline;
@@ -42,7 +42,7 @@ TEST_F(PolyLineUnitTest, InitializeReturnsFalseWithNullVertexShader)
 }
 
 // Test case to check if the Initialize method returns false when the device parameter is null
-TEST_F(PolyLineUnitTest, InitializeReturnsFalseWithNullDevice)
+TEST_F(PolyLineUnitTest, Test_InitializeReturnsFalseWithNullDevice)
 {
 	PolyLine polyline;
 	bool result = polyline.Initialize(nullptr, m_vertexShader, m_pixelShader, m_vertices, m_indices, _vertexCount, _indexCount);
@@ -50,7 +50,7 @@ TEST_F(PolyLineUnitTest, InitializeReturnsFalseWithNullDevice)
 }
 
 // Test case to check if the Initialize method returns false when the vertex shader parameter is null
-TEST_F(PolyLineUnitTest, InitializeReturnsFalseWithNullPixelShader)
+TEST_F(PolyLineUnitTest, Test_InitializeReturnsFalseWithNullPixelShader)
 {
 	PolyLine polyline;
 
@@ -59,7 +59,7 @@ TEST_F(PolyLineUnitTest, InitializeReturnsFalseWithNullPixelShader)
 	EXPECT_FALSE(result);
 }
 
-TEST_F(PolyLineUnitTest, SetNameAndGetName)
+TEST_F(PolyLineUnitTest, Test_SetNameAndGetName)
 {
 	PolyLine polyline;
 	ASSERT_TRUE(polyline.Initialize(m_device, m_vertexShader, m_pixelShader, m_vertices, m_indices, _vertexCount, _indexCount));
@@ -69,7 +69,7 @@ TEST_F(PolyLineUnitTest, SetNameAndGetName)
 
 }
 
-TEST_F(PolyLineUnitTest, Rotate)
+TEST_F(PolyLineUnitTest, Test_Rotate)
 {
 	PolyLine			polyline;
 	Vector3D			actual;
@@ -93,7 +93,7 @@ TEST_F(PolyLineUnitTest, Rotate)
 	ASSERT_EQ(actual, Vector3D(0, 0, 0));
 }
 
-TEST_F(PolyLineUnitTest, Scale)
+TEST_F(PolyLineUnitTest, Test_Scale)
 {
 	PolyLine			polyline;
 	Vector3D			actual;
@@ -115,7 +115,7 @@ TEST_F(PolyLineUnitTest, Scale)
 	ASSERT_EQ(actual, Vector3D(1.0f, 1.0f, 1.0f));
 }
 
-TEST_F(PolyLineUnitTest, Translate)
+TEST_F(PolyLineUnitTest, Test_Translate)
 {
 	PolyLine			polyline;
 	Vector3D			actual;
@@ -140,7 +140,7 @@ TEST_F(PolyLineUnitTest, Translate)
 }
 
 
-TEST_F(PolyLineUnitTest, SetColor)
+TEST_F(PolyLineUnitTest, Test_SetColor)
 {
 	PolyLine polyline;
 	polyline.SetColor(1.0f, 0.5f, 0.0f, 1.0f);
@@ -150,7 +150,7 @@ TEST_F(PolyLineUnitTest, SetColor)
 	ASSERT_EQ(expected, actual);
 }
 
-TEST_F(PolyLineUnitTest, SetIsSeenAndIsSeen)
+TEST_F(PolyLineUnitTest, Test_SetIsSeenAndIsSeen)
 {
 	PolyLine polyline;
 	polyline.SetIsSeen(true);

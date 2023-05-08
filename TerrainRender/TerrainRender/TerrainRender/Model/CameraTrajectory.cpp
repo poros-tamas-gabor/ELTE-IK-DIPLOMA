@@ -13,7 +13,7 @@ bool CameraTrajectory::Initialize(const std::vector<CameraPose>& cameraPoses, IR
 	this->m_start = cameraPoses.at(0).epochtime;
 	for (const CameraPose& camerapose : cameraPoses)
 	{
-		float elapsedMsec = static_cast<float>(camerapose.epochtime.diffInMillis(m_start));
+		float elapsedMsec = static_cast<float>(camerapose.epochtime.DiffInMilliSec(m_start));
 		this->m_elapsedmsecs.push_back(elapsedMsec);
 		this->m_positions.push_back({ (float)camerapose.east,-(float)camerapose.down,(float)camerapose.north });
 		this->m_rotations.push_back({ -(float)camerapose.pitch, (float)camerapose.yaw, -(float)camerapose.roll });

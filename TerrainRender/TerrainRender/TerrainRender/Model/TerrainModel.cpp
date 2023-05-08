@@ -508,7 +508,7 @@ bool	TerrainModel::LoadProject_withSoftEdges(const std::vector<std::wstring>& fi
 		}
 		catch (...)
 		{
-			ErrorHandler::Log("Unknown Exceptio: No details available");
+			ErrorHandler::Log("Unknown Exception: No details available");
 		}
 	}
 	return true;

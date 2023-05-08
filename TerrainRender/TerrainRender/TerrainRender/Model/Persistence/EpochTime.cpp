@@ -42,7 +42,7 @@ EpochTime EpochTime::operator-(const EpochTime& other) const
     }
     return EpochTime(sec, nsec);
 }
-double EpochTime::diffInMillis(const EpochTime& other) const
+double EpochTime::DiffInMilliSec(const EpochTime& other) const
 {
     EpochTime diff = *this - other;
     double ellapsedMillisec = diff.m_seconds * MSEC_PER_SEC + (double)diff.m_nanoseconds / NSEC_PER_MSEC;

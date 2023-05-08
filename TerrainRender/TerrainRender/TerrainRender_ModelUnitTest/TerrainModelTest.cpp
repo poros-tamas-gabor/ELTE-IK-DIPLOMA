@@ -25,7 +25,7 @@ protected:
 	}
 };
 
-TEST_F(TerrainModelTest, Initalize)
+TEST_F(TerrainModelTest, Test_InitalizeInvalid)
 {
 	IDataAccessPtr							perstistence;
 	IModelPtr								terrainModel;
@@ -40,7 +40,7 @@ TEST_F(TerrainModelTest, Initalize)
 	ASSERT_FALSE(terrainModel->Initalize(m_mock_persistence, m_device, 800,600, 0, 500, PI / 3));
 }
 
-TEST_F(TerrainModelTest, Resize)
+TEST_F(TerrainModelTest, Test_Resize)
 {
 	IModelPtr								terrainModel;
 
@@ -69,11 +69,11 @@ TEST_F(TerrainModelTest, Resize)
 
 
 
-TEST_F(TerrainModelTest, HandleMessage_IDM_INVALID)
+TEST_F(TerrainModelTest, Test_HandleMessage_IDM_INVALID)
 {
 	ASSERT_FALSE(m_terrainModel->HandleMessage(IDM_INVALID, {}, {}, {}));
 }
-TEST_F(TerrainModelTest, HandleMessage_IDM_LOAD_TERRAIN_SHARP)
+TEST_F(TerrainModelTest, Test_HandleMessage_IDM_LOAD_TERRAIN_SHARP)
 {
 
 	std::vector<stlFacet>	empty{};
@@ -89,7 +89,7 @@ TEST_F(TerrainModelTest, HandleMessage_IDM_LOAD_TERRAIN_SHARP)
 	ASSERT_TRUE(m_terrainModel->HandleMessage(IDM_LOAD_TERRAIN_SHARP, { L"path" }, {}, {}));
 }
 
-TEST_F(TerrainModelTest, HandleMessage_IDM_LOAD_TERRAIN_SOFT)
+TEST_F(TerrainModelTest, Test_HandleMessage_IDM_LOAD_TERRAIN_SOFT)
 {
 	//IDM_LOAD_TERRAIN_SHARP
 	std::vector<StlVertex>		emptyVertices;
@@ -111,7 +111,7 @@ TEST_F(TerrainModelTest, HandleMessage_IDM_LOAD_TERRAIN_SOFT)
 	ASSERT_TRUE(m_terrainModel->HandleMessage(IDM_LOAD_TERRAIN_SOFT, { L"path" }, {}, {}));
 }
 
-TEST_F(TerrainModelTest, HandleMessage_IDM_LOAD_PROJECT_SOFT)
+TEST_F(TerrainModelTest, Test_HandleMessage_IDM_LOAD_PROJECT_SOFT)
 {
 	//IDM_LOAD_TERRAIN_SHARP
 	std::vector<std::wstring>	filepaths {L"path1", L"path2"};
@@ -122,7 +122,7 @@ TEST_F(TerrainModelTest, HandleMessage_IDM_LOAD_PROJECT_SOFT)
 	m_terrainModel->HandleMessage(IDM_LOAD_PROJECT_SOFT, filepaths, {}, {});
 }
 
-TEST_F(TerrainModelTest, HandleMessage_IDM_LOAD_PROJECT_SHARP)
+TEST_F(TerrainModelTest, Test_HandleMessage_IDM_LOAD_PROJECT_SHARP)
 {
 	//IDM_LOAD_TERRAIN_SHARP
 	std::vector<std::wstring>	filepaths{ L"path1", L"path2" };
@@ -133,7 +133,7 @@ TEST_F(TerrainModelTest, HandleMessage_IDM_LOAD_PROJECT_SHARP)
 	m_terrainModel->HandleMessage(IDM_LOAD_PROJECT_SHARP, filepaths, {}, {});
 }
 
-TEST_F(TerrainModelTest, HandleMessage_IDM_LOAD_CONFIGURATION)
+TEST_F(TerrainModelTest, Test_HandleMessage_IDM_LOAD_CONFIGURATION)
 {
 	ParameterFile params;
 
@@ -142,7 +142,7 @@ TEST_F(TerrainModelTest, HandleMessage_IDM_LOAD_CONFIGURATION)
 	ASSERT_TRUE(m_terrainModel->HandleMessage(IDM_LOAD_CONFIGURATION, { L"path" }, {}, {}));
 }
 
-TEST_F(TerrainModelTest, HandleMessage_IDM_LOAD_CAMERA_TRAJECTORY)
+TEST_F(TerrainModelTest, Test_HandleMessage_IDM_LOAD_CAMERA_TRAJECTORY)
 {
 	std::vector<CameraPose> empty = {};
 
@@ -153,7 +153,7 @@ TEST_F(TerrainModelTest, HandleMessage_IDM_LOAD_CAMERA_TRAJECTORY)
 
 //	IDM_ORIGO_SET_LONGITUDE,
 //	IDM_ORIGO_SET_LATITUDE,
-TEST_F(TerrainModelTest, HandleMessage_IDM_ORIGO_SET_LONGITUDE_LATITUDE)
+TEST_F(TerrainModelTest, Test_HandleMessage_IDM_ORIGO_SET_LONGITUDE_LATITUDE)
 {
 	ASSERT_TRUE(m_terrainModel->HandleMessage(IDM_ORIGO_SET_LONGITUDE, {}, { 10.0f }, {}));
 	ASSERT_TRUE(m_terrainModel->HandleMessage(IDM_ORIGO_SET_LATITUDE, {}, { 30.0f }, {}));
@@ -162,7 +162,7 @@ TEST_F(TerrainModelTest, HandleMessage_IDM_ORIGO_SET_LONGITUDE_LATITUDE)
 	ASSERT_FLOAT_EQ(30.f, m_subscriber->m_explore3dState.origo.latitude);
 }
 
-TEST_F(TerrainModelTest, HandleMessage_IDM_E3D_)
+TEST_F(TerrainModelTest, Test_HandleMessage_IDM_E3D_)
 {
 	Vector3D startPos				= m_terrainModel->m_camera->GetPositionVec();
 	Vector3D previousPos		= m_terrainModel->m_camera->GetPositionVec();
@@ -258,7 +258,7 @@ TEST_F(TerrainModelTest, HandleMessage_IDM_E3D_)
 	ASSERT_EQ(actualRot, startRot);
 }
 
-TEST_F(TerrainModelTest, HandleMessage_IDM_SET_CAMERA_)
+TEST_F(TerrainModelTest, Test_HandleMessage_IDM_SET_CAMERA_)
 {
 	ASSERT_TRUE(m_terrainModel->HandleMessage(IDM_SET_CAMERA_FIELD_OF_VIEW, {}, {PI/2 }, {}));
 	ASSERT_FLOAT_EQ(PI / 2, m_terrainModel->m_camera->GetFOVrad());
@@ -273,7 +273,7 @@ TEST_F(TerrainModelTest, HandleMessage_IDM_SET_CAMERA_)
 	m_terrainModel->m_camera->GetFOVrad();
 }
 
-TEST_F(TerrainModelTest, HandleMessage_IDM_FLYTHROUGH_)
+TEST_F(TerrainModelTest, Test_HandleMessage_IDM_FLYTHROUGH_)
 {
 	Vector3D startPos = m_terrainModel->m_camera->GetPositionVec();
 	Vector3D previousPos = m_terrainModel->m_camera->GetPositionVec();
@@ -293,7 +293,7 @@ TEST_F(TerrainModelTest, HandleMessage_IDM_FLYTHROUGH_)
 //	IDM_SET_TIME_E3D,
 //	IDM_SET_START_TIME_TRAJECTORY,
 
-TEST_F(TerrainModelTest, HandleMessage_IDM_SET_TIME)
+TEST_F(TerrainModelTest, Test_HandleMessage_IDM_SET_TIME)
 {
 	ASSERT_FALSE(m_terrainModel->HandleMessage(IDM_SET_TIME_E3D, {}, {}, {}));
 	ASSERT_TRUE(m_terrainModel->HandleMessage(IDM_SET_TIME_E3D, {}, {}, {100}));
@@ -307,7 +307,7 @@ TEST_F(TerrainModelTest, HandleMessage_IDM_SET_TIME)
 	ASSERT_EQ(0, m_subscriber->m_flythroughState.currentEpochTime.getSeconds());
 }
 
-TEST_F(TerrainModelTest, HandleMessage_IDM_MESH_GROUP)
+TEST_F(TerrainModelTest, Test_HandleMessage_IDM_MESH_GROUP)
 {
 	Vector3D expectedScale			= { 2.0f, 2.0f, 2.0f };
 	Vector3D expectedRotation		= { PI/2, PI/3, PI/4 };

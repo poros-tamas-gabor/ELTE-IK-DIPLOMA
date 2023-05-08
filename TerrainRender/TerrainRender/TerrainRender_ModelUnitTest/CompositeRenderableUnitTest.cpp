@@ -29,32 +29,32 @@ protected:
 
 };
 
-TEST_F(CompositeRenderableUnitTest, InitializeReturnsTrueWithValidParameters)
+TEST_F(CompositeRenderableUnitTest, Test_Initialize)
 {
 	CompositeRenderable<VertexMesh> meshes;
 	ASSERT_TRUE(meshes.Initialize(m_device, m_vertexShader, m_pixelShader, NULL, NULL, NULL, NULL));
 }
 
-TEST_F(CompositeRenderableUnitTest, InitializeReturnsFalseWithNullVertexShader)
+TEST_F(CompositeRenderableUnitTest, Test_InitializeReturnsFalseWithNullVertexShader)
 {
 
 	CompositeRenderable<VertexMesh> meshes;
 	bool result = meshes.Initialize(m_device, nullptr, m_pixelShader, NULL, NULL, NULL, NULL);
 	EXPECT_FALSE(result);
 }
-TEST_F(CompositeRenderableUnitTest, InitializeReturnsFalseWithNullDevice)
+TEST_F(CompositeRenderableUnitTest, Test_InitializeReturnsFalseWithNullDevice)
 {
 	CompositeRenderable<VertexMesh> meshes;
 	bool result = meshes.Initialize(nullptr, m_vertexShader, m_pixelShader, NULL, NULL, NULL, NULL);
 	EXPECT_FALSE(result);
 }
-TEST_F(CompositeRenderableUnitTest, InitializeReturnsFalseWithNullPixelShader)
+TEST_F(CompositeRenderableUnitTest, Test_InitializeReturnsFalseWithNullPixelShader)
 {
 	CompositeRenderable<VertexMesh> meshes;
 	bool result = meshes.Initialize(m_device, m_vertexShader, nullptr, NULL, NULL, NULL, NULL);
 	EXPECT_FALSE(result);
 }
-TEST_F(CompositeRenderableUnitTest, Add)
+TEST_F(CompositeRenderableUnitTest, Test_Add)
 {
 	CompositeRenderable<VertexMesh> meshes;
 
@@ -67,7 +67,7 @@ TEST_F(CompositeRenderableUnitTest, Add)
 	ASSERT_TRUE(meshes.Add(vertices, indices, vertexCount, indexCount, PolygonMeshCreator(), L"test"));
 }
 
-TEST_F(CompositeRenderableUnitTest, Remove)
+TEST_F(CompositeRenderableUnitTest, Test_Remove)
 {
 	CompositeRenderable<VertexMesh> meshes;
 
@@ -86,7 +86,7 @@ TEST_F(CompositeRenderableUnitTest, Remove)
 	ASSERT_FALSE(meshes.Remove(last));
 }
 
-TEST_F(CompositeRenderableUnitTest, ClearRenderable)
+TEST_F(CompositeRenderableUnitTest, Test_ClearRenderable)
 {
 	CompositeRenderable<VertexMesh> meshes;
 
@@ -105,7 +105,7 @@ TEST_F(CompositeRenderableUnitTest, ClearRenderable)
 	ASSERT_FALSE(meshes.Remove(last));
 }
 
-TEST_F(CompositeRenderableUnitTest, Rotate)
+TEST_F(CompositeRenderableUnitTest, Test_Rotate)
 {
 	CompositeRenderable<VertexMesh> meshes;
 
@@ -130,7 +130,7 @@ TEST_F(CompositeRenderableUnitTest, Rotate)
 
 
 
-TEST_F(CompositeRenderableUnitTest, Translate)
+TEST_F(CompositeRenderableUnitTest, Test_Translate)
 {
 	CompositeRenderable<VertexMesh> meshes;
 
@@ -153,7 +153,7 @@ TEST_F(CompositeRenderableUnitTest, Translate)
 	ASSERT_EQ(snd->GetState().translation, Vector3D(1.0f, -1.0f, 1.0f));
 }
 
-TEST_F(CompositeRenderableUnitTest, Scale)
+TEST_F(CompositeRenderableUnitTest, Test_Scale)
 {
 	CompositeRenderable<VertexMesh> meshes;
 
@@ -177,7 +177,7 @@ TEST_F(CompositeRenderableUnitTest, Scale)
 }
 
 
-TEST_F(CompositeRenderableUnitTest, SetColor)
+TEST_F(CompositeRenderableUnitTest, Test_SetColor)
 {
 	CompositeRenderable<VertexMesh> meshes;
 
@@ -200,7 +200,7 @@ TEST_F(CompositeRenderableUnitTest, SetColor)
 	ASSERT_EQ(snd->GetState().color, Vector4D(0.5f, 0.5f, 0.5f, 1.0f));
 }
 
-TEST_F(CompositeRenderableUnitTest, SetColorComponent)
+TEST_F(CompositeRenderableUnitTest, Test_SetColorComponent)
 {
 	CompositeRenderable<VertexMesh> meshes;
 

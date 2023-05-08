@@ -1,5 +1,5 @@
 #include "pch.h"
-TEST(EpochTimeUnitTest, Constructor)
+TEST(EpochTimeUnitTest, Test_Constructor)
 {
 	EpochTime e;
 	EXPECT_EQ(e.getNanoseconds(), 0LL);
@@ -19,7 +19,7 @@ TEST(EpochTimeUnitTest, Constructor)
 	EXPECT_EQ(e3.getSeconds(), 2002LL);
 }
 
-TEST(EpochTimeUnitTest, OperatorPlus)
+TEST(EpochTimeUnitTest, Test_OperatorPlus)
 {
 	EpochTime e = { 100LL,10LL };
 	EpochTime sum = e + EpochTime();
@@ -33,7 +33,7 @@ TEST(EpochTimeUnitTest, OperatorPlus)
 	EXPECT_EQ(sum.getNanoseconds(), 11LL);
 }
 
-TEST(EpochTimeUnitTest, OperatorMinus)
+TEST(EpochTimeUnitTest, Test_OperatorMinus)
 {
 	EpochTime e = { 100LL,10LL };
 	EpochTime diff = e - EpochTime();
@@ -46,15 +46,15 @@ TEST(EpochTimeUnitTest, OperatorMinus)
 	EXPECT_EQ(diff.getNanoseconds(), 999999991LL);
 }
 
-TEST(EpochTimeUnitTest, diffInMillis)
+TEST(EpochTimeUnitTest, Test_DiffInMilliSec)
 {
 	EpochTime e = { 100LL,10LL };
 	EpochTime e1 = { 90LL, 50LL };
-	double diff = e.diffInMillis(e1);
+	double diff = e.DiffInMilliSec(e1);
 	EXPECT_NEAR(diff, 10 * 1000.0 + 20 / 1000000.0, 0.0001);
 }
 
-TEST(EpochTimeUnitTest, AddMilisec)
+TEST(EpochTimeUnitTest, Test_AddMilisec)
 {
 	EpochTime e = { 100LL,10LL };
 	EpochTime sum = e.AddMilliSeconds(2 * EpochTime::MSEC_PER_SEC); 

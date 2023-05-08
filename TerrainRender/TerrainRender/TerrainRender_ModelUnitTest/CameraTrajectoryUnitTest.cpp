@@ -33,13 +33,13 @@ protected:
 		cameraPose = { {5, 0}, -1.0f, 1.0f, 1.5f, 2.0f, 2.0f, -1.0f };
 		m_cameraPoses.push_back(cameraPose);
 
-		m_trajectory.Initialize(m_cameraPoses, m_polyline, m_camera);
+		ASSERT_TRUE(m_trajectory.Initialize(m_cameraPoses, m_polyline, m_camera));
 
 
     }
 };
 
-TEST_F(CameraTrajectoryTest, Initialize)
+TEST_F(CameraTrajectoryTest, Test_InitializeInvalid)
 {
 	CameraTrajectory				trajectory;
 	CameraPtr						nullCamera;
@@ -56,7 +56,12 @@ TEST_F(CameraTrajectoryTest, Initialize)
 	ASSERT_THROW(trajectory.Initialize(m_cameraPoses, m_polyline, nullCamera), TRException);
 
 	ASSERT_FALSE(trajectory.IsInitialized());
-	trajectory.Initialize(m_cameraPoses, m_polyline, m_camera);
+}
+TEST_F(CameraTrajectoryTest, Test_Initialize)
+{
+	CameraTrajectory				trajectory;
+
+	ASSERT_TRUE(trajectory.Initialize(m_cameraPoses, m_polyline, m_camera));
 	ASSERT_TRUE(trajectory.IsInitialized());
 
 	trajectory.Clear();
@@ -68,7 +73,7 @@ TEST_F(CameraTrajectoryTest, Initialize)
 	ASSERT_EQ(m_trajectory.GetStartEpochTime(), EpochTime(0, 0));
 }
 
-TEST_F(CameraTrajectoryTest, UpdateCamera)
+TEST_F(CameraTrajectoryTest, Test_UpdateCamera)
 {
 	m_trajectory.ResetStartPosition();
 	ASSERT_TRUE(m_trajectory.UpdateCamera(0));

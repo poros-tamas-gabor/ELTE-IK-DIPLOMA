@@ -19,7 +19,7 @@ protected:
 	}
 };
 
-TEST_F(ControllerGuiTest, Initialize)
+TEST_F(ControllerGuiTest, Test_Initialize)
 {
 	IModelPtr									mock_model;
 	IViewPtr									mock_view;
@@ -51,7 +51,7 @@ void OpenFileDialogMultipleSelection(std::vector<std::wstring>& files, const wch
 {
 	files = { L"path1", L"path2" };
 }
-TEST_F(ControllerGuiTest, HandleMessage)
+TEST_F(ControllerGuiTest, Test_HandleMessage)
 {
 	ASSERT_TRUE(m_controller.HandleMessage(IDCC_IS_FLYTHROUGH_MODE_ON, {}, {}));
 	ASSERT_TRUE((m_controller.IsActive()));

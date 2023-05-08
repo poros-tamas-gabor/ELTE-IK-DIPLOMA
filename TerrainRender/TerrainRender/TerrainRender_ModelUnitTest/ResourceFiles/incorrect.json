@@ -1,0 +1,18 @@
+{
+	"origo": {
+		"latitude": 47.497913
+	},
+	"terrain": {
+		"translation": [10, 11, 12],
+		"rotation": [20, 21, 22],
+		"color": {
+			"_buildings": [100,101,102, 1],
+			"_plants": [200, 201, 202, 1],
+			"_ground": [210, 211, 212, 1]
+		}
+	},
+	"trajectory": {
+		"translation": [700, 65, -250],
+		"rotation": [0, 0, 0]
+	}
+}

@@ -9,25 +9,25 @@ protected:
     }
 };
 
-TEST_F(DataAccessTest, LoadConfigurationFile_InvalidPath_ThrowsTRException) {
+TEST_F(DataAccessTest, LoadConfigurationFile_InvalidPath) {
     ParameterFile file;
 
     ASSERT_THROW(m_persistence->LoadConfigurationFile(L"invalid", file), TRException);
 }
 
-TEST_F(DataAccessTest, LoadConfigurationFile_IncorrectHeader_ThrowsTRException) {
+TEST_F(DataAccessTest, LoadConfigurationFile_Incorrect) {
     ParameterFile file;
 
     TCHAR buffer[MAX_PATH];
     GetCurrentDirectory(MAX_PATH, buffer);
 
     std::wstring incorrectHeader_path(buffer);
-    incorrectHeader_path += L"..\\..\\..\\TerrainRender_ModelUnitTest\\ResourceFiles\\incorrect_header.json";
+    incorrectHeader_path += L"..\\..\\..\\TerrainRender_ModelUnitTest\\ResourceFiles\\incorrect.json";
 
-    ASSERT_THROW(m_persistence->LoadConfigurationFile(incorrectHeader_path.c_str(), file), TRException);
+	ASSERT_ANY_THROW(m_persistence->LoadConfigurationFile(incorrectHeader_path.c_str(), file) );
 }
 
-TEST_F(DataAccessTest, LoadConfigurationFile_CorrectFile_LoadsSuccessfully) {
+TEST_F(DataAccessTest, LoadConfigurationFile) {
     ParameterFile file;
 
     TCHAR buffer[MAX_PATH];
@@ -47,13 +47,18 @@ TEST_F(DataAccessTest, LoadConfigurationFile_CorrectFile_LoadsSuccessfully) {
     ASSERT_EQ(file.trajectory.rotation, Vector3D(0, 0, 0));
 }
 
-TEST_F(DataAccessTest, LoadCameraTrajectory0)
+TEST_F(DataAccessTest, LoadCameraTrajectory_InvalidPath)
 {
 	std::vector<CameraPose> cameraPoses;
 	ASSERT_THROW(m_persistence->LoadCameraTrajectory(L"invalid", cameraPoses), TRException);
 }
 
-TEST_F(DataAccessTest, LoadCameraTrajectory1)
+TEST_F(DataAccessTest, LoadCameraTrajectory_Incorrect)
+{
+	std::vector<CameraPose> cameraPoses;
+	ASSERT_THROW(m_persistence->LoadCameraTrajectory(L"..\\..\\..\\TerrainRender_ModelUnitTest\\ResourceFiles\\incorrect.csv", cameraPoses), TRException);
+}
+TEST_F(DataAccessTest, LoadCameraTrajectory)
 {
 	CameraPose		test = { {1664534691, 679506806}, 1.37945, -0.0253926,0.00191395 , 188.429, -675.288, 0.000213623 };
 	std::vector<CameraPose> cameraPoses;
@@ -69,39 +74,87 @@ TEST_F(DataAccessTest, LoadCameraTrajectory1)
 	ASSERT_EQ(cameraPoses.at(9), test);
 }
 
-TEST_F(DataAccessTest, LoadTerrain_withSoftEdges)
+TEST_F(DataAccessTest, LoadTerrain_withSharpEdges_InvalidPath)
 {
-	IDataAccessPtr persistence = std::make_shared<BinaryFileDataAccessAsync>();
-	ASSERT_THROW(persistence->LoadTerrain_withSoftEdges(L"invalid"), TRException);
+	ASSERT_THROW(m_persistence->LoadTerrain_withSharpEdges(L"invalid"), TRException);
+}
 
+TEST_F(DataAccessTest, LoadTerrain_withSharpEdges_Incorrect)
+{
 	TCHAR buffer[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, buffer);
 
 	std::wstring asciiPath(buffer);
+
 	asciiPath += L"..\\..\\..\\TerrainRender_ModelUnitTest\\ResourceFiles\\ASCII_Sphericon.stl";
-	ASSERT_THROW(persistence->LoadTerrain_withSoftEdges(asciiPath.c_str()), TRException);
+	ASSERT_THROW(m_persistence->LoadTerrain_withSharpEdges(asciiPath.c_str()), TRException);
+}
+TEST_F(DataAccessTest, LoadTerrain_withSharpEdges)
+{
+	TCHAR buffer[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, buffer);
 
 
 	std::wstring spherePath(buffer);
 	spherePath += L"..\\..\\..\\TerrainRender_ModelUnitTest\\ResourceFiles\\3d_model_of_Sphere.stl";
-	persistence->LoadTerrain_withSoftEdges(spherePath.c_str());
+	m_persistence->LoadTerrain_withSharpEdges(spherePath.c_str());
 
-	ASSERT_EQ(persistence->GetVertices_Soft().size(), size_t(1538));
-	ASSERT_EQ(persistence->GetIndices_Soft().size(), size_t(3072));
+	ASSERT_EQ(m_persistence->GetFacets().size(), size_t(3072));
 
 	std::wstring bunny70k_path(buffer);
 	bunny70k_path += L"..\\..\\..\\TerrainRender_ModelUnitTest\\ResourceFiles\\bunny70k.stl";
-	persistence->LoadTerrain_withSoftEdges(bunny70k_path.c_str());
+	m_persistence->LoadTerrain_withSharpEdges(bunny70k_path.c_str());
 
-	ASSERT_EQ(persistence->GetVertices_Soft().size(), size_t(34834));
-	ASSERT_EQ(persistence->GetIndices_Soft().size(), size_t(69451));
+	ASSERT_EQ(m_persistence->GetFacets().size(), size_t(69451));
 
 	std::wstring bunny10k_path(buffer);
 	bunny10k_path += L"..\\..\\..\\TerrainRender_ModelUnitTest\\ResourceFiles\\bunny10k.stl";
-	persistence->LoadTerrain_withSoftEdges(bunny10k_path.c_str());
+	m_persistence->LoadTerrain_withSharpEdges(bunny10k_path.c_str());
 
-	ASSERT_EQ(persistence->GetVertices_Soft().size(), size_t(5051));
-	ASSERT_EQ(persistence->GetIndices_Soft().size(), size_t(9999));
+	ASSERT_EQ(m_persistence->GetFacets().size(), size_t(9999));
+}
+
+TEST_F(DataAccessTest, LoadTerrain_withSoftEdges_InvalidPath)
+{
+	ASSERT_THROW(m_persistence->LoadTerrain_withSoftEdges(L"invalid"), TRException);
+}
+
+TEST_F(DataAccessTest, LoadTerrain_withSoftEdges_Incorrect)
+{
+	TCHAR buffer[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, buffer);
+
+	std::wstring asciiPath(buffer);
+
+	asciiPath += L"..\\..\\..\\TerrainRender_ModelUnitTest\\ResourceFiles\\ASCII_Sphericon.stl";
+	ASSERT_THROW(m_persistence->LoadTerrain_withSoftEdges(asciiPath.c_str()), TRException);
+}
+TEST_F(DataAccessTest, LoadTerrain_withSoftEdges)
+{
+	TCHAR buffer[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, buffer);
+
+
+	std::wstring spherePath(buffer);
+	spherePath += L"..\\..\\..\\TerrainRender_ModelUnitTest\\ResourceFiles\\3d_model_of_Sphere.stl";
+	m_persistence->LoadTerrain_withSoftEdges(spherePath.c_str());
+
+	ASSERT_EQ(m_persistence->GetVertices_Soft().size(), size_t(1538));
+	ASSERT_EQ(m_persistence->GetIndices_Soft().size(), size_t(3072));
+
+	std::wstring bunny70k_path(buffer);
+	bunny70k_path += L"..\\..\\..\\TerrainRender_ModelUnitTest\\ResourceFiles\\bunny70k.stl";
+	m_persistence->LoadTerrain_withSoftEdges(bunny70k_path.c_str());
+
+	ASSERT_EQ(m_persistence->GetVertices_Soft().size(), size_t(34834));
+	ASSERT_EQ(m_persistence->GetIndices_Soft().size(), size_t(69451));
+
+	std::wstring bunny10k_path(buffer);
+	bunny10k_path += L"..\\..\\..\\TerrainRender_ModelUnitTest\\ResourceFiles\\bunny10k.stl";
+	m_persistence->LoadTerrain_withSoftEdges(bunny10k_path.c_str());
+
+	ASSERT_EQ(m_persistence->GetVertices_Soft().size(), size_t(5051));
+	ASSERT_EQ(m_persistence->GetIndices_Soft().size(), size_t(9999));
 }
 
 

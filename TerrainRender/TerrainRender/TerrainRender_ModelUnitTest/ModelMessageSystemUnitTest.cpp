@@ -1,7 +1,7 @@
 #include "Mocks.h"
 #include "pch.h"
 
-TEST(ModelMessageSystemTest, SubscribeUnsubscribe)
+TEST(ModelMessageSystemTest, Test_SubscribeUnsubscribe)
 {
     ModelMessageSystem system;
 
@@ -13,7 +13,7 @@ TEST(ModelMessageSystemTest, SubscribeUnsubscribe)
     EXPECT_FALSE(system.Unsubscribe(subscriber)); // Should not be able to unsubscribe twice
 }
 
-TEST(ModelMessageSystemTest, PublishModelState)
+TEST(ModelMessageSystemTest, Test_PublishModelState)
 {
     ModelMessageSystem  system;
     MeshGroupState      meshGroupState;

@@ -1,6 +1,7 @@
 #include "pch.h"
 
-TEST(CameraUnitTest, Initialize)
+
+TEST(CameraUnitTest, Test_Initialize_Invalid)
 {
 	Camera camera;
 	ASSERT_THROW(camera.Initialize(0, 1, 1, 2, 1), TRException);
@@ -10,6 +11,11 @@ TEST(CameraUnitTest, Initialize)
 	ASSERT_THROW(camera.Initialize(1, 1, 1, 2, 0), TRException);
 	ASSERT_THROW(camera.Initialize(1, 1, 1, 1, 1), TRException);
 
+}
+TEST(CameraUnitTest, Test_Initialize)
+{
+	Camera camera;
+
 	camera.Initialize(800, 600, 0.1f, 100.0f, DirectX::XMConvertToRadians(60.0f));
 	
 	DirectX::XMMATRIX actual = camera.GetProjectionMatrix();
@@ -18,7 +24,7 @@ TEST(CameraUnitTest, Initialize)
 	ASSERT_TRUE(AreMatricesEqual(actual, expected, 0.0001f));
 }
 
-TEST(CameraUnitTest, Resize)
+TEST(CameraUnitTest, Test_Resize)
 {
 	Camera camera;
 	camera.Initialize(800, 600, 0.1f, 100.0f, DirectX::XMConvertToRadians(60.0f));
@@ -32,7 +38,7 @@ TEST(CameraUnitTest, Resize)
 	ASSERT_TRUE(AreMatricesEqual(actual, expected, 0.0001f));
 }
 
-TEST(CameraUnitTest, SetPosition)
+TEST(CameraUnitTest, Test_SetPosition)
 {
 	Camera camera;
 	camera.SetPosition(1.0f, 2.0f, 3.0f);
@@ -44,7 +50,7 @@ TEST(CameraUnitTest, SetPosition)
 	ASSERT_EQ(positionV, Vector3D(1.0f, 2.0f, 3.0f));
 }
 
-TEST(CameraUnitTest, SetRotation)
+TEST(CameraUnitTest, Test_SetRotation)
 {
 	Camera camera;
 	camera.SetRotationRad(1.0f, 2.0f, 3.0f);
@@ -56,7 +62,7 @@ TEST(CameraUnitTest, SetRotation)
 	ASSERT_EQ(rotationV, Vector3D(1.0f, 2.0f, 3.0f));
 }
 
-TEST(CameraUnitTest, AdjustPosition)
+TEST(CameraUnitTest, Test_AdjustPosition)
 {
 	Camera				camera;
 	Vector3D			expected;
@@ -93,7 +99,7 @@ TEST(CameraUnitTest, AdjustPosition)
 	ASSERT_EQ(positionV, expected);
 }
 
-TEST(CameraUnitTest, AdjustRotation)
+TEST(CameraUnitTest, Test_AdjustRotation)
 {
 	Camera				camera;
 	Vector3D			expected;
@@ -130,7 +136,7 @@ TEST(CameraUnitTest, AdjustRotation)
 	ASSERT_EQ(rotationV, expected);
 }
 
-TEST(CameraUnitTest, SetNearScreen)
+TEST(CameraUnitTest, Test_SetNearScreen)
 {
 	Camera camera;
 	camera.Initialize(800, 600, 0.1f, 100.0f, DirectX::XMConvertToRadians(60.0f));
@@ -146,7 +152,7 @@ TEST(CameraUnitTest, SetNearScreen)
 	ASSERT_TRUE(AreMatricesEqual(actual, expected, 0.0001f));
 }
 
-TEST(CameraUnitTest, SetFarScreen)
+TEST(CameraUnitTest, Test_SetFarScreen)
 {
 	Camera camera;
 	camera.Initialize(800, 600, 0.1f, 100.0f, DirectX::XMConvertToRadians(60.0f));
@@ -162,7 +168,7 @@ TEST(CameraUnitTest, SetFarScreen)
 	ASSERT_TRUE(AreMatricesEqual(actual, expected, 0.0001f));
 }
 
-TEST(CameraUnitTest, Render)
+TEST(CameraUnitTest, Test_Render)
 {
 	// Create a new camera
 	Camera camera;

@@ -50,7 +50,7 @@ TEST(BinarySearchTest, Test7) {
     EXPECT_EQ(Iitenterpolation::binarySearch_greatestLessOrEqual(vec, value), expected_index);
 }
 
-TEST(LinearInterpolationTest, Calculate)
+TEST(LinearInterpolationTest, Test_Calculate)
 {
     LinearInterpolation interpolation;
     Vector3D            y;
@@ -88,7 +88,7 @@ TEST(LinearInterpolationTest, Calculate)
     ASSERT_FALSE(success);
 }
 
-TEST(LinearInterpolationTest, Calculate2)
+TEST(LinearInterpolationTest, Test_CalculateEmpty)
 {
     LinearInterpolation interpolation;
     Vector3D            y;
@@ -106,7 +106,7 @@ TEST(LinearInterpolationTest, Calculate2)
 }
 
 
-TEST(CirclularInterpolationTest, CalculateTest)
+TEST(CirclularInterpolationTest, Test_Calculate)
 {
 
     CirclularInterpolation  interpolation;

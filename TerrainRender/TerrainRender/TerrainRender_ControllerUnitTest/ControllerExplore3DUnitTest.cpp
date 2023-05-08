@@ -19,7 +19,7 @@ protected:
 	}
 };
 
-TEST_F(ControllerExplore3DTest, Initialize)
+TEST_F(ControllerExplore3DTest, Test_Initialize)
 {
 	IModelPtr									mock_model;
 	IViewPtr									mock_view;
@@ -37,7 +37,7 @@ TEST_F(ControllerExplore3DTest, Initialize)
 	ASSERT_TRUE((controller.IsActive()));
 }
 
-TEST_F(ControllerExplore3DTest, HandleMessage)
+TEST_F(ControllerExplore3DTest, Test_HandleMessage)
 {
 	ASSERT_FALSE(m_controller.HandleMessage(IDCC_IS_FLYTHROUGH_MODE_ON, {}, {}));
 	ASSERT_TRUE((m_controller.IsActive()));

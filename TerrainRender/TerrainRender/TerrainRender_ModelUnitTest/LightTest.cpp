@@ -4,7 +4,7 @@ static float toRad(float degree)
 {
 	return degree / 180.0 * PI;
 }
-TEST(LightTest, UpdateSunPopsition1)
+TEST(LightTest, Test_UpdateSunPopsition1)
 {
 	Light light;
 	//Azimuth and elevation values are from https://gml.noaa.gov/grad/solcalc/azel.html
@@ -15,7 +15,7 @@ TEST(LightTest, UpdateSunPopsition1)
 	ASSERT_NEAR(light.GetElevation(), toRad(47.01), 0.01);
 }
 
-TEST(LightTest, UpdateSunPopsition2)
+TEST(LightTest, Test_UpdateSunPopsition2)
 {
 	Light light;
 	//Azimuth and elevation values are from https://gml.noaa.gov/grad/solcalc/azel.html
@@ -26,7 +26,7 @@ TEST(LightTest, UpdateSunPopsition2)
 	ASSERT_NEAR(light.GetElevation(), toRad(39.58), 0.01);
 }
 
-TEST(LightTest, UpdateSunPopsition3)
+TEST(LightTest, Test_UpdateSunPopsition3)
 {
 	Light light;
 	//Azimuth and elevation values are from https://gml.noaa.gov/grad/solcalc/azel.html
@@ -37,7 +37,7 @@ TEST(LightTest, UpdateSunPopsition3)
 	ASSERT_NEAR(light.GetElevation(), toRad(0.3), 0.01);
 }
 
-TEST(LightTest, UpdateSunPopsition4)
+TEST(LightTest, Test_UpdateSunPopsition4)
 {
 	Light light;
 	//Azimuth and elevation values are from https://gml.noaa.gov/grad/solcalc/azel.html
@@ -48,7 +48,7 @@ TEST(LightTest, UpdateSunPopsition4)
 	ASSERT_NEAR(light.GetElevation(), toRad(58.73), 0.01);
 }
 
-TEST(LightTest, UpdateSunPopsition5)
+TEST(LightTest, Test_UpdateSunPopsition5)
 {
 	Light light;
 	//Azimuth and elevation values are from https://gml.noaa.gov/grad/solcalc/azel.html

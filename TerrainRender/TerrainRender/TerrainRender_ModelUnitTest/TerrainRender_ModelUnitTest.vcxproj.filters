@@ -52,6 +52,8 @@
     <ClCompile Include="TerrainModelSubscriber.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -77,5 +79,8 @@
     <ClInclude Include="TerrainModelSubscriber.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

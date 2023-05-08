@@ -20,7 +20,7 @@ protected:
 };
 
 
-TEST_F(ControllerRouterTest, Initialize)
+TEST_F(ControllerRouterTest, Test_Initialize)
 {
 	IModelPtr									mock_model;
 	IViewPtr									mock_view;
@@ -38,7 +38,7 @@ TEST_F(ControllerRouterTest, Initialize)
 	ASSERT_TRUE((controller.IsActive()));
 }
 
-TEST_F(ControllerRouterTest, AddController_RemoveController)
+TEST_F(ControllerRouterTest, Test_AddController_RemoveController)
 {
 
 	std::shared_ptr<MockController>	 controller1;
@@ -56,7 +56,7 @@ TEST_F(ControllerRouterTest, AddController_RemoveController)
 	ASSERT_FALSE(m_controller.RemoveController(controller1));
 }
 
-TEST_F(ControllerRouterTest, HandleMessage)
+TEST_F(ControllerRouterTest, Test_HandleMessage)
 {
 
 	std::shared_ptr<MockController>	 controller1;

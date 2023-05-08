@@ -28,12 +28,12 @@ protected:
 	}
 };
 
-TEST_F(PolygonMeshUnitTest, InitializeReturnsTrueWithValidParameters)
+TEST_F(PolygonMeshUnitTest, Test_Initialize)
 {
 	PolygonMesh mesh;
 	ASSERT_TRUE(mesh.Initialize(m_device, m_vertexShader, m_pixelShader, m_vertices, m_indices, _vertexCount, _indexCount));
 }
-TEST_F(PolygonMeshUnitTest, InitializeReturnsFalseWithNullVertexShader)
+TEST_F(PolygonMeshUnitTest, Test_InitializeReturnsFalseWithNullVertexShader)
 {
 	IVertexShaderPtr vertexShader;
 	PolygonMesh mesh;
@@ -42,7 +42,7 @@ TEST_F(PolygonMeshUnitTest, InitializeReturnsFalseWithNullVertexShader)
 }
 
 // Test case to check if the Initialize method returns false when the device parameter is null
-TEST_F(PolygonMeshUnitTest, InitializeReturnsFalseWithNullDevice)
+TEST_F(PolygonMeshUnitTest, Test_InitializeReturnsFalseWithNullDevice)
 {
 	PolygonMesh mesh;
 	bool result = mesh.Initialize(nullptr, m_vertexShader, m_pixelShader, m_vertices, m_indices, _vertexCount, _indexCount);
@@ -50,7 +50,7 @@ TEST_F(PolygonMeshUnitTest, InitializeReturnsFalseWithNullDevice)
 }
 
 // Test case to check if the Initialize method returns false when the vertex shader parameter is null
-TEST_F(PolygonMeshUnitTest, InitializeReturnsFalseWithNullPixelShader)
+TEST_F(PolygonMeshUnitTest, Test_InitializeReturnsFalseWithNullPixelShader)
 {
 	PolygonMesh mesh;
 
@@ -59,7 +59,7 @@ TEST_F(PolygonMeshUnitTest, InitializeReturnsFalseWithNullPixelShader)
 	EXPECT_FALSE(result);
 }
 
-TEST_F(PolygonMeshUnitTest, SetNameAndGetName)
+TEST_F(PolygonMeshUnitTest, Test_SetNameAndGetName)
 {
 	PolygonMesh mesh;
 	ASSERT_TRUE(mesh.Initialize(m_device, m_vertexShader, m_pixelShader, m_vertices, m_indices, _vertexCount, _indexCount));
@@ -69,7 +69,7 @@ TEST_F(PolygonMeshUnitTest, SetNameAndGetName)
 
 }
 
-TEST_F(PolygonMeshUnitTest, Rotate)
+TEST_F(PolygonMeshUnitTest, Test_Rotate)
 {
 	PolygonMesh			mesh;
 	Vector3D			actual;
@@ -93,7 +93,7 @@ TEST_F(PolygonMeshUnitTest, Rotate)
 	ASSERT_EQ(actual, Vector3D(0, 0, 0));
 }
 
-TEST_F(PolygonMeshUnitTest, Scale)
+TEST_F(PolygonMeshUnitTest, Test_Scale)
 {
 	PolygonMesh			mesh;
 	Vector3D			actual;
@@ -117,7 +117,7 @@ TEST_F(PolygonMeshUnitTest, Scale)
 	ASSERT_EQ(actual, Vector3D(1.0f, 1.0f, 1.0f));
 }
 
-TEST_F(PolygonMeshUnitTest, Translate)
+TEST_F(PolygonMeshUnitTest, Test_Translate)
 {
 	PolygonMesh			mesh;
 	Vector3D			actual;
@@ -142,7 +142,7 @@ TEST_F(PolygonMeshUnitTest, Translate)
 }
 
 
-TEST_F(PolygonMeshUnitTest, SetColor)
+TEST_F(PolygonMeshUnitTest, Test_SetColor)
 {
 	PolygonMesh mesh;
 	mesh.SetColor(1.0f, 0.5f, 0.0f, 1.0f);
@@ -152,7 +152,7 @@ TEST_F(PolygonMeshUnitTest, SetColor)
 	ASSERT_EQ(expected, actual);
 }
 
-TEST_F(PolygonMeshUnitTest, SetIsSeenAndIsSeen)
+TEST_F(PolygonMeshUnitTest, Test_SetIsSeenAndIsSeen)
 {
 	PolygonMesh mesh;
 	mesh.SetIsSeen(true);

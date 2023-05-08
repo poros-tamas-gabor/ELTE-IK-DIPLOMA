@@ -11,7 +11,7 @@ protected:
     }
 };
 
-TEST_F(CameraPositionerTest, Initialize)
+TEST_F(CameraPositionerTest, Test_InitializeInvalid)
 {
     CameraPtr           nullCamera;
     CameraPositioner    positioner;
@@ -19,14 +19,14 @@ TEST_F(CameraPositionerTest, Initialize)
     ASSERT_THROW(positioner.Initialize(nullCamera), TRException);
 }
 
-TEST_F(CameraPositionerTest, CurrentEpochTime)
+TEST_F(CameraPositionerTest, Test_CurrentEpochTime)
 {
     const EpochTime epochtime = 1234567890;
     m_positioner.SetCurrentEpochTime(epochtime);
     ASSERT_EQ(m_positioner.GetCurrentEpochTime(), epochtime);
 }
 
-TEST_F(CameraPositionerTest, MoveForward)
+TEST_F(CameraPositionerTest, Test_MoveForward)
 {
     Vector3D    expected;
     const float elapsedTime = 1.0f;
@@ -55,7 +55,7 @@ TEST_F(CameraPositionerTest, MoveForward)
     ASSERT_EQ(m_camera->GetPositionVec(), expected);
 }
 
-TEST_F(CameraPositionerTest, MoveBack)
+TEST_F(CameraPositionerTest, Test_MoveBack)
 {
     Vector3D    expected;
     const float elapsedTime = 1.0f;
@@ -84,7 +84,7 @@ TEST_F(CameraPositionerTest, MoveBack)
     ASSERT_EQ(m_camera->GetPositionVec(), expected);
 }
 
-TEST_F(CameraPositionerTest, MoveLeft)
+TEST_F(CameraPositionerTest, Test_MoveLeft)
 {
     Vector3D    expected;
     const float elapsedTime = 1.0f;
@@ -113,7 +113,7 @@ TEST_F(CameraPositionerTest, MoveLeft)
     ASSERT_EQ(m_camera->GetPositionVec(), expected);
 }
 
-TEST_F(CameraPositionerTest, MoveRight)
+TEST_F(CameraPositionerTest, Test_MoveRight)
 {
     Vector3D    expected;
     const float elapsedTime = 1.0f;
@@ -142,7 +142,7 @@ TEST_F(CameraPositionerTest, MoveRight)
     ASSERT_EQ(m_camera->GetPositionVec(), expected);
 }
 
-TEST_F(CameraPositionerTest, MoveUp)
+TEST_F(CameraPositionerTest, Test_MoveUp)
 {
     Vector3D    expected;
     const float elapsedTime = 1.0f;
@@ -171,7 +171,7 @@ TEST_F(CameraPositionerTest, MoveUp)
     ASSERT_EQ(m_camera->GetPositionVec(), expected);
 }
 
-TEST_F(CameraPositionerTest, MoveDown)
+TEST_F(CameraPositionerTest, Test_MoveDown)
 {
     Vector3D    expected;
     const float elapsedTime = 1.0f;
@@ -200,7 +200,7 @@ TEST_F(CameraPositionerTest, MoveDown)
     ASSERT_EQ(m_camera->GetPositionVec(), expected);
 }
 
-TEST_F(CameraPositionerTest, Rotate)
+TEST_F(CameraPositionerTest, Test_Rotate)
 {
     Vector3D    expected;
     const float elapsedTime = 1.0f;

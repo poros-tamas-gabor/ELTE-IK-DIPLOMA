@@ -155,9 +155,9 @@ TEST_F(PolyLineUnitTest, Test_SetIsSeenAndIsSeen)
 	PolyLine polyline;
 	polyline.SetIsSeen(true);
 	ASSERT_TRUE(polyline.IsSeen());
-	ASSERT_TRUE(polyline.GetState().m_isSeen);
+	ASSERT_TRUE(polyline.GetState().isSeen);
 	polyline.SetIsSeen(false);
 	ASSERT_FALSE(polyline.IsSeen());
-	ASSERT_FALSE(polyline.GetState().m_isSeen);
+	ASSERT_FALSE(polyline.GetState().isSeen);
 }
 

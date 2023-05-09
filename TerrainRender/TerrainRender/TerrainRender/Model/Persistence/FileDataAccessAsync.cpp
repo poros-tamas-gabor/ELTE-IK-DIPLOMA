@@ -1,6 +1,4 @@
 #include "DataAccess.h"
-#include "DataAccess.h"
-
 #include <fstream>
 #include <string>
 #include "../../win.h"
@@ -9,10 +7,10 @@
 #include <thread>
 #include <sstream>
 #include <mutex>
-
 #include <memory>
 #include "../../ErrorHandler.h"
 #include "../../nlohmann/json.hpp"
+
 int BinaryFileDataAccessAsync::GetNumThreads(int numOfFacets)
 {
     int maxNumThreads = std::thread::hardware_concurrency();
@@ -61,7 +59,7 @@ void BinaryFileDataAccessAsync::ReadFileSharpEdges(const std::wstring& filepath)
     
     std::vector<std::thread> threads;
     std::vector<ICallablePtr> processes;
-    std::vector<std::vector<stlFacet>> facetVectors(numThreads);
+    std::vector<std::vector<StlFacet>> facetVectors(numThreads);
     
     for (int i = 0; i < numThreads; i++)
     {
@@ -72,7 +70,7 @@ void BinaryFileDataAccessAsync::ReadFileSharpEdges(const std::wstring& filepath)
         else
             currentNumOfFacets = numTriangles - i * numFacetInChunk;
     
-        processes.emplace_back(std::make_shared<ReadSTLChunkSharp>(filepath, beginInBytes, currentNumOfFacets, &facetVectors.at(i)));
+        processes.emplace_back(std::make_shared<ReadSTLChunkSharp>(filepath, beginInBytes, currentNumOfFacets, facetVectors.at(i)));
         threads.emplace_back(std::thread(std::ref(*processes.at(i))));
     }
     
@@ -191,7 +189,7 @@ void BinaryFileDataAccessAsync::LoadTerrain_withSharpEdges(const wchar_t* filena
     this->ReadFileSharpEdges(filename);
 }
 
-const std::vector<stlFacet>& BinaryFileDataAccessAsync::GetFacets(void)
+const std::vector<StlFacet>& BinaryFileDataAccessAsync::GetFacets(void)
 {
     return m_facets;
 }

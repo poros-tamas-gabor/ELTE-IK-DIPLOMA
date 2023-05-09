@@ -1,6 +1,22 @@
 #ifndef TERRAIN_MODEL_H
 #define TERRAIN_MODEL_H
 
+///////////////////////////////////////////////////////////////////////////////
+// TerrainModel.h
+// ==============
+// 
+// The TerrainModel class is a derived class of IModel and represents a terrain in the program. 
+// 
+// The reversal of the flow direction is handled by the derived classes of the IModel interface.
+//
+// The class implements the HandleMessage function responsible for processing messages.
+// 
+// It initializes the classes associated with the model layer. 
+//
+// AUTHOR: TAMAS GABOR POROS
+// CREATED: 2023-05-08
+///////////////////////////////////////////////////////////////////////////////
+
 #include "IModel.h"
 #include "PixelShaderMesh.h"
 #include "VertexShaderMesh.h"
@@ -25,7 +41,7 @@
 class TerrainModel : public IModel
 {
 private:
-	LLACoordinate								m_llacoordinate = { 47.497913f , 19.040236f };
+	LLACoordinate								m_origoLLA = { 47.497913f , 19.040236f };
 
 	IVertexShaderPtr							m_vertexShaderMesh;
 	PixelShaderMeshPtr							m_pixelShaderMesh;
@@ -47,19 +63,16 @@ public:
 	CameraPtr									m_camera;
 	ModelMessageSystem							m_modelMessageSystem;
 	
-
-
 public:
-
 	TerrainModel();
 	TerrainModel(const TerrainModel&) = delete;
 	~TerrainModel();
 	bool	Initalize(IDataAccessPtr persistence, Microsoft::WRL::ComPtr<ID3D11Device> device, int screenWidth, int screenHeight, float screenNear, float screenDepth, float fieldOfView = (DirectX::XM_PI / 3.0)) override;
+	bool	HandleMessage(IModelMessageIDs message, const std::vector<std::wstring>& stringParams, const std::vector<float>& fparams, const std::vector<unsigned>& uparams) override;
 	bool	Resize(unsigned screenWidth, unsigned screenHeight) override;
 	void	Shutdown() override;
 	bool	Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext) override;
-
-	bool	HandleMessage(IModelMessageIDs message, const std::vector<std::wstring>& stringParams, const std::vector<float>& fparams, const std::vector<unsigned>& uparams) override;
+	bool	IsTrajectoryInitialized(void) const override;
 
 	bool	LoadTerrain_withSharpEdges(const std::wstring& filepath) ;
 	bool	LoadTerrain_withSoftEdges(const std::wstring& filepath) ;
@@ -67,8 +80,6 @@ public:
 	bool	LoadConfigurationFile(const std::wstring& filepath) ;
 	bool	LoadProject_withSharpEdges(const std::vector<std::wstring>& files) ;
 	bool	LoadProject_withSoftEdges(const std::vector<std::wstring>& files) ;
-
-	bool	IsTrajectoryInitialized(void) const override;
 
 	bool	HandleFlythroughMode(IModelMessageIDs message, const std::vector<float>& fparams, const std::vector<unsigned>& uparams) ;
 	bool	HandleExplore3DMode(IModelMessageIDs message, const std::vector<float>& fparams) ;
@@ -83,9 +94,7 @@ public:
 	bool	TransformTrajectory(IModelMessageIDs message, const std::vector<float>& fparams);
 	bool	ClearMeshes(void) ;
 	bool	ClearCameraTrajectory(void) ;
-	LLACoordinate	GetOrigo(void) const;
 private:
-
 	void				MoveCamera(IModelMessageIDs message, float timeElapsed);
 	void				RotateCamera(IModelMessageIDs message, float pitch, float yaw);
 	MeshGroupState		CollectMeshGroupState(void) const;

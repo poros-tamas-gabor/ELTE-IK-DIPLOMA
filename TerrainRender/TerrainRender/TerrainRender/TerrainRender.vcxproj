@@ -230,7 +230,7 @@
     <ClInclude Include="Model\CompositeRenderable.h" />
     <ClInclude Include="Model\IModelSubscriber.h" />
     <ClInclude Include="Model\IPixelShader.h" />
-    <ClInclude Include="Model\Math\IInterpolation.h" />
+    <ClInclude Include="Model\Math\Interpolations.h" />
     <ClInclude Include="Model\ModelMessageSystem.h" />
     <ClInclude Include="Model\Persistence\EpochTime.h" />
     <ClInclude Include="Model\LineList.h" />

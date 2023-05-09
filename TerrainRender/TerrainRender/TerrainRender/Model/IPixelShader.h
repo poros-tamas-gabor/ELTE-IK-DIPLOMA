@@ -1,6 +1,18 @@
 #ifndef I_PIXEL_SHADER
 #define I_PIXEL_SHADER
 
+///////////////////////////////////////////////////////////////////////////////
+// IPixelShader.h
+// ==============
+// 
+// The IPixelShader interface defines the methods that every pixel shader class should implement.
+// By creating a class that derives from the IPixelShader interface and implements its methods, 
+// you can define a custom pixel shader and use it in graphics pipeline of the program.
+//
+// AUTHOR: TAMAS GABOR POROS
+// CREATED: 2023-05-08
+///////////////////////////////////////////////////////////////////////////////
+
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include "Light.h"

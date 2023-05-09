@@ -70,7 +70,7 @@
     <Filter Include="Header Files\Model\Shader\Mesh">
       <UniqueIdentifier>{c337f942-b4bf-4759-affb-8c3a466d95c9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Model\Shader\Ployline">
+    <Filter Include="Header Files\Model\Shader\PolyLine">
       <UniqueIdentifier>{bd09b1be-b9fd-4626-892c-58efcefc1b34}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -216,11 +216,11 @@
     <ClCompile Include="Model\CameraTrajectory.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Math\IInterpolation.cpp">
-      <Filter>Header Files\Model\Math</Filter>
-    </ClCompile>
     <ClCompile Include="DialogWin.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Math\IInterpolation.cpp">
+      <Filter>Source Files\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -302,7 +302,7 @@
     <ClInclude Include="Model\RenderableCreator.h">
       <Filter>Header Files\Model\Renderable</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Math\IInterpolation.h">
+    <ClInclude Include="Model\Math\Interpolations.h">
       <Filter>Header Files\Model\Math</Filter>
     </ClInclude>
     <ClInclude Include="Model\Persistence\EpochTime.h">
@@ -339,13 +339,13 @@
       <Filter>Header Files\Model\Shader\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Model\PixelShaderPolyLine.h">
-      <Filter>Header Files\Model\Shader\Ployline</Filter>
+      <Filter>Header Files\Model\Shader\PolyLine</Filter>
     </ClInclude>
     <ClInclude Include="Model\VertexShaderMesh.h">
       <Filter>Header Files\Model\Shader\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Model\VertexShaderPolyLine.h">
-      <Filter>Header Files\Model\Shader\Ployline</Filter>
+      <Filter>Header Files\Model\Shader\PolyLine</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_impl_dx11.h">
       <Filter>Resource Files\ImGui</Filter>

@@ -673,7 +673,7 @@ void GuiView::HandleIModelState(const MeshGroupState& states)
             MeshTransformation tranformation;
             tranformation.id = state.id;
             Vector4DtoCArray(tranformation.color, state.color);
-            tranformation.m_isSeen = state.m_isSeen;
+            tranformation.m_isSeen = state.isSeen;
             m_MeshElementsTrans.push_back(tranformation);
         }
         else
@@ -697,7 +697,7 @@ void GuiView::HandleIModelState(const FlythroughState& state)
         TrajectoryState trajectoryState = state.trajectoryPolyLine.at(0);
         TrajectoryTransformation tt;
         tt.id       = trajectoryState.id;
-        tt.m_isSeen = trajectoryState.m_isSeen;
+        tt.m_isSeen = trajectoryState.isSeen;
         Vector3DtoCArray(tt.rotation, trajectoryState.rotation);
         Vector3DtoCArray(tt.tranlation, trajectoryState.translation);
         m_TrajectoryTrans = tt;

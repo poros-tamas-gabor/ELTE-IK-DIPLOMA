@@ -15,7 +15,7 @@ EpochTime::EpochTime(long long sec, long long nsec)
     }
 }
 
-    // arithmetic operators
+// arithmetic operators
 EpochTime EpochTime::operator+(const EpochTime& other) const 
 {
     long long sec = m_seconds + other.m_seconds;
@@ -61,10 +61,10 @@ EpochTime EpochTime::AddMilliSeconds(double millisecond) const
     return EpochTime(sec, nsec);
 }
 
-
 // getters
 long long EpochTime::getSeconds() const { return m_seconds; }
 long long EpochTime::getNanoseconds() const { return m_nanoseconds; }
 
+// setters
 void EpochTime::setSeconds(long long sec) { m_seconds = sec; };
 void EpochTime::setNanoseconds(long long nsec) { m_nanoseconds = nsec; };

@@ -691,7 +691,7 @@ public:
 class MockIDataAccess : public IDataAccess {
 public:
     MOCK_METHOD(void, LoadTerrain_withSharpEdges, (const wchar_t*), (override));
-    MOCK_METHOD(const std::vector<stlFacet>&, GetFacets, (), (override));
+    MOCK_METHOD(const std::vector<StlFacet>&, GetFacets, (), (override));
     MOCK_METHOD(void, LoadCameraTrajectory, (const wchar_t*, std::vector<CameraPose>&), (override));
     MOCK_METHOD(void, LoadConfigurationFile, (const wchar_t*, ParameterFile& params), (override));
     MOCK_METHOD(void, LoadTerrain_withSoftEdges, (const wchar_t*), (override));

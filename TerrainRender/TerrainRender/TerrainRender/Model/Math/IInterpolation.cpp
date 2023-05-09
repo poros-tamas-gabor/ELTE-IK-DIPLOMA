@@ -1,8 +1,8 @@
-#include "IInterpolation.h"
+#include "Interpolations.h"
 #include <cmath>
 
 // find the greatest element in the vector which is still less than or equal to a given value:
-int Iitenterpolation::binarySearch_greatestLessOrEqual(const std::vector<float>& vec, float value) {
+int AbstractInterpolation::binarySearch_greatestLessOrEqual(const std::vector<float>& vec, float value) {
     int low = 0;
     int high = vec.size() - 1;
     int index = -1;

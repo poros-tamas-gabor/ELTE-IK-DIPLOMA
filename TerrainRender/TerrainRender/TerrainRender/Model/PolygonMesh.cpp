@@ -5,26 +5,24 @@
 
 bool PolygonMesh::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, IVertexShaderPtr vertexShader, IPixelShaderPtr pixelShader, VertexMesh* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount)
 {
-	if (device == nullptr || vertexShader == nullptr || pixelShader == nullptr)
-		return false;
-
-	this->m_pixelShader		= pixelShader;
-	this->m_vertexShader	= vertexShader;
-
 	bool bresult;
-	bresult = this->InitializeBuffers(device, vertices, indices, vertexCount, indexCount);
 
-	this->ResetTransformation();
-	if (!bresult)
-	{
+	if (device == nullptr || vertexShader == nullptr || pixelShader == nullptr || vertices == nullptr || indices == nullptr || vertexCount == 0 || indexCount == 0)
 		return false;
-	}
-	return true;
+
+	m_pixelShader	= pixelShader;
+	m_vertexShader	= vertexShader;
+
+	bresult = InitializeBuffers(device, vertices, indices, vertexCount, indexCount);
+
+	ResetTransformation();
+
+	return bresult;
 }
 void PolygonMesh::Shutdown()
 {
 	// Shutdown the vertex and index buffers.
-	this->ShutdownBuffers();
+	ShutdownBuffers();
 }
 void PolygonMesh::Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat,const Light& light)
 {
@@ -32,32 +30,44 @@ void PolygonMesh::Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceConte
 
 		if (IsSeen())
 		{
-		m_worldMatrix = m_localMatrix * worldMat;
-		bool bresult = this->m_vertexShader->Render(deviceContext, m_worldMatrix, viewMat, projectionMat, m_color.ToXMFLOAT4());
-		if (!bresult)
-			THROW_TREXCEPTION(L"Failed to render vertex shader");
+			bool bresult;
 
-		this->RenderBuffers(deviceContext);
-		bresult = this->m_pixelShader->Render(deviceContext, this->GetIndexCount(), light);
-		if(!bresult)
-			THROW_TREXCEPTION(L"Failed to render pixel shader");
+			m_worldMatrix = m_localMatrix * worldMat;
+
+			bresult = m_vertexShader->Render(deviceContext, m_worldMatrix, viewMat, projectionMat, m_color.ToXMFLOAT4());
+			THROW_TREXCEPTION_IF_FAILED(bresult, L"Failed to render vertex shader");
+
+			RenderBuffers(deviceContext);
+
+			bresult = m_pixelShader->Render(deviceContext, GetIndexCount(), light);
+			THROW_TREXCEPTION_IF_FAILED(bresult, L"Failed to render pixel shader");
 		}
-
-
 	}
-	catch (TRException& exception)
+	catch (const COMException& e)
 	{
-		ErrorHandler::Log(exception);
+		ErrorHandler::Log(e);
+	}
+	catch (const TRException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const std::exception& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (...)
+	{
+		ErrorHandler::Log("Unknown Exception: No details available");
 	}
 }
 
 int PolygonMesh::GetIndexCount() const
 {
-	return this->m_indexCount;
+	return m_indexCount;
 }
 int PolygonMesh::GetVertexCount() const
 {
-	return this->m_vertexCount;
+	return m_vertexCount;
 
 }
 
@@ -70,13 +80,13 @@ bool PolygonMesh::InitializeBuffers(Microsoft::WRL::ComPtr<ID3D11Device> device,
 	try {
 		// Set the number of vertices in the vertex array.
 		// Set the number of indices in the index array.
-		this->m_indexCount = indexCount;
-		this->m_vertexCount = vertexCount;
+		m_indexCount = indexCount;
+		m_vertexCount = vertexCount;
 
 		// Set up the description of the static vertex buffer.
 		ZeroMemory(&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
 		vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-		vertexBufferDesc.ByteWidth = sizeof(VertexMesh) * this->m_vertexCount;
+		vertexBufferDesc.ByteWidth = sizeof(VertexMesh) * m_vertexCount;
 		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		vertexBufferDesc.CPUAccessFlags = 0;
 		vertexBufferDesc.MiscFlags = 0;
@@ -128,25 +138,12 @@ bool PolygonMesh::InitializeBuffers(Microsoft::WRL::ComPtr<ID3D11Device> device,
 	{
 		ErrorHandler::Log("Unknown Exception: No details available");
 	}
-	
-	
 	return false;
 }
 void PolygonMesh::ShutdownBuffers()
 {
 	// Release the index buffer.
-	//if (m_indexBuffer)
-	//{
-	//	m_indexBuffer->Release();
-	//	m_indexBuffer = 0;
-	//}
-	//// Release the vertex buffer.
-	//if (m_vertexBuffer)
-	//{
-	//	m_vertexBuffer->Release();
-	//	m_vertexBuffer = 0;
-	//}
-
+	// Release the vertex buffer.
 	return;
 }
 void PolygonMesh::RenderBuffers(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext)
@@ -159,7 +156,7 @@ void PolygonMesh::RenderBuffers(Microsoft::WRL::ComPtr<ID3D11DeviceContext> devi
 	offset = 0;
 
 	// Set the vertex buffer to active in the input assembler so it can be rendered.
-	deviceContext->IASetVertexBuffers(0, 1, this->m_vertexBuffer.GetAddressOf(), &stride, &offset);
+	deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
 
 	// Set the index buffer to active in the input assembler so it can be rendered.
 	deviceContext->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
@@ -215,9 +212,9 @@ DirectX::XMMATRIX PolygonMesh::GetWorldMatrix(void)
 {
 	return m_worldMatrix;
 }
-void PolygonMesh::SetIsSeen(bool m_isSeen)
+void PolygonMesh::SetIsSeen(bool isSeen)
 {
-	this->m_isSeen = m_isSeen;
+	m_isSeen = isSeen;
 }
 
 bool PolygonMesh::IsSeen(void) const
@@ -228,13 +225,13 @@ bool PolygonMesh::IsSeen(void) const
 IRenderableState PolygonMesh::GetState(void) const
 {
 	IRenderableState state;
-	state.id			= this->GetID();
-	state.m_isSeen		= m_isSeen;
-	state.name			= this->m_name;
-	state.rotation		= this->m_rotation;
-	state.scale			= this->m_scaling;
-	state.translation	= this->m_translation;
-	state.color			= this->m_color;
+	state.id			= GetID();
+	state.isSeen		= m_isSeen;
+	state.name			= m_name;
+	state.rotation		= m_rotation;
+	state.scale			= m_scaling;
+	state.translation	= m_translation;
+	state.color			= m_color;
 
 	return state;
 }

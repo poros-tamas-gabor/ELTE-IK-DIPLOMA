@@ -57,7 +57,7 @@ bool TerrainModel::Initalize(IDataAccessPtr persistence, Microsoft::WRL::ComPtr<
 		this->m_meshes.Initialize(device, m_vertexShaderMesh, m_pixelShaderMesh, NULL, NULL, NULL, NULL);
 		this->m_polylines.Initialize(device, m_vertexShaderPolyLine, m_pixelShaderPolyLine, NULL, NULL, NULL, NULL);
 		this->m_linelist.Initialize(device, m_vertexShaderPolyLine, m_pixelShaderPolyLine, NULL, NULL, NULL, NULL);
-		this->m_light.UpdateSunPosition(m_cameraPositioner.GetCurrentEpochTime().getSeconds(), m_llacoordinate.latitude, m_llacoordinate.longitude);
+		this->m_light.UpdateSunPosition(m_cameraPositioner.GetCurrentEpochTime().getSeconds(), m_origoLLA.latitude, m_origoLLA.longitude);
 		PublishModelState();
 		this->AddGrid(2000, { 0.6f, 0.6f, 0.6f, 0.6f }, 200, 200);
 
@@ -294,7 +294,7 @@ bool TerrainModel::HandleFlythroughMode(IModelMessageIDs message, const std::vec
 		m_cameraTrajectory.SetSpeed(fparams.at(0));
 		break;
 	}
-	this->m_light.UpdateSunPosition(m_cameraTrajectory.GetCurrentEpochTime().getSeconds(), m_llacoordinate.latitude, m_llacoordinate.longitude);
+	this->m_light.UpdateSunPosition(m_cameraTrajectory.GetCurrentEpochTime().getSeconds(), m_origoLLA.latitude, m_origoLLA.longitude);
 	return success;
 }
 
@@ -431,9 +431,9 @@ bool TerrainModel::LoadTerrain_withSharpEdges(const std::wstring& filepath)
 
 
 	m_persistence->LoadTerrain_withSharpEdges(filepath.c_str());
-	const std::vector<stlFacet>& facets = m_persistence->GetFacets();
+	const std::vector<StlFacet>& facets = m_persistence->GetFacets();
 	unsigned index = 0;
-	for (const stlFacet& facet : facets)
+	for (const StlFacet& facet : facets)
 	{
 		for (int i = 0; i < 3; i++)
 		{
@@ -521,7 +521,7 @@ bool	TerrainModel::LoadConfigurationFile(const std::wstring& filepath)
 
 	m_persistence->LoadConfigurationFile(filepath.c_str(), params);
 	//Set world origo
-	this->m_llacoordinate = params.origo;
+	this->m_origoLLA = params.origo;
 	
 	//Set Trajectory
 	const float t_x = params.trajectory.translation.x;
@@ -588,11 +588,6 @@ bool TerrainModel::ResetCamera()
 {
 	this->m_camera->Reset();
 	return true;
-}
-
-LLACoordinate	TerrainModel::GetOrigo(void) const
-{
-	return m_llacoordinate;
 }
 
 bool TerrainModel::TransformTrajectory(IModelMessageIDs message, const std::vector<float>& fparams)
@@ -694,13 +689,13 @@ FlythroughState	TerrainModel::CollectFlythroughState(void) const
 		TrajectoryState ts;
 		const IRenderableState& rs = m_cameraTrajectory.GetTrajectoryPolyLineState();
 		ts.id = rs.id;
-		ts.m_isSeen = rs.m_isSeen;
+		ts.isSeen = rs.isSeen;
 		ts.name = rs.name;
 		ts.rotation = rs.rotation;
 		ts.translation = rs.translation;
 
 		state.trajectoryPolyLine.push_back(ts);
-		state.origo = this->m_llacoordinate;
+		state.origo = this->m_origoLLA;
 	}
 	return state;
 }
@@ -719,7 +714,7 @@ Explore3DState TerrainModel::CollectExplore3DState(void) const
 	state.currentCameraRotation			= m_camera->GetRotationVec();
 	state.currentSunPosition.azimuth	= m_light.GetAzimuth();
 	state.currentSunPosition.elevation	= m_light.GetElevation();
-	state.origo = this->m_llacoordinate;
+	state.origo = this->m_origoLLA;
 
 	return state;
 }
@@ -738,7 +733,7 @@ MeshGroupState TerrainModel::CollectMeshGroupState() const
 
 	for (const IRenderableState& irs : iRenderableStates)
 	{
-		state.Meshes.push_back({ irs.id, irs.name, irs.m_isSeen, irs.color });
+		state.Meshes.push_back({ irs.id, irs.name, irs.isSeen, irs.color });
 	}
 	return state;
 }
@@ -774,11 +769,11 @@ bool TerrainModel::SetUnixTime(IModelMessageIDs message, unsigned uparam)
 	{
 	case IDM_SET_TIME_E3D:
 		this->m_cameraPositioner.SetCurrentEpochTime({ uparam,0 });
-		this->m_light.UpdateSunPosition(m_cameraPositioner.GetCurrentEpochTime().getSeconds(), m_llacoordinate.latitude, m_llacoordinate.longitude);
+		this->m_light.UpdateSunPosition(m_cameraPositioner.GetCurrentEpochTime().getSeconds(), m_origoLLA.latitude, m_origoLLA.longitude);
 		break;
 	case IDM_SET_START_TIME_TRAJECTORY:
 		this->m_cameraTrajectory.SetStartEpochTime({ uparam,0 });
-		this->m_light.UpdateSunPosition(m_cameraTrajectory.GetCurrentEpochTime().getSeconds(), m_llacoordinate.latitude, m_llacoordinate.longitude);
+		this->m_light.UpdateSunPosition(m_cameraTrajectory.GetCurrentEpochTime().getSeconds(), m_origoLLA.latitude, m_origoLLA.longitude);
 	default:
 		break;
 	}
@@ -846,10 +841,10 @@ bool TerrainModel::SetLongitudeLatitude(IModelMessageIDs message, const std::vec
 	switch (message)
 	{
 	case IDM_ORIGO_SET_LONGITUDE:
-		m_llacoordinate.longitude = fparams.at(0);
+		m_origoLLA.longitude = fparams.at(0);
 		break;
 	case IDM_ORIGO_SET_LATITUDE:
-		m_llacoordinate.latitude = fparams.at(0);
+		m_origoLLA.latitude = fparams.at(0);
 		break;
 	
 	default:

@@ -5,38 +5,56 @@
 
 bool LineList::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, IVertexShaderPtr vertexShader, IPixelShaderPtr pixelShader, VertexPolyLine* vertices, unsigned long* indices, UINT vertexCount, UINT indexCount)
 {
-	if (device == nullptr || vertexShader == nullptr || pixelShader == nullptr)
-		return false;
-
-	this->m_pixelShader = pixelShader;
-	this->m_vertexShader = vertexShader;
-	this->ResetTransformation();
-
 	bool bresult;
-	bresult = this->InitializeBuffers(device, vertices, vertexCount);
-	if (!bresult)
-	{
+
+	if (device == nullptr || vertexShader == nullptr || pixelShader == nullptr || vertices == nullptr || vertexCount == 0)
 		return false;
-	}
-	return true;
+
+	m_pixelShader = pixelShader;
+	m_vertexShader = vertexShader;
+	ResetTransformation();
+
+	bresult = InitializeBuffers(device, vertices, vertexCount);
+
+	return bresult;
 }
 void LineList::Shutdown()
 {
 	// Shutdown the vertex and index buffers.
-	this->ShutdownBuffers();
+	ShutdownBuffers();
 }
 void LineList::Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, const Light& light)
 {
-	if (IsSeen())
+	bool bresult;
+
+	try 
 	{
-		m_worldMatrix = m_localMatrix * worldMat;
-		bool bresult = this->m_vertexShader->Render(deviceContext, m_worldMatrix, viewMat, projectionMat, m_color.ToXMFLOAT4());
-		if (!bresult)
-			THROW_TREXCEPTION(L"Failed to render vertex shader");
-		this->RenderBuffers(deviceContext);
-		bresult = this->m_pixelShader->Render(deviceContext, this->GetVertexCount(), light);
-		if (!bresult)
-			THROW_TREXCEPTION(L"Failed to render pixel shader");
+		if (IsSeen())
+		{
+			m_worldMatrix = m_localMatrix * worldMat;
+			bresult = m_vertexShader->Render(deviceContext, m_worldMatrix, viewMat, projectionMat, m_color.ToXMFLOAT4());
+			THROW_TREXCEPTION_IF_FAILED(bresult, L"Failed to render vertex shader");
+
+			RenderBuffers(deviceContext);
+			bresult = m_pixelShader->Render(deviceContext, GetVertexCount(), light);
+			THROW_TREXCEPTION_IF_FAILED(bresult, L"Failed to render pixel shader");
+		}
+	}
+	catch (const COMException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const TRException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const std::exception& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (...)
+	{
+		ErrorHandler::Log("Unknown Exception: No details available");
 	}
 }
 
@@ -46,8 +64,7 @@ int LineList::GetIndexCount() const
 }
 int LineList::GetVertexCount() const
 {
-	return this->_vertexCount;
-
+	return m_vertexCount;
 }
 
 bool LineList::InitializeBuffers(Microsoft::WRL::ComPtr<ID3D11Device> device, VertexPolyLine* vertices, UINT vertexCount)
@@ -58,15 +75,14 @@ bool LineList::InitializeBuffers(Microsoft::WRL::ComPtr<ID3D11Device> device, Ve
 	D3D11_SUBRESOURCE_DATA					vertexData;
 
 	// Set the number of vertices in the vertex array.
-	// Set the number of indices in the index array.
-	this->_vertexCount = vertexCount;
+	m_vertexCount = vertexCount;
 
 	try
 	{
 		// Set up the description of the static vertex buffer.
 		ZeroMemory(&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
 		vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-		vertexBufferDesc.ByteWidth = sizeof(VertexPolyLine) * this->_vertexCount;
+		vertexBufferDesc.ByteWidth = sizeof(VertexPolyLine) * m_vertexCount;
 		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		vertexBufferDesc.CPUAccessFlags = 0;
 		vertexBufferDesc.MiscFlags = 0;
@@ -88,19 +104,10 @@ bool LineList::InitializeBuffers(Microsoft::WRL::ComPtr<ID3D11Device> device, Ve
 		return false;
 	}
 	return true;
-
-
 }
 void LineList::ShutdownBuffers()
 {
-
 	// Release the vertex buffer.
-	//if (m_vertexBuffer)
-	//{
-	//	m_vertexBuffer->Release();
-	//	m_vertexBuffer = 0;
-	//}
-
 	return;
 }
 void LineList::RenderBuffers(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext)
@@ -113,7 +120,7 @@ void LineList::RenderBuffers(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceC
 	offset = 0;
 
 	// Set the vertex buffer to active in the input assembler so it can be rendered.
-	deviceContext->IASetVertexBuffers(0, 1, this->m_vertexBuffer.GetAddressOf(), &stride, &offset);
+	deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
 
 	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
@@ -146,9 +153,9 @@ void LineList::Scale(float x, float y, float z)
 }
 void LineList::ResetTransformation()
 {
-	m_scaling = { 1, 1, 1 };
-	m_translation = { 0,0,0 };
-	m_rotation = { 0, 0, 0 };
+	m_rotation		= { 0.0f , 0.0f, 0.0f };
+	m_scaling		= { 1.0f, 1.0f, 1.0f };
+	m_translation	= { 0.0f , 0.0f, 0.0f };
 	CalculateLocalMatrix();
 }
 void LineList::CalculateLocalMatrix(void)
@@ -168,10 +175,11 @@ void LineList::SetColor(float r, float g, float b, float a)
 	m_color = { r,g,b,a };
 }
 
-void LineList::SetIsSeen(bool m_isSeen)
+void LineList::SetIsSeen(bool isSeen)
 {
-	this->m_isSeen = m_isSeen;
+	m_isSeen = isSeen;
 }
+
 bool LineList::IsSeen(void) const
 {
 	return m_isSeen;
@@ -180,12 +188,12 @@ bool LineList::IsSeen(void) const
 IRenderableState LineList::GetState(void) const
 {
 	IRenderableState state;
-	state.id = this->GetID();
-	state.m_isSeen = m_isSeen;
-	state.name = this->m_name;
-	state.rotation = this->m_rotation;
-	state.scale = this->m_scaling;
-	state.translation = this->m_translation;
-	state.color = this->m_color;
+	state.id = GetID();
+	state.isSeen = m_isSeen;
+	state.name = m_name;
+	state.rotation = m_rotation;
+	state.scale = m_scaling;
+	state.translation = m_translation;
+	state.color = m_color;
 	return state;
 }

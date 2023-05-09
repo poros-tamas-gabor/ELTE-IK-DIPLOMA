@@ -150,7 +150,7 @@ struct HTindex_Soft
 
 typedef std::unordered_map<HTindex_Soft, size_t, HTindex_Soft::Hash> HashTable_Soft;
 
-struct stlFacet
+struct StlFacet
 {
 	float normal[3];
 	float position[3][3];
@@ -159,45 +159,45 @@ struct stlFacet
 
 struct IRenderableState
 {
-	unsigned			id = 0;
-	std::wstring		name = L"";
-	bool				m_isSeen = false;
-	Vector3D			rotation = { 0,0,0 };
-	Vector3D			translation = { 0,0,0 };
-	Vector3D			scale = { 0,0,0 };
-	Vector4D			color = { 0,0,0,0 };
+	unsigned			id			= 0;
+	std::wstring		name		= L"";
+	bool				isSeen		= false;
+	Vector3D			rotation	= { 0.0f, 0.0f, 0.0f };
+	Vector3D			translation = { 0.0f, 0.0f, 0.0f };
+	Vector3D			scale		= { 0.0f, 0.0f, 0.0f };
+	Vector4D			color		= { 0.0f, 0.0f, 0.0f, 0.0f };
 };
 
 struct TrajectoryState
 {
 	unsigned			id			= 0;
 	std::wstring		name		= L"";
-	bool				m_isSeen	= false;
-	Vector3D			rotation	= {0,0,0};
-	Vector3D			translation = { 0,0,0 };
+	bool				isSeen		= false;
+	Vector3D			rotation	= { 0.0f, 0.0f, 0.0f };
+	Vector3D			translation = { 0.0f, 0.0f, 0.0f };
 };
 
 struct MeshState
 {
-	unsigned			id			= 0;
-	std::wstring		name		= L"";
-	bool				m_isSeen	= false;
-	Vector4D			color		= { 0,0,0,0 };
+	unsigned			id		= 0;
+	std::wstring		name	= L"";
+	bool				isSeen	= false;
+	Vector4D			color	= { 0.0f, 0.0f, 0.0f, 0.0f };
 };
 
 struct MeshGroupState
 {
-	Vector3D						rotation = { 0,0,0 };
-	Vector3D						scale = { 0,0,0 };
-	Vector3D						translation = { 0,0,0 };
+	Vector3D						rotation	= { 0.0f, 0.0f, 0.0f };
+	Vector3D						scale		= { 0.0f, 0.0f, 0.0f };
+	Vector3D						translation = { 0.0f, 0.0f, 0.0f };
 	std::vector<MeshState>			Meshes;
 
 };
 
 struct SunPositionState
 {
-	double azimuth = 0;
-	double elevation = 0;
+	float azimuth	= 0.0f;
+	float elevation = 0.0f;
 };
 struct FlythroughState
 {
@@ -205,10 +205,10 @@ struct FlythroughState
 	float							speed						= 1.0f;
 	unsigned						currentFrame				= 0;
 	unsigned						numberOfFrame				= 0;
-	EpochTime						currentEpochTime			= { 0,0 };
-	EpochTime						startEpochTime				= { 0,0 };
-	Vector3D						currentCameraPosition		= { 0,0,0 };
-	Vector3D						currentCameraRotation		= { 0,0,0 };
+	EpochTime						currentEpochTime			= { 0L, 0L };
+	EpochTime						startEpochTime				= { 0L, 0L };
+	Vector3D						currentCameraPosition		= { 0.0f, 0.0f, 0.0f };
+	Vector3D						currentCameraRotation		= { 0.0f, 0.0f, 0.0f };
 	SunPositionState				currentSunPosition;
 	LLACoordinate					origo;
 	std::vector<TrajectoryState>	trajectoryPolyLine;
@@ -248,4 +248,4 @@ struct ParameterFile {
 };
 
 
-#endif // !MODEL_VERTEX_H
+#endif // !MODEL_STRUCTS_H

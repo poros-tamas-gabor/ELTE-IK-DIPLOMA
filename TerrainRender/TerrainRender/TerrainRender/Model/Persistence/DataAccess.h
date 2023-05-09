@@ -7,6 +7,19 @@
 #include <memory>
 #include "ReadSTLChunk.h"
 
+///////////////////////////////////////////////////////////////////////////////
+// IDataAccess.h
+// ============
+// The IDataAccess interface defines the contract for the Data Access component in the Model-View-Controller (MVC) architecture.
+//
+// The IDataAccess interface is responsible for managing the persistence of data by defining methods that allow the Model to access and manipulate the data.
+//
+// BinaryFileDataAccessAsync is a derived class of IDataAccess. 
+// The purpose of this class is to asynchronously load meshes from binary STL files, as well as open the trajectory CSV file and configuration file.
+//
+// AUTHOR: TAMAS GABOR POROS
+// CREATED: 2023-05-08
+///////////////////////////////////////////////////////////////////////////////
 
 class IDataAccess
 {
@@ -15,7 +28,7 @@ public:
 
 	virtual void LoadTerrain_withSharpEdges(const wchar_t*) = 0;
     //Use After LoadTerrain_withSharpEdges
-    virtual const std::vector<stlFacet>& GetFacets(void) = 0;
+    virtual const std::vector<StlFacet>& GetFacets(void) = 0;
 
     virtual void LoadCameraTrajectory(const wchar_t*, std::vector<CameraPose>&) = 0;
     virtual void LoadConfigurationFile(const wchar_t*, ParameterFile& params) = 0;
@@ -29,6 +42,7 @@ public:
 
 typedef std::shared_ptr<IDataAccess> IDataAccessPtr;
 
+
 class BinaryFileDataAccessAsync : public IDataAccess {
 
     friend class ReadSTLChunkSharp;
@@ -38,7 +52,7 @@ private:
     const unsigned STL_BIN_HEADER_SIZE = 80;
     const unsigned STL_BIN_NUM_OF_TRIANGLE_SIZE = 4;
     const unsigned STL_BIN_TRIANGLE_SIZE = 50;
-    std::vector<stlFacet> m_facets;
+    std::vector<StlFacet> m_facets;
     std::vector<StlVertex> m_vertices;
     std::vector<CornerIndices> m_indices;
     std::shared_mutex m_mutex_hashtable;
@@ -62,7 +76,7 @@ public:
     void LoadCameraTrajectory(const wchar_t*, std::vector<CameraPose>& cameraPoses) override;
     void LoadConfigurationFile(const wchar_t*, ParameterFile& params) override;
     
-    const std::vector<stlFacet>& GetFacets(void);
+    const std::vector<StlFacet>& GetFacets(void);
     const std::vector<StlVertex>& GetVertices_Soft() override;
     const std::vector<CornerIndices>& GetIndices_Soft() override;
 };

@@ -1,6 +1,22 @@
 #ifndef PIXEL_SHADER_POLYLINE_H
 #define	PIXEL_SHADER_POLYLINE_H
 
+///////////////////////////////////////////////////////////////////////////////
+// PixelShaderPolyline.h
+// =====================
+// 
+// PixelShaderPolyline is a class derived from the IPixelShader interface.
+// Its main purpose is to set up the pixel shader of the lines by 
+// - compiling the pixel shader from the.hlsl file, 
+// - allocating memory for the constant buffers, 
+// - creating the DirectX pixel shader, 
+// - and using the device context to render the pixel shader.
+// 
+// The class encapsulates the logic of setting up and managing the rendering of lines in the program.
+//
+// AUTHOR: TAMAS GABOR POROS
+// CREATED: 2023-05-08
+///////////////////////////////////////////////////////////////////////////////
 
 #include "IPixelShader.h"
 #include <d3d11.h>

@@ -76,13 +76,13 @@ TEST_F(TerrainModelTest, Test_HandleMessage_IDM_INVALID)
 TEST_F(TerrainModelTest, Test_HandleMessage_IDM_LOAD_TERRAIN_SHARP)
 {
 
-	std::vector<stlFacet>	empty{};
+	std::vector<StlFacet>	empty{};
 	EXPECT_CALL(*m_mock_persistence, LoadTerrain_withSharpEdges(testing::StrEq(L"path"))).Times(1);
 	EXPECT_CALL(*m_mock_persistence, GetFacets()).Times(1).WillOnce(testing::ReturnRef(empty));;
 
 	ASSERT_FALSE(m_terrainModel->HandleMessage(IDM_LOAD_TERRAIN_SHARP, { L"path" }, {}, {}));
 
-	std::vector<stlFacet>	stlFacets{ stlFacet() };
+	std::vector<StlFacet>	stlFacets{ StlFacet() };
 	EXPECT_CALL(*m_mock_persistence, LoadTerrain_withSharpEdges(testing::StrEq(L"path"))).Times(1);
 	EXPECT_CALL(*m_mock_persistence, GetFacets()).Times(1).WillOnce(testing::ReturnRef(stlFacets));;
 

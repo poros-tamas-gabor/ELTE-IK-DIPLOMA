@@ -1,5 +1,5 @@
-#ifndef COMPOSITE_MESH_H
-#define COMPOSITE_MESH_H
+#ifndef COMPOSITE_RENDERABLE_H
+#define COMPOSITE_RENDERABLE_H
 
 #include "IRenderable.h"
 #include <algorithm>
@@ -8,6 +8,19 @@
 #include "IRenderableCreator.h"
 #include "../TRException.h"
 
+///////////////////////////////////////////////////////////////////////////////
+// CompositeRenderable.h
+// =====================
+//
+// The CompositeRenderable class is a template implementation of the IRenderable interface that utilizes the composite pattern.
+// This template class is designed to handle a collection of different leaf elements that are also of type IRenderable.
+//
+//The composite pattern is used in this class to manage a large number of renderable elements by allowing the interface methods to be called on the composite object, 
+// which in turn calls the same methods on its children elements.This approach provides a flexible and scalable solution for managing multiple IRenderable objects.
+// 
+// AUTHOR: TAMAS GABOR POROS
+// CREATED: 2023-05-08
+///////////////////////////////////////////////////////////////////////////////
 
 template <class V>
 class CompositeRenderable : public IRenderable<V>
@@ -168,7 +181,7 @@ public:
 	IRenderableState	GetState(void) const override {
 		IRenderableState state;
 		state.id = this->GetID();
-		state.m_isSeen = m_isSeen;
+		state.isSeen = m_isSeen;
 		state.name = this->m_name;
 		state.rotation = this->m_rotation;
 		state.scale = this->m_scaling;

@@ -4,7 +4,7 @@ TEST(BinarySearchTest, Test1) {
     std::vector<float> vec = { 1.0, 2.0, 3.0, 4.0, 5.0 };
     float value = 3.5;
     int expected_index = 2;
-    EXPECT_EQ(Iitenterpolation::binarySearch_greatestLessOrEqual(vec, value), expected_index);
+    EXPECT_EQ(AbstractInterpolation::binarySearch_greatestLessOrEqual(vec, value), expected_index);
 }
 
 TEST(BinarySearchTest, Test2) {
@@ -12,42 +12,42 @@ TEST(BinarySearchTest, Test2) {
     std::vector<float> vec = { 1.0, 2.0, 3.0, 4.0, 5.0 };
     float value = 0.5;
     int expected_index = -1;
-    EXPECT_EQ(Iitenterpolation::binarySearch_greatestLessOrEqual(vec, value), expected_index);
+    EXPECT_EQ(AbstractInterpolation::binarySearch_greatestLessOrEqual(vec, value), expected_index);
 }
 
 TEST(BinarySearchTest, Test3) {
     std::vector<float> vec = { 1.0, 2.0, 3.0, 4.0, 5.0 };
     float value = 5.5;
     int expected_index = 4;
-    EXPECT_EQ(Iitenterpolation::binarySearch_greatestLessOrEqual(vec, value), expected_index);
+    EXPECT_EQ(AbstractInterpolation::binarySearch_greatestLessOrEqual(vec, value), expected_index);
 }
 
 TEST(BinarySearchTest, Test4) {
     std::vector<float> vec = { 1.0, 2.0, 3.0, 4.0, 5.0 };
     float value = 3.0;
     int expected_index = 2;
-    EXPECT_EQ(Iitenterpolation::binarySearch_greatestLessOrEqual(vec, value), expected_index);
+    EXPECT_EQ(AbstractInterpolation::binarySearch_greatestLessOrEqual(vec, value), expected_index);
 }
 
 TEST(BinarySearchTest, Test5) {
     std::vector<float> vec = { 1.0, 2.0, 3.0, 4.0, 5.0 };
     float value = 5.0;
     int expected_index = 4;
-    EXPECT_EQ(Iitenterpolation::binarySearch_greatestLessOrEqual(vec, value), expected_index);
+    EXPECT_EQ(AbstractInterpolation::binarySearch_greatestLessOrEqual(vec, value), expected_index);
 }
 
 TEST(BinarySearchTest, Test6) {
     std::vector<float> vec = { 1.0, 1.0, 1.0, 1.0, 1.0 };
     float value = 1.0;
     int expected_index = 4;
-    EXPECT_EQ(Iitenterpolation::binarySearch_greatestLessOrEqual(vec, value), expected_index);
+    EXPECT_EQ(AbstractInterpolation::binarySearch_greatestLessOrEqual(vec, value), expected_index);
 }
 
 TEST(BinarySearchTest, Test7) {
     std::vector<float> vec = {  };
     float value = 1.0;
     int expected_index = -1;
-    EXPECT_EQ(Iitenterpolation::binarySearch_greatestLessOrEqual(vec, value), expected_index);
+    EXPECT_EQ(AbstractInterpolation::binarySearch_greatestLessOrEqual(vec, value), expected_index);
 }
 
 TEST(LinearInterpolationTest, Test_Calculate)

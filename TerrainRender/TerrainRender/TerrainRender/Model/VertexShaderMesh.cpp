@@ -149,7 +149,7 @@ void VertexShaderMesh::RenderShader(Microsoft::WRL::ComPtr<ID3D11DeviceContext> 
 bool VertexShaderMesh::Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 color)
 {
 	bool bresult;
-	bresult = this->SetShadeParameters(deviceContext, worldMat, viewMat, projectionMat, color);
+	bresult = this->SetShaderParameters(deviceContext, worldMat, viewMat, projectionMat, color);
 	if (!bresult)
 	{
 		return false;
@@ -158,7 +158,7 @@ bool VertexShaderMesh::Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> device
 	return true;
 }
 
-bool VertexShaderMesh::SetShadeParameters(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 color)
+bool VertexShaderMesh::SetShaderParameters(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, DirectX::XMMATRIX worldMat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 color)
 {
 	HRESULT						result;
 	D3D11_MAPPED_SUBRESOURCE	mappedResource;

@@ -1,6 +1,23 @@
 #ifndef VERTEX_SHADER_MESH_H
 #define	VERTEX_SHADER_MESH_H
 
+///////////////////////////////////////////////////////////////////////////////
+// VertexShaderMesh.h
+// ==================
+// 
+// VertexShaderMesh is a class derived from the IVertexShader interface.
+// Its main purpose is to set up the vertex shader of the meshes by 
+// - compiling the vertex shader from the.hlsl file, 
+// - allocating memory for the constant buffers, 
+// - creating the DirectX vertex shader, 
+// - and using the device context to render the vertex shader.
+// 
+// The class encapsulates the logic of setting up and managing the rendering of meshes in the program.
+//
+// AUTHOR: TAMAS GABOR POROS
+// CREATED: 2023-05-08
+///////////////////////////////////////////////////////////////////////////////
+
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
@@ -40,7 +57,7 @@ public:
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> GetInputLayout(void) override;
 
 private:
-	bool SetShadeParameters(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, DirectX::XMMATRIX worldmat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 color);
+	bool SetShaderParameters(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, DirectX::XMMATRIX worldmat, DirectX::XMMATRIX viewMat, DirectX::XMMATRIX projectionMat, DirectX::XMFLOAT4 color);
 	bool InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device>, const WCHAR*);
 	void ShutdownShader();
 	void RenderShader(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext);

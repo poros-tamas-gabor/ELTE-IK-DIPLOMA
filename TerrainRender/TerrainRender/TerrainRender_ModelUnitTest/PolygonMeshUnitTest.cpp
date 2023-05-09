@@ -157,10 +157,10 @@ TEST_F(PolygonMeshUnitTest, Test_SetIsSeenAndIsSeen)
 	PolygonMesh mesh;
 	mesh.SetIsSeen(true);
 	ASSERT_TRUE(mesh.IsSeen());
-	ASSERT_TRUE(mesh.GetState().m_isSeen);
+	ASSERT_TRUE(mesh.GetState().isSeen);
 	mesh.SetIsSeen(false);
 	ASSERT_FALSE(mesh.IsSeen());
-	ASSERT_FALSE(mesh.GetState().m_isSeen);
+	ASSERT_FALSE(mesh.GetState().isSeen);
 }
 
 

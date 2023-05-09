@@ -4,11 +4,11 @@
 
 void Light::SetAmbientColor(const DirectX::XMFLOAT4& ambientColor)
 {
-	this->_ambientColor = ambientColor;
+	m_ambientColor = ambientColor;
 }
 void Light::SetDiffuseColor(const DirectX::XMFLOAT4& diffuseColor)
 {
-	this->_diffuseColor = diffuseColor;
+	m_diffuseColor = diffuseColor;
 }
 
 void Light::UpdateSunPosition(std::time_t currentEpochTime, float lat, float longitude)
@@ -22,10 +22,10 @@ void Light::UpdateSunPosition(std::time_t currentEpochTime, float lat, float lon
 	m_azimuth = static_cast<float>(sunCoords.dAzimuth /180.0 * pi);
 	m_elevation = static_cast<float>(pi / 2 - (sunCoords.dZenithAngle / 180.0 * pi));
 
-	SetInverseDirectionBySunPosition(m_azimuth, m_elevation);
+	CalculateInverseDirectionBySunPosition(m_azimuth, m_elevation);
 }
 
-void Light::SetInverseDirectionBySunPosition(float azimuth, float elevation)
+void Light::CalculateInverseDirectionBySunPosition(float azimuth, float elevation)
 {
 	float rotXRad = -elevation;
 	float rotYRad = azimuth;
@@ -34,20 +34,20 @@ void Light::SetInverseDirectionBySunPosition(float azimuth, float elevation)
 	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(rotXRad, rotYRad, rotZRad);
 	const DirectX::XMVECTOR defaultZVector = DirectX::XMVectorSet(0.0, 0.0, 1.0, 0.0);
 	DirectX::XMVECTOR inverseLightDirection = DirectX::XMVector4Transform(defaultZVector, rotationMatrix);
-	DirectX::XMStoreFloat4(&this->_inverseDirection, inverseLightDirection);
+	DirectX::XMStoreFloat4(&m_inverseDirection, inverseLightDirection);
 }
 
 DirectX::XMFLOAT4 Light::GetAmbientColor(void) const
 {
-	return this->_ambientColor;
+	return m_ambientColor;
 }
 DirectX::XMFLOAT4 Light::GetDiffuseColor(void) const
 {
-	return this->_diffuseColor;
+	return m_diffuseColor;
 }
 DirectX::XMFLOAT4 Light::GetInverseDirection(void) const
 {
-	return this->_inverseDirection;
+	return m_inverseDirection;
 }
 
 float Light::GetAzimuth(void) const

@@ -10,7 +10,7 @@ protected:
 	IVertexShaderPtr m_vertexShader;
 	IPixelShaderPtr m_pixelShader;
 
-	//unsigned _vertexCount = 4;
+	//unsigned m_vertexCount = 4;
 	//unsigned _indexCount = 6;
 	//VertexMesh m_vertices[4] = { VertexMesh(),VertexMesh(),VertexMesh(),VertexMesh() };
 	//unsigned long m_indices[6] = { 0,1,2,2,3,4 };

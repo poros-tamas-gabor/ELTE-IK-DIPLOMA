@@ -24,16 +24,7 @@ void PixelShaderMesh::Shutdown()
 
 void PixelShaderMesh::ShutdownShader()
 {
-	//if (this->m_pixelShader)
-	//{
-	//	this->m_pixelShader->Release();
-	//	this->m_pixelShader = nullptr;
-	//}
-	//if (this->m_lightBuffer)
-	//{
-	//	this->m_lightBuffer->Release();
-	//	this->m_lightBuffer = nullptr;
-	//}
+
 }
 
 bool PixelShaderMesh::InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device> device, const std::wstring& psFilename)
@@ -71,7 +62,6 @@ bool PixelShaderMesh::InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device> devi
 			std::wstring errormsg = L"Failed to Compile the pixel shader code. Filename: ";
 			errormsg += psFilename;
 			THROW_COM_EXCEPTION_IF_FAILED(result, errormsg);
-
 		}
 
 		// Create the pixel shader from the buffer.
@@ -104,7 +94,6 @@ bool PixelShaderMesh::InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device> devi
 		return false;
 	}
 
-
 	return true;
 
 }
@@ -117,7 +106,7 @@ Microsoft::WRL::ComPtr<ID3D11PixelShader> PixelShaderMesh::GetPixelShader(void)
 bool PixelShaderMesh::Render(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, int vertexCount, const Light& light)
 {
 	bool result = true;
-	result = this->SetShadeParameters(deviceContext, light);
+	result = this->SetShaderParameters(deviceContext, light);
 	this->RenderShader(deviceContext, vertexCount);
 	return result;
 }
@@ -127,7 +116,7 @@ void PixelShaderMesh::RenderShader(Microsoft::WRL::ComPtr<ID3D11DeviceContext> d
 	deviceContext->DrawIndexed(indexCount, 0, 0);
 }
 
-bool PixelShaderMesh::SetShadeParameters(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, const Light& light)
+bool PixelShaderMesh::SetShaderParameters(Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext, const Light& light)
 {
 	HRESULT						result;
 	D3D11_MAPPED_SUBRESOURCE	mappedResource;
@@ -160,8 +149,6 @@ bool PixelShaderMesh::SetShadeParameters(Microsoft::WRL::ComPtr<ID3D11DeviceCont
 		ErrorHandler::Log(exception);
 		return false;
 	}
-
-
 	return true;
 }
 

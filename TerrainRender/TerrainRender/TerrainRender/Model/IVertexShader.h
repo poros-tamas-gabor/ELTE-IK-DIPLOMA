@@ -1,6 +1,18 @@
 #ifndef I_VERTEX_SHADER
 #define I_VERTEX_SHADER
 
+///////////////////////////////////////////////////////////////////////////////
+// IVertexShader.h
+// ===============
+// 
+// The IVertexShader interface defines the methods that every vertex shader class should implement.
+// By creating a class that derives from the IVertexShader interface and implements its methods, 
+// you can define a custom vertex shader and use it in graphics pipeline of the program.
+//
+// AUTHOR: TAMAS GABOR POROS
+// CREATED: 2023-05-08
+///////////////////////////////////////////////////////////////////////////////
+
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <wrl/client.h>

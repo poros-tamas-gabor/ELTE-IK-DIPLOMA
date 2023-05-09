@@ -217,6 +217,11 @@ public:
 
 	void SetColor(float r, float g, float b, float a) override
 	{
+		THROW_TREXCEPTION_IF_FAILED((r >= 0.0f && r <= 1.0f), L"Failed to Set Color");
+		THROW_TREXCEPTION_IF_FAILED((g >= 0.0f && g <= 1.0f), L"Failed to Set Color");
+		THROW_TREXCEPTION_IF_FAILED((b >= 0.0f && b <= 1.0f), L"Failed to Set Color");
+		THROW_TREXCEPTION_IF_FAILED((a >= 0.0f && a <= 1.0f), L"Failed to Set Color");
+
 		for (IRendarablePtr<V> renderable : m_renderables)
 		{
 			renderable->SetColor(r, g, b, a);
@@ -225,6 +230,11 @@ public:
 
 	void SetColorComponent(unsigned componentID, float r, float g, float b, float a)
 	{
+		THROW_TREXCEPTION_IF_FAILED((r >= 0.0f && r <= 1.0f), L"Failed to Set Color");
+		THROW_TREXCEPTION_IF_FAILED((g >= 0.0f && g <= 1.0f), L"Failed to Set Color");
+		THROW_TREXCEPTION_IF_FAILED((b >= 0.0f && b <= 1.0f), L"Failed to Set Color");
+		THROW_TREXCEPTION_IF_FAILED((a >= 0.0f && a <= 1.0f), L"Failed to Set Color");
+
 		for (IRendarablePtr<V> renderable : m_renderables)
 		{
 			if (renderable->GetID() == componentID)
@@ -234,6 +244,11 @@ public:
 
 	void SetColorComponent(std::wstring componentName, float r, float g, float b, float a)
 	{
+		THROW_TREXCEPTION_IF_FAILED((r >= 0.0f && r <= 1.0f), L"Failed to Set Color");
+		THROW_TREXCEPTION_IF_FAILED((g >= 0.0f && g <= 1.0f), L"Failed to Set Color");
+		THROW_TREXCEPTION_IF_FAILED((b >= 0.0f && b <= 1.0f), L"Failed to Set Color");
+		THROW_TREXCEPTION_IF_FAILED((a >= 0.0f && a <= 1.0f), L"Failed to Set Color");
+
 		for (IRendarablePtr<V> renderable : m_renderables)
 		{
 			if (renderable->GetName().find(componentName) != std::wstring::npos)

@@ -39,6 +39,9 @@ TEST_F(DataAccessTest, LoadConfigurationFile) {
 
     ASSERT_FLOAT_EQ(file.origo.latitude, 47.497913f);
 	ASSERT_FLOAT_EQ(file.origo.longitude, 19.040236f);
+	ASSERT_FLOAT_EQ(file.camera.fieldOfView, 1.0467f);
+	ASSERT_FLOAT_EQ(file.camera.screenNear , 1.0f);
+	ASSERT_FLOAT_EQ(file.camera.screenDepth, 2000.0f);
     ASSERT_EQ(file.terrain.translation, Vector3D(10, 11, 12));
     ASSERT_EQ(file.terrain.rotation, Vector3D(20, 21, 22));
     ASSERT_FALSE(file.terrain.colors.empty());

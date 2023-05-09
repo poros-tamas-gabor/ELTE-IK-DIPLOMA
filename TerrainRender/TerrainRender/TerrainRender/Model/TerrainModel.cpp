@@ -522,6 +522,11 @@ bool	TerrainModel::LoadConfigurationFile(const std::wstring& filepath)
 	m_persistence->LoadConfigurationFile(filepath.c_str(), params);
 	//Set world origo
 	this->m_origoLLA = params.origo;
+
+	//Set Camera
+	m_camera->SetFieldOfView(params.camera.fieldOfView);
+	m_camera->SetNearScreen(params.camera.screenNear);
+	m_camera->SetFarScreen(params.camera.screenDepth);
 	
 	//Set Trajectory
 	const float t_x = params.trajectory.translation.x;

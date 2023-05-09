@@ -181,6 +181,7 @@
     <ClCompile Include="Model\ModelMessageSystem.cpp" />
     <ClCompile Include="Model\Persistence\EpochTime.cpp" />
     <ClCompile Include="Model\LineList.cpp" />
+    <ClCompile Include="Model\Persistence\from_json.cpp" />
     <ClCompile Include="Model\Persistence\ModelStructs.cpp" />
     <ClCompile Include="Model\Persistence\ReadSTLChunk.cpp" />
     <ClCompile Include="Model\Persistence\FileDataAccessAsync.cpp" />
@@ -238,6 +239,7 @@
     <ClInclude Include="Model\IRenderable.h" />
     <ClInclude Include="Model\IVertexShader.h" />
     <ClInclude Include="Model\Light.h" />
+    <ClInclude Include="Model\Persistence\from_json.h" />
     <ClInclude Include="Model\Persistence\ICallable.h" />
     <ClInclude Include="Model\Persistence\ReadSTLChunk.h" />
     <ClInclude Include="Model\PixelShaderPolyLine.h" />

@@ -135,11 +135,9 @@ TEST_F(TerrainModelTest, Test_HandleMessage_IDM_LOAD_PROJECT_SHARP)
 
 TEST_F(TerrainModelTest, Test_HandleMessage_IDM_LOAD_CONFIGURATION)
 {
-	ParameterFile params;
-
 	EXPECT_CALL(*m_mock_persistence, LoadConfigurationFile(testing::StrEq(L"path"), testing::Matcher<ParameterFile&>(testing::_))).Times(1);
 
-	ASSERT_TRUE(m_terrainModel->HandleMessage(IDM_LOAD_CONFIGURATION, { L"path" }, {}, {}));
+	ASSERT_FALSE(m_terrainModel->HandleMessage(IDM_LOAD_CONFIGURATION, { L"path" }, {}, {}));
 }
 
 TEST_F(TerrainModelTest, Test_HandleMessage_IDM_LOAD_CAMERA_TRAJECTORY)

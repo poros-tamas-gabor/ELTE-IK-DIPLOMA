@@ -10,6 +10,7 @@
 #include "../TerrainRender/Model/Math/IInterpolation.cpp"
 #include "../TerrainRender/Model/Persistence/ModelStructs.cpp"
 #include "../TerrainRender/Model/Persistence/EpochTime.cpp"
+#include "../TerrainRender/Model/Persistence/from_json.cpp"
 
 #include "../TerrainRender/Model/LineList.cpp"
 #include "../TerrainRender/Model/PolygonMesh.cpp"

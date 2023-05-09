@@ -236,6 +236,11 @@ struct GeneralModelState
 struct ParameterFile {
 
 	LLACoordinate origo;
+	struct Camera {
+		float fieldOfView; 
+		float screenNear;
+		float screenDepth;
+	} camera;
 	struct Terrain {
 		Vector3D translation;
 		Vector3D rotation;
@@ -246,6 +251,5 @@ struct ParameterFile {
 		Vector3D rotation;
 	} trajectory;
 };
-
 
 #endif // !MODEL_STRUCTS_H

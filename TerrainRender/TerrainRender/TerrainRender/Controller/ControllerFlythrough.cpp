@@ -132,7 +132,7 @@ bool ControllerFlythrough::HandleMessage(IControllerMessageIDs message, const st
 				if (m_isRecording && (m_recordedPrevFrameNum == 0 || m_recordedPrevFrameNum != m_flythroughState.currentFrame))
 				{
 					m_recordedPrevFrameNum = m_flythroughState.currentFrame;
-					this->m_terrainView->HandleMessage(IDV_CAPTURE_SCREEN, {}, {}, { m_flythroughState.currentFrame });
+					this->m_terrainView->HandleMessage(IDV_CAPTURE_SCREEN, {}, {}, { m_flythroughState.currentFrame + 1});
 				}
 				m_isRunning = m_terrainModel->HandleMessage(IDM_FLYTHROUGH_NEXT_FRAME, {}, fparams, uparams);
 				return m_isRunning;

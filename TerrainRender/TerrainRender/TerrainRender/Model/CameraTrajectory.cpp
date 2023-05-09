@@ -9,16 +9,16 @@ bool CameraTrajectory::Initialize(const std::vector<CameraPose>& cameraPoses, IR
 
 	Clear();
 
-	this->m_camera = camera;
-	this->m_start = cameraPoses.at(0).epochtime;
+	m_camera = camera;
+	m_start = cameraPoses.at(0).epochtime;
 	for (const CameraPose& camerapose : cameraPoses)
 	{
 		float elapsedMsec = static_cast<float>(camerapose.epochtime.DiffInMilliSec(m_start));
-		this->m_elapsedmsecs.push_back(elapsedMsec);
-		this->m_positions.push_back({ (float)camerapose.east,-(float)camerapose.down,(float)camerapose.north });
-		this->m_rotations.push_back({ -(float)camerapose.pitch, (float)camerapose.yaw, -(float)camerapose.roll });
+		m_elapsedmsecs.push_back(elapsedMsec);
+		m_positions.push_back({ (float)camerapose.east,-(float)camerapose.down,(float)camerapose.north });
+		m_rotations.push_back({ -(float)camerapose.pitch, (float)camerapose.yaw, -(float)camerapose.roll });
 	}
-	this->m_polyLine = renderable;	
+	m_polyLine = renderable;	
 	return true;
 } 
 
@@ -32,12 +32,12 @@ void CameraTrajectory::Shutdown()
 
 void CameraTrajectory::Clear()
 {
-	this->m_elapsedmsecs.clear();
-	this->m_positions.clear();
-	this->m_rotations.clear();
-	this->m_elapsedmsec = 0;
+	m_elapsedmsecs.clear();
+	m_positions.clear();
+	m_rotations.clear();
+	m_elapsedmsec = 0;
 	m_currentFrameNum = 0;
-	this->m_polyLine.reset();
+	m_polyLine.reset();
 }
 
 IRendarablePtr<VertexPolyLine> CameraTrajectory::GetPolyLine() const
@@ -55,9 +55,10 @@ void CameraTrajectory::ResetStartPosition()
 	currentCameraPosition = TransformPosition(currentCameraPosition);
 	currentCameraRotation = TransformRotation(currentCameraRotation);
 
-	this->m_elapsedmsec = 0;
-	this->m_camera->SetPosition(currentCameraPosition.x, currentCameraPosition.y, currentCameraPosition.z);
-	this->m_camera->SetRotationRad(currentCameraRotation.x, currentCameraRotation.y, currentCameraRotation.z);
+	m_elapsedmsec = 0.0f;
+	m_currentFrameNum = 0;
+	m_camera->SetPosition(currentCameraPosition.x, currentCameraPosition.y, currentCameraPosition.z);
+	m_camera->SetRotationRad(currentCameraRotation.x, currentCameraRotation.y, currentCameraRotation.z);
 }
 
 Vector3D  CameraTrajectory::TransformPosition(const Vector3D& vector) const
@@ -94,58 +95,58 @@ bool CameraTrajectory::UpdateCamera(float elapsedmsec)
 	THROW_TREXCEPTION_IF_FAILED((m_camera != nullptr), L"Null pointer exception");
 
 	elapsedmsec *= m_speed;
+	m_elapsedmsec += elapsedmsec;
 
 	bool result;
 	Vector3D currentCameraRotation;
 	Vector3D currentCameraPosition;
 
-	this->m_elapsedmsec += elapsedmsec;
 
 	LinearInterpolation	linearInterpolation;
-	result = linearInterpolation.Calculate(this->m_elapsedmsecs, this->m_positions, this->m_elapsedmsec, currentCameraPosition, m_currentFrameNum);
+	result = linearInterpolation.Calculate(m_elapsedmsecs, m_positions, m_elapsedmsec, currentCameraPosition, m_currentFrameNum);
 	if (!result)
 		return false;
 
 	CirclularInterpolation circularInterpolation;
-	result = circularInterpolation.Calculate(this->m_elapsedmsecs, this->m_rotations, this->m_elapsedmsec, currentCameraRotation, m_currentFrameNum);
+	result = circularInterpolation.Calculate(m_elapsedmsecs, m_rotations, m_elapsedmsec, currentCameraRotation, m_currentFrameNum);
 	if (!result)
 		return false;
 
 	currentCameraRotation = TransformRotation(currentCameraRotation);
 	currentCameraPosition = TransformPosition(currentCameraPosition);
 	
-	this->m_camera->SetPosition(currentCameraPosition.x, currentCameraPosition.y, currentCameraPosition.z);
-	this->m_camera->SetRotationRad(currentCameraRotation.x, currentCameraRotation.y, currentCameraRotation.z);
+	m_camera->SetPosition(currentCameraPosition.x, currentCameraPosition.y, currentCameraPosition.z);
+	m_camera->SetRotationRad(currentCameraRotation.x, currentCameraRotation.y, currentCameraRotation.z);
 
 	return true;
 }
 
 void CameraTrajectory::SetStartEpochTime(EpochTime time)
 {
-	this->m_start = time;
+	m_start = time;
 }
 
 EpochTime CameraTrajectory::GetCurrentEpochTime(void) const
 {
-	return this->m_start.AddMilliSeconds(m_elapsedmsec);
+	return m_start.AddMilliSeconds(m_elapsedmsec);
 }
 
 EpochTime CameraTrajectory::GetStartEpochTime(void) const
 {
-	return this->m_start;
+	return m_start;
 }
 
 unsigned CameraTrajectory::GetCurrentFrameNum(void) const
 {
-	return this->m_currentFrameNum;
+	return m_currentFrameNum;
 }
 unsigned CameraTrajectory::GetNumberOfFrame(void) const
 {
-	return static_cast<unsigned>(this->m_elapsedmsecs.size());
+	return static_cast<unsigned>(m_elapsedmsecs.size());
 }
 void CameraTrajectory::SetCurrentFrame(unsigned frameNum)
 {
-	this->m_elapsedmsec = this->m_elapsedmsecs.at(frameNum);
+	m_elapsedmsec = m_elapsedmsecs.at(frameNum);
 }
 
 IRenderableState CameraTrajectory::GetTrajectoryPolyLineState() const

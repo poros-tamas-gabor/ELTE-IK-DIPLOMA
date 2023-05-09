@@ -35,11 +35,11 @@ class CameraTrajectory
 private:
 
 	EpochTime								m_start;
-	float									m_elapsedmsec = 0.0;
+	float									m_elapsedmsec		= 0.0f;
+	unsigned								m_currentFrameNum	= 0;
 	std::vector<float>						m_elapsedmsecs;
 	std::vector<Vector3D>					m_positions;
 	std::vector<Vector3D>					m_rotations;
-	unsigned								m_currentFrameNum = 0;
 	IRendarablePtr<VertexPolyLine> 			m_polyLine;
 	CameraPtr								m_camera;
 	float									m_speed = 1.0f;

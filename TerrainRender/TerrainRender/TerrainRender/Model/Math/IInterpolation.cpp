@@ -26,7 +26,11 @@ bool LinearInterpolation::Calculate(const std::vector<float>& xValues, const std
     if (i == -1)
         return false;
     else if ((i == xValues.size() - 1) && x > xValues.at(i))
+    {
+        index = static_cast<unsigned>(xValues.size() - 1);
+        y = yValues.at(xValues.size() - 1);
         return false;
+    }
     else if (i == xValues.size() - 1) 
     {
         index = static_cast<unsigned>(i);

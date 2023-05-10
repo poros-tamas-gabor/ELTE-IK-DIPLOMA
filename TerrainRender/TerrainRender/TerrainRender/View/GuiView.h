@@ -39,19 +39,12 @@ private:
 		float		color[4]		= { 1.0f,1.0f,1.0f,1.0f };
 		bool		m_isSeen = true;
 	};
-	struct TrajectoryTransformation
-	{
-		unsigned	id;
-		float		rotation[3] = { 0.0f,0.0f,0.0f };
-		float		tranlation[3] = { 0.0f,0.0f,0.0f };
-		bool		m_isSeen = true;
-	};
+
 
 private:
 	IControllerPtr							m_terrainController;
 	MeshGroupTransformation					m_GroupTrans;
 	std::vector<MeshTransformation>			m_MeshElementsTrans;
-	TrajectoryTransformation				m_TrajectoryTrans;
 
 	MeshGroupState							m_TerrainsState;
 	FlythroughState							m_flythroughState;
@@ -95,7 +88,7 @@ private:
 	void Explore3DWindow();
 	void TerrainListBox();
 	void TerrainPopUp(unsigned int terrainId, MeshTransformation& t);
-	void TrajectoryPopUp( TrajectoryTransformation& t);
+	void TrajectoryPopUp( );
 
 	std::vector<std::string> CollectTerrainIDNames(void);
 };

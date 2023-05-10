@@ -286,9 +286,7 @@ void GuiView::GeneralWindow()
                 {
                     ImGui::OpenPopup("Trajectory");
                 }
-
-                TrajectoryPopUp(m_TrajectoryTrans);
-
+                TrajectoryPopUp();
             }
 
         }
@@ -305,6 +303,11 @@ void GuiView::GeneralWindow()
     {
         ImGui::ErrorCheckEndFrameRecover(e);
     }
+    catch (...)
+    {
+        ErrorHandler::Log("Caught unknown exception");
+    }
+
     ImGui::End();
 }
 
@@ -342,7 +345,7 @@ void GuiView::TerrainPopUp(unsigned int terrainId, MeshTransformation& t)
     }
 }
 
-void GuiView::TrajectoryPopUp(TrajectoryTransformation& t)
+void GuiView::TrajectoryPopUp()
 {
     if (ImGui::BeginPopup("Trajectory")) //BeginPopupContextItem())
     {
@@ -683,23 +686,6 @@ void GuiView::HandleIModelState(const MeshGroupState& states)
 void GuiView::HandleIModelState(const FlythroughState& state)
 {
     m_flythroughState = state;
-
-    if (state.trajectoryPolyLine.empty())
-    {
-        m_TrajectoryTrans = TrajectoryTransformation();
-    }
-
-    else 
-    {
-        TrajectoryState trajectoryState = state.trajectoryPolyLine.at(0);
-        TrajectoryTransformation tt;
-        tt.id       = trajectoryState.id;
-        tt.m_isSeen = trajectoryState.isSeen;
-        Vector3DtoCArray(tt.rotation, trajectoryState.rotation);
-        Vector3DtoCArray(tt.tranlation, trajectoryState.translation);
-        m_TrajectoryTrans = tt;
-    }
-
 }
 
 void GuiView::HandleIModelState(const Explore3DState& state)

@@ -2,7 +2,7 @@
 
 void TerrainModelSubscriber::HandleIModelState(const MeshGroupState& states)
 {
-    m_TerrainsState = states;
+    m_meshGroupState = states;
 }
 
 void TerrainModelSubscriber::HandleIModelState(const FlythroughState& state)

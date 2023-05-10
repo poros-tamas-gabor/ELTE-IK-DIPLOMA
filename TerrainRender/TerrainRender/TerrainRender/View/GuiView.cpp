@@ -7,6 +7,9 @@
 #include <iomanip>
 #include <ctime>
 #include "../ErrorHandler.h"
+
+const static float PI = 3.14159265358979323846f;
+
 bool ToggleButton(const char* str_id, bool* isOn)
 {
     ImVec4* colors = ImGui::GetStyle().Colors;
@@ -46,7 +49,7 @@ bool ToggleButton(const char* str_id, bool* isOn)
 
 }
 
-const static float PI = 3.14159265358979323846f;
+
 bool GuiView::Initalize(Microsoft::WRL::ComPtr<ID3D11Device> m_device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_deviceContext, IControllerPtr controller)
 {
     bool result;
@@ -150,6 +153,10 @@ void GuiView::Help()
     {
         ImGui::ErrorCheckEndFrameRecover(e);
     }
+    catch (...)
+    {
+        ErrorHandler::Log("Caught unknown exception");
+    }
     ImGui::End();
 }
 
@@ -243,20 +250,22 @@ void GuiView::GeneralWindow()
         if (ImGui::CollapsingHeader("Meshes"))
         {
             ImGui::SeparatorText("Scale");
-            if (ImGui::DragFloat("scale", &m_GroupTrans.scaling, (0.01f), 0.0f, 100.0f))
+            if (ImGui::DragFloat("scale", &m_meshGroupState.scale.x, (0.01f), 0.0f, 100.0f))
             {
-                m_terrainController->HandleMessage(IDC_MESH_GROUP_SCALE, { m_GroupTrans.scaling }, {  });
+                m_terrainController->HandleMessage(IDC_MESH_GROUP_SCALE, { m_meshGroupState.scale.x }, {  });
             }
 
             ImGui::SeparatorText("Rotation [radian]");
-            if (ImGui::DragFloat3("[pitch, yaw, roll]", m_GroupTrans.rotation, (0.01f), -PI, PI))
-                m_terrainController->HandleMessage(IDC_MESH_GROUP_ROTATION, { m_GroupTrans.rotation[0], m_GroupTrans.rotation[1], m_GroupTrans.rotation[2] }, {});
+            Vector3D& rotation = m_meshGroupState.rotation;
+            if (ImGui::DragFloat3("[pitch, yaw, roll]", &rotation.x, (0.01f), -PI, PI))
+                m_terrainController->HandleMessage(IDC_MESH_GROUP_ROTATION, { rotation.x, rotation.y, rotation.z }, {});
 
 
             ImGui::SeparatorText("Translation");
-            if (ImGui::DragFloat3("[x, y, z]", m_GroupTrans.tranlation, 0.1f))
+            Vector3D& translation = m_meshGroupState.translation;
+            if (ImGui::DragFloat3("[x, y, z]", &translation.x, 0.1f))
             {
-                m_terrainController->HandleMessage(IDC_MESH_GROUP_TRANSLATION, { m_GroupTrans.tranlation[0], m_GroupTrans.tranlation[1], m_GroupTrans.tranlation[2] }, {});
+                m_terrainController->HandleMessage(IDC_MESH_GROUP_TRANSLATION, { translation.x, translation.y, translation.z }, {});
             }
 
 
@@ -275,14 +284,15 @@ void GuiView::GeneralWindow()
             {
 
                 TrajectoryState& trajectoryState = m_flythroughState.trajectoryPolyLine.at(0);
-                std::string polyLineName = StringConverter::WideToString(trajectoryState.name);
+                std::string prefix = trajectoryState.isSeen ? "" : "* ";
+                std::string polylineName = prefix + StringConverter::WideToString(trajectoryState.name);
 
                 ImGui::SeparatorText("Loaded trajectory");
                 if (ImGui::Button("Clear trajectory"))
                 {
                     m_terrainController->HandleMessage(IDC_BUTTON_CLEAR_TRAJECTORY, {}, {});
                 }
-                if (ImGui::Button(polyLineName.c_str(), ImVec2(ImGui::GetContentRegionAvail().x, 0)))
+                if (ImGui::Button(polylineName.c_str(), ImVec2(ImGui::GetContentRegionAvail().x, 0)))
                 {
                     ImGui::OpenPopup("Trajectory");
                 }
@@ -317,29 +327,30 @@ std::vector<std::string> GuiView::CollectTerrainIDNames(void)
 {
     std::vector<std::string> names;
    
-    for (const MeshState& info : m_TerrainsState.Meshes)
+    for (const MeshState& info : m_meshGroupState.Meshes)
     {
-        std::string id = StringConverter::WideToString(info.name) + ", id: " + std::to_string(info.id);
+        std::string prefix = info.isSeen ? "" : "* ";
+        std::string id = prefix + StringConverter::WideToString(info.name) + ", id: " + std::to_string(info.id);
         names.push_back(id);
     }
     return names;
 
 }
 
-void GuiView::TerrainPopUp(unsigned int terrainId, MeshTransformation& t)
+void GuiView::TerrainPopUp(MeshState& state)
 {
     if (ImGui::BeginPopup("Meshes")) //BeginPopupContextItem())
     {
-        if (ImGui::Checkbox("Show mesh", &t.m_isSeen))
+        if (ImGui::Checkbox("Show mesh", &state.isSeen))
         {
-            float b = (float)t.m_isSeen;
-            m_terrainController->HandleMessage(IDC_MESH_SET_ISSEEN, { b }, { terrainId });
+            float b = (float)state.isSeen;
+            m_terrainController->HandleMessage(IDC_MESH_SET_ISSEEN, { b }, { state.id });
         }
 
          ImGui::SeparatorText("Color");
-         if (ImGui::ColorEdit4("color", t.color))
+         if (ImGui::ColorEdit4("color", &state.color.x))
          {
-             m_terrainController->HandleMessage(IDC_MESH_SET_COLOR, {t.color[0],t.color[1],t.color[2],t.color[3]}, {terrainId});
+             m_terrainController->HandleMessage(IDC_MESH_SET_COLOR, { state.color.x, state.color.y, state.color.z, state.color.w }, { state.id });
          }
         ImGui::EndPopup();
     }
@@ -404,10 +415,7 @@ void GuiView::TerrainListBox()
                 ImGui::SetItemDefaultFocus();
             }
 
-            unsigned int terrainId = m_TerrainsState.Meshes.at(item_current_idx).id;
-            auto it = std::find_if(m_MeshElementsTrans.begin(), m_MeshElementsTrans.end(), [terrainId](MeshTransformation t) {return t.id == terrainId; });
-
-            this->TerrainPopUp(terrainId, *it);
+            this->TerrainPopUp(m_meshGroupState.Meshes.at(item_current_idx));
             ImGui::PopID();
         }
         ImGui::EndListBox();
@@ -582,6 +590,10 @@ void GuiView::FlythroughWindow()
     {
         ImGui::ErrorCheckEndFrameRecover(e);
     }
+    catch (...)
+    {
+        ErrorHandler::Log("Caught unknown exception");
+    }
     ImGui::End();
     
 }
@@ -630,6 +642,10 @@ void GuiView::Explore3DWindow()
     {
         ImGui::ErrorCheckEndFrameRecover(e);
     }
+    catch (...)
+    {
+        ErrorHandler::Log("Caught unknown exception");
+    }
     ImGui::End();
 }
 void GuiView::BeginFrame()
@@ -653,34 +669,7 @@ void GuiView::Shutdown()
 
 void GuiView::HandleIModelState(const MeshGroupState& states)
 {
-    m_TerrainsState = states;
-
-    Vector3DtoCArray(m_GroupTrans.rotation, states.rotation);
-    m_GroupTrans.scaling = states.scale.x;
-    Vector3DtoCArray(m_GroupTrans.tranlation, states.translation);
-
-
-    if (states.Meshes.empty())
-    {
-        m_MeshElementsTrans.clear();
-    }
-    for (const MeshState& state : states.Meshes)
-    {
-        auto it = std::find_if(m_MeshElementsTrans.begin(), m_MeshElementsTrans.end(), [state](MeshTransformation t) {return t.id == state.id; });
-        //not contains
-        if (it == m_MeshElementsTrans.end())
-        {
-            MeshTransformation tranformation;
-            tranformation.id = state.id;
-            Vector4DtoCArray(tranformation.color, state.color);
-            tranformation.m_isSeen = state.isSeen;
-            m_MeshElementsTrans.push_back(tranformation);
-        }
-        else
-        {
-            Vector4DtoCArray(it->color, state.color);
-        }
-    }
+    m_meshGroupState = states;
 }
 
 void GuiView::HandleIModelState(const FlythroughState& state)
@@ -691,7 +680,6 @@ void GuiView::HandleIModelState(const FlythroughState& state)
 void GuiView::HandleIModelState(const Explore3DState& state)
 {
     m_explore3dState = state;
-
 }
 void GuiView::HandleIModelState(const GeneralModelState& state)
 {

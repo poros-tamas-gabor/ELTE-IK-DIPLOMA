@@ -3,7 +3,7 @@
 class TerrainModelSubscriber : public IModelSubscriber
 {
 public:
-	MeshGroupState		m_TerrainsState;
+	MeshGroupState		m_meshGroupState;
 	FlythroughState		m_flythroughState;
 	Explore3DState		m_explore3dState;
 	GeneralModelState	m_generalState;

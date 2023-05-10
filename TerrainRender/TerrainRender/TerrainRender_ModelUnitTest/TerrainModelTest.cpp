@@ -314,17 +314,17 @@ TEST_F(TerrainModelTest, Test_HandleMessage_IDM_MESH_GROUP)
 	ASSERT_FALSE(m_terrainModel->HandleMessage(IDM_MESH_GROUP_SCALE, {}, {}, {}));
 	ASSERT_TRUE(m_terrainModel->HandleMessage(IDM_MESH_GROUP_SCALE, {}, { expectedScale.x }, {}));
 
-	ASSERT_EQ(expectedScale, m_subscriber->m_TerrainsState.scale);
+	ASSERT_EQ(expectedScale, m_subscriber->m_meshGroupState.scale);
 
 	ASSERT_FALSE(m_terrainModel->HandleMessage(IDM_MESH_GROUP_ROTATION, {}, {}, {}));
 	ASSERT_TRUE(m_terrainModel->HandleMessage(IDM_MESH_GROUP_ROTATION, {}, { expectedRotation.x, expectedRotation.y, expectedRotation.z}, {}));
 
-	ASSERT_EQ(expectedRotation, m_subscriber->m_TerrainsState.rotation);
+	ASSERT_EQ(expectedRotation, m_subscriber->m_meshGroupState.rotation);
 
 	ASSERT_FALSE(m_terrainModel->HandleMessage(IDM_MESH_GROUP_TRANSLATION, {}, {}, {}));
 	ASSERT_TRUE(m_terrainModel->HandleMessage(IDM_MESH_GROUP_TRANSLATION, {}, { expectedTranslation.x, expectedTranslation.y, expectedTranslation.z }, {}));
 
-	ASSERT_EQ(expectedTranslation, m_subscriber->m_TerrainsState.translation);
+	ASSERT_EQ(expectedTranslation, m_subscriber->m_meshGroupState.translation);
 }
 
 

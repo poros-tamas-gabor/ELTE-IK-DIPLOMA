@@ -25,28 +25,11 @@
 
 class GuiView : public IModelSubscriber
 {
-private:
-	struct MeshGroupTransformation
-	{
-		float		rotation[3] = { 0.0f,0.0f,0.0f };
-		float		tranlation[3] = { 0.0f,0.0f,0.0f };
-		float		scaling = 1.0f;
-		bool		m_isSeen = true;
-	};
-	struct MeshTransformation
-	{
-		unsigned	id;
-		float		color[4]		= { 1.0f,1.0f,1.0f,1.0f };
-		bool		m_isSeen = true;
-	};
-
 
 private:
 	IControllerPtr							m_terrainController;
-	MeshGroupTransformation					m_GroupTrans;
-	std::vector<MeshTransformation>			m_MeshElementsTrans;
 
-	MeshGroupState							m_TerrainsState;
+	MeshGroupState							m_meshGroupState;
 	FlythroughState							m_flythroughState;
 	Explore3DState							m_explore3dState;
 	GeneralModelState						m_generalState;
@@ -87,7 +70,7 @@ private:
 	void FlythroughWindow();
 	void Explore3DWindow();
 	void TerrainListBox();
-	void TerrainPopUp(unsigned int terrainId, MeshTransformation& t);
+	void TerrainPopUp(MeshState& state);
 	void TrajectoryPopUp( );
 
 	std::vector<std::string> CollectTerrainIDNames(void);

@@ -66,7 +66,6 @@ float CirclularInterpolation::angleMod(float angle)
 
 bool CirclularInterpolation::Calculate(const std::vector<float>& xValues, const std::vector<Vector3D>& yValues,  float x, Vector3D& y, unsigned& index)
 {
-    //TODO ::
 //Compute the difference between the two angles : d = angle2 - angle1
 //Adjust the difference to bring it within the range - pi to pi : d = ((d + pi) % (2 * pi)) - pi
 //Compute the interpolated angle as : angle = angle1 + t * d

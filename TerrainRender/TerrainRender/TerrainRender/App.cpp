@@ -7,8 +7,6 @@
 #include "ImGui/imgui_impl_dx11.h"
 #include "resource.h"
 #include <wrl/client.h>
-
-//TODO: DELETE
 #include "Controller/ControllerGui.h"
 #include "Controller/Controller3DExplore.h"
 #include "Controller/ControllerFlythrough.h"

@@ -193,7 +193,7 @@ void GuiView::GeneralWindow()
             }
         }
 
-        if (ImGui::CollapsingHeader("Origo LLA"))
+        if (ImGui::CollapsingHeader("Origo LLA coordinates"))
         {
             if (ImGui::InputFloat("Longitude", &m_explore3dState.origo.longitude, 0.0f, 0.0f, "%.4f"))
             {
@@ -204,20 +204,20 @@ void GuiView::GeneralWindow()
                 m_terrainController->HandleMessage(IDC_ORIGO_SET_LATITUDE, { m_explore3dState.origo.latitude }, {  });
             }
         }
-        if (ImGui::CollapsingHeader("Configurations"))
+        if (ImGui::CollapsingHeader("View"))
         {
             if (ImGui::Checkbox("Shading", &m_generalState.isShadingOn ))
             {
                 m_terrainController->HandleMessage(IDC_PIXELSHADER_SET_SHADING, {  }, { m_generalState.isShadingOn });
             }
-            if (ImGui::Checkbox("Grid", &m_generalState.isGridSeen))
+            if (ImGui::Checkbox("Show grid", &m_generalState.isGridSeen))
             {
                 m_terrainController->HandleMessage(IDC_XZ_PLANE_GRID_SET_ISSEEN, {  }, { m_generalState.isGridSeen });
             }
         }
 
 
-        if (ImGui::CollapsingHeader("Camera Properties"))
+        if (ImGui::CollapsingHeader("Camera properties"))
         {
             float fov = m_generalState.fieldOfView;
             if (ImGui::SliderFloat("Field of view", &fov, 0.5, /*0.01*/ PI, "%.3f"))
@@ -225,56 +225,44 @@ void GuiView::GeneralWindow()
                 this->m_terrainController->HandleMessage(IDC_SET_CAMERA_FIELD_OF_VIEW, { fov }, {});
             }
             float nearScreen = m_generalState.screenNear;
-            if (ImGui::SliderFloat("NearScreen", &nearScreen, 0.5, /*0.01*/ 5, "%.3f"))
+            if (ImGui::SliderFloat("Near screen", &nearScreen, 0.5, /*0.01*/ 5, "%.3f"))
             {
                 this->m_terrainController->HandleMessage(IDC_SET_CAMERA_NEAR_SCREEN, { nearScreen }, {});
             }
             float farScreen = m_generalState.screenDepth;
-            if (ImGui::SliderFloat("FarScreen", &farScreen, 10, /*0.01*/ 3000, "%.3f"))
+            if (ImGui::SliderFloat("Far screen", &farScreen, 10, /*0.01*/ 3000, "%.3f"))
             {
                 this->m_terrainController->HandleMessage(IDC_SET_CAMERA_FAR_SCREEN, { farScreen }, {});
             }
 
-            if (ImGui::Button("Reset Camera"))
+            if (ImGui::Button("Reset camera position"))
             {
                 this->m_terrainController->HandleMessage(IDC_E3D_CAMERA_RESET, {}, {});
             }
         }
-        if (ImGui::CollapsingHeader("Terrain Meshes"))
+        if (ImGui::CollapsingHeader("Meshes"))
         {
             ImGui::SeparatorText("Scale");
-            if (ImGui::SliderFloat("slider S", &m_GroupTrans.scaling, 0, 10))
-            {
-                m_terrainController->HandleMessage(IDC_MESH_GROUP_SCALE, { m_GroupTrans.scaling }, {  });
-            }
-            if (ImGui::InputFloat("input S", &m_GroupTrans.scaling))
+            if (ImGui::DragFloat("scale", &m_GroupTrans.scaling, (0.01f), 0.0f, 100.0f))
             {
                 m_terrainController->HandleMessage(IDC_MESH_GROUP_SCALE, { m_GroupTrans.scaling }, {  });
             }
 
-
-            ImGui::SeparatorText("Rotation radian");
-            if (ImGui::SliderFloat3("slider R", m_GroupTrans.rotation, -PI, PI))
-            {
-                m_terrainController->HandleMessage(IDC_MESH_GROUP_ROTATION, { m_GroupTrans.rotation[0],m_GroupTrans.rotation[1],m_GroupTrans.rotation[2] }, {});
-            }
-
-            if (ImGui::InputFloat3("input R", m_GroupTrans.rotation))
-            {
+            ImGui::SeparatorText("Rotation [radian]");
+            if (ImGui::DragFloat3("[pitch, yaw, roll]", m_GroupTrans.rotation, (0.01f), -PI, PI))
                 m_terrainController->HandleMessage(IDC_MESH_GROUP_ROTATION, { m_GroupTrans.rotation[0], m_GroupTrans.rotation[1], m_GroupTrans.rotation[2] }, {});
-            }
+
 
             ImGui::SeparatorText("Translation");
-            if (ImGui::DragFloat3("slider T", m_GroupTrans.tranlation, 0.1f))
-            {
-                m_terrainController->HandleMessage(IDC_MESH_GROUP_TRANSLATION, { m_GroupTrans.tranlation[0], m_GroupTrans.tranlation[1], m_GroupTrans.tranlation[2] }, {});
-            }
-            if (ImGui::InputFloat3("input T", m_GroupTrans.tranlation))
+            if (ImGui::DragFloat3("[x, y, z]", m_GroupTrans.tranlation, 0.1f))
             {
                 m_terrainController->HandleMessage(IDC_MESH_GROUP_TRANSLATION, { m_GroupTrans.tranlation[0], m_GroupTrans.tranlation[1], m_GroupTrans.tranlation[2] }, {});
             }
 
-            if (ImGui::Button("Clear Terrain meshes"))
+
+            ImGui::SeparatorText("List of meshes");
+
+            if (ImGui::Button("Clear meshes"))
             {
                 m_terrainController->HandleMessage(IDC_BUTTON_CLEAR_MESHES, {}, {});
             }
@@ -283,28 +271,24 @@ void GuiView::GeneralWindow()
         }
         if (ImGui::CollapsingHeader("Trajectory"))
         {
-            if (ImGui::Button("Clear Trajectory"))
-            {
-                m_terrainController->HandleMessage(IDC_BUTTON_CLEAR_TRAJECTORY, {}, {});
-            }
             if (!m_flythroughState.trajectoryPolyLine.empty())
             {
+
                 TrajectoryState& trajectoryState = m_flythroughState.trajectoryPolyLine.at(0);
                 std::string polyLineName = StringConverter::WideToString(trajectoryState.name);
-                ImGui::PushID(polyLineName.c_str());
 
-                static bool is_selected = false;
-                if (ImGui::Selectable(polyLineName.c_str(), &is_selected))
+                ImGui::SeparatorText("Loaded trajectory");
+                if (ImGui::Button("Clear trajectory"))
+                {
+                    m_terrainController->HandleMessage(IDC_BUTTON_CLEAR_TRAJECTORY, {}, {});
+                }
+                if (ImGui::Button(polyLineName.c_str(), ImVec2(ImGui::GetContentRegionAvail().x, 0)))
                 {
                     ImGui::OpenPopup("Trajectory");
                 }
-                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-                if (is_selected)
-                {
-                    ImGui::SetItemDefaultFocus();
-                }
+
                 TrajectoryPopUp(m_TrajectoryTrans);
-                ImGui::PopID();
+
             }
 
         }
@@ -341,9 +325,9 @@ std::vector<std::string> GuiView::CollectTerrainIDNames(void)
 
 void GuiView::TerrainPopUp(unsigned int terrainId, MeshTransformation& t)
 {
-    if (ImGui::BeginPopup("Terrain")) //BeginPopupContextItem())
+    if (ImGui::BeginPopup("Meshes")) //BeginPopupContextItem())
     {
-        if (ImGui::Checkbox("IsSeen", &t.m_isSeen))
+        if (ImGui::Checkbox("Show mesh", &t.m_isSeen))
         {
             float b = (float)t.m_isSeen;
             m_terrainController->HandleMessage(IDC_MESH_SET_ISSEEN, { b }, { terrainId });
@@ -362,32 +346,30 @@ void GuiView::TrajectoryPopUp(TrajectoryTransformation& t)
 {
     if (ImGui::BeginPopup("Trajectory")) //BeginPopupContextItem())
     {
-        
-        if (ImGui::Checkbox("IsSeen", &t.m_isSeen))
+        if (!m_flythroughState.trajectoryPolyLine.empty())
         {
-            float b = (float)t.m_isSeen;
-            m_terrainController->HandleMessage(IDC_TRAJECTORY_SET_ISSEEN, { b }, {  });
-        }
-        
-        ImGui::SeparatorText("Rotation radian");
-        if (ImGui::SliderFloat3("slider R", t.rotation, -PI, PI))
-        {
-           m_terrainController->HandleMessage(IDC_TRAJECTORY_ROTATION, { t.rotation[0], t.rotation[1] ,t.rotation[2] }, {});
-        }
+            bool &isSeen = m_flythroughState.trajectoryPolyLine.at(0).isSeen;
+            if (ImGui::Checkbox("Show trajectory", &isSeen))
+            {
+                float b = (float)isSeen;
+                m_terrainController->HandleMessage(IDC_TRAJECTORY_SET_ISSEEN, { b }, {  });
+            }
 
-        if (ImGui::InputFloat3("input R", t.rotation))
-        {
-          m_terrainController->HandleMessage(IDC_TRAJECTORY_ROTATION, { t.rotation[0], t.rotation[1] ,t.rotation[2] }, {  });
-        }
+            ImGui::SeparatorText("Rotation [radian]");
+            Vector3D& rotation = m_flythroughState.trajectoryPolyLine.at(0).rotation;
+            if (ImGui::DragFloat3("[pitch, yaw, roll]", &rotation.x, (0.01f), -PI, PI))
+            {
+                m_terrainController->HandleMessage(IDC_TRAJECTORY_ROTATION, { rotation.x, rotation.y ,rotation.z }, {});
+            }
 
-        ImGui::SeparatorText("Translation");
-        if (ImGui::DragFloat3("slider T", t.tranlation,0.1f))
-        {
-            m_terrainController->HandleMessage(IDC_TRAJECTORY_TRANSLATION, { t.tranlation[0], t.tranlation[1] ,t.tranlation[2] }, {});
-        }
-        if (ImGui::InputFloat3("input T", t.tranlation))
-        {
-            m_terrainController->HandleMessage(IDC_TRAJECTORY_TRANSLATION, { t.tranlation[0], t.tranlation[1] ,t.tranlation[2] }, {});
+
+            ImGui::SeparatorText("Translation");
+            Vector3D& translation = m_flythroughState.trajectoryPolyLine.at(0).translation;
+            if (ImGui::DragFloat3("[x, y, z]", &translation.x, 0.1f))
+            {
+                m_terrainController->HandleMessage(IDC_TRAJECTORY_TRANSLATION, { translation.x, translation.y ,translation.z }, {});
+            }
+
         }
 
         ImGui::EndPopup();
@@ -411,7 +393,7 @@ void GuiView::TerrainListBox()
             if (ImGui::Selectable(terrainIds.at(n).c_str(), is_selected))
             {
                 item_current_idx = n;
-                ImGui::OpenPopup("Terrain");
+                ImGui::OpenPopup("Meshes");
             }
             // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
             if (is_selected)
@@ -439,6 +421,13 @@ void PrintStatus(const T& state)
     {
         ImGui::TableNextRow();
         ImGui::TableSetColumnIndex(0);
+        ImGui::Text("x");
+        ImGui::TableSetColumnIndex(1);
+        ImGui::Text("y");
+        ImGui::TableSetColumnIndex(2);
+        ImGui::Text("z");
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex(0);
         ImGui::Text("%.4f", state.currentCameraPosition.x);
         ImGui::TableSetColumnIndex(1);
         ImGui::Text("%.4f", state.currentCameraPosition.y);
@@ -448,9 +437,16 @@ void PrintStatus(const T& state)
     }
 
     ImGui::Spacing();
-    ImGui::SeparatorText("Rotation (radian) [pitch, yaw, roll]");
+    ImGui::SeparatorText("Rotation [radian]");
     if (ImGui::BeginTable("Rotation", 3))
     {
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex(0);
+        ImGui::Text("pitch");
+        ImGui::TableSetColumnIndex(1);
+        ImGui::Text("yaw");
+        ImGui::TableSetColumnIndex(2);
+        ImGui::Text("roll");
         ImGui::TableNextRow();
         ImGui::TableSetColumnIndex(0);
         ImGui::Text("%.4f", state.currentCameraRotation.x);
@@ -461,7 +457,7 @@ void PrintStatus(const T& state)
         ImGui::EndTable();
     }
 
-    ImGui::SeparatorText("Origo LLA coords");
+    ImGui::SeparatorText("Origo LLA coordinates");
     {
         if (ImGui::BeginTable("Origo LLA", 2))
         {
@@ -489,9 +485,9 @@ void PrintStatus(const T& state)
         ImGui::Text("Unix time: %d", state.currentEpochTime.getSeconds());
 
     }
-    ImGui::SeparatorText("Sun Position");
+    ImGui::SeparatorText("Sun position");
     {
-        if (ImGui::BeginTable("Sun Position", 2))
+        if (ImGui::BeginTable("Sun position", 2))
         {
             ImGui::TableNextRow();
             ImGui::TableSetColumnIndex(0);
@@ -519,7 +515,7 @@ void GuiView::FlythroughWindow()
     {
         ImGui::PushItemWidth(ImGui::GetFontSize() * -15);
         ImGui::Begin("Flythrough Settings", &m_show_FlythroughWin, 0);
-        ImGui::SeparatorText("Buttons");
+        ImGui::SeparatorText("Simulation control");
         if (ImGui::Button("Play"))
             this->m_terrainController->HandleMessage(IDC_FLYTHROUGH_START, {}, {});
 
@@ -531,19 +527,18 @@ void GuiView::FlythroughWindow()
         if (ImGui::Button("Stop"))
             this->m_terrainController->HandleMessage(IDC_FLYTHROUGH_STOP, {}, {});      
 
-        std::wstring str = L"Output dir: " + m_outputDir;
+        ImGui::SeparatorText("Record control");
+        std::wstring str = L"Output directory: " + m_outputDir;
         ImGui::TextWrapped(StringConverter::WideToString(str).c_str());
         
-        if (!m_isRecordingOn)
+        if (ImGui::Button(m_isRecordingOn ? "Stop Record" : "Record Frames"))
         {
-            if (ImGui::Button("Record Frames"))
+            if(!m_isRecordingOn)
                 this->m_terrainController->HandleMessage(IDC_FLYTHROUGH_RECORD_START, {}, {});
-        }
-        else
-        {
-            if (ImGui::Button("Stop Record"))
+            else
                 this->m_terrainController->HandleMessage(IDC_FLYTHROUGH_RECORD_STOP, {}, {});
         }
+
         ImGui::SeparatorText("Properties");
         static float flythrough_speed = m_flythroughState.speed;
         if (ImGui::SliderFloat("Speed", &flythrough_speed, 0.1f, 3.0f, "%.3f"))
@@ -560,7 +555,8 @@ void GuiView::FlythroughWindow()
         std::string unixtimestr = std::to_string(m_flythroughState.startEpochTime.getSeconds());
         char ut[11];
         strcpy_s<11>(ut, unixtimestr.c_str());
-        if (ImGui::InputText("UnixTime_FT", ut, 11))
+        ImGui::PushID("UnixTime_FT");
+        if (ImGui::InputText("Unix time", ut, 11))
         {
             unsigned newUnix = std::atol(ut);
             if (newUnix > 0)
@@ -568,6 +564,7 @@ void GuiView::FlythroughWindow()
                 this->m_terrainController->HandleMessage(IDC_SET_START_TIME_TRAJECTORY, {}, {newUnix});
             }
         }      
+        ImGui::PopID();
         PrintStatus<FlythroughState>(m_flythroughState);
     }
     catch (const TRException& e)
@@ -606,7 +603,8 @@ void GuiView::Explore3DWindow()
         std::string unixtimestr = std::to_string(m_explore3dState.currentEpochTime.getSeconds());
         char ut[11];
         strcpy_s<11>(ut, unixtimestr.c_str());
-        if (ImGui::InputText("UnixTime_E3D", ut, 11))
+        ImGui::PushID("UnixTime_E3D");
+        if (ImGui::InputText("Unix time", ut, 11))
         {
             unsigned newUnix = std::atol(ut);
             if (newUnix > 0)
@@ -614,7 +612,7 @@ void GuiView::Explore3DWindow()
                 this->m_terrainController->HandleMessage(IDC_SET_TIME_E3D, {}, { newUnix });
             }
         }
-
+        ImGui::PopID();
         PrintStatus<Explore3DState>(m_explore3dState);
     }
     catch (const TRException& e)
@@ -646,8 +644,7 @@ void GuiView::EndFrame()
 
 void GuiView::Shutdown()
 {
-    ImGui_ImplDX11_Shutdown();
-    
+    ImGui_ImplDX11_Shutdown();  
 }
 
 

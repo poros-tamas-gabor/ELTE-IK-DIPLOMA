@@ -140,8 +140,8 @@ void GuiView::Help()
 
             ImGui::EndTable();
         }
-
-        ImGui::TextWrapped("The process of screen capturing with saving on the hard disk is resource-intensive. The recommended speed for screen capturing is below 0.5.");
+        ImGui::Separator();
+        ImGui::TextWrapped("The process of screen capturing with saving on the hard disk is resource-intensive. The recommended speed for recording is below 0.5.");
     }
     catch (const TRException& e)
     {
@@ -178,7 +178,6 @@ void GuiView::ShowFlythroughWindow()
 {
     m_show_FlythroughWin = true;
 }
-
 
 void GuiView::GeneralWindow()
 {
@@ -324,7 +323,6 @@ void GuiView::GeneralWindow()
 }
 
 
-
 std::vector<std::string> GuiView::CollectTerrainIDNames(void)
 {
     std::vector<std::string> names;
@@ -341,7 +339,7 @@ std::vector<std::string> GuiView::CollectTerrainIDNames(void)
 
 void GuiView::TerrainPopUp(MeshState& state)
 {
-    if (ImGui::BeginPopup("Meshes")) //BeginPopupContextItem())
+    if (ImGui::BeginPopup("Meshes")) 
     {
         if (ImGui::Checkbox("Show mesh", &state.isSeen))
         {
@@ -360,7 +358,7 @@ void GuiView::TerrainPopUp(MeshState& state)
 
 void GuiView::TrajectoryPopUp()
 {
-    if (ImGui::BeginPopup("Trajectory")) //BeginPopupContextItem())
+    if (ImGui::BeginPopup("Trajectory"))
     {
         if (!m_flythroughState.trajectoryPolyLine.empty())
         {
@@ -387,7 +385,6 @@ void GuiView::TrajectoryPopUp()
             }
 
         }
-
         ImGui::EndPopup();
     }
 }

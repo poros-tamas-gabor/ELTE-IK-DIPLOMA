@@ -76,6 +76,7 @@ bool ControllerGui::HandleMessage(IControllerMessageIDs message, const std::vect
 			bool isFlythroughModeOn;
 			THROW_TREXCEPTION_IF_FAILED((m_messageSystem != nullptr), L"Controller message system is not initialized");
 			isFlythroughModeOn = m_messageSystem->Publish(IDCC_IS_FLYTHROUGH_MODE_ON, {}, {});
+			THROW_TREXCEPTION_IF_FAILED((!isFlythroughModeOn), L"The Explore3D settings window is only available in Explore3D mode. If you want to open the settings window, switch to Explore3D mode.");
 			if (!isFlythroughModeOn)
 				m_terrainView->HandleMessage(IDC2IDV(IDMENU_WINDOWS_EXPLORE3D), {}, {}, {});
 			return !isFlythroughModeOn;
@@ -85,6 +86,7 @@ bool ControllerGui::HandleMessage(IControllerMessageIDs message, const std::vect
 			bool isFlythroughModeOn;
 			THROW_TREXCEPTION_IF_FAILED((m_messageSystem != nullptr), L"Controller message system is not initialized");
 			isFlythroughModeOn = m_messageSystem->Publish(IDCC_IS_FLYTHROUGH_MODE_ON, {}, {});
+			THROW_TREXCEPTION_IF_FAILED((isFlythroughModeOn), L"The Flythrough settings window is only available in Flythrough mode. If you want to open the settings window, switch to Flythrough mode, which is only available if a trajectory file is successfully loaded.");
 			if (isFlythroughModeOn)
 				m_terrainView->HandleMessage(IDC2IDV(IDMENU_WINDOWS_FLYTHROUGH), {}, {}, {});
 			return isFlythroughModeOn;

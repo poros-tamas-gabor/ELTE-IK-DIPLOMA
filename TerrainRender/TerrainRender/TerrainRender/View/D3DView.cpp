@@ -99,31 +99,26 @@ bool D3DView::GetAdapterData(float screenWidth, float screenHeight, unsigned int
 		// Release the display mode list.
 		delete[] displayModeList;
 		displayModeList = 0;
-
-		// Release the adapter output.
-		//adapterOutput->Release();
-		//adapterOutput = 0;
-		//
-		//// Release the adapter.
-		//adapter->Release();
-		//adapter = 0;
-		//
-		//// Release the factory.
-		//factory->Release();
-		//factory = 0;
+		return true;
 	}
-	catch (TRException& exception)
+	catch (const COMException& e)
 	{
-		ErrorHandler::Log(exception);
-		return false;
+		ErrorHandler::Log(e);
 	}
-	catch (COMException& exception)
+	catch (const TRException& e)
 	{
-		ErrorHandler::Log(exception);
-		return false;
+		ErrorHandler::Log(e);
+	}
+	catch (const std::exception& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (...)
+	{
+		ErrorHandler::Log("Unknown Exception: No details available");
 	}
 
-	return true;
+	return false;
 }
 
 
@@ -198,11 +193,23 @@ bool D3DView::Initalize(HWND hwnd, float screenWidth, float screenHeight, bool f
 		
 	}
 
-	catch (COMException& exception)
+	catch (const COMException& e)
 	{
-		ErrorHandler::Log(exception);
-		return false;
+		ErrorHandler::Log(e);
 	}
+	catch (const TRException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const std::exception& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (...)
+	{
+		ErrorHandler::Log("Unknown Exception: No details available");
+	}
+	return false;
 }
 
 bool  D3DView::InitalizeAttributes(unsigned screenWidth, unsigned screenHeight)
@@ -229,10 +236,6 @@ bool  D3DView::InitalizeAttributes(unsigned screenWidth, unsigned screenHeight)
 
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create the render target view with the back buffer pointer");
 
-		//// Release pointer to the back buffer as we no longer need it.
-		//backBufferPtr->Release();
-		//backBufferPtr = 0;
-
 		// Initialize the description of the depth buffer.
 		ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
 
@@ -250,12 +253,9 @@ bool  D3DView::InitalizeAttributes(unsigned screenWidth, unsigned screenHeight)
 		depthBufferDesc.MiscFlags = 0;
 
 		// Create the texture for the depth buffer using the filled out description.
-		result = m_device->CreateTexture2D(&depthBufferDesc, NULL, m_depthStencilBuffer.ReleaseAndGetAddressOf());
-
-	
+		result = m_device->CreateTexture2D(&depthBufferDesc, NULL, m_depthStencilBuffer.ReleaseAndGetAddressOf());	
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create the texture for the depth buffer");
 
-		//
 		// Initialize the description of the stencil state.
 		ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
 
@@ -282,7 +282,6 @@ bool  D3DView::InitalizeAttributes(unsigned screenWidth, unsigned screenHeight)
 
 		// Create the depth stencil state.
 		result = m_device->CreateDepthStencilState(&depthStencilDesc, m_depthStencilState.ReleaseAndGetAddressOf());
-
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create the depth stencil state");
 
 		// Set the depth stencil state.
@@ -298,7 +297,6 @@ bool  D3DView::InitalizeAttributes(unsigned screenWidth, unsigned screenHeight)
 
 		//Create the depth stencil view.
 		result = m_device->CreateDepthStencilView(m_depthStencilBuffer.Get(), &depthStencilViewDesc, m_depthStencilView.ReleaseAndGetAddressOf());
-
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create the depth stencil view");
 
 		// Bind the render target view and depth stencil buffer to the output render pipeline.
@@ -321,7 +319,6 @@ bool  D3DView::InitalizeAttributes(unsigned screenWidth, unsigned screenHeight)
 
 		// Create the rasterizer state from the description we just filled out.
 		result = m_device->CreateRasterizerState(&rasterDesc, m_rasterState.ReleaseAndGetAddressOf());
-
 		THROW_COM_EXCEPTION_IF_FAILED(result, L"Failed to Create the rasterizer state from the description we just filled out.");
 
 		// Now set the rasterizer state.
@@ -335,16 +332,28 @@ bool  D3DView::InitalizeAttributes(unsigned screenWidth, unsigned screenHeight)
 		viewport.MaxDepth = 1.0f;
 		viewport.TopLeftX = 0.0f;
 		viewport.TopLeftY = 0.0f;
-		//
+
 		// Create the viewport.
 		m_deviceContext->RSSetViewports(1, &viewport);
 		return true;
 	}
-	catch (COMException& exception)
+	catch (const COMException& e)
 	{
-		ErrorHandler::Log(exception);
-		return false;
+		ErrorHandler::Log(e);
 	}
+	catch (const TRException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const std::exception& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (...)
+	{
+		ErrorHandler::Log("Unknown Exception: No details available");
+	}
+	return false;
 }
 
 HRESULT D3DView::ReleaseBackBuffer()
@@ -355,10 +364,8 @@ HRESULT D3DView::ReleaseBackBuffer()
 	// Release the render target view based on the back buffer:
 	m_renderTargetView.Reset();
 
-
 	// The depth stencil will need to be resized, so release it (and view):
 	m_depthStencilView.Reset();
-
 
 	// After releasing references to these resources, we need to call Flush() to 
 	// ensure that Direct3D also releases any references it might still have to
@@ -401,56 +408,26 @@ bool D3DView::Resize(unsigned screenWidth, unsigned screenHeight)
 
 		}
 	}
-	catch (COMException& exception)
+	catch (const COMException& e)
 	{
-		ErrorHandler::Log(exception);
+		ErrorHandler::Log(e);
+	}
+	catch (const TRException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const std::exception& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (...)
+	{
+		ErrorHandler::Log("Unknown Exception: No details available");
 	}
 	return false;
 }
-void D3DView::Shutdown() {
+void D3DView::Shutdown() {}
 
-	//if (m_swapChain)
-	//{
-	//	m_swapChain->Release();
-	//	m_swapChain = nullptr;
-	//}
-	//
-	//if (m_device)
-	//{
-	//	m_device->Release();
-	//	m_device = nullptr;
-	//}
-	//if (m_deviceContext)
-	//{
-	//	m_deviceContext->Release();
-	//	m_deviceContext = nullptr;
-	//}
-	//if (m_renderTargetView)
-	//{
-	//	m_renderTargetView->Release();
-	//	m_renderTargetView = nullptr;
-	//}
-	//if (m_depthStencilBuffer)
-	//{
-	//	m_depthStencilBuffer->Release();
-	//	m_depthStencilBuffer = nullptr;
-	//}
-	//if (m_depthStencilView)
-	//{
-	//	m_depthStencilView->Release();
-	//	m_depthStencilView = nullptr;
-	//}
-	//if (m_depthStencilState)
-	//{
-	//	m_depthStencilState->Release();
-	//	m_depthStencilState = nullptr;
-	//}
-	//if (m_rasterState)
-	//{
-	//	m_rasterState->Release();
-	//	m_rasterState = nullptr;
-	//}
-}
 void D3DView::BeginScene(float red, float green, float blue, float alpha) {
 
 	float color[] = { red, green, blue, alpha };
@@ -461,7 +438,8 @@ void D3DView::BeginScene(float red, float green, float blue, float alpha) {
 	m_deviceContext->ClearDepthStencilView(m_depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 }
-void D3DView::EndScene() {
+void D3DView::EndScene() 
+{
 	// Present the back buffer to the screen since rendering is complete.
 	if (m_vsync)
 	{
@@ -473,7 +451,6 @@ void D3DView::EndScene() {
 		// Present as fast as possible.
 		m_swapChain->Present(0, 0);
 	}
-
 }
 
 Microsoft::WRL::ComPtr<ID3D11Device> D3DView::GetDevice()
@@ -504,14 +481,25 @@ void D3DView::CaptureScreen(const std::wstring& directoryPath, unsigned frameNum
 
 		if (SUCCEEDED(hr))
 		{
-			std::wstring pictureName = directoryPath + L"\\screenShot" + std::to_wstring(frameNum) + L".JPG";
+			std::wstring pictureName = directoryPath + L"\\terrainrender_frame" + std::to_wstring(frameNum) + L".JPG";
 			hr = DirectX::SaveWICTextureToFile(m_deviceContext.Get(), backBufferPtr.Get(), GUID_ContainerFormatJpeg, pictureName.c_str());
 		}
 		THROW_COM_EXCEPTION_IF_FAILED(initialize, L"Error to grab");
 	}
-	catch (COMException& exception)
+	catch (const COMException& e)
 	{
-		ErrorHandler::Log(exception);
+		ErrorHandler::Log(e);
 	}
-
+	catch (const TRException& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (const std::exception& e)
+	{
+		ErrorHandler::Log(e);
+	}
+	catch (...)
+	{
+		ErrorHandler::Log("Unknown Exception: No details available");
+	}
 }

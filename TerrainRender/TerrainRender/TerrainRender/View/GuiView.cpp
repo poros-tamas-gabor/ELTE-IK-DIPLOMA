@@ -93,9 +93,9 @@ void GuiView::Help()
 
 2. Load a trajectory file by selecting "File > Open Trajectory". After the file is successfully loaded, you can switch to "Flythrough" mode, where you can play and record the camera path.
 
-3. Load a configuration file or set the position of the meshes and trajectory using the graphical user interface (GUI).
+3. Load a configuration file by selecting "File > Open configuration file" or set the position of the meshes and trajectory using the graphical user interface.
 
-4. Set the output directory path where you want to save the frames of the picture.)";
+4. Set the output directory path by selecting "File > Set output directory" where you want to save the frames of the picture.)";
         ImGui::TextWrapped(text.c_str());
 
         ImGui::SeparatorText("Controls in Explore 3D mode");
@@ -140,6 +140,8 @@ void GuiView::Help()
 
             ImGui::EndTable();
         }
+
+        ImGui::TextWrapped("The process of screen capturing with saving on the hard disk is resource-intensive. The recommended speed for screen capturing is below 0.5.");
     }
     catch (const TRException& e)
     {

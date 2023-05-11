@@ -64,21 +64,21 @@ static void AddMenus(HWND hwnd) {
 	hMenuWindows = CreateMenu();
 
 
-	AppendMenuW(hMenuFile_OpenTerrain, MF_STRING, static_cast<UINT>(IDMENU_FIlE_TERRAIN_SHARP), L"&Terrain with Sharp edges");
-	AppendMenuW(hMenuFile_OpenTerrain, MF_STRING, static_cast<UINT>(IDMENU_FIlE_TERRAIN_SOFT), L"&Terrain with Soft edges");
+	AppendMenuW(hMenuFile_OpenTerrain, MF_STRING, static_cast<UINT>(IDMENU_FIlE_TERRAIN_SHARP), L"&with Sharp edges");
+	AppendMenuW(hMenuFile_OpenTerrain, MF_STRING, static_cast<UINT>(IDMENU_FIlE_TERRAIN_SOFT), L"&with Soft edges");
 
-	AppendMenuW(hMenuFile, MF_POPUP, (UINT_PTR)hMenuFile_OpenTerrain, L"&Open Terrain");
+	AppendMenuW(hMenuFile, MF_POPUP, (UINT_PTR)hMenuFile_OpenTerrain, L"&Open terrain");
 
 
-	AppendMenuW(hMenuFile_OpenProject, MF_STRING, static_cast<UINT>(IDMENU_FIlE_TERRAIN_PROJECT_SHARP), L"&Project with Sharp edges");
-	AppendMenuW(hMenuFile_OpenProject, MF_STRING, static_cast<UINT>(IDMENU_FIlE_TERRAIN_PROJECT_SOFT), L"&Project with Soft edges");
+	AppendMenuW(hMenuFile_OpenProject, MF_STRING, static_cast<UINT>(IDMENU_FIlE_TERRAIN_PROJECT_SHARP), L"&with Sharp edges");
+	AppendMenuW(hMenuFile_OpenProject, MF_STRING, static_cast<UINT>(IDMENU_FIlE_TERRAIN_PROJECT_SOFT), L"&with Soft edges");
 
-	AppendMenuW(hMenuFile, MF_POPUP, (UINT_PTR)hMenuFile_OpenProject, L"&Open Project");
+	AppendMenuW(hMenuFile, MF_POPUP, (UINT_PTR)hMenuFile_OpenProject, L"&Open project");
 
 	AppendMenuW(hMenuFile, MF_SEPARATOR, 0, NULL);
-	AppendMenuW(hMenuFile, MF_STRING, static_cast<UINT>(IDMENU_FIlE_CAMERA_TRAJECTORY), L"&Open Trajectory");
+	AppendMenuW(hMenuFile, MF_STRING, static_cast<UINT>(IDMENU_FIlE_CAMERA_TRAJECTORY), L"&Open trajectory");
 	AppendMenuW(hMenuFile, MF_SEPARATOR, 0, NULL);
-	AppendMenuW(hMenuFile, MF_STRING, static_cast<UINT>(IDMENU_FIlE_CONFIGURATION), L"&Open configure file");
+	AppendMenuW(hMenuFile, MF_STRING, static_cast<UINT>(IDMENU_FIlE_CONFIGURATION), L"&Open configuration file");
 	AppendMenuW(hMenuFile, MF_SEPARATOR, 0, NULL);
 
 	AppendMenuW(hMenuFile, MF_STRING, static_cast<UINT>(IDMENU_FILE_OUTPUT_DIRECTORY), L"&Set output directory");

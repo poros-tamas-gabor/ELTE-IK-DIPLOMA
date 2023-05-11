@@ -691,12 +691,13 @@ public:
 class MockIDataAccess : public IDataAccess {
 public:
     MOCK_METHOD(void, LoadTerrain_withSharpEdges, (const wchar_t*), (override));
-    MOCK_METHOD(const std::vector<StlFacet>&, GetFacets, (), (override));
+    MOCK_METHOD(const std::vector<StlFacet>&, GetFacets_Sharp, (), (override));
     MOCK_METHOD(void, LoadCameraTrajectory, (const wchar_t*, std::vector<CameraPose>&), (override));
     MOCK_METHOD(void, LoadConfigurationFile, (const wchar_t*, ParameterFile& params), (override));
     MOCK_METHOD(void, LoadTerrain_withSoftEdges, (const wchar_t*), (override));
     MOCK_METHOD(const std::vector<StlVertex>&, GetVertices_Soft, (), (override));
     MOCK_METHOD(const std::vector<CornerIndices>&, GetIndices_Soft, (), (override));
+    MOCK_METHOD(void, Clear, (), (override));
 };
 
 class MockModelMessageSystem : public ModelMessageSystem {

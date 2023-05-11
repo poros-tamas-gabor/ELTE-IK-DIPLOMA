@@ -28,7 +28,7 @@ public:
 
 	virtual void LoadTerrain_withSharpEdges(const wchar_t*) = 0;
     //Use After LoadTerrain_withSharpEdges
-    virtual const std::vector<StlFacet>& GetFacets(void) = 0;
+    virtual const std::vector<StlFacet>& GetFacets_Sharp(void) = 0;
 
     virtual void LoadCameraTrajectory(const wchar_t*, std::vector<CameraPose>&) = 0;
     virtual void LoadConfigurationFile(const wchar_t*, ParameterFile& params) = 0;
@@ -38,6 +38,8 @@ public:
     virtual const std::vector<StlVertex>& GetVertices_Soft() = 0;
     //Use After LoadTerrain_withSoftEdges
     virtual const std::vector<CornerIndices>& GetIndices_Soft() = 0;
+
+    virtual void Clear() = 0;
 };
 
 typedef std::shared_ptr<IDataAccess> IDataAccessPtr;
@@ -75,8 +77,9 @@ public:
     void LoadTerrain_withSoftEdges(const wchar_t* filename) override;
     void LoadCameraTrajectory(const wchar_t*, std::vector<CameraPose>& cameraPoses) override;
     void LoadConfigurationFile(const wchar_t*, ParameterFile& params) override;
+    void Clear() override;
     
-    const std::vector<StlFacet>& GetFacets(void);
+    const std::vector<StlFacet>& GetFacets_Sharp(void);
     const std::vector<StlVertex>& GetVertices_Soft() override;
     const std::vector<CornerIndices>& GetIndices_Soft() override;
 };

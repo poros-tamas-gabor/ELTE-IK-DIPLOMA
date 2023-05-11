@@ -78,13 +78,13 @@ TEST_F(TerrainModelTest, Test_HandleMessage_IDM_LOAD_TERRAIN_SHARP)
 
 	std::vector<StlFacet>	empty{};
 	EXPECT_CALL(*m_mock_persistence, LoadTerrain_withSharpEdges(testing::StrEq(L"path"))).Times(1);
-	EXPECT_CALL(*m_mock_persistence, GetFacets()).Times(1).WillOnce(testing::ReturnRef(empty));;
+	EXPECT_CALL(*m_mock_persistence, GetFacets_Sharp()).Times(1).WillOnce(testing::ReturnRef(empty));;
 
 	ASSERT_FALSE(m_terrainModel->HandleMessage(IDM_LOAD_TERRAIN_SHARP, { L"path" }, {}, {}));
 
 	std::vector<StlFacet>	stlFacets{ StlFacet() };
 	EXPECT_CALL(*m_mock_persistence, LoadTerrain_withSharpEdges(testing::StrEq(L"path"))).Times(1);
-	EXPECT_CALL(*m_mock_persistence, GetFacets()).Times(1).WillOnce(testing::ReturnRef(stlFacets));;
+	EXPECT_CALL(*m_mock_persistence, GetFacets_Sharp()).Times(1).WillOnce(testing::ReturnRef(stlFacets));;
 
 	ASSERT_TRUE(m_terrainModel->HandleMessage(IDM_LOAD_TERRAIN_SHARP, { L"path" }, {}, {}));
 }

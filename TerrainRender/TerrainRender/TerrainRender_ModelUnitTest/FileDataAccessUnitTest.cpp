@@ -102,19 +102,19 @@ TEST_F(DataAccessTest, LoadTerrain_withSharpEdges)
 	spherePath += L"..\\..\\..\\TerrainRender_ModelUnitTest\\ResourceFiles\\3d_model_of_Sphere.stl";
 	m_persistence->LoadTerrain_withSharpEdges(spherePath.c_str());
 
-	ASSERT_EQ(m_persistence->GetFacets().size(), size_t(3072));
+	ASSERT_EQ(m_persistence->GetFacets_Sharp().size(), size_t(3072));
 
 	std::wstring bunny70k_path(buffer);
 	bunny70k_path += L"..\\..\\..\\TerrainRender_ModelUnitTest\\ResourceFiles\\bunny70k.stl";
 	m_persistence->LoadTerrain_withSharpEdges(bunny70k_path.c_str());
 
-	ASSERT_EQ(m_persistence->GetFacets().size(), size_t(69451));
+	ASSERT_EQ(m_persistence->GetFacets_Sharp().size(), size_t(69451));
 
 	std::wstring bunny10k_path(buffer);
 	bunny10k_path += L"..\\..\\..\\TerrainRender_ModelUnitTest\\ResourceFiles\\bunny10k.stl";
 	m_persistence->LoadTerrain_withSharpEdges(bunny10k_path.c_str());
 
-	ASSERT_EQ(m_persistence->GetFacets().size(), size_t(9999));
+	ASSERT_EQ(m_persistence->GetFacets_Sharp().size(), size_t(9999));
 }
 
 TEST_F(DataAccessTest, LoadTerrain_withSoftEdges_InvalidPath)

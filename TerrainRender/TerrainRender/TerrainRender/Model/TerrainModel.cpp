@@ -396,6 +396,7 @@ bool TerrainModel::LoadTerrain_withSoftEdges(const std::wstring& filepath)
 	{
 		for (int i = 0; i < 3; i++)
 		{
+			//Invert the direction of the traversal of the triangle.
 			const unsigned long& index = facet.corner[2 - i];
 			indices.push_back(index);
 		}
@@ -403,6 +404,7 @@ bool TerrainModel::LoadTerrain_withSoftEdges(const std::wstring& filepath)
 	for (const StlVertex& v : vertices)
 	{
 		VertexMesh vertexMesh;
+		//Translate from a right-handed coordinate system to a left-handed coordinate system.
 		vertexMesh.normal = { (float)v.normal.x, (float)v.normal.z,(float)v.normal.y };
 		vertexMesh.position = { (float)v.pos.x, (float)v.pos.z, (float)v.pos.y };
 		verticesMesh.push_back(vertexMesh);
@@ -415,7 +417,7 @@ bool TerrainModel::LoadTerrain_withSoftEdges(const std::wstring& filepath)
 
 	PolygonMeshCreator creator;
 	this->m_meshes.Add(pVertices, pIndices, vertexCount, indexCount, creator, StringConverter::GetFileNameFromPath(filepath));
-
+	m_persistence->Clear();
 	return true;
 
 }
@@ -429,15 +431,15 @@ bool TerrainModel::LoadTerrain_withSharpEdges(const std::wstring& filepath)
 	std::vector<unsigned long>				indices;
 	unsigned long*							pIndices;
 
-
 	m_persistence->LoadTerrain_withSharpEdges(filepath.c_str());
-	const std::vector<StlFacet>& facets = m_persistence->GetFacets();
+	const std::vector<StlFacet>& facets = m_persistence->GetFacets_Sharp();
 	unsigned index = 0;
 	for (const StlFacet& facet : facets)
 	{
 		for (int i = 0; i < 3; i++)
 		{
 			VertexMesh vertex;
+			//Translate from a right-handed coordinate system to a left-handed coordinate system.
 			vertex.normal = { (float)facet.normal[0], (float)facet.normal[2],(float)facet.normal[1] };
 			vertex.position = { (float)facet.position[2 - i][0], (float)facet.position[2 - i][2], (float)facet.position[2 - i][1] };
 
@@ -454,6 +456,7 @@ bool TerrainModel::LoadTerrain_withSharpEdges(const std::wstring& filepath)
 
 	PolygonMeshCreator creator;
 	this->m_meshes.Add(pVertices, pIndices, vertexCount, indexCount, creator, StringConverter::GetFileNameFromPath(filepath));
+	m_persistence->Clear();
 	return true;
 }
 

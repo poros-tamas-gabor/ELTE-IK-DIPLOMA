@@ -189,7 +189,7 @@ void BinaryFileDataAccessAsync::LoadTerrain_withSharpEdges(const wchar_t* filena
     this->ReadFileSharpEdges(filename);
 }
 
-const std::vector<StlFacet>& BinaryFileDataAccessAsync::GetFacets(void)
+const std::vector<StlFacet>& BinaryFileDataAccessAsync::GetFacets_Sharp(void)
 {
     return m_facets;
 }
@@ -289,7 +289,6 @@ void BinaryFileDataAccessAsync::LoadCameraTrajectory(const wchar_t* filepath, st
 
 }
 
-
 void BinaryFileDataAccessAsync::LoadConfigurationFile(const wchar_t* filepath, ParameterFile& params)
 {
     nlohmann::json jsonFile;
@@ -300,4 +299,11 @@ void BinaryFileDataAccessAsync::LoadConfigurationFile(const wchar_t* filepath, P
 
     jsonFile = nlohmann::json::parse(file);
     params = jsonFile.get<ParameterFile>();
+}
+
+void BinaryFileDataAccessAsync::Clear()
+{
+    m_facets.clear();
+    m_indices.clear();
+    m_vertices.clear();
 }

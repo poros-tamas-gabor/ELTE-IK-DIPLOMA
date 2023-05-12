@@ -52,8 +52,8 @@ bool ControllerFlythrough::HandleMessage(IControllerMessageIDs message, const st
 			{
 				this->m_isActive = true;
 				this->m_isRunning = false;
-				this->m_terrainModel->HandleMessage(IDM_FLYTHROUGH_START_POSITION, {}, fparams, uparams);
-				return true;
+				IModelMessageIDs modelMessage = IDC2IDM(message);
+				return this->m_terrainModel->HandleMessage(modelMessage, {}, fparams, uparams);
 			}
 			return false;
 		}

@@ -37,7 +37,8 @@ bool Controller3DExplore::HandleMessage(IControllerMessageIDs message, const std
 		case IDC_ACTIVATE_3DEXPLORE_MODE:
 		{
 			this->m_isActive = true;
-			return true;
+			IModelMessageIDs modelMessage = IDC2IDM(message);
+			return this->m_terrainModel->HandleMessage(modelMessage, {}, fparams, uparams);
 		}
 		case IDC_ACTIVATE_FLYTHROUGH_MODE:
 		{

@@ -57,7 +57,7 @@ bool TerrainModel::Initalize(IDataAccessPtr persistence, Microsoft::WRL::ComPtr<
 		this->m_meshes.Initialize(device, m_vertexShaderMesh, m_pixelShaderMesh, NULL, NULL, NULL, NULL);
 		this->m_polylines.Initialize(device, m_vertexShaderPolyLine, m_pixelShaderPolyLine, NULL, NULL, NULL, NULL);
 		this->m_linelist.Initialize(device, m_vertexShaderPolyLine, m_pixelShaderPolyLine, NULL, NULL, NULL, NULL);
-		this->m_light.UpdateSunPosition(m_cameraPositioner.GetCurrentEpochTime().getSeconds(), m_origoLLA.latitude, m_origoLLA.longitude);
+		UpdateSunPosition();
 		PublishModelState();
 		this->AddGrid(2000, { 0.6f, 0.6f, 0.6f, 0.6f }, 200, 200);
 
@@ -167,6 +167,11 @@ bool TerrainModel::HandleMessage(IModelMessageIDs message, const std::vector<std
 			success = this->LoadConfigurationFile(stringParams.at(0));
 			break;
 
+		case IDM_ACTIVATE_3DEXPLORE_MODE:
+		case IDM_ACTIVATE_FLYTHROUGH_MODE:
+			success = SetMode(message);
+			break;
+
 		case IDM_E3D_MOVE_FORWARD:
 		case IDM_E3D_MOVE_BACK:
 		case IDM_E3D_MOVE_LEFT:
@@ -267,6 +272,23 @@ bool TerrainModel::HandleMessage(IModelMessageIDs message, const std::vector<std
 	return false;
 }
 
+bool TerrainModel::SetMode(IModelMessageIDs message)
+{
+	switch (message)
+	{
+	case IDM_ACTIVATE_3DEXPLORE_MODE:
+		m_mode = Explore3D;
+		UpdateSunPosition();
+		return true;
+	case IDM_ACTIVATE_FLYTHROUGH_MODE:
+		THROW_TREXCEPTION_IF_FAILED(IsTrajectoryInitialized(), L"Failed to switch Flythrough mode");
+		m_mode = Flythrough;
+		UpdateSunPosition();
+		return true;
+	default:
+		return false;
+	}
+}
 
 bool TerrainModel::HandleFlythroughMode(IModelMessageIDs message, const std::vector<float>& fparams, const std::vector<unsigned>& uparams)
 {
@@ -294,7 +316,7 @@ bool TerrainModel::HandleFlythroughMode(IModelMessageIDs message, const std::vec
 		m_cameraTrajectory.SetSpeed(fparams.at(0));
 		break;
 	}
-	this->m_light.UpdateSunPosition(m_cameraTrajectory.GetCurrentEpochTime().getSeconds(), m_origoLLA.latitude, m_origoLLA.longitude);
+	UpdateSunPosition();
 	return success;
 }
 
@@ -722,7 +744,7 @@ Explore3DState TerrainModel::CollectExplore3DState(void) const
 	state.currentCameraRotation			= m_camera->GetRotationVec();
 	state.currentSunPosition.azimuth	= m_light.GetAzimuth();
 	state.currentSunPosition.elevation	= m_light.GetElevation();
-	state.origo = this->m_origoLLA;
+	state.origo							= this->m_origoLLA;
 
 	return state;
 }
@@ -777,14 +799,13 @@ bool TerrainModel::SetUnixTime(IModelMessageIDs message, unsigned uparam)
 	{
 	case IDM_SET_TIME_E3D:
 		this->m_cameraPositioner.SetCurrentEpochTime({ uparam,0 });
-		this->m_light.UpdateSunPosition(m_cameraPositioner.GetCurrentEpochTime().getSeconds(), m_origoLLA.latitude, m_origoLLA.longitude);
 		break;
 	case IDM_SET_START_TIME_TRAJECTORY:
 		this->m_cameraTrajectory.SetStartEpochTime({ uparam,0 });
-		this->m_light.UpdateSunPosition(m_cameraTrajectory.GetCurrentEpochTime().getSeconds(), m_origoLLA.latitude, m_origoLLA.longitude);
 	default:
 		break;
 	}
+	UpdateSunPosition();
 	return true;
 }
 
@@ -858,7 +879,24 @@ bool TerrainModel::SetLongitudeLatitude(IModelMessageIDs message, const std::vec
 	default:
 		break;
 	}
+	UpdateSunPosition();
 	return true;
+}
+
+void TerrainModel::UpdateSunPosition()
+{
+	switch (m_mode)
+	{
+	case TerrainModel::Explore3D:
+		m_light.UpdateSunPosition(m_cameraPositioner.GetCurrentEpochTime().getSeconds(), m_origoLLA.latitude, m_origoLLA.longitude);
+		break;
+	case TerrainModel::Flythrough:
+		THROW_TREXCEPTION_IF_FAILED(IsTrajectoryInitialized(), L"Failed to update Sun Position");
+		m_light.UpdateSunPosition(m_cameraTrajectory.GetCurrentEpochTime().getSeconds(), m_origoLLA.latitude, m_origoLLA.longitude);
+		break;
+	default:
+		break;
+	}
 }
 
 

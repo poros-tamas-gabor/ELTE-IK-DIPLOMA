@@ -40,6 +40,8 @@
 
 class TerrainModel : public IModel
 {
+private: 
+	enum Mode {Explore3D, Flythrough};
 private:
 	LLACoordinate								m_origoLLA = { 47.497913f , 19.040236f };
 
@@ -58,6 +60,8 @@ private:
 	IDataAccessPtr								m_persistence;
 	Microsoft::WRL::ComPtr<ID3D11Device>		m_device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext>	m_deviceContext;
+
+	Mode										m_mode = Explore3D;
 
 public:
 	CameraPtr									m_camera;
@@ -93,7 +97,9 @@ public:
 	bool	TransformMeshGroup(IModelMessageIDs message, const std::vector<float>& fparams);
 	bool	TransformTrajectory(IModelMessageIDs message, const std::vector<float>& fparams);
 	bool	ClearMeshes(void) ;
-	bool	ClearCameraTrajectory(void) ;
+	bool	ClearCameraTrajectory(void);
+	bool	SetMode(IModelMessageIDs message);
+	void	UpdateSunPosition();
 private:
 	void				MoveCamera(IModelMessageIDs message, float timeElapsed);
 	void				RotateCamera(IModelMessageIDs message, float pitch, float yaw);

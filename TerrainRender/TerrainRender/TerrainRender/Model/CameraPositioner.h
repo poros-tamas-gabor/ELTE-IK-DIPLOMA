@@ -42,7 +42,7 @@ private:
 
 	CameraPtr	m_camera;
 
-	float		m_speed				= 0.01f;
+	float		m_speed				= 0.1f;
 	float		m_rotationSpeed		= 0.001f;
 	EpochTime	m_currentEpochTime	= EpochTime(std::time(NULL), 0);
 

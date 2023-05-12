@@ -34,6 +34,8 @@ void from_json(const nlohmann::json& json, ParameterFile::Terrain& data)
     data.translation = to_Vector3D(tmp);
     tmp = json.at("rotation").get<std::vector<float>>();
     data.rotation = to_Vector3D(tmp);
+    tmp = json.at("scale").get<std::vector<float>>();
+    data.scale = to_Vector3D(tmp);
 
     for (auto it = json.at("color").begin(); it != json.at("color").end(); ++it) {
         std::string color_name = it.key();

@@ -44,6 +44,7 @@ TEST_F(DataAccessTest, LoadConfigurationFile) {
 	ASSERT_FLOAT_EQ(file.camera.screenDepth, 2000.0f);
     ASSERT_EQ(file.terrain.translation, Vector3D(10, 11, 12));
     ASSERT_EQ(file.terrain.rotation, Vector3D(20, 21, 22));
+	ASSERT_EQ(file.terrain.scale, Vector3D(1, 2, 3));
     ASSERT_FALSE(file.terrain.colors.empty());
     ASSERT_EQ(file.terrain.colors.size(), size_t(3));
     ASSERT_EQ(file.trajectory.translation, Vector3D(700, 65, -250));

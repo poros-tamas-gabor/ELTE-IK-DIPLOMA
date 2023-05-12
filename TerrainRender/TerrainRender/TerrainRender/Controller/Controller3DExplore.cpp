@@ -34,7 +34,7 @@ bool Controller3DExplore::HandleMessage(IControllerMessageIDs message, const std
 		{
 			return !IsActive();
 		}
-		case IDC_ACTIVATE_3DEXPLORE_MODE:
+		case IDC_ACTIVATE_EXPLORE3D_MODE:
 		{
 			this->m_isActive = true;
 			IModelMessageIDs modelMessage = IDC2IDM(message);

@@ -167,7 +167,7 @@ bool TerrainModel::HandleMessage(IModelMessageIDs message, const std::vector<std
 			success = this->LoadConfigurationFile(stringParams.at(0));
 			break;
 
-		case IDM_ACTIVATE_3DEXPLORE_MODE:
+		case IDM_ACTIVATE_EXPLORE3D_MODE:
 		case IDM_ACTIVATE_FLYTHROUGH_MODE:
 			success = SetMode(message);
 			break;
@@ -276,7 +276,7 @@ bool TerrainModel::SetMode(IModelMessageIDs message)
 {
 	switch (message)
 	{
-	case IDM_ACTIVATE_3DEXPLORE_MODE:
+	case IDM_ACTIVATE_EXPLORE3D_MODE:
 		m_mode = Explore3D;
 		UpdateSunPosition();
 		return true;
@@ -571,6 +571,7 @@ bool	TerrainModel::LoadConfigurationFile(const std::wstring& filepath)
 	//Set Terrain
 	m_meshes.Rotate(params.terrain.rotation.x, params.terrain.rotation.y, params.terrain.rotation.z);
 	m_meshes.Translate(params.terrain.translation.x, params.terrain.translation.y, params.terrain.translation.z);
+	m_meshes.Scale(params.terrain.scale.x, params.terrain.scale.y, params.terrain.scale.z);
 
 	for (auto it = params.terrain.colors.begin(); it != params.terrain.colors.end(); it++)
 	{

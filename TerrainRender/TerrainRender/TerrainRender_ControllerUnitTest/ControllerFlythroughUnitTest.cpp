@@ -42,7 +42,7 @@ TEST_F(ControllerFlythroughTest, Test_HandleMessage)
 	ASSERT_FALSE(m_controller.HandleMessage(IDCC_IS_FLYTHROUGH_MODE_ON, {}, {}));
 	ASSERT_FALSE((m_controller.IsActive()));
 
-	ASSERT_TRUE(m_controller.HandleMessage(IDC_ACTIVATE_3DEXPLORE_MODE, {}, {}));
+	ASSERT_TRUE(m_controller.HandleMessage(IDC_ACTIVATE_EXPLORE3D_MODE, {}, {}));
 	ASSERT_FALSE((m_controller.IsActive()));
 
 	//IsTrajectoryInitialized returns false
@@ -52,7 +52,7 @@ TEST_F(ControllerFlythroughTest, Test_HandleMessage)
 
 	//IsTrajectoryInitialized returns true
 	EXPECT_CALL(*m_mock_model, IsTrajectoryInitialized()).Times(1).WillOnce(testing::Return(true));
-	EXPECT_CALL(*m_mock_model, HandleMessage(IDM_FLYTHROUGH_START_POSITION, testing::_, testing::_, testing::_)).Times(1);
+	EXPECT_CALL(*m_mock_model, HandleMessage(IDM_ACTIVATE_FLYTHROUGH_MODE, testing::_, testing::_, testing::_)).Times(1).WillOnce(testing::Return(true));
 	ASSERT_TRUE(m_controller.HandleMessage(IDC_ACTIVATE_FLYTHROUGH_MODE, {}, {}));
 	ASSERT_TRUE((m_controller.IsActive()));
 

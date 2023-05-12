@@ -40,7 +40,7 @@ bool ControllerFlythrough::HandleMessage(IControllerMessageIDs message, const st
 		{
 			return IsActive();
 		}
-		case IDC_ACTIVATE_3DEXPLORE_MODE:
+		case IDC_ACTIVATE_EXPLORE3D_MODE:
 		{
 			this->m_isActive = false;
 			this->m_isRunning = false;

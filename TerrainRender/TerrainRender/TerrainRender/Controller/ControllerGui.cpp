@@ -111,7 +111,7 @@ bool ControllerGui::HandleMessage(IControllerMessageIDs message, const std::vect
 		case IDC_BUTTON_CLEAR_TRAJECTORY:
 		{
 			THROW_TREXCEPTION_IF_FAILED((m_messageSystem != nullptr), L"Controller message system is not initialized");
-			m_messageSystem->Publish(IDC_ACTIVATE_3DEXPLORE_MODE, fparam, uparam);
+			m_messageSystem->Publish(IDC_ACTIVATE_EXPLORE3D_MODE, fparam, uparam);
 			return m_terrainModel->HandleMessage(modelmsg, {}, fparam, uparam);
 		}
 		case IDC_SET_CAMERA_FIELD_OF_VIEW:

@@ -193,7 +193,7 @@ void GuiView::GeneralWindow()
             if (m_isFlythroughModeOn)
                 success = this->m_terrainController->HandleMessage(IDC_ACTIVATE_FLYTHROUGH_MODE, {}, {});
             else
-                success = this->m_terrainController->HandleMessage(IDC_ACTIVATE_3DEXPLORE_MODE, {}, {});
+                success = this->m_terrainController->HandleMessage(IDC_ACTIVATE_EXPLORE3D_MODE, {}, {});
             if (!success)
             {
                 m_isFlythroughModeOn = false;

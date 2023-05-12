@@ -242,6 +242,7 @@ struct ParameterFile {
 		float screenDepth;
 	} camera;
 	struct Terrain {
+		Vector3D scale;
 		Vector3D translation;
 		Vector3D rotation;
 		std::map<std::string, Vector4D>  colors;

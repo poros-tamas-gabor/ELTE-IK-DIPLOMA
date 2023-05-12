@@ -9,6 +9,7 @@
 		"farScreen": 2000
 	},
 	"terrain": {
+		"scale": [1, 2, 3],
 		"translation": [10, 11, 12],
 		"rotation": [20, 21, 22],
 		"color": {

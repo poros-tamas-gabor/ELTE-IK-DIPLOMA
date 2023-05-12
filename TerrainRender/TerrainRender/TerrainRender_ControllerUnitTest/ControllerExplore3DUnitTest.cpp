@@ -47,8 +47,9 @@ TEST_F(ControllerExplore3DTest, Test_HandleMessage)
 	ASSERT_TRUE(m_controller.HandleMessage(IDC_ACTIVATE_FLYTHROUGH_MODE, {}, {}));
 	ASSERT_FALSE((m_controller.IsActive()));
 
-	//IDC_ACTIVATE_3DEXPLORE_MODE
-	ASSERT_TRUE(m_controller.HandleMessage(IDC_ACTIVATE_3DEXPLORE_MODE, {}, {}));
+	//IDC_ACTIVATE_EXPLORE3D_MODE
+	EXPECT_CALL(*m_mock_model, HandleMessage(IDM_ACTIVATE_EXPLORE3D_MODE, testing::_, testing::_, testing::_)).Times(1).WillOnce(testing::Return(true));
+	ASSERT_TRUE(m_controller.HandleMessage(IDC_ACTIVATE_EXPLORE3D_MODE, {}, {}));
 	ASSERT_TRUE((m_controller.IsActive()));
 
 	//IDC_E3D_CAMERA_SPEED:

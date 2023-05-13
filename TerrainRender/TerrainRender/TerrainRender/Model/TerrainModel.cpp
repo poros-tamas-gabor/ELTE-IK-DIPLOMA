@@ -284,6 +284,7 @@ bool TerrainModel::SetMode(IModelMessageIDs message)
 		THROW_TREXCEPTION_IF_FAILED(IsTrajectoryInitialized(), L"Failed to switch Flythrough mode");
 		m_mode = Flythrough;
 		UpdateSunPosition();
+		m_cameraTrajectory.ResetStartPosition();
 		return true;
 	default:
 		return false;

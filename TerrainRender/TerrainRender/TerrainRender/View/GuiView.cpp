@@ -46,7 +46,37 @@ bool ToggleButton(const char* str_id, bool* isOn)
         ImGui::Text("Explore 3D");
 
     return isClicked;
+}
 
+bool RangeInputText(const char* label, float* value, float min, float max)
+{
+    bool valueChanged = false;
+    char buf[20];
+    std::stringstream stream;
+    float newValue = *value;
+
+    if(ImGui::InputFloat(label, &newValue, 0.0f, 0.0f, "%.4f"))
+    {
+        // enforce the value range
+        if (newValue < min) {
+            newValue = min;
+            valueChanged = true;
+        }
+        if (newValue > max) {
+            newValue = max;
+            valueChanged = true;
+        }
+        if (*value != newValue)
+        {
+            valueChanged = true;
+        }
+
+        // update the output value
+        if (valueChanged) {
+            *value = newValue;
+        }
+    }
+    return valueChanged;
 }
 
 
@@ -203,11 +233,11 @@ void GuiView::GeneralWindow()
 
         if (ImGui::CollapsingHeader("Origo LLA coordinates"))
         {
-            if (ImGui::InputFloat("Longitude", &m_explore3dState.origo.longitude, 0.0f, 0.0f, "%.4f"))
+            if (RangeInputText("Longitude", &m_explore3dState.origo.longitude, -180, 180))
             {
                 m_terrainController->HandleMessage(IDC_ORIGO_SET_LONGITUDE, { m_explore3dState.origo.longitude }, {  });
             }
-            if (ImGui::InputFloat("Latitude", &m_explore3dState.origo.latitude, 0.0f, 0.0f, "%.4f"))
+            if (RangeInputText("Latitude", &m_explore3dState.origo.latitude, -90, 90))
             {
                 m_terrainController->HandleMessage(IDC_ORIGO_SET_LATITUDE, { m_explore3dState.origo.latitude }, {  });
             }

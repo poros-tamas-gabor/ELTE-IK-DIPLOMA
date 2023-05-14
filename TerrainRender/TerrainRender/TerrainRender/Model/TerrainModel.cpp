@@ -547,7 +547,9 @@ bool	TerrainModel::LoadConfigurationFile(const std::wstring& filepath)
 
 	m_persistence->LoadConfigurationFile(filepath.c_str(), params);
 	//Set world origo
-	this->m_origoLLA = params.origo;
+
+	SetLongitudeLatitude(IDM_ORIGO_SET_LATITUDE, { params.origo.latitude});
+	SetLongitudeLatitude(IDM_ORIGO_SET_LONGITUDE, { params.origo.longitude});
 
 	//Set Camera
 	m_camera->SetFieldOfView(params.camera.fieldOfView);
@@ -872,9 +874,11 @@ bool TerrainModel::SetLongitudeLatitude(IModelMessageIDs message, const std::vec
 	switch (message)
 	{
 	case IDM_ORIGO_SET_LONGITUDE:
+		THROW_TREXCEPTION_IF_FAILED((fparams.at(0) <= 180 && fparams.at(0) >= -180), L"Longitude could not be set as the value provided is outside the valid range of -180 to 180 degrees");
 		m_origoLLA.longitude = fparams.at(0);
 		break;
 	case IDM_ORIGO_SET_LATITUDE:
+		THROW_TREXCEPTION_IF_FAILED((fparams.at(0) <= 90 && fparams.at(0) >= -90), L"Latitude could not be set as the value provided is outside the valid range of -90 to 90 degrees");
 		m_origoLLA.latitude = fparams.at(0);
 		break;
 	

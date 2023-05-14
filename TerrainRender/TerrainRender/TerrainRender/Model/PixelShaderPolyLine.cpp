@@ -45,13 +45,13 @@ bool PixelShaderPolyLine::InitializeShader(Microsoft::WRL::ComPtr<ID3D11Device> 
 #ifdef _WIN64 //x64
 		shaderfolder = L"..\\x64\\Debug\\";
 #else  //x86 (Win32)
-		shaderfolder = L"..\\Debug\\";
+		shaderfolder = L"..\\Win32\\Debug\\";
 #endif
 #else //Release Mode
 #ifdef _WIN64 //x64
 		shaderfolder = L"..\\x64\\Release\\";
 #else  //x86 (Win32)
-		shaderfolder = L"..\\Release\\";
+		shaderfolder = L"..\\Win32\\Release\\";
 #endif
 #endif
 	}

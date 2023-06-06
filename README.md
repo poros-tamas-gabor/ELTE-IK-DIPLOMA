@@ -31,6 +31,7 @@ The program uses the DirectX 11 graphics API, which requires the installation of
 The provided binary file does not require installation but requires at least Windows 10 operating system. The program supports 64-bit Windows operating systems.
 
 ## Program Usage
+![Alt Text](config.gif)
 1. Load the surface meshes using either "File > Open Terrain" or "File > Open project" options. While loading the surface meshes, you can choose between “with soft edges” or “with sharp edges”. Soft edges are used for interpolated shading, while sharp edges can be used for constant shading. The default mode is Explore 3D Mode, where you can move the camera using keyboard and mouse inputs.
 
 2. Load a camera trajectory file using the "File > Open trajectory" option. Once the file is successfully loaded, you can switch to the Flythrough Mode, where you can play and record the simulation of the camera's path.

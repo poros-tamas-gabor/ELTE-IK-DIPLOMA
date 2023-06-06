@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TerrainRender", "TerrainRender\TerrainRender.vcxproj", "{E3F49437-7AA3-4150-913D-C85143DD3D57}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TerrainRender_ModelUnitTest", "TerrainRender_ModelUnitTest\TerrainRender_ModelUnitTest.vcxproj", "{AD0236D9-61E1-4A67-ACF7-D9123E0B39AF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TerrainRender_ControllerUnitTest", "TerrainRender_ControllerUnitTest\TerrainRender_ControllerUnitTest.vcxproj", "{947B4C03-4F91-4403-85E6-62BEDFBBD571}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E3F49437-7AA3-4150-913D-C85143DD3D57}.Debug|x64.ActiveCfg = Debug|x64
+		{E3F49437-7AA3-4150-913D-C85143DD3D57}.Debug|x64.Build.0 = Debug|x64
+		{E3F49437-7AA3-4150-913D-C85143DD3D57}.Debug|x86.ActiveCfg = Debug|Win32
+		{E3F49437-7AA3-4150-913D-C85143DD3D57}.Debug|x86.Build.0 = Debug|Win32
+		{E3F49437-7AA3-4150-913D-C85143DD3D57}.Release|x64.ActiveCfg = Release|x64
+		{E3F49437-7AA3-4150-913D-C85143DD3D57}.Release|x64.Build.0 = Release|x64
+		{E3F49437-7AA3-4150-913D-C85143DD3D57}.Release|x86.ActiveCfg = Release|Win32
+		{E3F49437-7AA3-4150-913D-C85143DD3D57}.Release|x86.Build.0 = Release|Win32
+		{AD0236D9-61E1-4A67-ACF7-D9123E0B39AF}.Debug|x64.ActiveCfg = Debug|x64
+		{AD0236D9-61E1-4A67-ACF7-D9123E0B39AF}.Debug|x64.Build.0 = Debug|x64
+		{AD0236D9-61E1-4A67-ACF7-D9123E0B39AF}.Debug|x86.ActiveCfg = Debug|Win32
+		{AD0236D9-61E1-4A67-ACF7-D9123E0B39AF}.Debug|x86.Build.0 = Debug|Win32
+		{AD0236D9-61E1-4A67-ACF7-D9123E0B39AF}.Release|x64.ActiveCfg = Release|x64
+		{AD0236D9-61E1-4A67-ACF7-D9123E0B39AF}.Release|x64.Build.0 = Release|x64
+		{AD0236D9-61E1-4A67-ACF7-D9123E0B39AF}.Release|x86.ActiveCfg = Release|Win32
+		{AD0236D9-61E1-4A67-ACF7-D9123E0B39AF}.Release|x86.Build.0 = Release|Win32
+		{947B4C03-4F91-4403-85E6-62BEDFBBD571}.Debug|x64.ActiveCfg = Debug|x64
+		{947B4C03-4F91-4403-85E6-62BEDFBBD571}.Debug|x64.Build.0 = Debug|x64
+		{947B4C03-4F91-4403-85E6-62BEDFBBD571}.Debug|x86.ActiveCfg = Debug|Win32
+		{947B4C03-4F91-4403-85E6-62BEDFBBD571}.Debug|x86.Build.0 = Debug|Win32
+		{947B4C03-4F91-4403-85E6-62BEDFBBD571}.Release|x64.ActiveCfg = Release|x64
+		{947B4C03-4F91-4403-85E6-62BEDFBBD571}.Release|x64.Build.0 = Release|x64
+		{947B4C03-4F91-4403-85E6-62BEDFBBD571}.Release|x86.ActiveCfg = Release|Win32
+		{947B4C03-4F91-4403-85E6-62BEDFBBD571}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F68C492D-A276-4C5B-BCCF-2D56D8725338}
+	EndGlobalSection
+EndGlobal

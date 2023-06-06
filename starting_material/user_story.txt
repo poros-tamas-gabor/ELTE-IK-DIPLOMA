@@ -1,0 +1,187 @@
+
+
+AS A        | Felhasználó
+I WANT TO   | elidítani a programot
+SO THAT     | végrehajtsam a szimulációt
+
+
+1   GIVEN   | a program sikeresen betöltődik és elindul az indítási képernyő
+    WHEN    | ha megadjuk a triangulált terepmodell elérési útvonalát és sikeresen betöltődik
+    THEN    | a program jelzi a sikeres beolvasást
+
+2   GIVEN   | a program sikeresen betöltődik és elindul az indítási képernyő
+    WHEN    | ha megadjuk a triangulált terepmodell elérési útvonalát és sikertelen a betöltése
+    THEN    | program figyelmeztet és újra bekéri a modell elérési útvonalát.
+
+3   GIVEN   | a program sikeresen betöltődik és elindul az indítási képernyő
+    WHEN    | ha megadjuk a kamera trajektória elérési útvonalát és sikeresen betöltődik
+    THEN    | a program jelzi a sikeres beolvasást
+
+4   GIVEN   | a program sikeresen betöltődik és elindul az indítási képernyő
+    WHEN    | ha megadjuk a kamera trajektória elérési útvonalát és sikertelen a betöltése
+    THEN    | program figyelmeztet és újra bekéri a kamera trajektória elérési útvonalát.
+
+5   GIVEN   | a program sikeresen betöltődik és elindul az indítási képernyő
+    WHEN    | ha megadunk egy tetszőleges időpontot
+    THEN    | a program jelzi a sikeres időpont megadást
+
+6   GIVEN   | a program sikeresen betöltődik és elindul az indítási képernyő
+    WHEN    | ha megadjuk a kamera paramétereket tartalmazó fájl elérési útvonalát és sikeresen betöltődik
+    THEN    | a program jelzi a sikeres beolvasást
+
+7   GIVEN   | a program sikeresen betöltődik és elindul az indítási képernyő
+    WHEN    | ha megadjuk a kamera paramétereket tartalmazó fájl elérési útvonalát és sikertelen a betöltése
+    THEN    | program figyelmeztet és újra bekéri a modell elérési útvonalát.
+
+--------------------------------------------------------------------------------------------------------
+
+AS A        | Felhasználó
+I WANT TO   | elindítani a szimulációt
+SO THAT     | 
+
+1   GIVEN   | csak a terepmodell elérési útvonalát adtuk meg és sikeresen betöltődött a modell
+    WHEN    | START gombra kattintok
+    THEN    | a program megjeleníti a modellt és elindítja a BARANGOLÁS módot alapértelmezett kamera paraméterekkel
+//    THEN    | a program megjeleníti a modellt, a kamerát default paraméterek, Nap állását a dátum alapján inicializálja.
+
+2   GIVEN   | megadtuk a dátumot és a terepmodell elérési útvonalát, ami sikeresen betöltődött
+    WHEN    | START gombra kattintok
+    THEN    | a program megjeleníti a modellt és elindítja a BARANGOLÁS módot alapértelmezett kamera paraméterekkel
+//    THEN    | a program megjeleníti a modellt, a kamerát default paraméterek, Nap állását a dátum alapján inicializálja.
+
+3   GIVEN   | megadtuk a dátumot, kamera paraméterek és a terepmodell elérési útvonalát, amik sikeresen betöltődött
+    WHEN    | START gombra kattintok
+    THEN    | a program megjeleníti a modellt és elindítja a BARANGOLÁS módot a megadott kamera paraméterekkel
+
+4   GIVEN   | megadtuk a triangulált terepmodell és a kamera trajektória elérési útvonalát és sikeresen betöltődtek
+    WHEN    | START gombra kattintok
+    THEN    | a program megjeleníti a modellt és a kamera útvonalát. Elindítja a KÖRSÉTA módot az alapértelmezett kameraparaméterekkel
+
+5   GIVEN   | megadtuk a triangulált terepmodell, kamera paraméterek és a kamera trajektória elérési útvonalát és sikeresen betöltődtek
+    WHEN    | START gombra kattintok
+    THEN    | a program megjeleníti a modellt és a kamera útvonalát. Elindítja a KÖRSÉTA módot a megadott kameraparaméterekkel
+
+//    THEN    | a program megjeleníti a modellt és a kamera útvonalat, a kamerát és a Napot trajektóriában található paraméterek alapján inicializálja.
+
+
+--------------------------------------------------------------------------------------------------------
+
+AS A        | Felhasználó
+I WANT TO   | BARANGOLÁS módba lépni
+SO THAT     | 
+
+1   GIVEN   | KÖRSÉTA mód van beállítva
+    WHEN    | Ctrl - M billentyűk lenyomásával
+    THEN    | program elindítja a BARANGOLÁS módot.
+
+
+
+AS A        | Felhasználó
+I WANT TO   | szabadon barangolni a terepmodell felett
+SO THAT     | megtekintsem a modellt
+
+1   GIVEN   | a BARANGOLÁS mód van beállítva
+    WHEN    | a billentyűzet nyilainak lenyomásával
+    THEN    | a program módosítja a kamera pozícióját a megfelelő irány alapján, és megjeleníti az újra renderelt képet
+
+2   GIVEN   | a BARANGOLÁS mód van beállítva
+    WHEN    | az egér mozgatásával
+    THEN    | a program módosítja a kamera tájolását, és megjeleníti az újra renderelt képet
+
+3   GIVEN   | a KÖRSÉTA mód van beállítva
+    WHEN    | Ctrl - M billentyűk lenyomásával
+    THEN    | a program elindítja a BARANGOLÁS módot
+
+
+--------------------------------------------------------------------------------------------------------
+
+AS A        | Felhasználó
+I WANT TO   | KÖRSÉTA módba lépni
+SO THAT     | megtekintsem a modellt az kamera útvonal mentén
+
+1   GIVEN   | nincs betöltött trajektória
+    WHEN    | Ctrl - M billentyűk lenyomásával
+    THEN    | program figyelmeztet és bekéri a kamera trajektória elérési útvonalát. Majd elindítja a KÖRSÉTA módot.
+
+2   GIVEN   | van betöltött trajektória és a BARANGOLÁS mód van beállítva
+    WHEN    | Ctrl - M billentyűk lenyomásával
+    THEN    | program elindítja a KÖRSÉTA módot
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+AS A        | Felhasználó
+I WANT TO   | lejátszani a kamera trajektóriát
+SO THAT     | megtekintsem a modellt az kamera útvonal mentén
+
+1   GIVEN   | nincs betöltött trajektória
+    WHEN    | Ctrl - SAPCE billentyűk lenyomásával
+    THEN    | program figyelmeztet és bekéri a kamera trajektória elérési útvonalát.
+
+2   GIVEN   | van betöltött trajektória és a BARANGOLÁS mód van beállítva
+    WHEN    | Ctrl - M billentyűk lenyomásával
+    THEN    | program elindítja a KÖRSÉTA módot.
+
+3   GIVEN   | van betöltött trajektória és a KÖRSÉTA mód van beállítva
+    WHEN    | Ctrl - SAPCE billentyűk lenyomásával
+    THEN    | program elindítja előről a szimulációt a modell felett a megadott kameraútvonal mentén.
+
+
+AS A        | Felhasználó
+I WANT TO   | megállítani a kamera trajektória lejátszását
+SO THAT     | 
+
+1   GIVEN   | a program a trajektróia útvonala mentén halad
+    WHEN    | SPACE gomb megnyomásával 
+    THEN    | a program megállítja a lejátszást az adott kamera pozícióban
+
+AS A        | Felhasználó
+I WANT TO   | folytatni a kamera trajektória lejátszását
+SO THAT     | 
+
+1   GIVEN   | a program a KÖRSÉTA módban, álló helyzetben van
+    WHEN    | SPACE gomb megnyomásával 
+    THEN    | a program folytatja a lejátszást az adott kamera pozíciótól  
+    
+--------------------------------------------------------------------------------------------------------    
+
+AS A        | Felhasználó
+I WANT TO   | főmenübe lépni
+SO THAT     | bemeneti paramétereken módosítson
+
+1   GIVEN   | bármilyen állaptoban van
+    WHEN    | ESC gomb megnyomásával 
+    THEN    | a program megállítja a folyamatot és a főmenübe lép
+
+
+--------------------------------------------------------------------------------------------------------    
+
+
+AS A        | Felhasználó
+I WANT TO   | exportálni a szimulációt
+SO THAT     | képek formájában mentsem a szimulációt
+
+1   GIVEN   | BARANGOLÁS/KÖRSÉTA mód van beállítva, nincs megadott output mappa elérési útvonal
+    WHEN    | Ctrl - SAPCE billentyűk lenyomásával
+    THEN    | program figyelmeztet és bekéri az output mappa elérési útvonalát. 
+
+1   GIVEN   | BARANGOLÁS mód van beállítva
+    WHEN    | Ctrl - SAPCE billentyűk lenyomásával
+    THEN    | program elindítja a felvételt, FELVÉTEL módba lép és képeket ment ki miközben szabadon barangolunk.
+
+1   GIVEN   | BARANGOLÁS + FELVÉTEL mód van beállítva
+    WHEN    | Ctrl - SAPCE billentyűk lenyomásával
+    THEN    | program megállítja a felvételt és BARANGOLÁS módba lép.
+
+1   GIVEN   | KÖRSÉTA mód van beállítva
+    WHEN    | Ctrl - SAPCE billentyűk lenyomásával
+    THEN    | FELVÉTEL módba lép, a kamera trajektória mentén elindul a képek exportálása
+
+
+BARANGOLÁS  - 3D EXPLORE
+KÖRSÉTA     - FLY-THROUGH
+ 
+
+ 
+

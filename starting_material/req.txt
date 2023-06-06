@@ -1,0 +1,45 @@
+A követelmény-leírás felépítése:
+
+1. előszó (célközönség, dokumentum-történet)
+
+
+2. bevezetés (szoftver célja, helye, szükségessége, előnyei)
+
+    A szakdolgozat keretében készítendő program az önvezető drónokat fejlesztő kutatás egyik elemét képezi. 
+    A szoftvert az automata drónok fejlesztésében részt vevő kutatók fogják használni, a szakdolgozatban szereplő program által készített képek a drónok helyzetének validálásában, hibák kiszűrésében segíthet.
+
+    A kutatás rövid leírása:
+
+    A kijelölt célterület felett a drónok repülés közben fedélzeti kamerájukkal képeket készítenek. A fedélzeti kamera által készített képeken a kutatócsoport által készített program szemantikus szegmentációt hajt végre. A szegmentálást végrehajtó program előre definiált logikai osztályokba sorolja a fénykép pixelei. 
+    Ezek az osztályok a program jelenlegi fázisában az:
+                                                        épület, 
+                                                        úttest, 
+                                                        növényzet.
+
+    A célterületről lézerpontos felméréssel egy másik kutatói csoport 3D-s pontfelhőt és háromszögelt térbeli hálót készít.
+    A háromszögelt térháló elemeit a megfelelő logikai osztályokba csoportosítják. Az így elkészített modell .stl formátumba exportálják.
+
+    A szakdolgozatban szereplő szoftver feladata, hogy a területről készített 3D-s háromszögelt térhálón, a Nap pozíciójának ismeretében, meghatározott kamera útvonal mentén szimulációt hajtson végre. Futás közben a program képeket készít a szimulációról, amelyeket .png formátumban exportál.
+
+    A szakdolgozatban szereplő program kimeneti eredményét felhasználva az önvezető drónt fejlesző csoportnak lehetősége van a szemantikusan szegmentált fényképek és a szimuláció képeinek összehasonlítására. Az összehasonlítást végző szoftver már nem a szakdolgozat kereteiben készül. A összehasonlítás eredményeként meghatározható, hogy a drón a tervek szerint halad-e, vagy eltér a megírt repülési tervtől.
+
+3. fogalomtár (technikai áttekintés)
+
+    - szemantikus szegmentálás 
+    - háromszögelt térbeli háló
+    - kamera trajektória
+    - triangulált
+
+4. követelmények felhasználói leírása
+
+5. rendszer architektúra (magas szintű áttekintés)
+
+6. követelmények fejlesztői leírása
+
+7. rendszer modellek (pl. felület terv, adatformátum leírás)
+
+8. rendszer evolúció (várható fejlesztések, karbantartás)
+
+9. függelék (pl. adatbázis terv, becsült hardver szükségletek)
+
+10. tárgymutató

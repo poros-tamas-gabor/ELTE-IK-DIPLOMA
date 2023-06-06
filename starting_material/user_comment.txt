@@ -1,0 +1,13 @@
+Én egy nagy felugró beviteli ablakot képzelek el kezdésnek, ahol minden bemeneti file-t és paramétert be lehet neki adni. lehet mindegyikhez egy beolvasás gomb amikor ellenőrzi a filet- és beállítja a belső adatszerkezeteit a file alapján. Start gomb után megy a szimuláció. 
+
+Szimulációban oldalt legyen pár gomb: 
+
+amivel újra be lehet hozni a betöltő/paraméter állító képernyőt 
+
+szabad barangolás és trajektória lejátszás közötti váltás 
+
+trajektória lejátszás paraméterei egy kis boxban (csúszka az idővonalával, start/stop) 
+
+végül az exportálás (képsorozat)  
+
+Első körben mindent a kamera nézetébő látunk, tehát a kmera képe a szimulátor képe. 
